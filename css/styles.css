@@ -849,28 +849,33 @@ footer button:hover {
     margin-bottom: 16px;
   }
   .product {
-    padding: 12px;
-    gap: 12px;
-    margin-bottom: 12px;
+    padding: 10px;
+    gap: 10px;
+    margin-bottom: 10px;
+    min-height: 80px;
   }
   .product img {
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
   }
   .product h4 {
-    font-size: 13px;
+    font-size: 12px;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
+    margin-bottom: 2px;
   }
   .price {
-    font-size: 14px;
+    font-size: 13px;
+    margin-bottom: 2px;
   }
   .stock-status {
-    font-size: 10px;
+    font-size: 9px;
+    margin-bottom: 2px;
   }
   .add {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
   }
   .categories-grid {
     grid-template-columns: repeat(2, 1fr);
