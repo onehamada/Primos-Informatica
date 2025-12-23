@@ -445,12 +445,18 @@ function createProductElement(product, categoryId) {
 
   const title = document.createElement('h4');
   
-  // Adicionar quebra de linha específica após "RTX"
+  // Adicionar quebra de linha a cada 18 caracteres
   let productName = product.nome || 'Produto';
-  if (productName.includes('RTX')) {
-    productName = productName.replace(/RTX/g, 'RTX<br>');
+  let formattedName = '';
+  
+  for (let i = 0; i < productName.length; i++) {
+    if (i > 0 && i % 18 === 0) {
+      formattedName += '<br>';
+    }
+    formattedName += productName[i];
   }
-  title.innerHTML = productName;
+  
+  title.innerHTML = formattedName;
 
   const price = document.createElement('div');
   price.className = 'price';
