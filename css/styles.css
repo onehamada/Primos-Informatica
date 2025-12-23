@@ -771,27 +771,132 @@ footer button:hover {
 }
 
 @media (max-width: 600px) {
+  header {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+  }
+  header .brand-logo {
+    width: 28px;
+    height: 28px;
+  }
+  header .brand-title {
+    font-size: 16px;
+  }
+  header .search-container {
+    order: 3;
+    width: 100%;
+    margin-top: 4px;
+  }
+  header input {
+    font-size: 14px;
+    padding: 10px 12px;
+    border-radius: 8px;
+  }
+  .tabs {
+    padding: 0 8px;
+  }
+  .tab-btn {
+    padding: 12px 16px;
+    font-size: 13px;
+    min-width: 80px;
+  }
   .home-hero {
-    padding: 24px 12px;
+    padding: 24px 16px;
     margin-bottom: 24px;
   }
   .home-hero h1 {
-    font-size: 20px;
+    font-size: 22px;
+    margin-bottom: 12px;
+    text-align: center;
   }
   .home-hero p {
     font-size: 14px;
+    margin-bottom: 20px;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .hero-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+  .hero-buttons .btn-primary,
+  .hero-buttons .btn-whatsapp,
+  .hero-buttons .btn-olx,
+  .hero-buttons .btn-instagram,
+  .hero-buttons .btn-facebook,
+  .hero-buttons .btn-maps {
+    width: 100%;
+    max-width: 280px;
+    padding: 14px 20px;
+    font-size: 14px;
+    text-align: center;
   }
   .home-section {
     margin-bottom: 32px;
-    padding: 0 8px;
+    padding: 0 16px;
   }
   .home-section h2 {
-    font-size: 18px;
+    font-size: 20px;
     margin-bottom: 16px;
   }
-  .btn-primary, .btn-whatsapp, .btn-outline {
+  .product {
+    padding: 16px;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  .product img {
+    width: 90px;
+    height: 90px;
+  }
+  .product h4 {
     font-size: 15px;
-    padding: 10px 20px;
+  }
+  .price {
+    font-size: 18px;
+  }
+  .stock-status {
+    font-size: 11px;
+  }
+  .add {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0 16px;
+  }
+  .category-card {
+    padding: 20px;
+  }
+  .category-card h3 {
+    font-size: 16px;
+  }
+  .category-card p {
+    font-size: 13px;
+  }
+  .contact-info {
+    padding: 0 16px;
+  }
+  .contact-item {
+    padding: 16px 0;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .contact-item:last-child {
+    border-bottom: none;
+  }
+  .contact-item strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .contact-item a {
+    word-break: break-all;
   }
 }
 
