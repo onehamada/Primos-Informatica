@@ -1,6 +1,7 @@
 # Minha Loja
 
 Este projeto é uma loja online simples, desenvolvida em HTML, CSS e JavaScript. Abaixo estão as instruções para configurar e executar o projeto, bem como detalhes sobre suas funcionalidades.
+Acesse AQUI: https://onehamada.github.io/Primos-Informatica/
 
 ## Estrutura do Projeto
 
