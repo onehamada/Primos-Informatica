@@ -444,7 +444,13 @@ function createProductElement(product, categoryId) {
   info.className = 'product-info';
 
   const title = document.createElement('h4');
-  title.textContent = product.nome || 'Produto';
+  
+  // Adicionar quebra de linha específica após "RTX"
+  let productName = product.nome || 'Produto';
+  if (productName.includes('RTX')) {
+    productName = productName.replace(/RTX/g, 'RTX<br>');
+  }
+  title.innerHTML = productName;
 
   const price = document.createElement('div');
   price.className = 'price';
