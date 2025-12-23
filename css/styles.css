@@ -421,6 +421,48 @@ footer button:hover {
   background: #128c7e;
 }
 
+.btn-instagram {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-instagram:hover {
+  background: linear-gradient(45deg, #e08322 0%, #d5572b 25%, #c71f3a 50%, #b71e5a 75%, #a71577 100%);
+}
+
+.btn-facebook {
+  background: #1877f2;
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-facebook:hover {
+  background: #166fe5;
+}
+
+.btn-maps {
+  background: #ea4335;
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-maps:hover {
+  background: #d23324;
+}
+
 .btn-outline {
   background: transparent;
   color: var(--brand-700);
