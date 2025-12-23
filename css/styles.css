@@ -263,8 +263,8 @@ main {
   transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
   position: relative;
   overflow: hidden;
-  min-height: 130px;
-  max-width: 750px;
+  min-height: 140px;
+  max-width: 800px;
 }
 
 .product::before {
@@ -309,7 +309,7 @@ main {
 }
 .product-info { 
   flex: 1; 
-  min-width: 200px;
+  min-width: 250px;
   padding-right: 8px;
   overflow-wrap: break-word;
 }
