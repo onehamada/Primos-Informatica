@@ -264,6 +264,7 @@ main {
   position: relative;
   overflow: hidden;
   min-height: 120px;
+  max-width: 600px;
 }
 
 .product::before {
@@ -307,7 +308,7 @@ main {
 }
 .product-info { 
   flex: 1; 
-  min-width: 0;
+  min-width: 200px;
   padding-right: 8px;
   overflow-wrap: break-word;
 }
@@ -324,10 +325,10 @@ main {
   overflow: hidden;
 }
 .price { 
-  font-size: 18px; 
+  font-size: 16px; 
   font-weight: 700; 
   color: var(--brand-600);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 .add { 
   background: linear-gradient(135deg, var(--brand-600), var(--brand-500));
