@@ -43,6 +43,26 @@ let currentCategory = null;
 let searchAbortController = null;
 
 // === Parsing do CSV ===
+function parseCsvLine(line) {
+  const parts = line.split(';').map(p => p.trim());
+  if (parts.length < 5) return null;
+  
+  const [codigo, nome, categoria, preco, qt] = parts;
+  if (!codigo || !nome || !categoria || !preco || qt === undefined) return null;
+  
+  const precoNum = parseFloat(preco.replace(',', '.'));
+  const qtNum = parseInt(qt) || 0;
+  if (isNaN(precoNum) || isNaN(qtNum)) return null;
+  
+  return {
+    codigo: codigo.trim(),
+    nome: nome.trim(),
+    categoria: categoria.trim().toLowerCase(),
+    preco: precoNum,
+    qt: qtNum
+  };
+}
+
 function parseCsv(text) {
   if (!text || typeof text !== 'string') return [];
   
@@ -50,21 +70,12 @@ function parseCsv(text) {
   if (lines.length < 2) return [];
 
   const headers = lines[0].split(';').map(h => h.trim().toLowerCase());
-  const requiredFields = ['codigo', 'nome', 'categoria', 'preco'];
+  const requiredFields = ['codigo', 'nome', 'categoria', 'preco', 'qt'];
   
   const products = [];
   for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split(';').map(v => v.trim());
-    if (values.length < headers.length) continue;
-
-    const product = {};
-    headers.forEach((header, idx) => {
-      product[header] = values[idx] || '';
-    });
-
-    // Validação de campos obrigatórios
-    const isValid = requiredFields.every(field => product[field]);
-    if (!isValid) continue;
+    const product = parseCsvLine(lines[i]);
+    if (!product) continue;
 
     // Normalização
     product.codigo = String(product.codigo).trim();
@@ -406,12 +417,17 @@ function loadMoreProducts(categoryId) {
   renderCategory(categoryId);
 }
 
-// === Product Rendering ===
 function createProductElement(product, categoryId) {
   const div = document.createElement('div');
   div.className = 'product';
   div.dataset.code = product.codigo || '';
   div.dataset.category = categoryId;
+
+  // Adicionar classe de estoque
+  const temEstoque = product.qt > 0;
+  if (!temEstoque) {
+    div.classList.add('sem-estoque');
+  }
 
   const img = document.createElement('img');
   img.alt = product.nome || 'Produto';
@@ -434,17 +450,33 @@ function createProductElement(product, categoryId) {
   price.className = 'price';
   price.textContent = formatPrice(product.precoRaw);
 
+  // Adicionar status de estoque
+  const stockStatus = document.createElement('div');
+  stockStatus.className = 'stock-status';
+  if (temEstoque) {
+    stockStatus.textContent = 'Em estoque';
+    stockStatus.classList.add('disponivel');
+  } else {
+    stockStatus.textContent = 'Esgotado';
+    stockStatus.classList.add('esgotado');
+  }
+
   info.appendChild(title);
   info.appendChild(price);
+  info.appendChild(stockStatus);
 
   const addBtn = document.createElement('button');
   addBtn.type = 'button';
   addBtn.className = 'add';
   addBtn.textContent = '+';
-  addBtn.title = 'Adicionar';
+  addBtn.title = temEstoque ? 'Adicionar' : 'Produto esgotado';
+  addBtn.disabled = !temEstoque;
+  
   addBtn.addEventListener('click', e => {
     e.stopPropagation();
-    alert(`Adicionado: ${product.nome}`);
+    if (temEstoque) {
+      alert(`Adicionado: ${product.nome}`);
+    }
   });
 
   div.appendChild(img);
