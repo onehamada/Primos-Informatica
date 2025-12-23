@@ -445,18 +445,39 @@ function createProductElement(product, categoryId) {
 
   const title = document.createElement('h4');
   
-  // Adicionar quebra de linha a cada 18 caracteres
-  let productName = product.nome || 'Produto';
-  let formattedName = '';
-  
-  for (let i = 0; i < productName.length; i++) {
-    if (i > 0 && i % 18 === 0) {
-      formattedName += '<br>';
+  // Função inteligente de quebra de linha baseada no tamanho do container
+  function formatProductName(name) {
+    const maxCharsPerLine = 18; // máximo de caracteres por linha
+    let result = '';
+    let currentLine = '';
+    
+    const words = name.split(' ');
+    
+    for (let i = 0; i < words.length; i++) {
+      const word = words[i];
+      
+      // Se adicionar esta palavra exceder o limite, quebra a linha
+      if (currentLine.length + word.length + 1 > maxCharsPerLine && currentLine.length > 0) {
+        result += currentLine + '<br>';
+        currentLine = word;
+      } else {
+        if (currentLine.length > 0) {
+          currentLine += ' ' + word;
+        } else {
+          currentLine = word;
+        }
+      }
     }
-    formattedName += productName[i];
+    
+    // Adiciona a última linha
+    if (currentLine.length > 0) {
+      result += currentLine;
+    }
+    
+    return result;
   }
   
-  title.innerHTML = formattedName;
+  title.innerHTML = formatProductName(product.nome || 'Produto');
 
   const price = document.createElement('div');
   price.className = 'price';
