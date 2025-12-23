@@ -317,12 +317,17 @@ main {
   font-size: 13px; 
   font-weight: 600; 
   margin-bottom: 6px; 
-  line-height: 1.2;
+  line-height: 1.1;
   color: var(--text);
   white-space: normal;
   word-wrap: break-word;
   overflow-wrap: break-word;
   max-width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .price { 
   font-size: 15px; 
