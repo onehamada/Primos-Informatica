@@ -6,6 +6,50 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
 }
 
+/* === Animações Globais === */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
 :root {
   --bg: #f3f6fb;
   --surface: #ffffff;
@@ -36,6 +80,11 @@ header {
   align-items: center; 
   justify-content: space-between; 
   border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(2, 12, 27, 0.05);
 }
 
 header .header-brand {
@@ -84,6 +133,20 @@ header input:focus {
   background: var(--surface);
   border-color: rgba(17, 122, 163, 0.55);
   box-shadow: 0 10px 25px rgba(17, 122, 163, 0.20);
+}
+
+.search-dropdown.tabs {
+  display: flex;
+  gap: 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  position: sticky;
+  top: 73px;
+  z-index: 99;
+  backdrop-filter: blur(8px);
 }
 
 .search-dropdown {
@@ -192,18 +255,38 @@ main {
   background: var(--surface);
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px;
+  gap: 18px;
+  padding: 18px;
   border-radius: 12px;
   margin-bottom: 16px;
   box-shadow: 0 6px 18px rgba(2, 12, 27, 0.06);
-  transition: transform .14s ease, box-shadow .14s ease;
+  transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
+  position: relative;
+  overflow: hidden;
   min-height: 110px;
 }
+
+.product::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(17, 122, 163, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.product:hover::before {
+  left: 100%;
+}
+
 .product:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 34px rgba(2, 12, 27, 0.12);
+  box-shadow: 0 12px 24px rgba(2, 12, 27, 0.12);
+  background: linear-gradient(135deg, var(--surface), rgba(17, 122, 163, 0.02));
 }
+
 .empty-state {
   background: rgba(255,255,255,0.8);
   border: 1px dashed rgba(17, 122, 163, 0.35);
@@ -325,18 +408,38 @@ footer button:hover {
 }
 
 .tab-btn {
-  padding: 12px 18px;
-  border-radius: 12px;
-  font-weight: 600;
-  background: rgba(15, 91, 134, 0.08);
-  border: 1px solid rgba(15, 91, 134, 0.14);
+  padding: 14px 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--muted);
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.tab-btn::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--brand-500), var(--brand-400));
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%);
+}
+
+.tab-btn:hover::before {
+  width: 100%;
 }
 
 .tab-btn:hover {
-  background: rgba(15, 91, 134, 0.14);
+  color: var(--brand-600);
+  background: rgba(17, 122, 163, 0.05);
 }
 
 .tab-btn.active {
@@ -414,7 +517,27 @@ footer button:hover {
   padding: 12px 24px;
   border-radius: 10px;
   font-weight: 600;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-whatsapp::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn-whatsapp:hover::before {
+  width: 300px;
+  height: 300px;
 }
 
 .btn-whatsapp:hover {
