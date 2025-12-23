@@ -151,9 +151,46 @@ function loadProductsFromCsv() {
 }
 
 // === Gerenciamento de Categorias ===
+function limparCategoriasOrfas() {
+  // Pegar categorias que existem no CSV
+  const categoriasCSV = new Set(__allProducts.map(p => p.categoria));
+  
+  // Remover abas que não existem mais no CSV
+  document.querySelectorAll('.tab-btn').forEach(tab => {
+    const categoria = tab.dataset.target;
+    if (categoria && !categoriasCSV.has(categoria) && categoria !== 'inicio' && categoria !== 'promo') {
+      tab.remove();
+    }
+  });
+  
+  // Remover seções que não existem mais no CSV
+  document.querySelectorAll('.category').forEach(section => {
+    const categoria = section.id;
+    if (categoria && !categoriasCSV.has(categoria) && categoria !== 'inicio' && categoria !== 'promo') {
+      section.remove();
+    }
+  });
+  
+  // Limpar estado das categorias removidas
+  const keysParaRemover = [];
+  __categoryState.forEach((_, key) => {
+    if (!categoriasCSV.has(key) && key !== 'inicio' && key !== 'promo') {
+      keysParaRemover.push(key);
+    }
+  });
+  
+  keysParaRemover.forEach(key => {
+    __categoryState.delete(key);
+    __categoryLabels.delete(key);
+  });
+}
+
 function ensureCategoriesFromCsv() {
   const tabsContainer = document.querySelector('.tabs');
   if (!tabsContainer) return;
+
+  // Primeiro, limpar categorias órfãs
+  limparCategoriasOrfas();
 
   __categoryLabels.forEach((label, id) => {
     // Verifica se tab já existe
