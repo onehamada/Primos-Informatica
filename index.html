@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Primos Informática</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<header>
+  <div class="header-brand">
+    <img class="brand-logo" src="images/logo.png" alt="Primos Informática" />
+    <h1>Primos Informática</h1>
+  </div>
+  <input type="text" placeholder="Buscar produtos..." aria-label="Buscar produtos" />
+</header>
+
+<div class="tabs">
+  <button type="button" class="tab-btn active" data-target="inicio" onclick="showCategory('inicio')">Início</button>
+  <button type="button" class="tab-btn" data-target="promo" onclick="showCategory('promo')">Promoções</button>
+  <button type="button" class="tab-btn" data-target="gamer" onclick="showCategory('gamer')">Gamer</button>
+  <button type="button" class="tab-btn" data-target="fones" onclick="showCategory('fones')">Fones</button>
+  <button type="button" class="tab-btn" data-target="adaptadores" onclick="showCategory('adaptadores')">Adaptadores</button>
+  <button type="button" class="tab-btn" data-target="coolers" onclick="showCategory('coolers')">Coolers</button>
+  <button type="button" class="tab-btn" data-target="hardware" onclick="showCategory('hardware')">Hardware</button>
+</div>
+
+<main>
+  <div id="inicio" class="category">
+    <div class="home-hero">
+      <div class="hero-content">
+        <h1>Hardware e Acessórios Gamers</h1>
+        <p>Peças para PC, notebooks, coolers, fones e mais. Retirada na loja ou enviamos.</p>
+        <div class="hero-buttons">
+          <button type="button" class="btn-primary" onclick="showCategory('promo')">Ver Promoções</button>
+          <a href="https://wa.me/55XXXXXXXXXX" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">Falar no WhatsApp</a>
+        </div>
+      </div>
+    </div>
+
+    <section class="home-section">
+      <h2>Categorias Populares</h2>
+      <div id="home-categories-grid" class="categories-grid">
+        <!-- cards gerados dinamicamente via JS -->
+      </div>
+    </section>
+
+    <section class="home-section">
+      <h2>Destaques do Dia</h2>
+      <div id="home-highlights-grid" class="products-grid">
+        <!-- produtos gerados dinamicamente via JS -->
+      </div>
+      <button type="button" class="btn-outline" onclick="showCategory('promo')">Ver todos</button>
+    </section>
+
+    <section class="home-section">
+      <h2>Contato</h2>
+      <div class="contact-info">
+        <div class="contact-item">
+          <strong>WhatsApp:</strong>
+          <a href="https://wa.me/55XXXXXXXXXX" target="_blank" rel="noopener noreferrer">55 XX XXXXX-XXXX</a>
+        </div>
+        <div class="contact-item">
+          <strong>Endereço:</strong>
+          <span>Rua Exemplo, 123 - Centro, Sua Cidade - UF</span>
+        </div>
+        <div class="contact-item">
+          <strong>Horário:</strong>
+          <span>Seg-Sex 9h-18h | Sáb 9h-13h</span>
+        </div>
+        <div class="contact-item">
+          <strong>Formas de pagamento:</strong>
+          <span>Pix, Cartão de Crédito, Débito</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="promo" class="category" style="display:none;">
+    <h2>PRODUTOS MAIS VENDIDOS</h2>
+    <div id="promo-list" class="products-grid">
+      <!-- produtos marcados serão clonados aqui -->
+    </div>
+  </div>
+
+  <div id="gamer" class="category" style="display:none;">
+    <h2>PERIFÉRICOS GAMER</h2>
+  </div>
+
+  <div id="fones" class="category" style="display:none;">
+    <h2>FONES</h2>
+  </div>
+
+  <div id="hardware" class="category" style="display:none;">
+    <h2>HARDWARE / INFORMÁTICA</h2>
+  </div>
+
+  <div id="coolers" class="category" style="display:none;">
+    <h2>COOLERS E HARDWARE GAMER</h2>
+  </div>
+
+  <div id="adaptadores" class="category" style="display:none;">
+    <h2>ADAPTADORES</h2>
+  </div>
+</main>
+
+<footer>
+  <button type="button" onclick="showCategory('inicio')">Início</button>
+  <button type="button" onclick="showCategory('gamer')">Gamer</button>
+  <button type="button" onclick="showCategory('fones')">Fones</button>
+</footer>
+
+<script src="js/script.js" defer></script>
+</body>
+</html>
