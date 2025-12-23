@@ -147,6 +147,7 @@ header input:focus {
   top: 73px;
   z-index: 99;
   backdrop-filter: blur(8px);
+  padding: 0 4px;
 }
 
 .search-dropdown {
@@ -455,7 +456,7 @@ footer button:hover {
 }
 
 .tab-btn {
-  padding: 14px 24px;
+  padding: 10px 16px;
   background: transparent;
   border: none;
   border-bottom: 3px solid transparent;
@@ -466,6 +467,7 @@ footer button:hover {
   white-space: nowrap;
   position: relative;
   overflow: hidden;
+  font-size: 12px;
 }
 
 .tab-btn::before {
@@ -806,12 +808,12 @@ footer button:hover {
     border-radius: 8px;
   }
   .tabs {
-    padding: 0 8px;
+    padding: 8px;
   }
   .tab-btn {
-    padding: 12px 16px;
-    font-size: 13px;
-    min-width: 80px;
+    padding: 8px 12px;
+    font-size: 11px;
+    min-width: 60px;
   }
   .home-hero {
     padding: 24px 16px;
