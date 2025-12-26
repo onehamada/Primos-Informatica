@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     optimizeProductImages(document);
     initTabsDragScroll();
     
+    // Inicializar busca
+    initSearch();
+    
     // Otimização: lazy loading dinâmico
     initDynamicLazyLoading();
     
@@ -49,7 +52,100 @@ let __categoryLabels = new Map();
 let currentCategory = null;
 let searchAbortController = null;
 
-// === Parsing do CSV ===
+// === Funcionalidade de Busca ===
+function initSearch() {
+  const searchInput = document.querySelector('input[type="text"]');
+  if (!searchInput) return;
+  
+  let searchTimeout;
+  
+  searchInput.addEventListener('input', (e) => {
+    const query = e.target.value.trim();
+    
+    // Cancelar busca anterior
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+    
+    // Debounce de 300ms
+    searchTimeout = setTimeout(() => {
+      performSearch(query);
+    }, 300);
+  });
+  
+  // Limpar busca ao pressionar Escape
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      searchInput.value = '';
+      showCategory(currentCategory || 'inicio');
+    }
+  });
+}
+
+function performSearch(query) {
+  if (!query) {
+    showCategory(currentCategory || 'inicio');
+    return;
+  }
+  
+  // Cancelar busca anterior se existir
+  if (searchAbortController) {
+    searchAbortController.abort();
+  }
+  
+  searchAbortController = new AbortController();
+  
+  // Filtrar produtos
+  const filteredProducts = __allProducts.filter(product => {
+    const searchTerm = query.toLowerCase();
+    return (
+      product.nome.toLowerCase().includes(searchTerm) ||
+      product.descricao.toLowerCase().includes(searchTerm) ||
+      product.marca.toLowerCase().includes(searchTerm) ||
+      product.categoria.toLowerCase().includes(searchTerm) ||
+      product.codigo.toLowerCase().includes(searchTerm)
+    );
+  });
+  
+  // Mostrar resultados da busca
+  showSearchResults(filteredProducts, query);
+}
+
+function showSearchResults(products, query) {
+  // Ocultar todas as categorias
+  document.querySelectorAll('.category').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  
+  // Criar ou mostrar seção de busca
+  let searchSection = document.getElementById('search-results');
+  if (!searchSection) {
+    searchSection = document.createElement('div');
+    searchSection.id = 'search-results';
+    searchSection.className = 'category';
+    searchSection.innerHTML = '<h2>Resultados da Busca</h2><div class="products-grid"></div>';
+    document.querySelector('main').appendChild(searchSection);
+  } else {
+    searchSection.innerHTML = '<h2>Resultados da Busca</h2><div class="products-grid"></div>';
+  }
+  
+  searchSection.style.display = 'block';
+  
+  const grid = searchSection.querySelector('.products-grid');
+  grid.innerHTML = '';
+  
+  if (products.length === 0) {
+    grid.innerHTML = '<div class="empty-state">Nenhum produto encontrado para "' + query + '"</div>';
+  } else {
+    const frag = document.createDocumentFragment();
+    products.forEach(p => {
+      frag.appendChild(createProductElement(p, 'search'));
+    });
+    grid.appendChild(frag);
+    optimizeProductImages(grid);
+  }
+  
+  currentCategory = 'search-results';
+}
 function parseCsvLine(line) {
   const parts = line.split(';').map(p => p.trim());
   if (parts.length < 8) return null;
