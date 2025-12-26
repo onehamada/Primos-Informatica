@@ -130,7 +130,11 @@ function showSearchResults(products, query) {
     searchDropdown = document.createElement('div');
     searchDropdown.id = 'search-dropdown';
     searchDropdown.className = 'search-dropdown';
-    document.querySelector('header').appendChild(searchDropdown);
+    // Adicionar ao input de busca, não ao header
+    const searchInput = document.querySelector('input[type="text"]');
+    if (searchInput) {
+      searchInput.parentNode.appendChild(searchDropdown);
+    }
   }
   
   searchDropdown.innerHTML = '';
