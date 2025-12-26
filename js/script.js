@@ -439,9 +439,14 @@ function createProductElement(product, categoryId) {
   const productCode = product.codigo || '';
   const productImagePath = `images/products/thumbnail/${productCode}.webp`;
   const catSlug = slugify(product.categoria || 'default');
+  const categoryImagePath = `images/products/thumbnail/${catSlug}.webp`;
   
-  // Verifica se imagem específica existe, senão usa imagem da categoria
+  // Verifica se imagem específica existe, senão usa imagem da categoria, senão usa default
   img.src = productImagePath;
+  img.onerror = function() {
+    this.onerror = null;
+    this.src = categoryImagePath;
+  };
   img.srcset = `${productImagePath} 150w, images/products/medium/${productCode}.webp 400w, images/products/large/${productCode}.webp 800w`;
   img.sizes = '(max-width: 900px) 86px, 110px';
 
