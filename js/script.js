@@ -3,12 +3,19 @@
 // === Inicialização ===
 document.addEventListener('DOMContentLoaded', async () => {
   try {
+    // Otimização: pré-carregar imagens críticas
+    preloadCriticalImages();
+    
     stripStaticProductsFromHtml();
     await loadProductsFromCsv();
     populatePromo();
     showCategory('inicio');
     optimizeProductImages(document);
     initTabsDragScroll();
+    
+    // Otimização: lazy loading dinâmico
+    initDynamicLazyLoading();
+    
   } catch (error) {
     console.error('Erro na inicialização:', error);
   }
@@ -28,10 +35,10 @@ function stripStaticProductsFromHtml() {
 
 // === Configurações ===
 const CONFIG = {
-  PAGE_SIZE: 30,
-  CSV_CACHE_KEY: 'productsCsvCache:v1',
-  CSV_CACHE_TTL: 10 * 60 * 1000, // 10 minutos
-  MAX_HIGHLIGHTS: 6,
+  PAGE_SIZE: 30, // Aumentado para menos recargas
+  CSV_CACHE_KEY: 'productsCsvCache:v2', // Versão atualizada
+  CSV_CACHE_TTL: 30 * 60 * 1000, // 30 minutos
+  MAX_HIGHLIGHTS: 8, // Aumentado para mais destaques
   MAX_HOME_CATEGORIES: 8
 };
 
@@ -99,41 +106,23 @@ function readCsvCache() {
   try {
     const raw = localStorage.getItem(CONFIG.CSV_CACHE_KEY);
     if (!raw) return '';
-    const data = JSON.parse(raw);
-    if (!data || typeof data.text !== 'string') return '';
-    if (Date.now() - data.timestamp > CONFIG.CSV_CACHE_TTL) return '';
-    return data.text;
-  } catch (_) {
-    return '';
   }
 }
 
-function writeCsvCache(text) {
+function writeCsvCache(data) {
   try {
-    localStorage.setItem(CONFIG.CSV_CACHE_KEY, JSON.stringify({
-      text,
+    const cache = {
+      data: data,
       timestamp: Date.now()
-    }));
-  } catch (_) {}
+    };
+    localStorage.setItem(CONFIG.CSV_CACHE_KEY, JSON.stringify(cache));
+  } catch (error) {
+    console.warn('Erro ao escrever cache:', error);
+  }
 }
 
-function refreshCacheInBackground() {
-  setTimeout(() => {
-    fetch('data/products.csv')
-      .then(r => r.text())
-      .then(text => {
-        const products = parseCsv(text);
-        if (products.length) {
-          applyProductsAndRender(products);
-          writeCsvCache(text);
-        }
-      })
-      .catch(() => {});
-  }, CONFIG.CSV_CACHE_TTL);
-}
-
-// === Carregamento do CSV ===
-function loadProductsFromCsv() {
+async function loadProductsFromCsv() {
+  // Tenta carregar do cache primeiro
   const cached = readCsvCache();
   if (cached) {
     try {
@@ -379,14 +368,54 @@ function initTabsDragScroll() {
 }
 
 // === Image Optimization ===
+function preloadCriticalImages() {
+  const criticalImages = [
+    'images/logo.png',
+    'images/products/thumbnail/rtx3060.webp',
+    'images/products/thumbnail/gtx1660.webp',
+    'images/products/thumbnail/r5230.webp'
+  ];
+  
+  criticalImages.forEach(src => {
+    const img = new Image();
+    img.src = src;
+  });
+}
+
+function initDynamicLazyLoading() {
+  const imageObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        const src = img.dataset.src;
+        if (src && !img.src) {
+          img.src = src;
+          img.classList.remove('lazy');
+          imageObserver.unobserve(img);
+        }
+      }
+    });
+  }, {
+    rootMargin: '50px',
+    threshold: 0.1
+  });
+  
+  document.querySelectorAll('img[data-src]').forEach(img => {
+    imageObserver.observe(img);
+  });
+}
+
 function optimizeProductImages(container) {
-  const imgs = container.querySelectorAll('img');
-  imgs.forEach(img => {
-    if (!img.src || img.src.includes('placeholder')) {
-      const catSlug = slugify(img.dataset.category || 'default');
-      img.src = `images/products/thumbnail/${catSlug}.webp`;
-      img.srcset = `images/products/thumbnail/${catSlug}.webp 150w, images/products/medium/${catSlug}.webp 400w, images/products/large/${catSlug}.webp 800w`;
-      img.sizes = '(max-width: 900px) 86px, 110px';
+  // Adicionar loading="lazy" a todas as imagens de produto
+  const productImages = container.querySelectorAll('.product img');
+  productImages.forEach(img => {
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    
+    // Adicionar placeholder para melhor UX
+    if (!img.complete) {
+      img.style.backgroundColor = '#f0f0f0';
+      img.style.backgroundImage = 'linear-gradient(45deg, #f0f0f0 25%, transparent 50%)';
     }
   });
 }
