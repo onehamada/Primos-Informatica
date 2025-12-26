@@ -1101,6 +1101,9 @@ footer button:hover {
     min-width: 100px;
     border-radius: 12px;
     padding: 12px;
+    object-fit: contain !important;
+    display: block !important;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
   }
   
   .product-info {
@@ -1224,6 +1227,9 @@ footer button:hover {
     height: 80px;
     min-width: 80px;
     padding: 8px;
+    object-fit: contain !important;
+    display: block !important;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
   }
   
   .product-info {
