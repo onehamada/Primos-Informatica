@@ -45,9 +45,9 @@ let searchAbortController = null;
 // === Parsing do CSV ===
 function parseCsvLine(line) {
   const parts = line.split(';').map(p => p.trim());
-  if (parts.length < 5) return null;
+  if (parts.length < 8) return null;
   
-  const [codigo, nome, categoria, preco, qt] = parts;
+  const [codigo, nome, categoria, preco, qt, descricao, marca, promocao, imagem] = parts;
   if (!codigo || !nome || !categoria || !preco || qt === undefined) return null;
   
   const precoNum = parseFloat(preco.replace(',', '.'));
@@ -59,7 +59,11 @@ function parseCsvLine(line) {
     nome: nome.trim(),
     categoria: categoria.trim().toLowerCase(),
     preco: precoNum,
-    qt: qtNum
+    qt: qtNum,
+    descricao: descricao ? descricao.trim() : '',
+    marca: marca ? marca.trim() : '',
+    promocao: promocao ? promocao.trim().toLowerCase() === 'sim' : false,
+    imagem: imagem ? imagem.trim() : ''
   };
 }
 
@@ -435,25 +439,38 @@ function createProductElement(product, categoryId) {
   img.height = 110;
   img.loading = 'lazy';
   img.decoding = 'async';
-  // Usa código do produto se existir imagem específica, senão usa categoria
+  // Usa imagem específica se existir, senão usa código, senão usa categoria
   const productCode = product.codigo || '';
-  const productImagePath = `images/products/thumbnail/${productCode}.webp`;
+  const specificImagePath = product.imagem ? `images/products/thumbnail/${product.imagem}` : `images/products/thumbnail/${productCode}.webp`;
   const catSlug = slugify(product.categoria || 'default');
   const categoryImagePath = `images/products/thumbnail/${catSlug}.webp`;
   
   // Verifica se imagem específica existe, senão usa imagem da categoria, senão usa default
-  img.src = productImagePath;
+  img.src = specificImagePath;
   img.onerror = function() {
     this.onerror = null;
     this.src = categoryImagePath;
   };
-  img.srcset = `${productImagePath} 150w, images/products/medium/${productCode}.webp 400w, images/products/large/${productCode}.webp 800w`;
+  
+  // Define srcset baseado na imagem específica ou código
+  if (product.imagem) {
+    const baseName = product.imagem.replace('.webp', '');
+    img.srcset = `${specificImagePath} 150w, images/products/medium/${baseName}.webp 400w, images/products/large/${baseName}.webp 800w`;
+  } else {
+    img.srcset = `${specificImagePath} 150w, images/products/medium/${productCode}.webp 400w, images/products/large/${productCode}.webp 800w`;
+  }
   img.sizes = '(max-width: 900px) 86px, 110px';
 
   const info = document.createElement('div');
   info.className = 'product-info';
 
   const title = document.createElement('h4');
+  
+  // Adiciona marca se existir
+  let displayName = product.nome;
+  if (product.marca) {
+    displayName = `${product.marca} ${product.nome}`;
+  }
   
   // Função inteligente de quebra de linha baseada no tamanho do container
   function formatProductName(name) {
@@ -487,10 +504,21 @@ function createProductElement(product, categoryId) {
     return result;
   }
   
-  title.innerHTML = formatProductName(product.nome || 'Produto');
+  title.innerHTML = formatProductName(displayName || 'Produto');
+  
+  // Adiciona descrição se existir
+  if (product.descricao) {
+    const desc = document.createElement('div');
+    desc.className = 'product-description';
+    desc.textContent = product.descricao;
+    info.appendChild(desc);
+  }
 
   const price = document.createElement('div');
   price.className = 'price';
+  if (product.promocao) {
+    price.classList.add('promocao');
+  }
   price.textContent = formatPrice(product.precoRaw);
 
   // Adicionar status de estoque
