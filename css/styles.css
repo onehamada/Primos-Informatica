@@ -1026,15 +1026,239 @@ footer button:hover {
   to { opacity: 1; }
 }
 
-/* responsividade: empilha em telas pequenas */
-@media (max-width: 900px) {
-  .container { flex-direction: column; padding: 12px; max-width: 960px; }
-  aside { width: 100%; order: 2; }
-  main { order: 1; }
-  .product img { width: 86px; height: 86px; }
-  .tabs { padding: 10px; margin: 12px; overflow-x: auto; }
-  header input { width: 60vw; }
-  header { gap: 12px; }
-  header .brand-logo { width: 38px; height: 38px; }
-  header h1 { font-size: 18px; }
+/* === MEGA RESPONSIVIDADE MOBILE === */
+@media (max-width: 768px) {
+  /* Header e Busca */
+  header {
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .header-brand {
+    order: 1;
+  }
+  
+  header input {
+    order: 2;
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 16px;
+    border-radius: 12px;
+  }
+  
+  /* Tabs */
+  .tabs {
+    padding: 8px 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .tab-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+    min-width: 80px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  
+  /* Container Principal */
+  main {
+    padding: 16px;
+    max-width: 100%;
+  }
+  
+  /* Grid de Produtos - MOBILE */
+  .products-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 0;
+  }
+  
+  /* Cards de Produtos - MOBILE */
+  .product {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 140px;
+    max-height: none;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 16px;
+    border-radius: 16px;
+    margin-bottom: 0;
+  }
+  
+  .product img {
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
+    border-radius: 12px;
+    padding: 12px;
+  }
+  
+  .product-info {
+    padding: 0 0 0 16px;
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .product-info h4 {
+    font-size: 14px;
+    line-height: 1.3;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    min-height: auto;
+  }
+  
+  .price {
+    font-size: 16px;
+    margin: 8px 0;
+  }
+  
+  .add {
+    width: auto;
+    height: 36px;
+    padding: 0 16px;
+    font-size: 14px;
+    margin-top: 12px;
+    align-self: flex-start;
+  }
+  
+  /* Categorias */
+  .categories-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    padding: 0 16px;
+  }
+  
+  .category-card {
+    padding: 16px 12px;
+  }
+  
+  .category-card h3 {
+    font-size: 14px;
+  }
+  
+  .category-card p {
+    font-size: 12px;
+  }
+  
+  /* Home Hero */
+  .home-hero {
+    padding: 32px 16px;
+    text-align: center;
+  }
+  
+  .home-hero h1 {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+  
+  .home-hero p {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  
+  .hero-buttons {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  
+  .btn-primary, .btn-whatsapp {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  /* Seções */
+  .home-section {
+    padding: 0 16px;
+    margin-bottom: 32px;
+  }
+  
+  .home-section h2 {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+  header {
+    padding: 8px 12px;
+  }
+  
+  .header-brand h1 {
+    font-size: 18px;
+  }
+  
+  .brand-logo {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .tab-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    min-width: 70px;
+  }
+  
+  main {
+    padding: 12px;
+  }
+  
+  .product {
+    padding: 12px;
+    border-radius: 12px;
+  }
+  
+  .product img {
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+    padding: 8px;
+  }
+  
+  .product-info {
+    padding: 0 0 0 12px;
+  }
+  
+  .product-info h4 {
+    font-size: 13px;
+  }
+  
+  .price {
+    font-size: 15px;
+  }
+  
+  .add {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+  
+  .categories-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+    padding: 0 12px;
+  }
+  
+  .category-card {
+    padding: 12px 8px;
+  }
+  
+  .category-card h3 {
+    font-size: 13px;
+  }
+  
+  .category-card p {
+    font-size: 11px;
+  }
 }
