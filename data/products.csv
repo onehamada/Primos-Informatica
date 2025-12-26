@@ -25,9 +25,15 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1899;NVIDIA PLACA DE VIDEO GTX1050 4GB DDR5 GALAX;Placa de vídeo;1013,70;2;GTX 1050 4GB DDR5 128 bits Galax;NVIDIA;nao;gtx1050.webp
 402270;NVIDIA PLACA DE VIDEO GTX1050 TI 4GB DDR5 ASUS;Placa de vídeo;1329,90;1;GTX 1050 Ti 4GB DDR5 128 bits ASUS;NVIDIA;nao;gtx1050ti.webp
 401807;NVIDIA PLACA DE VIDEO GTX1660 6GB DDR5 GALAX;Placa de vídeo;1534,50;1;GTX 1660 6GB DDR5 192 bits Galax;NVIDIA;sim;gtx1660.webp
-401721;PLACA MAE PCWARE 1151 8ª/9ªG IPMH310G DDR4 PRO;Placa mãe;469,90;1;Placa mãe PCWare IPMH310G DDR4 PRO socket 1151 8ª/9ª geração;PCWare;sim;ipmh310gpro.webp
-402176;PLACA MAE PCWARE 1151 8ª/9ªG IPMH310G DDR4;Placa mãe;499,90;1;Placa mãe PCWare IPMH310G DDR4 socket 1151 8ª/9ª geração;PCWare;nao;ipmh310g.webp
-401513;PLACA MAE GIGABYTE 1151 8ª/9ªG H310M-H DDR4;Placa mãe;519,90;1;Placa mãe Gigabyte H310M-H DDR4 socket 1151 8ª/9ª geração;Gigabyte;nao;h310mh.webp
-401583;PLACA MAE ASUS 1151 8ª/9ªG H310M-E PRIME DHMI DDR4;Placa mãe;615,90;1;Placa mãe Asus H310M-E Prime HDMI DDR4 socket 1151 8ª/9ª geração;Asus;nao;h310meprime.webp
-1041;PLACA MAE ASUS H610M-K D4 PRIME 12ª GER;Placa mãe;665,90;1;Placa mãe Asus H610M-K D4 Prime socket 1700 12ª geração;Asus;nao;h610mkprime.webp
-1525;PLACA MAE GIGABYTE H610M-K 1700 HDMI ATX;Placa mãe;659,90;1;Placa mãe Gigabyte H610M-K HDMI ATX socket 1700;Gigabyte;nao;h610mk.webp
+401583;PLACA MAE ASUS 1151 8ª/9ªG H310M-E PRIME DHMI DDR4;Placa mãe;649,90;1;Placa mãe Asus H310M-E Prime HDMI DDR4 socket 1151 8ª/9ª geração;Asus;nao;h310meprime.webp
+1773;PLACA MAE ASUS H610M-CS D4 PRIME 12ª GER;Placa mãe;699,90;1;Placa mãe Asus H610M-CS D4 Prime socket 1700 12ª geração;Asus;nao;h610mcsprime.webp
+1041;PLACA MAE ASUS H610M-K D4 PRIME 12ª GER;Placa mãe;699,90;1;Placa mãe Asus H610M-K D4 Prime socket 1700 12ª geração;Asus;nao;h610mkprime.webp
+1833;PLACA MAE BRASIL PC S1150 H81 BPCH81M;Placa mãe;209,99;1;Placa mãe Brasil PC H81 BPCH81M socket 1150;Brasil PC;nao;bpch81m.webp
+1829;PLACA MAE BRAZIL PC 1155 DDR3 BPC-H61-ITX-M.2;Placa mãe;159,99;1;Placa mãe Brazil PC H61 ITX M.2 DDR3 socket 1155;Brazil PC;nao;bpc-h61-itx.webp
+401513;PLACA MAE GIGABYTE 1151 8ª/9ªG H310M-H DDR4;Placa mãe;649,90;1;Placa mãe Gigabyte H310M-H DDR4 socket 1151 8ª/9ª geração;Gigabyte;nao;h310mh.webp
+1525;PLACA MAE GIGABYTE H610M-K 1700 HDMI ATX;Placa mãe;665,00;1;Placa mãe Gigabyte H610M-K HDMI ATX socket 1700;Gigabyte;nao;h610mk.webp
+1565;PLACA MAE HAYOM 1155 B75M S/S/V/R DDR3 PLM2301;Placa mãe;160,00;1;Placa mãe Hayom B75M DDR3 PLM2301 socket 1155;Hayom;nao;plm2301.webp
+1564;PLACA MAE HAYOM 1155 H61M EL DDR3 PLM2300;Placa mãe;160,00;1;Placa mãe Hayom H61M EL DDR3 PLM2300 socket 1155;Hayom;sim;plm2300.webp
+401778;PLACA MAE PCWARE 1151 8ª/9ªG IPMB360 PRO-GAMING DDR4;Placa mãe;530,00;1;Placa mãe PCWare IPMB360 PRO-GAMING DDR4 socket 1151 8ª/9ª geração;PCWare;nao;ipmb360.webp
+402176;PLACA MAE PCWARE 1151 8ª/9ªG IPMH310G DDR4;Placa mãe;530,00;1;Placa mãe PCWare IPMH310G DDR4 socket 1151 8ª/9ª geração;PCWare;nao;ipmh310g.webp
+401721;PLACA MAE PCWARE 1151 8ª/9ªG IPMH310G DDR4 PRO;Placa mãe;470,00;1;Placa mãe PCWare IPMH310G DDR4 PRO socket 1151 8ª/9ª geração;PCWare;nao;ipmh310gpro.webp
