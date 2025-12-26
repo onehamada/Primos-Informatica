@@ -528,7 +528,7 @@ function createProductElement(product, categoryId) {
   
   // Função inteligente de quebra de linha baseada no tamanho do container
   function formatProductName(name) {
-    const maxCharsPerLine = 18; // máximo de caracteres por linha
+    const maxCharsPerLine = 22; // aumentado para acomodar nomes maiores
     let result = '';
     let currentLine = '';
     
