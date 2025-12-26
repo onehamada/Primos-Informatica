@@ -36,7 +36,7 @@ function stripStaticProductsFromHtml() {
 // === Configurações ===
 const CONFIG = {
   PAGE_SIZE: 30, // Aumentado para menos recargas
-  CSV_CACHE_KEY: 'productsCsvCache:v3', // Versão atualizada para limpar cache
+  CSV_CACHE_KEY: 'productsCsvCache:v4', // Versão atualizada para limpar cache novamente
   CSV_CACHE_TTL: 30 * 60 * 1000, // 30 minutos
   MAX_HIGHLIGHTS: 8, // Aumentado para mais destaques
   MAX_HOME_CATEGORIES: 8
