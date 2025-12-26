@@ -105,7 +105,22 @@ function parseCsv(text) {
 function readCsvCache() {
   try {
     const raw = localStorage.getItem(CONFIG.CSV_CACHE_KEY);
-    if (!raw) return '';
+    if (!raw) return null;
+    
+    const cached = JSON.parse(raw);
+    const now = Date.now();
+    
+    // Verifica se cache ainda é válido
+    if (now - cached.timestamp < CONFIG.CSV_CACHE_TTL) {
+      return cached.data;
+    }
+    
+    // Remove cache expirado
+    localStorage.removeItem(CONFIG.CSV_CACHE_KEY);
+    return null;
+  } catch (error) {
+    console.warn('Erro ao ler cache:', error);
+    return null;
   }
 }
 
