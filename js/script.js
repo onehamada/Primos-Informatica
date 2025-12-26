@@ -585,31 +585,42 @@ function createProductElement(product, categoryId) {
 
   const img = document.createElement('img');
   img.alt = product.nome || 'Produto';
-  img.width = 110;
-  img.height = 110;
   img.loading = 'lazy';
   img.decoding = 'async';
+  
   // Usa imagem específica se existir, senão usa código, senão usa categoria
   const productCode = product.codigo || '';
   const specificImagePath = product.imagem ? `images/products/thumbnail/${product.imagem}` : `images/products/thumbnail/${productCode}.webp`;
   const catSlug = slugify(product.categoria || 'default');
   const categoryImagePath = `images/products/thumbnail/${catSlug}.webp`;
   
-  // Verifica se imagem específica existe, senão usa imagem da categoria, senão usa default
-  img.src = specificImagePath;
-  img.onerror = function() {
-    this.onerror = null;
-    this.src = categoryImagePath;
-  };
+  // Para mobile: não usar srcset para evitar problemas
+  const isMobile = window.innerWidth <= 768;
   
-  // Define srcset baseado na imagem específica ou código
-  if (product.imagem) {
-    const baseName = product.imagem.replace('.webp', '');
-    img.srcset = `${specificImagePath} 150w, images/products/medium/${baseName}.webp 400w, images/products/large/${baseName}.webp 800w`;
+  if (isMobile) {
+    // Mobile: usar apenas src simples
+    img.src = specificImagePath;
+    img.onerror = function() {
+      this.onerror = null;
+      this.src = categoryImagePath;
+    };
   } else {
-    img.srcset = `${specificImagePath} 150w, images/products/medium/${productCode}.webp 400w, images/products/large/${productCode}.webp 800w`;
+    // Desktop: usar srcset completo
+    img.src = specificImagePath;
+    img.onerror = function() {
+      this.onerror = null;
+      this.src = categoryImagePath;
+    };
+    
+    // Define srcset baseado na imagem específica ou código
+    if (product.imagem) {
+      const baseName = product.imagem.replace('.webp', '');
+      img.srcset = `${specificImagePath} 150w, images/products/medium/${baseName}.webp 400w, images/products/large/${baseName}.webp 800w`;
+    } else {
+      img.srcset = `${specificImagePath} 150w, images/products/medium/${productCode}.webp 400w, images/products/large/${productCode}.webp 800w`;
+    }
+    img.sizes = '(max-width: 900px) 86px, 110px';
   }
-  img.sizes = '(max-width: 900px) 86px, 110px';
 
   const info = document.createElement('div');
   info.className = 'product-info';
