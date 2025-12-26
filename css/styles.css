@@ -80,6 +80,7 @@ header {
   align-items: center; 
   justify-content: space-between; 
   border-bottom: 1px solid var(--border);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
@@ -324,9 +325,10 @@ main {
   word-wrap: break-word;
   overflow-wrap: break-word;
   max-width: 100%;
-  display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
