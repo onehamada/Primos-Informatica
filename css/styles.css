@@ -1030,7 +1030,7 @@ footer button:hover {
 /* === Search Dropdown === */
 .search-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 8px);
   left: 0;
   right: 0;
   background: white;
