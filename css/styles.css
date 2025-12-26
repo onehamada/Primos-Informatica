@@ -302,12 +302,13 @@ main {
 .product img { 
   width: 100px; 
   height: 100px; 
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 10px;
   background: #f5f5f5;
   flex-shrink: 0;
   border: 1px solid rgba(0,0,0,0.06);
   font-size: 8px;
+  padding: 5px;
 }
 .product-info { 
   flex: 1; 
