@@ -336,6 +336,16 @@ function showCategory(id) {
     populatePromo();
   } else if (__categoryState.has(id)) {
     renderCategory(id);
+  } else {
+    // Para categorias manuais (como "placa mãe"), inicializa e renderiza
+    const products = __allProducts.filter(p => p.categoria === id);
+    if (products.length > 0) {
+      __categoryState.set(id, {
+        products: products.slice(0, CONFIG.PAGE_SIZE),
+        hasMore: products.length > CONFIG.PAGE_SIZE
+      });
+      renderCategory(id);
+    }
   }
 }
 
