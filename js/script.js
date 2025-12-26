@@ -636,8 +636,8 @@ function populatePromo() {
   if (!promoContainer) return;
   promoContainer.innerHTML = '';
 
-  // Usa os produtos do CSV (primeiros 8 como destaques)
-  const items = __allProducts.slice(0, 8);
+  // Filtra apenas produtos marcados como promoção
+  const items = __allProducts.filter(p => p.promocao === true);
   const frag = document.createDocumentFragment();
   items.forEach(p => {
     frag.appendChild(createProductElement(p, 'promo'));
