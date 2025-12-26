@@ -1,7 +1,6 @@
 codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1042;PROCESSADOR INTEL I5 13400 LGA1700;Processador;1519,63;2;Intel Core i5 13400 2.5GHz 20MB 13ª geração;Intel;nao;i513400.webp
 1574;PROCESSADOR INTEL I5 14400 LGA1700;Processador;1581,00;3;Intel Core i5 14400 14ª geração;Intel;nao;i514400.webp
-1038;PROCESSADOR INTEL I7 4170 LGA1150;Processador;353,40;1;Intel Core i7 4170 OEM;Intel;nao;i74170.webp
 402614;PROCESSADOR INTEL I7 3770 LGA1155;Processador;432,45;1;Intel Core i7 3770 3.9GHz;Intel;nao;i73770.webp
 401282;PROCESSADOR INTEL I7 9700F LGA1151;Processador;1858,14;1;Intel Core i7 9700F 9ª geração;Intel;nao;i79700f.webp
 1690;PROCESSADOR INTEL I7 12700 LGA1700;Processador;2609,58;1;Intel Core i7 12700 12ª geração;Intel;nao;i712700.webp

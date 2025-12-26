@@ -54,7 +54,7 @@ for /f "skip=1 tokens=1,9 delims=;" %%a in ('type "%CSV_FILE%"') do (
     
     :: Verificar se arquivo existe
     if not exist "%IMAGE_FOLDER%\!imagem!" (
-        echo FALTA: !imagem! (Produto: !codigo!)
+        echo FALTA: !imagem! ^(Produto: !codigo!^)
         echo !imagem! >> "%MISSING_IMAGES%"
         set /a missing_count+=1
     ) else (
