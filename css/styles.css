@@ -2230,13 +2230,13 @@ main {
 .search-dropdown {
   position: absolute;
   top: calc(100% + 8px);
-  right: 0;
-  transform: translateX(-40px);
+  left: 50%;
+  transform: translateX(-50%);
   width: 400px;
   max-width: 90vw;
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   max-height: 400px;
   overflow-y: auto;
