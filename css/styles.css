@@ -1,4 +1,4 @@
-/* === Header Simples === */
+/* === Header Simplificado === */
 header {
   display: flex;
   align-items: center;
@@ -139,17 +139,21 @@ header input:focus {
   header {
     padding: 8px 12px;
     gap: 8px;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
   }
   
   header .brand-title {
+    order: 1;
+    width: 100%;
     font-size: 16px;
-    flex: 0 0 80px;
+    margin-bottom: 8px;
+    text-align: center;
   }
   
   header .search-container {
-    flex: 1 1 auto;
-    min-width: 150px;
+    order: 2;
+    width: 100%;
+    min-width: auto;
   }
   
   header input {
@@ -170,6 +174,7 @@ header input:focus {
   }
   
   .tabs {
+    order: 3;
     width: 100%;
     padding: 8px 12px 0;
     gap: 6px;
@@ -188,22 +193,22 @@ header input:focus {
   header {
     padding: 6px 8px;
     gap: 6px;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
   }
   
   header .brand-title {
     font-size: 14px;
-    flex: 0 0 60px;
+    margin-bottom: 6px;
   }
   
   header .search-container {
-    flex: 1 1 auto;
-    min-width: 120px;
+    min-width: auto;
   }
   
   header input {
     height: 36px;
     padding: 6px 10px;
+    font-size: 16px;
   }
   
   .header-actions {
