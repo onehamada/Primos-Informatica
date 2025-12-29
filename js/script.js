@@ -634,44 +634,49 @@ function performSearch(query) {
   });
   
   // Mostrar resultados da busca
-  showSearchResults(filteredProducts, query);
-}
-
-function showSearchResults(products, query) {
-  // Não ocultar categorias, apenas mostrar dropdown
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
   
   // Criar ou mostrar dropdown de busca
-  let searchDropdown = document.getElementById('search-dropdown');
-  if (!searchDropdown) {
-    searchDropdown = document.createElement('div');
-    searchDropdown.id = 'search-dropdown';
-    searchDropdown.className = 'search-dropdown';
-    // Adicionar ao input de busca, não ao header
-    const searchInput = document.querySelector('input[type="text"]');
-    if (searchInput) {
-      searchInput.parentNode.appendChild(searchDropdown);
-    }
-  }
+  let searchDropdown = document.createElement('div');
+  searchDropdown.id = 'search-dropdown';
   
-  searchDropdown.innerHTML = '';
+  // Adicionar ao body
+  document.body.appendChild(searchDropdown);
   
-  if (products.length === 0) {
-    searchDropdown.innerHTML = '<div class="search-empty">Nenhum produto encontrado para "' + query + '"</div>';
-  } else {
-    const frag = document.createDocumentFragment();
-    products.forEach(p => {
-      frag.appendChild(createProductElement(p, 'search'));
-    });
-    searchDropdown.appendChild(frag);
-    optimizeProductImages(searchDropdown);
-  }
+  // Posicionar o dropdown
+  const inputRect = activeInputEl.getBoundingClientRect();
+  searchDropdown.style.position = 'absolute';
+  searchDropdown.style.top = `${inputRect.bottom + window.scrollY}px`;
+  searchDropdown.style.left = `${inputRect.left}px`;
+  searchDropdown.style.width = `${inputRect.width}px`;
+  searchDropdown.style.zIndex = '9999';
+  
+  // Adicionar conteúdo do dropdown
+  searchDropdown.innerHTML = `
+    <div class="search-dropdown-content">
+      <div class="search-results">
+        <div class="search-loading">Carregando...</div>
+      </div>
+    </div>
+  `;
   
   // Mostrar dropdown
   searchDropdown.style.display = 'block';
   
-  currentCategory = 'search-results';
+  // Focar no input
+  activeInputEl.focus();
 }
+
+function desktopSearch() {
+  const searchInput = document.getElementById('desktopSearchInput');
+  const query = searchInput.value.trim();
+  
+  if (query) {
+    performSearch(query);
+  }
+}
+
+// ...
+
 function parseCsvLine(line) {
   const parts = line.split(';').map(p => p.trim());
   if (parts.length < 8) return null;
