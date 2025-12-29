@@ -13,8 +13,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     optimizeProductImages(document);
     initTabsDragScroll();
     
-    // Inicializar busca
-    initSearch();
     
     // Otimização: lazy loading dinâmico
     initDynamicLazyLoading();
@@ -111,7 +109,7 @@ const CONFIG = {
 
 // === Estado Global ===
 let __allProducts = [];
-let __categoryState = new Map();
+let __categoryLabels = new Map();
 let __cart = [];
 
 // === Carrinho de Compras ===
@@ -565,132 +563,6 @@ function addCartButtons() {
     }
   });
 }
-let __categoryLabels = new Map();
-let currentCategory = null;
-let searchAbortController = null;
-
-// === Funcionalidade de Busca ===
-function initSearch() {
-  // Encontrar inputs específicos para mobile e desktop
-  const mobileSearchInput = document.getElementById('mobileSearchInput');
-  const desktopSearchInput = document.getElementById('desktopSearchInput');
-  
-  if (!mobileSearchInput && !desktopSearchInput) return;
-  
-  // Adicionar eventos ao input correto
-  const searchInput = mobileSearchInput || desktopSearchInput;
-  
-  let searchTimeout;
-  
-  searchInput.addEventListener('input', (e) => {
-    const query = e.target.value.trim();
-    
-    // Cancelar busca anterior
-    if (searchTimeout) {
-      clearTimeout(searchTimeout);
-    }
-    
-    // Debounce de 300ms
-    searchTimeout = setTimeout(() => {
-      performSearch(query);
-    }, 300);
-  });
-  
-  // Limpar busca ao pressionar Escape
-  searchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      searchInput.value = '';
-      const searchDropdown = document.getElementById('search-dropdown');
-      if (searchDropdown) {
-        searchDropdown.style.display = 'none';
-      }
-      showCategory(currentCategory || 'inicio');
-    }
-  });
-}
-
-function performSearch(query) {
-  if (!query) {
-    // Esconder dropdown se busca vazia
-    const searchDropdown = document.getElementById('search-dropdown');
-    if (searchDropdown) {
-      searchDropdown.style.display = 'none';
-    }
-    showCategory(currentCategory || 'inicio');
-    return;
-  }
-  
-  // Cancelar busca anterior se existir
-  if (searchAbortController) {
-    searchAbortController.abort();
-  }
-  
-  searchAbortController = new AbortController();
-  
-  // Filtrar produtos
-  const filteredProducts = __allProducts.filter(product => {
-    const searchTerm = query.toLowerCase();
-    return (
-      product.nome.toLowerCase().includes(searchTerm) ||
-      product.descricao.toLowerCase().includes(searchTerm) ||
-      product.marca.toLowerCase().includes(searchTerm) ||
-      product.categoria.toLowerCase().includes(searchTerm) ||
-      product.codigo.toLowerCase().includes(searchTerm)
-    );
-  });
-  
-  // Mostrar resultados da busca
-  
-  // Encontrar elementos de busca
-  const mobileSearchInput = document.getElementById('mobileSearchInput');
-  const desktopSearchInput = document.getElementById('desktopSearchInput');
-  const activeInput = mobileSearchInput ? 'mobile' : 'desktop';
-  const activeInputEl = activeInput === 'mobile' ? mobileSearchInput : desktopSearchInput;
-  
-  // Limpar valor do input ativo
-  activeInputEl.value = '';
-  
-  // Criar ou mostrar dropdown de busca
-  let searchDropdown = document.getElementById('search-dropdown');
-  if (!searchDropdown) {
-    searchDropdown = document.createElement('div');
-    searchDropdown.id = 'search-dropdown';
-    document.body.appendChild(searchDropdown);
-  }
-  
-  // Posicionar o dropdown
-  const inputRect = activeInputEl.getBoundingClientRect();
-  searchDropdown.style.position = 'absolute';
-  searchDropdown.style.top = `${inputRect.bottom + window.scrollY}px`;
-  searchDropdown.style.left = `${inputRect.left}px`;
-  searchDropdown.style.width = `${inputRect.width}px`;
-  searchDropdown.style.zIndex = '9999';
-  
-  // Adicionar conteúdo do dropdown
-  searchDropdown.innerHTML = `
-    <div class="search-dropdown-content">
-      <div class="search-results">
-        <div class="search-loading">Carregando...</div>
-      </div>
-    </div>
-  `;
-  
-  // Mostrar dropdown
-  searchDropdown.style.display = 'block';
-  
-  // Focar no input
-  activeInputEl.focus();
-}
-
-function desktopSearch() {
-  const desktopSearchInput = document.getElementById('desktopSearchInput');
-  const query = desktopSearchInput.value.trim();
-  if (query) {
-    performSearch(query);
-  }
-}
-
-// ...
 
 function parseCsvLine(line) {
   const parts = line.split(';').map(p => p.trim());
@@ -972,7 +844,6 @@ function showCategory(id) {
   if (target) target.style.display = 'block';
   const btn = document.querySelector(`[data-target="${id}"]`);
   if (btn) btn.classList.add('active');
-  currentCategory = id;
   
   if (id === 'promo') {
     populatePromo();
