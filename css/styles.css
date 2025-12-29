@@ -738,6 +738,88 @@ header input:focus {
   box-shadow: 0 10px 25px rgba(17, 122, 163, 0.20);
 }
 
+/* Mobile Search Optimization */
+@media (max-width: 768px) {
+  header input {
+    width: 100%;
+    max-width: none;
+    padding: 12px 16px;
+    font-size: 16px; /* Evita zoom no iOS */
+    border-radius: 12px;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(10px);
+  }
+  
+  header input::placeholder {
+    font-size: 16px;
+    color: #6b7280;
+  }
+  
+  header input:focus {
+    background: white;
+    box-shadow: 0 8px 20px rgba(17, 122, 163, 0.15);
+  }
+  
+  /* Ajuste do container de busca */
+  header .search-container {
+    order: 2;
+    width: 100%;
+    margin: 8px 0;
+    padding: 0 16px;
+  }
+  
+  /* Reposicionar elementos no header */
+  header {
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    gap: 8px;
+  }
+  
+  header .brand-title {
+    order: 1;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  
+  header .header-actions {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  
+  /* Carrinho no mobile */
+  header .cart-btn {
+    padding: 12px 16px;
+    font-size: 14px;
+    min-height: 44px; /* Touch target mínimo */
+  }
+  
+  /* Tabs abaixo da busca no mobile */
+  .tabs {
+    order: 4;
+    width: 100%;
+    margin-top: 8px;
+    padding: 12px 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .tab-btn {
+    flex-shrink: 0;
+    padding: 8px 12px;
+    font-size: 14px;
+    min-height: 40px;
+  }
+}
+
 .search-dropdown.tabs {
   display: flex;
   gap: 0;
@@ -1789,26 +1871,113 @@ main {
 @media (max-width: 768px) {
   .search-dropdown {
     position: fixed;
-    top: 60px;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    max-height: none;
-    border-radius: 0;
-    border-top: 1px solid var(--border);
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 3000;
     transform: none;
+    border-radius: 0;
+    padding: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .search-dropdown::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: white;
+    z-index: 1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
   
   .search-dropdown .product {
     padding: 16px;
+    margin: 8px 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: none;
+    position: relative;
+    z-index: 2;
   }
   
   .search-dropdown .product img {
     width: 80px;
     height: 80px;
     min-width: 80px;
+    border-radius: 8px;
+  }
+  
+  .search-dropdown .product-info {
+    padding: 0 0 0 16px;
+    flex: 1;
+  }
+  
+  .search-dropdown .product-info h4 {
+    font-size: 14px;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+  
+  .search-dropdown .price {
+    font-size: 15px;
+    margin: 6px 0;
+    font-weight: 600;
+  }
+  
+  .search-dropdown .add {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    font-size: 16px;
+    border-radius: 8px;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 3;
+  }
+  
+  .search-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 15px;
+    background: white;
+    margin: 16px;
+    border-radius: 12px;
+  }
+  
+  /* Fechar dropdown com swipe ou botão */
+  .search-dropdown::after {
+    content: '✕';
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #374151;
+    z-index: 4;
+    cursor: pointer;
   }
 }
+
 @media (max-width: 768px) {
   /* Header e Busca */
   header {
