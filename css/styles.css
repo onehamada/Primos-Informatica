@@ -151,6 +151,7 @@ header input {
   background: rgba(255,255,255,0.75);
   outline: none;
   transition: box-shadow .15s ease, border-color .15s ease, background .15s ease;
+  position: relative;
 }
 
 header input::placeholder {
@@ -1031,10 +1032,9 @@ footer button:hover {
 .search-dropdown {
   position: absolute;
   top: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 400px;
-  max-width: 90vw;
+  left: 0;
+  right: 0;
+  width: 100%;
   background: white;
   border: 1px solid var(--border);
   border-radius: 12px;
