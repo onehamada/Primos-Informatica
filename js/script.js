@@ -168,7 +168,29 @@ class Cart {
 
   getTotal() {
     return this.items.reduce((total, item) => {
-      const price = parseFloat(item.preco.replace(',', '.'));
+      // Tentar diferentes formatos de preço
+      let price = 0;
+      
+      if (item.precoRaw) {
+        // Se tiver precoRaw (já processado)
+        price = parseFloat(item.precoRaw);
+      } else if (item.preco) {
+        // Limpar o preço e converter
+        const cleanPrice = item.preco
+          .replace('R$', '')
+          .replace(/\s+/g, '')
+          .replace('.', '')
+          .replace(',', '.')
+          .trim();
+        price = parseFloat(cleanPrice);
+      }
+      
+      // Verificar se é um número válido
+      if (isNaN(price) || !isFinite(price)) {
+        console.warn('Preço inválido para o produto:', item.codigo, item.preco);
+        price = 0;
+      }
+      
       return total + (price * item.quantity);
     }, 0);
   }
@@ -218,12 +240,32 @@ class Cart {
       return;
     }
 
-    container.innerHTML = this.items.map(item => `
+    container.innerHTML = this.items.map(item => {
+      // Calcular preço usando a mesma lógica do getTotal
+      let price = 0;
+      
+      if (item.precoRaw) {
+        price = parseFloat(item.precoRaw);
+      } else if (item.preco) {
+        const cleanPrice = item.preco
+          .replace('R$', '')
+          .replace(/\s+/g, '')
+          .replace('.', '')
+          .replace(',', '.')
+          .trim();
+        price = parseFloat(cleanPrice);
+      }
+      
+      if (isNaN(price) || !isFinite(price)) {
+        price = 0;
+      }
+      
+      return `
       <div class="cart-item">
         <img src="images/products/thumbnail/${item.imagem}" alt="${item.nome}" class="cart-item-image">
         <div class="cart-item-details">
           <div class="cart-item-name">${item.nome}</div>
-          <div class="cart-item-price">${this.formatPrice(parseFloat(item.preco.replace(',', '.')))}</div>
+          <div class="cart-item-price">${this.formatPrice(price)}</div>
           <div class="cart-item-quantity">
             <button class="quantity-btn" onclick="cart.updateQuantity('${item.codigo}', ${item.quantity - 1})" ${item.quantity <= 1 ? 'disabled' : ''}>-</button>
             <span>${item.quantity}</span>
@@ -232,7 +274,8 @@ class Cart {
         </div>
         <button class="cart-item-remove" onclick="cart.remove('${item.codigo}')">Remover</button>
       </div>
-    `).join('');
+    `;
+    }).join('');
   }
 
   formatPrice(price) {
@@ -292,9 +335,28 @@ function checkout() {
     return;
   }
 
-  const message = cart.items.map(item => 
-    `${item.quantity}x ${item.nome} - ${cart.formatPrice(parseFloat(item.preco.replace(',', '.')))}`
-  ).join('\n');
+  const message = cart.items.map(item => {
+    // Calcular preço usando a mesma lógica
+    let price = 0;
+    
+    if (item.precoRaw) {
+      price = parseFloat(item.precoRaw);
+    } else if (item.preco) {
+      const cleanPrice = item.preco
+        .replace('R$', '')
+        .replace(/\s+/g, '')
+        .replace('.', '')
+        .replace(',', '.')
+        .trim();
+      price = parseFloat(cleanPrice);
+    }
+    
+    if (isNaN(price) || !isFinite(price)) {
+      price = 0;
+    }
+    
+    return `${item.quantity}x ${item.nome} - ${cart.formatPrice(price)}`;
+  }).join('\n');
 
   const total = cart.formatPrice(cart.getTotal());
   
