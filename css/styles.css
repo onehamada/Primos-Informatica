@@ -773,8 +773,8 @@ header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  padding: 12px 16px;
-  gap: 8px;
+  padding: 8px 12px;
+  gap: 6px;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -786,15 +786,15 @@ header .brand-title {
   order: 1;
   width: 100%;
   text-align: center;
-  margin-bottom: 8px;
-  font-size: 18px;
+  margin-bottom: 6px;
+  font-size: 16px;
 }
 
 header .search-container {
   order: 2;
   width: 100%;
-  margin: 8px 0;
-  padding: 0 16px;
+  margin: 6px 0;
+  padding: 0 12px;
 }
 
 header .header-actions {
@@ -803,15 +803,15 @@ header .header-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
-  gap: 8px;
+  margin-top: 6px;
+  gap: 6px;
 }
 
 header .cart-btn {
-  padding: 12px 16px;
-  font-size: 14px;
-  min-height: 48px;
-  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13px;
+  min-height: 44px;
+  border-radius: 10px;
   background: #2563eb;
   color: white;
   border: none;
@@ -828,14 +828,14 @@ header .cart-btn:hover {
 .tabs {
   order: 4;
   width: 100%;
-  margin-top: 8px;
-  padding: 0 16px;
+  margin-top: 6px;
+  padding: 0 12px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .tabs::-webkit-scrollbar {
@@ -844,68 +844,27 @@ header .cart-btn:hover {
 
 .tab-btn {
   flex-shrink: 0;
-  padding: 8px 12px;
-  font-size: 14px;
-  min-height: 40px;
+  padding: 6px 10px;
+  font-size: 13px;
+  min-height: 36px;
   white-space: nowrap;
 }
 
 /* Small Mobile */
 @media (max-width: 480px) {
   header {
-    padding: 8px 12px;
-    gap: 6px;
-  }
-  
-  header .brand-title {
-    font-size: 16px;
-    margin-bottom: 6px;
-  }
-  
-  header .search-container {
-    margin: 6px 0;
-    padding: 0 12px;
-  }
-  
-  header .header-actions {
-    margin-top: 6px;
-    gap: 6px;
-  }
-  
-  header .cart-btn {
-    padding: 10px 14px;
-    font-size: 13px;
-    min-height: 44px;
-  }
-  
-  .tabs {
-    padding: 0 12px;
-    margin-top: 6px;
-    gap: 6px;
-  }
-  
-  .tab-btn {
     padding: 6px 10px;
-    font-size: 13px;
-    min-height: 36px;
-  }
-}
-
-/* Very Small Mobile */
-@media (max-width: 360px) {
-  header {
-    padding: 6px 8px;
     gap: 4px;
   }
   
   header .brand-title {
-    font-size: 14px;
+    font-size: 15px;
     margin-bottom: 4px;
   }
   
   header .search-container {
     margin: 4px 0;
-    padding: 0 8px;
+    padding: 0 10px;
   }
   
   header .header-actions {
@@ -920,7 +879,7 @@ header .cart-btn:hover {
   }
   
   .tabs {
-    padding: 0 8px;
+    padding: 0 10px;
     margin-top: 4px;
     gap: 4px;
   }
@@ -929,6 +888,47 @@ header .cart-btn:hover {
     padding: 5px 8px;
     font-size: 12px;
     min-height: 32px;
+  }
+}
+
+/* Very Small Mobile */
+@media (max-width: 360px) {
+  header {
+    padding: 4px 8px;
+    gap: 3px;
+  }
+  
+  header .brand-title {
+    font-size: 14px;
+    margin-bottom: 3px;
+  }
+  
+  header .search-container {
+    margin: 3px 0;
+    padding: 0 8px;
+  }
+  
+  header .header-actions {
+    margin-top: 3px;
+    gap: 3px;
+  }
+  
+  header .cart-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+    min-height: 36px;
+  }
+  
+  .tabs {
+    padding: 0 8px;
+    margin-top: 3px;
+    gap: 3px;
+  }
+  
+  .tab-btn {
+    padding: 4px 6px;
+    font-size: 11px;
+    min-height: 28px;
   }
 }
 
