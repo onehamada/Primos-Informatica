@@ -713,119 +713,141 @@ header h1 {
 }
 /* === Search === */
 header input { 
-  width: min(420px, 55vw);
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: rgba(255,255,255,0.75);
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  background: white;
   outline: none;
-  transition: box-shadow .15s ease, border-color .15s ease, background .15s ease;
-  position: relative;
+  transition: all 0.2s ease;
+  font-size: 16px;
+  min-height: 48px;
+  box-sizing: border-box;
 }
 
 header input::placeholder {
-  color: var(--muted);
+  color: #9ca3af;
+  font-size: 16px;
 }
 
 header input:focus-visible {
-  outline: 3px solid rgba(25, 164, 193, 0.45);
-  outline-offset: 2px;
+  outline: none;
 }
 
 header input:focus {
-  background: var(--surface);
-  border-color: rgba(17, 122, 163, 0.55);
-  box-shadow: 0 10px 25px rgba(17, 122, 163, 0.20);
+  background: white;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-/* Mobile Search - Reset e Refeito */
-@media (max-width: 768px) {
-  /* Resetar estilos mobile antigos */
-  header .search-container {
-    order: 2;
-    width: 100%;
-    margin: 8px 0;
-    padding: 0 16px;
+/* Desktop (acima de 768px) */
+@media (min-width: 769px) {
+  header input { 
+    width: min(420px, 55vw);
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.75);
+    transition: box-shadow .15s ease, border-color .15s ease, background .15s ease;
     position: relative;
   }
   
-  header {
-    flex-wrap: wrap;
-    padding: 12px 16px;
-    gap: 8px;
-  }
-  
-  header .brand-title {
-    order: 1;
-    width: 100%;
-    text-align: center;
-    margin-bottom: 8px;
-  }
-  
-  header .header-actions {
-    order: 3;
-    width: 100%;
-    justify-content: space-between;
-    margin-top: 8px;
-    gap: 8px;
-  }
-  
-  /* Nova busca mobile simples */
-  header input {
-    width: 100%;
-    padding: 12px 16px;
-    font-size: 16px;
-    border-radius: 12px;
-    background: white;
-    border: 2px solid #e5e7eb;
-    min-height: 48px;
-    box-sizing: border-box;
-    transition: all 0.2s ease;
-  }
-  
   header input::placeholder {
-    font-size: 16px;
-    color: #9ca3af;
+    color: var(--muted);
+  }
+  
+  header input:focus-visible {
+    outline: 3px solid rgba(25, 164, 193, 0.45);
+    outline-offset: 2px;
   }
   
   header input:focus {
-    background: white;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    outline: none;
+    background: var(--surface);
+    border-color: rgba(17, 122, 163, 0.55);
+    box-shadow: 0 10px 25px rgba(17, 122, 163, 0.20);
   }
-  
-  /* Carrinho mobile */
-  header .cart-btn {
-    padding: 12px 16px;
-    font-size: 14px;
-    min-height: 48px;
-    border-radius: 12px;
-  }
-  
-  /* Tabs mobile */
-  .tabs {
-    order: 4;
-    width: 100%;
-    margin-top: 8px;
-    padding: 0 16px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  
-  .tabs::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .tab-btn {
-    flex-shrink: 0;
-    padding: 8px 12px;
-    font-size: 14px;
-    min-height: 40px;
-    white-space: nowrap;
-  }
+}
+
+/* === Header Mobile-First === */
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 12px 16px;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+header .brand-title {
+  order: 1;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+header .search-container {
+  order: 2;
+  width: 100%;
+  margin: 8px 0;
+  padding: 0 16px;
+}
+
+header .header-actions {
+  order: 3;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  gap: 8px;
+}
+
+header .cart-btn {
+  padding: 12px 16px;
+  font-size: 14px;
+  min-height: 48px;
+  border-radius: 12px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+header .cart-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* Tabs */
+.tabs {
+  order: 4;
+  width: 100%;
+  margin-top: 8px;
+  padding: 0 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  display: flex;
+  gap: 8px;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-btn {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  font-size: 14px;
+  min-height: 40px;
+  white-space: nowrap;
 }
 
 /* Small Mobile */
@@ -836,18 +858,13 @@ header input:focus {
   }
   
   header .brand-title {
+    font-size: 16px;
     margin-bottom: 6px;
   }
   
   header .search-container {
     margin: 6px 0;
     padding: 0 12px;
-  }
-  
-  header input {
-    padding: 10px 14px;
-    min-height: 44px;
-    border-radius: 10px;
   }
   
   header .header-actions {
@@ -864,6 +881,7 @@ header input:focus {
   .tabs {
     padding: 0 12px;
     margin-top: 6px;
+    gap: 6px;
   }
   
   .tab-btn {
@@ -881,18 +899,13 @@ header input:focus {
   }
   
   header .brand-title {
+    font-size: 14px;
     margin-bottom: 4px;
   }
   
   header .search-container {
     margin: 4px 0;
     padding: 0 8px;
-  }
-  
-  header input {
-    padding: 8px 12px;
-    min-height: 40px;
-    border-radius: 8px;
   }
   
   header .header-actions {
@@ -909,12 +922,71 @@ header input:focus {
   .tabs {
     padding: 0 8px;
     margin-top: 4px;
+    gap: 4px;
   }
   
   .tab-btn {
     padding: 5px 8px;
     font-size: 12px;
     min-height: 32px;
+  }
+}
+
+/* Desktop (acima de 768px) */
+@media (min-width: 769px) {
+  header {
+    flex-wrap: nowrap;
+    padding: 16px 24px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  header .brand-title {
+    order: 1;
+    width: auto;
+    text-align: left;
+    margin-bottom: 0;
+  }
+  
+  header .search-container {
+    order: 2;
+    width: auto;
+    margin: 0;
+    padding: 0;
+  }
+  
+  header .header-actions {
+    order: 3;
+    width: auto;
+    margin-top: 0;
+    gap: 12px;
+  }
+  
+  header .cart-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    min-height: auto;
+    background: #2563eb;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .tabs {
+    order: 4;
+    width: auto;
+    margin-top: 0;
+    padding: 0;
+    overflow-x: visible;
+  }
+  
+  .tab-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    min-height: auto;
+    white-space: nowrap;
   }
 }
 
