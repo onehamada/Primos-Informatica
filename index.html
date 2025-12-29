@@ -102,6 +102,14 @@
     <h1>Primos Informática</h1>
   </div>
     <div class="header-actions">
+    <div class="search-container">
+      <input
+        type="search"
+        id="searchInput"
+        placeholder="Buscar produto..."
+        autocomplete="off"
+      >
+    </div>
     <button class="cart-btn" onclick="toggleCart()" aria-label="Carrinho de compras">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="9" cy="21" r="1"></circle>
@@ -218,15 +226,7 @@
 
 <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
 
-  <div class="search-container">
-  <input
-    type="search"
-    id="searchInput"
-    placeholder="Buscar produto, marca, categoria ou código..."
-    autocomplete="off"
-  >
-</div>
-
+  
 <div class="tabs">
   <button type="button" class="tab-btn active" data-target="inicio" onclick="showCategory('inicio')">Início</button>
   <button type="button" class="tab-btn" data-target="promo" onclick="showCategory('promo')">Promoções</button>
