@@ -2362,16 +2362,17 @@ main {
   top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  width: 400px;
-  max-width: 90vw;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  width: 90%;
+  max-width: 400px;
+  background: white;
+  z-index: 9999;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  max-height: 400px;
+  display: block;
+  max-height: 60vh;
   overflow-y: auto;
-  z-index: 1000;
-  display: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .search-dropdown .product {
