@@ -101,15 +101,7 @@
     <img class="brand-logo" src="images/logo.png" alt="Primos Informática" />
     <h1>Primos Informática</h1>
   </div>
-    <div class="header-actions">
-    <div class="search-container">
-      <input
-        type="search"
-        id="searchInput"
-        placeholder="Buscar produto..."
-        autocomplete="off"
-      >
-    </div>
+  <div class="header-actions">
     <button class="cart-btn" onclick="toggleCart()" aria-label="Carrinho de compras">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="9" cy="21" r="1"></circle>
@@ -226,7 +218,6 @@
 
 <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
 
-  
 <div class="tabs">
   <button type="button" class="tab-btn active" data-target="inicio" onclick="showCategory('inicio')">Início</button>
   <button type="button" class="tab-btn" data-target="promo" onclick="showCategory('promo')">Promoções</button>
@@ -239,11 +230,6 @@
 </div>
 
 <main>
-  <div id="search-results" class="category" style="display:none;">
-    <h2>Resultado da busca</h2>
-    <div class="products-grid"></div>
-  </div>
-
   <div id="inicio" class="category">
     <div class="home-hero">
       <div class="hero-content animate-fadeInUp">
