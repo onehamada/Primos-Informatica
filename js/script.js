@@ -512,7 +512,7 @@ function finalizeViaEmail() {
     `🛒 PEDIDO VIA SITE PRIMOS INFORMÁTICA 🛒\n\nOlá!\n\nGostaria de fazer um pedido através do nosso site:\n\n${message}\n\nTotal: ${total}\n\n⚡ Este pedido foi gerado automaticamente pelo nosso site\n🌐 Site: https://onehamada.github.io/Primos-Informatica/\n\nPodem me ajudar?\n\nDados para contato:\n[Seu nome completo]\n[Seu telefone com DDD]\n[Seu e-mail]\n[Seu endereço completo]\n[Forma de pagamento preferida]\n\nAguardando retorno!`
   );
   
-  window.open(`mailto:primosinformatica@email.com?subject=${emailSubject}&body=${emailBody}`, '_blank');
+  window.open(`mailto:marketing.primosinfo@gmail.com?subject=${emailSubject}&body=${emailBody}`, '_blank');
   closeCheckout();
 }
 
