@@ -25,57 +25,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-function renderSearchResults(products) {
-  // Esconde todas as categorias
-  document.querySelectorAll('.category').forEach(el => {
-    el.style.display = 'none';
-  });
-
-  // Desativa tabs
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-
-  const section = document.getElementById('search-results');
-  const grid = section.querySelector('.products-grid');
-
-  grid.innerHTML = '';
-
-  if (products.length === 0) {
-    grid.innerHTML = '<p>Nenhum produto encontrado.</p>';
-  } else {
-    const frag = document.createDocumentFragment();
-    products.forEach(p => {
-      frag.appendChild(createProductElement(p, p.categoria));
-    });
-    grid.appendChild(frag);
-  }
-
-  section.style.display = 'block';
-  optimizeProductImages(section);
-}
-
-// === Funcionalidade de Busca Segura ===
-function searchProducts(term) {
-  const value = term.trim().toLowerCase();
-
-  // Se campo vazio, volta para início
-  if (!value) {
-    document.getElementById('search-results').style.display = 'none';
-    showCategory('inicio');
-    return;
-  }
-
-  const results = __allProducts.filter(p =>
-    (p.nome && p.nome.toLowerCase().includes(value)) ||
-    (p.marca && p.marca.toLowerCase().includes(value)) ||
-    (p.categoria && p.categoria.toLowerCase().includes(value)) ||
-    (p.codigo && p.codigo.toLowerCase().includes(value))
-  );
-
-  renderSearchResults(results);
-}
-
 // === Footer Inteligente ===
 function initSmartFooter() {
   let lastScrollY = window.scrollY;
