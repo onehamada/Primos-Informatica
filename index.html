@@ -101,8 +101,38 @@
     <img class="brand-logo" src="images/logo.png" alt="Primos Informática" />
     <h1>Primos Informática</h1>
   </div>
-  <input type="text" placeholder="Buscar produtos..." aria-label="Buscar produtos" />
+  <div class="header-actions">
+    <input type="text" placeholder="Buscar produtos..." aria-label="Buscar produtos" />
+    <button class="cart-btn" onclick="toggleCart()" aria-label="Carrinho de compras">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
 </header>
+
+<!-- Carrinho Flutuante -->
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>Meu Carrinho</h3>
+    <button class="cart-close" onclick="toggleCart()">×</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <!-- Items do carrinho -->
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Total: <strong id="cartTotal">R$ 0,00</strong></span>
+    </div>
+    <button class="btn-primary" onclick="checkout()">Finalizar Pedido</button>
+    <button class="btn-outline" onclick="clearCart()">Esvaziar Carrinho</button>
+  </div>
+</div>
+
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
 
 <div class="tabs">
   <button type="button" class="tab-btn active" data-target="inicio" onclick="showCategory('inicio')">Início</button>
