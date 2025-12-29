@@ -1,15 +1,82 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Primos Informática</title>
-<link rel="icon" href="favicon.ico" sizes="any">
-<link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="css/styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- SEO Meta Tags -->
+  <title>Primos Informática | Hardware, PCs e Componentes em Brasília</title>
+  <meta name="description" content="Loja de informática em Brasília. Processadores, placas mãe, placas de vídeo, SSDs, HDs e fontes. Retirada na loja ou enviamos. WhatsApp: (61) 3340-6740." />
+  <meta name="keywords" content="informática brasília, hardware, processadores, placas mãe, placa de vídeo, SSD, HD, fonte, computador, PC, componentes, asa norte, primos informática" />
+  <meta name="author" content="Primos Informática" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="pt-BR" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://onehamada.github.io/Primos-Informatica/" />
+  <meta property="og:title" content="Primos Informática | Hardware e Componentes em Brasília" />
+  <meta property="og:description" content="Loja de informática em Brasília. Processadores, placas, SSDs e mais. Retirada na loja ou enviamos." />
+  <meta property="og:image" content="https://onehamada.github.io/Primos-Informatica/images/logo.png" />
+  <meta property="og:locale" content="pt_BR" />
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://onehamada.github.io/Primos-Informatica/" />
+  <meta property="twitter:title" content="Primos Informática | Hardware em Brasília" />
+  <meta property="twitter:description" content="Loja de informática em Brasília. Processadores, placas, SSDs e mais." />
+  <meta property="twitter:image" content="https://onehamada.github.io/Primos-Informatica/images/logo.png" />
+  
+  <!-- Local Business Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Primos Informática",
+    "description": "Loja de informática especializada em hardware e componentes para PCs",
+    "url": "https://onehamada.github.io/Primos-Informatica/",
+    "telephone": "+556133406740",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Asa Norte CLN 208 BL A LOJA 11",
+      "addressLocality": "Brasília",
+      "addressRegion": "DF",
+      "postalCode": "70853-510",
+      "addressCountry": "BR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "-15.7489",
+      "longitude": "-47.8875"
+    },
+    "openingHours": "Mo-Fr 09:00-18:00 Sa 09:00-13:00",
+    "priceRange": "R$60-R$2185",
+    "paymentAccepted": ["Pix", "Cartão de Crédito", "Débito"],
+    "image": "https://onehamada.github.io/Primos-Informatica/images/logo.png",
+    "sameAs": [
+      "https://wa.me/556133406740",
+      "https://www.olx.com.br/perfil/primos-informatica-dd755dba",
+      "https://www.instagram.com/primosinformaticadf/",
+      "https://www.facebook.com/profile.php?id=61573835540802"
+    ]
+  }
+  </script>
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://onehamada.github.io/Primos-Informatica/" />
+  
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+  
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  
+  <!-- Analytics placeholder -->
+  <!-- Google Analytics will be added here -->
 </head>
 <body>
 
@@ -36,8 +103,8 @@
   <div id="inicio" class="category">
     <div class="home-hero">
       <div class="hero-content animate-fadeInUp">
-        <h1>Hardware e Acessórios Gamers</h1>
-        <p>Peças para PC, notebooks, coolers, fones e mais. Retirada na loja ou enviamos.</p>
+        <h1>Primos Informática - Hardware em Brasília</h1>
+        <p>Loja especializada em processadores, placas mãe, placas de vídeo, SSDs, HDs e fontes. Melhores preços da Asa Norte, Brasília. Retirada na loja ou enviamos para todo Brasil.</p>
         <div class="hero-buttons">
           <button type="button" class="btn-primary" onclick="showCategory('promo')">Ver Promoções</button>
           <a href="https://wa.me/556133406740" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">Falar no WhatsApp</a>
@@ -50,18 +117,40 @@
     </div>
 
     <section class="home-section">
-      <h2>Categorias Populares</h2>
+      <h2>Nossas Categorias de Produtos</h2>
       <div id="home-categories-grid" class="categories-grid">
         <!-- cards gerados dinamicamente via JS -->
       </div>
     </section>
 
     <section class="home-section">
-      <h2>Destaques do Dia</h2>
+      <h2>Produtos em Destaque - Ofertas Especiais</h2>
       <div id="home-highlights-grid" class="products-grid">
         <!-- produtos gerados dinamicamente via JS -->
       </div>
-      <button type="button" class="btn-outline" onclick="showCategory('promo')">Ver todos</button>
+      <button type="button" class="btn-outline" onclick="showCategory('promo')">Ver todos os produtos</button>
+    </section>
+
+    <section class="home-section">
+      <h2>Por que comprar na Primos Informática?</h2>
+      <div class="features-grid">
+        <div class="feature-item">
+          <h3>🏪 Loja Física em Brasília</h3>
+          <p>Estamos localizados na Asa Norte, CLN 208 BL A LOJA 11. Venha nos visitar!</p>
+        </div>
+        <div class="feature-item">
+          <h3>📦 Enviamos para Todo Brasil</h3>
+          <p>Com segurança e confiabilidade. Entrega rápida para sua região.</p>
+        </div>
+        <div class="feature-item">
+          <h3>💳 Formas de Pagamento</h3>
+          <p>Aceitamos Pix, Cartão de Crédito e Débito. Compre como preferir.</p>
+        </div>
+        <div class="feature-item">
+          <h3>🔧 Especialistas em Hardware</h3>
+          <p>Atendimento especializado para montagem e upgrade de PCs.</p>
+        </div>
+      </div>
     </section>
 
     <section class="home-section">
