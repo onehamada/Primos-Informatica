@@ -329,14 +329,66 @@ function clearCart() {
   }
 }
 
-function checkout() {
+function showCheckoutOptions() {
   if (cart.items.length === 0) {
     alert('Seu carrinho está vazio!');
     return;
   }
 
+  // Fechar carrinho primeiro
+  toggleCart();
+  
+  // Preencher resumo do pedido
+  const summaryContainer = document.getElementById('checkoutSummary');
+  const totalElement = document.getElementById('checkoutTotal');
+  
+  const summaryHTML = cart.items.map(item => {
+    let price = 0;
+    
+    if (item.precoRaw) {
+      price = parseFloat(item.precoRaw);
+    } else if (item.preco) {
+      const cleanPrice = item.preco
+        .replace('R$', '')
+        .replace(/\s+/g, '')
+        .replace('.', '')
+        .replace(',', '.')
+        .trim();
+      price = parseFloat(cleanPrice);
+    }
+    
+    if (isNaN(price) || !isFinite(price)) {
+      price = 0;
+    }
+    
+    return `
+      <div class="checkout-summary-item">
+        <div>
+          <div class="checkout-item-name">${item.quantity}x ${item.nome}</div>
+          <div class="checkout-item-details">${cart.formatPrice(price)} cada</div>
+        </div>
+        <div class="checkout-item-details">${cart.formatPrice(price * item.quantity)}</div>
+      </div>
+    `;
+  }).join('');
+  
+  summaryContainer.innerHTML = summaryHTML;
+  totalElement.textContent = cart.formatPrice(cart.getTotal());
+  
+  // Mostrar modal
+  const modal = document.getElementById('checkoutModal');
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCheckout() {
+  const modal = document.getElementById('checkoutModal');
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function finalizeViaWhatsApp() {
   const message = cart.items.map(item => {
-    // Calcular preço usando a mesma lógica
     let price = 0;
     
     if (item.precoRaw) {
@@ -365,6 +417,133 @@ function checkout() {
   );
   
   window.open(`https://wa.me/556133406740?text=${whatsappMessage}`, '_blank');
+  closeCheckout();
+}
+
+function finalizeViaInstagram() {
+  const message = cart.items.map(item => {
+    let price = 0;
+    
+    if (item.precoRaw) {
+      price = parseFloat(item.precoRaw);
+    } else if (item.preco) {
+      const cleanPrice = item.preco
+        .replace('R$', '')
+        .replace(/\s+/g, '')
+        .replace('.', '')
+        .replace(',', '.')
+        .trim();
+      price = parseFloat(cleanPrice);
+    }
+    
+    if (isNaN(price) || !isFinite(price)) {
+      price = 0;
+    }
+    
+    return `${item.quantity}x ${item.nome} - ${cart.formatPrice(price)}`;
+  }).join('\n');
+
+  const total = cart.formatPrice(cart.getTotal());
+  
+  const instagramMessage = encodeURIComponent(
+    `Olá! Vi o site da Primos Informática e gostaria de fazer um pedido:\n\n${message}\n\nTotal: ${total}\n\nPodem me ajudar?`
+  );
+  
+  window.open(`https://www.instagram.com/primosinformaticadf/`, '_blank');
+  closeCheckout();
+}
+
+function finalizeViaFacebook() {
+  const message = cart.items.map(item => {
+    let price = 0;
+    
+    if (item.precoRaw) {
+      price = parseFloat(item.precoRaw);
+    } else if (item.preco) {
+      const cleanPrice = item.preco
+        .replace('R$', '')
+        .replace(/\s+/g, '')
+        .replace('.', '')
+        .replace(',', '.')
+        .trim();
+      price = parseFloat(cleanPrice);
+    }
+    
+    if (isNaN(price) || !isFinite(price)) {
+      price = 0;
+    }
+    
+    return `${item.quantity}x ${item.nome} - ${cart.formatPrice(price)}`;
+  }).join('\n');
+
+  const total = cart.formatPrice(cart.getTotal());
+  
+  window.open(`https://www.facebook.com/profile.php?id=61573835540802`, '_blank');
+  closeCheckout();
+}
+
+function finalizeViaEmail() {
+  const message = cart.items.map(item => {
+    let price = 0;
+    
+    if (item.precoRaw) {
+      price = parseFloat(item.precoRaw);
+    } else if (item.preco) {
+      const cleanPrice = item.preco
+        .replace('R$', '')
+        .replace(/\s+/g, '')
+        .replace('.', '')
+        .replace(',', '.')
+        .trim();
+      price = parseFloat(cleanPrice);
+    }
+    
+    if (isNaN(price) || !isFinite(price)) {
+      price = 0;
+    }
+    
+    return `${item.quantity}x ${item.nome} - ${cart.formatPrice(price)}`;
+  }).join('\n');
+
+  const total = cart.formatPrice(cart.getTotal());
+  
+  const emailSubject = encodeURIComponent('Pedido - Primos Informática');
+  const emailBody = encodeURIComponent(
+    `Olá!\n\nGostaria de fazer um pedido:\n\n${message}\n\nTotal: ${total}\n\nPodem me ajudar?\n\nDados para contato:\n[Seu nome]\n[Seu telefone]\n[Seu e-mail]`
+  );
+  
+  window.open(`mailto:primosinformatica@email.com?subject=${emailSubject}&body=${emailBody}`, '_blank');
+  closeCheckout();
+}
+
+function finalizePresential() {
+  const message = cart.items.map(item => {
+    let price = 0;
+    
+    if (item.precoRaw) {
+      price = parseFloat(item.precoRaw);
+    } else if (item.preco) {
+      const cleanPrice = item.preco
+        .replace('R$', '')
+        .replace(/\s+/g, '')
+        .replace('.', '')
+        .replace(',', '.')
+        .trim();
+      price = parseFloat(cleanPrice);
+    }
+    
+    if (isNaN(price) || !isFinite(price)) {
+      price = 0;
+    }
+    
+    return `${item.quantity}x ${item.nome} - ${cart.formatPrice(price)}`;
+  }).join('\n');
+
+  const total = cart.formatPrice(cart.getTotal());
+  
+  alert(`Ótima escolha! Para retirada na loja:\n\n${message}\n\nTotal: ${total}\n\n📍 Endereço: Asa Norte CLN 208 BL A LOJA 11\n📞 Telefone: (61) 3340-6740\n⏰ Horário: Seg-Sex 9h-18h, Sáb 9h-13h\n\nLeve seu código do pedido para agilizar o atendimento!`);
+  
+  closeCheckout();
 }
 
 // Adicionar botão "Adicionar ao Carrinho" nos produtos
