@@ -571,8 +571,14 @@ let searchAbortController = null;
 
 // === Funcionalidade de Busca ===
 function initSearch() {
-  const searchInput = document.querySelector('input[type="text"]');
-  if (!searchInput) return;
+  // Encontrar inputs específicos para mobile e desktop
+  const mobileSearchInput = document.getElementById('mobileSearchInput');
+  const desktopSearchInput = document.getElementById('desktopSearchInput');
+  
+  if (!mobileSearchInput && !desktopSearchInput) return;
+  
+  // Adicionar eventos ao input correto
+  const searchInput = mobileSearchInput || desktopSearchInput;
   
   let searchTimeout;
   
@@ -635,12 +641,22 @@ function performSearch(query) {
   
   // Mostrar resultados da busca
   
-  // Criar ou mostrar dropdown de busca
-  let searchDropdown = document.createElement('div');
-  searchDropdown.id = 'search-dropdown';
+  // Encontrar elementos de busca
+  const mobileSearchInput = document.getElementById('mobileSearchInput');
+  const desktopSearchInput = document.getElementById('desktopSearchInput');
+  const activeInput = mobileSearchInput ? 'mobile' : 'desktop';
+  const activeInputEl = activeInput === 'mobile' ? mobileSearchInput : desktopSearchInput;
   
-  // Adicionar ao body
-  document.body.appendChild(searchDropdown);
+  // Limpar valor do input ativo
+  activeInputEl.value = '';
+  
+  // Criar ou mostrar dropdown de busca
+  let searchDropdown = document.getElementById('search-dropdown');
+  if (!searchDropdown) {
+    searchDropdown = document.createElement('div');
+    searchDropdown.id = 'search-dropdown';
+    document.body.appendChild(searchDropdown);
+  }
   
   // Posicionar o dropdown
   const inputRect = activeInputEl.getBoundingClientRect();
@@ -667,9 +683,8 @@ function performSearch(query) {
 }
 
 function desktopSearch() {
-  const searchInput = document.getElementById('desktopSearchInput');
-  const query = searchInput.value.trim();
-  
+  const desktopSearchInput = document.getElementById('desktopSearchInput');
+  const query = desktopSearchInput.value.trim();
   if (query) {
     performSearch(query);
   }
