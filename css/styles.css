@@ -138,21 +138,17 @@ header input:focus {
   header {
     padding: 8px 12px;
     gap: 8px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
   
   header .brand-title {
-    order: 1;
-    width: 100%;
     font-size: 16px;
-    margin-bottom: 8px;
-    text-align: center;
+    flex: 0 0 80px;
   }
   
   header .search-container {
-    order: 2;
-    width: 100%;
-    min-width: auto;
+    flex: 1 1 auto;
+    min-width: 150px;
   }
   
   header input {
@@ -162,22 +158,21 @@ header input:focus {
   }
   
   .header-actions {
-    order: 3;
-    width: 100%;
-    justify-content: center;
-    margin-top: 8px;
+    flex: 0 0 auto;
+    gap: 6px;
   }
   
   .cart-btn {
-    padding: 8px 16px;
+    padding: 8px 12px;
     font-size: 13px;
     height: 40px;
   }
   
   .tabs {
-    order: 4;
+    width: 100%;
     padding: 8px 12px 0;
     gap: 6px;
+    margin-top: 8px;
   }
   
   .tab-btn {
@@ -192,11 +187,17 @@ header input:focus {
   header {
     padding: 6px 8px;
     gap: 6px;
+    flex-wrap: nowrap;
   }
   
   header .brand-title {
     font-size: 14px;
-    margin-bottom: 6px;
+    flex: 0 0 60px;
+  }
+  
+  header .search-container {
+    flex: 1 1 auto;
+    min-width: 120px;
   }
   
   header input {
@@ -204,8 +205,12 @@ header input:focus {
     padding: 6px 10px;
   }
   
+  .header-actions {
+    gap: 4px;
+  }
+  
   .cart-btn {
-    padding: 6px 12px;
+    padding: 6px 10px;
     font-size: 12px;
     height: 36px;
   }
@@ -213,6 +218,7 @@ header input:focus {
   .tabs {
     padding: 6px 8px 0;
     gap: 4px;
+    margin-top: 6px;
   }
   
   .tab-btn {
