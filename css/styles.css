@@ -1032,9 +1032,9 @@ footer button:hover {
 .search-dropdown {
   position: absolute;
   top: calc(100% + 8px);
-  left: 0;
   right: 0;
-  width: 100%;
+  width: 400px;
+  max-width: 90vw;
   background: white;
   border: 1px solid var(--border);
   border-radius: 12px;
