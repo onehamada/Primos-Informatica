@@ -1,37 +1,81 @@
-/* === Carrinho de Compras === */
-.header-actions {
+/* === Header Simples === */
+header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  flex: 1;
-  max-width: 500px;
+  padding: 12px 16px;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.header-actions input {
-  flex: 1;
+header .brand-title {
+  flex: 0 0 auto;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+header .search-container {
+  flex: 1 1 auto;
+  min-width: 200px;
+}
+
+header input { 
+  width: 100%;
+  padding: 10px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  outline: none;
+  transition: all 0.2s ease;
+  font-size: 16px;
+  height: 44px;
+  box-sizing: border-box;
+}
+
+header input::placeholder {
+  color: #9ca3af;
+  font-size: 16px;
+}
+
+header input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.header-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .cart-btn {
-  position: relative;
-  background: none;
-  border: 2px solid #2563eb;
+  background: #2563eb;
+  color: white;
+  border: none;
   border-radius: 8px;
-  padding: 0.5rem;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-  color: #2563eb;
+  transition: all 0.2s ease;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
 }
 
 .cart-btn:hover {
-  background: #2563eb;
-  color: white;
-  transform: translateY(-2px);
+  background: #1d4ed8;
+  transform: translateY(-1px);
 }
 
 .cart-count {
-  position: absolute;
-  top: -8px;
-  right: -8px;
   background: #dc2626;
   color: white;
   border-radius: 50%;
@@ -40,8 +84,151 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
-  font-weight: bold;
+  font-size: 12px;
+  font-weight: 600;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+}
+
+/* Tabs */
+.tabs {
+  width: 100%;
+  padding: 12px 16px 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-btn {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  min-height: 40px;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  color: #6b7280;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+.tab-btn.active {
+  background: #2563eb;
+  color: white;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  header {
+    padding: 8px 12px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  header .brand-title {
+    order: 1;
+    width: 100%;
+    font-size: 16px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  
+  header .search-container {
+    order: 2;
+    width: 100%;
+    min-width: auto;
+  }
+  
+  header input {
+    height: 40px;
+    padding: 8px 12px;
+    font-size: 16px;
+  }
+  
+  .header-actions {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  
+  .cart-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    height: 40px;
+  }
+  
+  .tabs {
+    order: 4;
+    padding: 8px 12px 0;
+    gap: 6px;
+  }
+  
+  .tab-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+    min-height: 36px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  header {
+    padding: 6px 8px;
+    gap: 6px;
+  }
+  
+  header .brand-title {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  
+  header input {
+    height: 36px;
+    padding: 6px 10px;
+  }
+  
+  .cart-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    height: 36px;
+  }
+  
+  .tabs {
+    padding: 6px 8px 0;
+    gap: 4px;
+  }
+  
+  .tab-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    min-height: 32px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+  .tabs {
+    padding: 0 24px;
+    border-bottom: none;
+    background: #f8fafc;
+  }
 }
 
 /* Carrinho Sidebar */
