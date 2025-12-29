@@ -1031,7 +1031,8 @@ footer button:hover {
 .search-dropdown {
   position: absolute;
   top: calc(100% + 8px);
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 400px;
   max-width: 90vw;
   background: white;
@@ -1117,6 +1118,7 @@ footer button:hover {
     max-height: none;
     border-radius: 0;
     border-top: 1px solid var(--border);
+    transform: none;
   }
   
   .search-dropdown .product {
