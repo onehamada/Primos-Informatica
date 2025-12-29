@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://onehamada.github.io/Primos-Informatica/sitemap.xml
+
+# Allow specific directories
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /data/
+
+# Block unnecessary files
+Disallow: /*.bat$
+Disallow: /*.py$
+Disallow: /tools/
+Disallow: /__pycache__/
+
+# Crawl delay (be respectful)
+Crawl-delay: 1

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>CSVs por Categoria | Primos-Informatica</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="CSVs por Categoria" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Site Primos Informatica" />
+<meta property="og:description" content="Site Primos Informatica" />
+<link rel="canonical" href="https://onehamada.github.io/Primos-Informatica/data/produtos/" />
+<meta property="og:url" content="https://onehamada.github.io/Primos-Informatica/data/produtos/" />
+<meta property="og:site_name" content="Primos-Informatica" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="CSVs por Categoria" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Site Primos Informatica","headline":"CSVs por Categoria","url":"https://onehamada.github.io/Primos-Informatica/data/produtos/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/Primos-Informatica/assets/css/style.css?v=45dd00187699fd7d56407f22e777c47967f5209e">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/Primos-Informatica/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://onehamada.github.io/Primos-Informatica/">Primos-Informatica</a></h1>
+      
+
+      <h1 id="csvs-por-categoria">CSVs por Categoria</h1>
+
+<h2 id="arquivos-disponíveis">Arquivos Disponíveis</h2>
+
+<p>Esta pasta contém os arquivos CSV separados por categoria:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">processador.csv</code> - 17 processadores</li>
+  <li><code class="language-plaintext highlighter-rouge">placa_de_video.csv</code> - 9 placas de vídeo</li>
+  <li><code class="language-plaintext highlighter-rouge">placa_mae.csv</code> - 12 placas mãe</li>
+  <li><code class="language-plaintext highlighter-rouge">ssd.csv</code> - 13 SSDs</li>
+  <li><code class="language-plaintext highlighter-rouge">hd_externo.csv</code> - 3 HDs externos</li>
+  <li><code class="language-plaintext highlighter-rouge">hd_interno.csv</code> - 1 HD interno</li>
+</ul>
+
+<h2 id="como-usar">Como Usar</h2>
+
+<h3 id="para-editar-produtos">Para editar produtos:</h3>
+
+<ol>
+  <li><strong>Abra o CSV da categoria desejada</strong> (ex: <code class="language-plaintext highlighter-rouge">placa_de_video.csv</code> para editar placas de vídeo)</li>
+  <li><strong>Faça suas alterações</strong> (adicionar, remover, modificar produtos)</li>
+  <li><strong>Use o script para atualizar o arquivo principal</strong>:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Clique duplo em: tools\separar-csv.bat
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="para-recriar-todos-os-csvs">Para recriar todos os CSVs:</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Clique duplo em: tools\separar-csv.bat
+</code></pre></div></div>
+
+<h2 id="formato-dos-arquivos">Formato dos Arquivos</h2>
+
+<p>Todos os CSVs usam o mesmo formato (separados por ponto e vírgula):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
+1234;NOME DO PRODUTO;Categoria;999,99;10;Descrição completa;Marca;nao;imagem.webp
+</code></pre></div></div>
+
+<h2 id="importante">Importante</h2>
+
+<ul>
+  <li><strong>O site continua lendo apenas o <code class="language-plaintext highlighter-rouge">data/products.csv</code></strong></li>
+  <li><strong>Estes arquivos são apenas para facilitar sua edição</strong></li>
+  <li><strong>Sempre mantenha o backup do arquivo principal</strong></li>
+  <li><strong>Verifique se as imagens existem após adicionar novos produtos</strong></li>
+</ul>
+
+<h2 id="exemplo-prático">Exemplo Prático</h2>
+
+<p>Para adicionar uma nova placa de vídeo:</p>
+
+<ol>
+  <li>Abra <code class="language-plaintext highlighter-rouge">placa_de_video.csv</code></li>
+  <li>Adicione a linha: <code class="language-plaintext highlighter-rouge">9999;NOVA PLACA;Placa de vídeo;1500,00;5;Descrição;Marca;nao;nova_placa.webp</code></li>
+  <li>Execute <code class="language-plaintext highlighter-rouge">tools\separar-csv.bat</code> para atualizar</li>
+  <li>Gere a imagem: <code class="language-plaintext highlighter-rouge">tools\gerar-imagens.bat</code></li>
+  <li>Faça upload do site</li>
+</ol>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>
