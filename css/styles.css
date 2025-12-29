@@ -134,6 +134,64 @@ header input:focus {
   color: white;
 }
 
+/* Desktop Search Bar */
+.desktop-search {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+}
+
+.desktop-search-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.desktop-search-input {
+  flex: 1;
+  padding: 10px 16px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: white;
+  outline: none;
+  transition: all 0.2s ease;
+  font-size: 16px;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+.desktop-search-input::placeholder {
+  color: var(--muted);
+}
+
+.desktop-search-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  outline: 3px solid rgba(25, 164, 193, 0.45);
+  outline-offset: 2px;
+}
+
+.desktop-search-btn {
+  padding: 10px 16px;
+  border: 2px solid #2563eb;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 40px;
+}
+
+.desktop-search-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
 /* Desktop (acima de 768px) */
 @media (min-width: 769px) {
   header {
@@ -177,6 +235,41 @@ header input:focus {
     box-shadow: 0 10px 25px rgba(17, 122, 163, 0.20);
     outline: 3px solid rgba(25, 164, 193, 0.45);
     outline-offset: 2px;
+  }
+  
+  .desktop-search {
+    display: block;
+  }
+  
+  .desktop-search-container {
+    max-width: 500px;
+  }
+  
+  .desktop-search-input {
+    padding: 12px 16px;
+    font-size: 16px;
+    height: 44px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.75);
+    border: 1px solid var(--border);
+  }
+  
+  .desktop-search-input::placeholder {
+    color: var(--muted);
+  }
+  
+  .desktop-search-input:focus {
+    background: var(--surface);
+    border-color: rgba(17, 122, 163, 0.55);
+    box-shadow: 0 10px 25px rgba(17, 122, 163, 0.20);
+    outline: 3px solid rgba(25, 164, 193, 0.45);
+    outline-offset: 2px;
+  }
+  
+  .desktop-search-btn {
+    padding: 12px 16px;
+    font-size: 14px;
+    min-height: 44px;
   }
 }
 

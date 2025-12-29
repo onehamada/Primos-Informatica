@@ -101,8 +101,21 @@
     <img class="brand-logo" src="images/logo.png" alt="Primos Informática" />
     <h1>Primos Informática</h1>
   </div>
+  <!-- Desktop Search Bar -->
+  <div class="desktop-search" style="display: none;">
+    <div class="desktop-search-container">
+      <input type="text" id="desktopSearchInput" placeholder="Pesquisar produtos..." class="desktop-search-input">
+      <button class="desktop-search-btn" onclick="desktopSearch()">🔍</button>
+    </div>
+  </div>
+
+  <!-- Mobile Search Bar -->
+  <div class="mobile-search">
+    <div class="search-container">
+      <input type="text" id="mobileSearchInput" placeholder="Pesquisar produtos..." class="mobile-search-input">
+    </div>
+  </div>
   <div class="header-actions">
-    <input type="text" placeholder="Buscar produtos..." aria-label="Buscar produtos" />
     <button class="cart-btn" onclick="toggleCart()" aria-label="Carrinho de compras">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="9" cy="21" r="1"></circle>
