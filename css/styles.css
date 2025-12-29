@@ -869,16 +869,7 @@ main {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
   margin-bottom: 20px;
   border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-@media (min-width: 1024px) {
-  .products-grid .product {
-    width: 17rem;
-  }
-}
-
-.products-grid .product {
-  width: 18.125rem;
+  contain: layout style paint;
 }
 
 .product:hover {
@@ -1628,14 +1619,90 @@ main {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-  gap: 18px;
-  padding: 20px 0;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+  container-type: inline-size;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Layout flexível baseado no espaço disponível */
+@container (min-width: 320px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+  }
+}
+
+@container (min-width: 480px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+  }
+}
+
+@container (min-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+}
+
+@container (min-width: 1024px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
+}
+
+@container (min-width: 1280px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 28px;
+  }
+}
+
+/* Produtos se adaptam ao container */
+.products-grid .product {
+  width: 100%;
+  min-width: 280px;
+  max-width: 400px;
+  justify-self: stretch;
+  align-self: stretch;
+  transition: all 0.3s ease;
+}
+
+/* Layout responsivo tradicional como fallback */
+@media (max-width: 767px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .products-grid .product {
+    min-width: auto;
+    max-width: none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
 }
 
 /* === Search Dropdown === */
