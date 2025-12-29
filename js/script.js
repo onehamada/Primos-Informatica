@@ -413,7 +413,7 @@ function finalizeViaWhatsApp() {
   const total = cart.formatPrice(cart.getTotal());
   
   const whatsappMessage = encodeURIComponent(
-    `Olá! Gostaria de fazer um pedido:\n\n${message}\n\nTotal: ${total}\n\nPodem me ajudar?`
+    `🛒 PEDIDO VIA SITE PRIMOS INFORMÁTICA 🛒\n\nOlá! Gostaria de fazer um pedido através do site:\n\n${message}\n\nTotal: ${total}\n\n⚡ Este pedido foi gerado automaticamente pelo nosso site\n🌐 Site: https://onehamada.github.io/Primos-Informatica/\n\nPodem me ajudar?`
   );
   
   window.open(`https://wa.me/556133406740?text=${whatsappMessage}`, '_blank');
@@ -445,9 +445,7 @@ function finalizeViaInstagram() {
 
   const total = cart.formatPrice(cart.getTotal());
   
-  const instagramMessage = encodeURIComponent(
-    `Olá! Vi o site da Primos Informática e gostaria de fazer um pedido:\n\n${message}\n\nTotal: ${total}\n\nPodem me ajudar?`
-  );
+  alert(`🛒 PEDIDO VIA SITE PRIMOS INFORMÁTICA 🛒\n\nRedirecionando para o Instagram...\n\nSeu pedido:\n${message}\n\nTotal: ${total}\n\n⚡ Pedido gerado automaticamente pelo site\n🌐 Site: https://onehamada.github.io/Primos-Informatica/\n\nEnvie-nos uma Direct com esses dados!`);
   
   window.open(`https://www.instagram.com/primosinformaticadf/`, '_blank');
   closeCheckout();
@@ -478,6 +476,8 @@ function finalizeViaFacebook() {
 
   const total = cart.formatPrice(cart.getTotal());
   
+  alert(`🛒 PEDIDO VIA SITE PRIMOS INFORMÁTICA 🛒\n\nRedirecionando para o Facebook...\n\nSeu pedido:\n${message}\n\nTotal: ${total}\n\n⚡ Pedido gerado automaticamente pelo site\n🌐 Site: https://onehamada.github.io/Primos-Informatica/\n\nEnvie-nos uma mensagem no Messenger com esses dados!`);
+  
   window.open(`https://www.facebook.com/profile.php?id=61573835540802`, '_blank');
   closeCheckout();
 }
@@ -507,9 +507,9 @@ function finalizeViaEmail() {
 
   const total = cart.formatPrice(cart.getTotal());
   
-  const emailSubject = encodeURIComponent('Pedido - Primos Informática');
+  const emailSubject = encodeURIComponent('🛒 PEDIDO VIA SITE - Primos Informática');
   const emailBody = encodeURIComponent(
-    `Olá!\n\nGostaria de fazer um pedido:\n\n${message}\n\nTotal: ${total}\n\nPodem me ajudar?\n\nDados para contato:\n[Seu nome]\n[Seu telefone]\n[Seu e-mail]`
+    `🛒 PEDIDO VIA SITE PRIMOS INFORMÁTICA 🛒\n\nOlá!\n\nGostaria de fazer um pedido através do nosso site:\n\n${message}\n\nTotal: ${total}\n\n⚡ Este pedido foi gerado automaticamente pelo nosso site\n🌐 Site: https://onehamada.github.io/Primos-Informatica/\n\nPodem me ajudar?\n\nDados para contato:\n[Seu nome completo]\n[Seu telefone com DDD]\n[Seu e-mail]\n[Seu endereço completo]\n[Forma de pagamento preferida]\n\nAguardando retorno!`
   );
   
   window.open(`mailto:primosinformatica@email.com?subject=${emailSubject}&body=${emailBody}`, '_blank');
@@ -541,7 +541,7 @@ function finalizePresential() {
 
   const total = cart.formatPrice(cart.getTotal());
   
-  alert(`Ótima escolha! Para retirada na loja:\n\n${message}\n\nTotal: ${total}\n\n📍 Endereço: Asa Norte CLN 208 BL A LOJA 11\n📞 Telefone: (61) 3340-6740\n⏰ Horário: Seg-Sex 9h-18h, Sáb 9h-13h\n\nLeve seu código do pedido para agilizar o atendimento!`);
+  alert(`🛒 PEDIDO VIA SITE PRIMOS INFORMÁTICA 🛒\n\nÓtima escolha! Para retirada na loja:\n\n${message}\n\nTotal: ${total}\n\n⚡ Este pedido foi gerado automaticamente pelo nosso site\n🌐 Site: https://onehamada.github.io/Primos-Informatica/\n\n📍 Endereço: Asa Norte CLN 208 BL A LOJA 11\n📞 Telefone: (61) 3340-6740\n⏰ Horário: Seg-Sex 9h-18h, Sáb 9h-13h\n\nLeve seu código do pedido para agilizar o atendimento!\n\nCódigo: ${Date.now()}`);
   
   closeCheckout();
 }
