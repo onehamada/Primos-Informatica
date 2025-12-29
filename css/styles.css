@@ -1033,7 +1033,7 @@ footer button:hover {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  transform: translateX(-80px);
+  transform: translateX(-40px);
   width: 400px;
   max-width: 90vw;
   background: white;
