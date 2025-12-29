@@ -2409,8 +2409,9 @@ main {
 /* Mobile Search Dropdown */
 @media (max-width: 768px) {
   .search-dropdown {
-    left: 0;
-    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
     max-height: 50vh;
   }
   
