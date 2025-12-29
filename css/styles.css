@@ -806,25 +806,66 @@ main {
 footer { 
   background: var(--surface);
   border-top: 1px solid var(--border);
-  padding: 10px; 
+  padding: 8px 10px; 
   position: fixed; 
   bottom: 0; 
   width: 100%; 
   display: flex; 
   justify-content: center; 
-  gap: 15px; 
-  z-index: 1000;
+  gap: 10px; 
+  z-index: 100;
+  transform: translateY(0);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
 }
+
+/* Footer escondido quando usuário rola para baixo */
+footer.hidden {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+/* Footer minimizado no mobile */
+@media (max-width: 768px) {
+  footer {
+    padding: 6px;
+    gap: 8px;
+    flex-wrap: wrap;
+    max-height: 40px;
+    overflow: hidden;
+  }
+  
+  footer button {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+  }
+}
+
 footer button { 
-  padding: 6px 12px; 
+  padding: 4px 10px; 
   border: 1px solid var(--border);
   background: var(--surface);
   cursor: pointer; 
-  border-radius: 6px; 
+  border-radius: 6px;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
 }
 footer button:hover {
   border-color: rgba(17, 122, 163, 0.35);
   background: rgba(17, 122, 163, 0.06);
+  transform: translateY(-1px);
+}
+
+/* Adicionar padding ao main para não ficar escondido atrás do footer */
+main {
+  padding-bottom: 60px;
+}
+
+@media (max-width: 768px) {
+  main {
+    padding-bottom: 50px;
+  }
 }
 
 

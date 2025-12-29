@@ -19,10 +19,74 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Otimização: lazy loading dinâmico
     initDynamicLazyLoading();
     
+    // Inicializar footer inteligente
+    initSmartFooter();
+    
   } catch (error) {
     console.error('Erro na inicialização:', error);
   }
 });
+
+// === Footer Inteligente ===
+function initSmartFooter() {
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+  const footer = document.querySelector('footer');
+  
+  if (!footer) return;
+  
+  function updateFooter() {
+    const currentScrollY = window.scrollY;
+    const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
+    const isAtTop = currentScrollY < 100;
+    const isAtBottom = window.innerHeight + currentScrollY >= document.body.offsetHeight - 100;
+    
+    // Esconder footer quando rolando para baixo (exceto no topo)
+    if (scrollDirection === 'down' && !isAtTop) {
+      footer.classList.add('hidden');
+    } 
+    // Mostrar footer quando rolando para cima ou no topo
+    else if (scrollDirection === 'up' || isAtTop || isAtBottom) {
+      footer.classList.remove('hidden');
+    }
+    
+    lastScrollY = currentScrollY;
+    ticking = false;
+  }
+  
+  function requestTick() {
+    if (!ticking) {
+      requestAnimationFrame(updateFooter);
+      ticking = true;
+    }
+  }
+  
+  // Throttle scroll events
+  window.addEventListener('scroll', requestTick, { passive: true });
+  
+  // Mostrar footer quando mouse estiver perto do bottom
+  document.addEventListener('mousemove', (e) => {
+    const threshold = 100; // 100px do bottom
+    const distanceFromBottom = window.innerHeight - e.clientY;
+    
+    if (distanceFromBottom < threshold) {
+      footer.classList.remove('hidden');
+    }
+  });
+  
+  // Mostrar footer em mobile quando tocar perto do bottom
+  if ('ontouchstart' in window) {
+    document.addEventListener('touchstart', (e) => {
+      const threshold = 150;
+      const touch = e.touches[0];
+      const distanceFromBottom = window.innerHeight - touch.clientY;
+      
+      if (distanceFromBottom < threshold) {
+        footer.classList.remove('hidden');
+      }
+    });
+  }
+}
 
 function stripStaticProductsFromHtml() {
   const categories = Array.from(document.querySelectorAll('.category'));
