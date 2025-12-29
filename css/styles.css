@@ -2246,9 +2246,9 @@ main {
   .search-dropdown {
     position: absolute;
     top: 100%;
-    left: 50px;
+    left: 61px;
     right: 0;
-    width: calc(100% - 50px);
+    width: calc(100% - 61px);
     background: white;
     z-index: 9999;
     border: 1px solid #e5e7eb;
