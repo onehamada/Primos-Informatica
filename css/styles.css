@@ -134,6 +134,52 @@ header input:focus {
   color: white;
 }
 
+/* Desktop (acima de 768px) */
+@media (min-width: 769px) {
+  header {
+    flex-wrap: nowrap;
+    padding: 16px 24px;
+    gap: 16px;
+  }
+  
+  header .brand-title {
+    order: 1;
+    width: auto;
+    text-align: left;
+    margin-bottom: 0;
+    font-size: 18px;
+  }
+  
+  header .search-container {
+    order: 2;
+    width: auto;
+    min-width: 300px;
+    max-width: 500px;
+  }
+  
+  header input {
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 16px;
+    height: 44px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.75);
+    border: 1px solid var(--border);
+  }
+  
+  header input::placeholder {
+    color: var(--muted);
+  }
+  
+  header input:focus {
+    background: var(--surface);
+    border-color: rgba(17, 122, 163, 0.55);
+    box-shadow: 0 10px 25px rgba(17, 122, 163, 0.20);
+    outline: 3px solid rgba(25, 164, 193, 0.45);
+    outline-offset: 2px;
+  }
+}
+
 /* Mobile */
 @media (max-width: 768px) {
   header {
@@ -231,15 +277,6 @@ header input:focus {
     padding: 5px 10px;
     font-size: 12px;
     min-height: 32px;
-  }
-}
-
-/* Desktop */
-@media (min-width: 769px) {
-  .tabs {
-    padding: 0 24px;
-    border-bottom: none;
-    background: #f8fafc;
   }
 }
 
@@ -2309,15 +2346,18 @@ main {
 /* === Search Dropdown Mobile-First === */
 .search-dropdown {
   position: absolute;
-  top: 100%;
-  left: 61px;
-  right: 0;
-  width: calc(100% - 61px);
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 400px;
   background: white;
   z-index: 9999;
   border: 1px solid #e5e7eb;
-  border-top: none;
-  max-height: 70vh;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: none;
+  max-height: 60vh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -2409,9 +2449,8 @@ main {
 /* Mobile Search Dropdown */
 @media (max-width: 768px) {
   .search-dropdown {
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
+    width: 95%;
+    max-width: none;
     max-height: 50vh;
   }
   
@@ -2496,7 +2535,7 @@ main {
   .search-empty {
     padding: 12px;
     font-size: 12px;
-  margin: 3px;
+    margin: 3px;
   }
 }
 
