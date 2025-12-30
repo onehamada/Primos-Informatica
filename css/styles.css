@@ -108,7 +108,7 @@
   position: relative;
   flex: 2;
   max-width: 700px;
-  margin: 0 24px;
+  margin: 0 auto;
 }
 
 .search-input {
@@ -326,9 +326,10 @@ header .brand-logo:hover {
 }
 
 .header-actions {
-  flex: 0 0 auto;
+  flex: 2;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
 }
 
