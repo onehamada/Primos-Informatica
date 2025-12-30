@@ -297,7 +297,6 @@ header .header-brand {
   flex: 1;
   cursor: pointer;
   transition: transform 0.2s ease;
-  margin-left: 60px; /* Espaço para o toggle */
 }
 
 header .header-brand:hover {
