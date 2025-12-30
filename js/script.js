@@ -3,10 +3,6 @@
 // === Inicialização ===
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    // Limpar cache para debug
-    console.log('Limpando cache...');
-    localStorage.removeItem('productsCsvCache:v7');
-    
     // Otimização: pré-carregar imagens críticas
     preloadCriticalImages();
     
@@ -105,7 +101,7 @@ function stripStaticProductsFromHtml() {
 // === Configurações ===
 const CONFIG = {
   PAGE_SIZE: 30, // Aumentado para menos recargas
-  CSV_CACHE_KEY: 'productsCsvCache:v7', // Versão atualizada para forçar limpeza
+  CSV_CACHE_KEY: 'productsCsvCache:v8', // Versão atualizada para forçar limpeza
   CSV_CACHE_TTL: 30 * 60 * 1000, // 30 minutos
   MAX_HIGHLIGHTS: 8, // Aumentado para mais destaques
   MAX_HOME_CATEGORIES: 8
