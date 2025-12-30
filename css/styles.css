@@ -3239,10 +3239,33 @@ body.dark-mode .header-main {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-body.dark-mode .search-input {
-  background: rgba(30, 41, 59, 0.8);
-  color: #f1f5f9;
-  border-color: rgba(148, 163, 184, 0.2);
+body.dark-mode header {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .header-tabs {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+}
+
+body.dark-mode .header-tabs::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-mode .header-tabs::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6) !important;
+}
+
+body.dark-mode .header-tabs::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
+}
+
+body.dark-mode .header-brand h1 {
+  color: #f1f5f9 !important;
+}
+
+body.dark-mode .brand-logo {
+  filter: brightness(0.9) contrast(1.1);
 }
 
 body.dark-mode .search-input:focus {
