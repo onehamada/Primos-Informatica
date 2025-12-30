@@ -349,6 +349,7 @@ header .brand-logo:hover {
   gap: 8px;
   position: relative;
   box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+  right: 3px;
 }
 
 .cart-btn:hover {
