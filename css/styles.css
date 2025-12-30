@@ -2882,13 +2882,22 @@ main {
     order: 1;
   }
   
-  header input {
+  .header-actions {
     order: 2;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .search-container {
     width: calc(100% - 32px);
+    margin: 0 16px;
+  }
+  
+  header input {
+    width: 100%;
     font-size: 16px;
     padding: 12px 16px;
     border-radius: 12px;
-    margin: 0 16px;
   }
   
   /* Tabs */
@@ -3089,9 +3098,18 @@ main {
     height: 32px;
   }
   
-  header input {
+  .header-actions {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .search-container {
     width: calc(100% - 24px);
     margin: 0 12px;
+  }
+  
+  header input {
+    width: 100%;
     padding: 10px 14px;
     font-size: 14px;
   }
