@@ -271,6 +271,23 @@ header {
   justify-content: space-between;
   padding: 16px 24px;
   gap: 16px;
+  position: relative;
+}
+
+/* Dark Mode Toggle na frente da logo */
+.dark-mode-toggle {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 50px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
 header .header-brand {
@@ -280,6 +297,7 @@ header .header-brand {
   flex: 1;
   cursor: pointer;
   transition: transform 0.2s ease;
+  margin-left: 60px; /* Espaço para o toggle */
 }
 
 header .header-brand:hover {
@@ -3151,19 +3169,6 @@ main {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-}
-
-.dark-mode-toggle::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: rgba(59, 130, 246, 0.1);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark-mode-toggle:hover::before {
