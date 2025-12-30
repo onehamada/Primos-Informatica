@@ -103,6 +103,21 @@
   
   <!-- Analytics placeholder -->
   <!-- Google Analytics will be added here -->
+  
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('✅ Service Worker registrado:', registration.scope);
+          })
+          .catch(error => {
+            console.log('❌ Falha no registro do Service Worker:', error);
+          });
+      });
+    }
+  </script>
 </head>
 <body>
 
@@ -129,6 +144,111 @@
         <div class="search-results" id="searchResults"></div>
       </div>
       
+      <!-- Filtros Avançados -->
+      <div class="filters-container" id="filtersContainer">
+        <button class="filters-toggle" id="filtersToggle" onclick="toggleFilters()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+          Filtros
+        </button>
+        
+        <div class="filters-panel" id="filtersPanel">
+          <div class="filter-group">
+            <label>Faixa de Preço</label>
+            <div class="price-range">
+              <input type="number" id="minPrice" placeholder="Min" placeholder="R$ 0">
+              <span>-</span>
+              <input type="number" id="maxPrice" placeholder="Max" placeholder="R$ 5000">
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <label>Categorias</label>
+            <div class="category-filters">
+              <label class="checkbox-label">
+                <input type="checkbox" value="processador" onchange="applyFilters()">
+                <span>Processadores</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="placa de vídeo" onchange="applyFilters()">
+                <span>Placas de Vídeo</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="placa mãe" onchange="applyFilters()">
+                <span>Placas Mãe</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="ssd" onchange="applyFilters()">
+                <span>SSDs</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="hd externo" onchange="applyFilters()">
+                <span>HDs Externos</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="hd interno" onchange="applyFilters()">
+                <span>HDs Internos</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="fonte" onchange="applyFilters()">
+                <span>Fontes</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <label>Marcas</label>
+            <div class="brand-filters">
+              <label class="checkbox-label">
+                <input type="checkbox" value="Intel" onchange="applyFilters()">
+                <span>Intel</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="AMD" onchange="applyFilters()">
+                <span>AMD</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="NVIDIA" onchange="applyFilters()">
+                <span>NVIDIA</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="ASUS" onchange="applyFilters()">
+                <span>ASUS</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="Gigabyte" onchange="applyFilters()">
+                <span>Gigabyte</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="Kingston" onchange="applyFilters()">
+                <span>Kingston</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="Seagate" onchange="applyFilters()">
+                <span>Seagate</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="Corsair" onchange="applyFilters()">
+                <span>Corsair</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="promoOnly" onchange="applyFilters()">
+              <span>Apenas Promoções</span>
+            </label>
+          </div>
+          
+          <div class="filter-actions">
+            <button class="btn-outline" onclick="clearFilters()">Limpar Filtros</button>
+            <button class="btn-primary" onclick="applyFilters()">Aplicar</button>
+          </div>
+        </div>
+      </div>
+      
       <button class="cart-btn" onclick="toggleCart()" aria-label="Carrinho de compras">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="9" cy="21" r="1"></circle>
@@ -136,6 +256,28 @@
           <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
         </svg>
         <span class="cart-count" id="cartCount">0</span>
+      </button>
+      
+      <!-- Dark Mode Toggle -->
+      <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()" aria-label="Alternar modo escuro">
+        <div class="toggle-track">
+          <div class="toggle-thumb">
+            <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </div>
+        </div>
       </button>
     </div>
   </div>
