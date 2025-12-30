@@ -20,6 +20,16 @@
   <meta property="og:image" content="https://onehamada.github.io/Primos-Informatica/images/logo.png" />
   <meta property="og:locale" content="pt_BR" />
   
+  <!-- Loading Spinner -->
+  <div class="loading" id="loading">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- Botão Voltar ao Topo -->
+  <button class="back-to-top" id="backToTop" aria-label="Voltar ao topo">
+    ↑
+  </button>
+
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content="https://onehamada.github.io/Primos-Informatica/" />
@@ -97,19 +107,50 @@
 <body>
 
 <header>
-  <div class="header-brand">
-    <img class="brand-logo" src="images/logo.png" alt="Primos Informática" />
-    <h1>Primos Informática</h1>
+  <div class="header-main">
+    <div class="header-brand">
+      <img class="brand-logo" src="images/logo.png" alt="Primos Informática" onclick="showCategory('inicio')" style="cursor: pointer;" />
+      <h1 onclick="showCategory('inicio')" style="cursor: pointer;">Primos Informática</h1>
+    </div>
+    <div class="header-actions">
+      <!-- Barra de Pesquisa -->
+      <div class="search-container">
+        <input 
+          type="text" 
+          class="search-input" 
+          id="searchInput"
+          placeholder="Buscar produtos..."
+          autocomplete="off"
+        >
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+      
+      <button class="cart-btn" onclick="toggleCart()" aria-label="Carrinho de compras">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
   </div>
-  <div class="header-actions">
-    <button class="cart-btn" onclick="toggleCart()" aria-label="Carrinho de compras">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="9" cy="21" r="1"></circle>
-        <circle cx="20" cy="21" r="1"></circle>
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-      </svg>
-      <span class="cart-count" id="cartCount">0</span>
-    </button>
+  
+  <!-- Tabs integradas ao header -->
+  <div class="header-tabs">
+    <button type="button" class="tab-btn active" data-target="inicio" onclick="showCategory('inicio')">Início</button>
+    <button type="button" class="tab-btn" data-target="promo" onclick="showCategory('promo')">Promoções</button>
+    <button type="button" class="tab-btn" data-target="processador" onclick="showCategory('processador')">Processadores</button>
+    <button type="button" class="tab-btn" data-target="placa de vídeo" onclick="showCategory('placa de vídeo')">Placas de Vídeo</button>
+    <button type="button" class="tab-btn" data-target="placa mãe" onclick="showCategory('placa mãe')">Placas Mãe</button>
+    <button type="button" class="tab-btn" data-target="ssd" onclick="showCategory('ssd')">SSDs</button>
+    <button type="button" class="tab-btn" data-target="hd externo" onclick="showCategory('hd externo')">HDs Externos</button>
+    <button type="button" class="tab-btn" data-target="hd interno" onclick="showCategory('hd interno')">HDs Internos</button>
+    <button type="button" class="tab-btn" data-target="fonte" onclick="showCategory('fonte')">Fontes</button>
   </div>
 </header>
 
@@ -218,17 +259,6 @@
 
 <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
 
-<div class="tabs">
-  <button type="button" class="tab-btn active" data-target="inicio" onclick="showCategory('inicio')">Início</button>
-  <button type="button" class="tab-btn" data-target="promo" onclick="showCategory('promo')">Promoções</button>
-  <button type="button" class="tab-btn" data-target="gamer" onclick="showCategory('gamer')">Gamer</button>
-  <button type="button" class="tab-btn" data-target="fones" onclick="showCategory('fones')">Fones</button>
-  <button type="button" class="tab-btn" data-target="adaptadores" onclick="showCategory('adaptadores')">Adaptadores</button>
-  <button type="button" class="tab-btn" data-target="coolers" onclick="showCategory('coolers')">Coolers</button>
-  <button type="button" class="tab-btn" data-target="placa mãe" onclick="showCategory('placa mãe')">Placa mãe</button>
-  <button type="button" class="tab-btn" data-target="hardware" onclick="showCategory('hardware')">Hardware</button>
-</div>
-
 <main>
   <div id="inicio" class="category">
     <div class="home-hero">
@@ -313,35 +343,52 @@
     </div>
   </div>
 
-  <div id="gamer" class="category" style="display:none;">
-    <h2>PERIFÉRICOS GAMER</h2>
+  <div id="processador" class="category" style="display:none;">
+    <h2>Processadores</h2>
+    <div class="products-grid"></div>
   </div>
 
-  <div id="fones" class="category" style="display:none;">
-    <h2>FONES</h2>
+  <div id="placa de vídeo" class="category" style="display:none;">
+    <h2>Placas de Vídeo</h2>
+    <div class="products-grid"></div>
   </div>
 
   <div id="placa mãe" class="category" style="display:none;">
-    <h2>PLACAS MÃE</h2>
+    <h2>Placas Mãe</h2>
+    <div class="products-grid"></div>
   </div>
 
-  <div id="hardware" class="category" style="display:none;">
-    <h2>HARDWARE / INFORMÁTICA</h2>
+  <div id="ssd" class="category" style="display:none;">
+    <h2>SSDs</h2>
+    <div class="products-grid"></div>
   </div>
 
-  <div id="coolers" class="category" style="display:none;">
-    <h2>COOLERS E HARDWARE GAMER</h2>
+  <div id="hd externo" class="category" style="display:none;">
+    <h2>HDs Externos</h2>
+    <div class="products-grid"></div>
   </div>
 
-  <div id="adaptadores" class="category" style="display:none;">
-    <h2>ADAPTADORES</h2>
+  <div id="hd interno" class="category" style="display:none;">
+    <h2>HDs Internos</h2>
+    <div class="products-grid"></div>
+  </div>
+
+  <div id="fonte" class="category" style="display:none;">
+    <h2>Fontes</h2>
+    <div class="products-grid"></div>
   </div>
 </main>
 
 <footer>
   <button type="button" onclick="showCategory('inicio')">Início</button>
-  <button type="button" onclick="showCategory('gamer')">Gamer</button>
-  <button type="button" onclick="showCategory('fones')">Fones</button>
+  <button type="button" onclick="showCategory('promo')">Promoções</button>
+  <button type="button" onclick="showCategory('processador')">Processadores</button>
+  <button type="button" onclick="showCategory('placa de vídeo')">Placas de Vídeo</button>
+  <button type="button" onclick="showCategory('placa mãe')">Placas Mãe</button>
+  <button type="button" onclick="showCategory('ssd')">SSDs</button>
+  <button type="button" onclick="showCategory('hd externo')">HDs Externos</button>
+  <button type="button" onclick="showCategory('hd interno')">HDs Internos</button>
+  <button type="button" onclick="showCategory('fonte')">Fontes</button>
 </footer>
 
 <script src="js/script.js" defer></script>
