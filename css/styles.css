@@ -474,8 +474,8 @@ header .brand-logo:hover {
 }
 
 .header-tabs::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(90deg, #2563eb, #1d4ed8);
-  transform: scaleY(1.2);
+  background: linear-gradient(90deg, #2563eb, #1d4ed8) !important;
+  transform: scaleY(1.3) !important;
 }
 
 .tab-btn {
@@ -1134,6 +1134,7 @@ header .brand-logo:hover {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.7);
+  -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
 }
 
@@ -2061,28 +2062,31 @@ main {
 }
 
 .product-info h4 { 
-font-size: 15px; 
-font-weight: 600; 
-margin: 0; 
-color: var(--text);
-line-height: 1.3;
--webkit-line-clamp: 2;
-line-clamp: 2;
+  font-size: 15px; 
+  font-weight: 600; 
+  margin: 0; 
+  color: var(--text);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
 /* Mobile product text */
 @media (max-width: 768px) {
-.product-info h4 {
-font-size: 14px;
-line-height: 1.2;
-}
+  .product-info h4 {
+    font-size: 14px;
+    line-height: 1.2;
+  }
 }
 
 @media (max-width: 480px) {
-.product-info h4 {
-font-size: 13px;
-line-height: 1.2;
-}
+  .product-info h4 {
+    font-size: 13px;
+    line-height: 1.2;
+  }
 }
 
 @media (max-width: 360px) {
@@ -2194,6 +2198,7 @@ footer {
   z-index: 100;
   transform: translateY(0);
   transition: transform 0.3s ease, opacity 0.3s ease;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.95);
 }

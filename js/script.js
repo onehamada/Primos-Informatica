@@ -41,6 +41,28 @@ function initDarkMode() {
   });
 }
 
+// Função global para toggle dark mode (para uso inline)
+function toggleDarkMode() {
+  const body = document.body;
+  body.classList.toggle('dark-mode');
+  const isDark = body.classList.contains('dark-mode');
+  localStorage.setItem('darkMode', isDark);
+  
+  // Feedback tátil (se disponível)
+  if (navigator.vibrate) {
+    navigator.vibrate(50);
+  }
+  
+  // Feedback visual
+  const toggle = document.getElementById('darkModeToggle');
+  if (toggle) {
+    toggle.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+      toggle.style.transform = '';
+    }, 150);
+  }
+}
+
 // === Performance Monitor ===
 function initPerformanceMonitor() {
   if ('PerformanceObserver' in window) {
