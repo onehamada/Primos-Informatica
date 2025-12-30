@@ -5,11 +5,10 @@ function initDarkMode() {
   const darkModeToggle = document.getElementById('darkModeToggle');
   const body = document.body;
   
-  // Verifica preferência salva ou preferência do sistema
+  // Sempre começa no modo claro, só respeita preferência salva explicitamente
   const savedMode = localStorage.getItem('darkMode');
-  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   
-  if (savedMode === 'true' || (!savedMode && systemPrefersDark)) {
+  if (savedMode === 'true') {
     body.classList.add('dark-mode');
   }
   
@@ -32,13 +31,6 @@ function initDarkMode() {
       }, 150);
     });
   }
-  
-  // Detecta mudança na preferência do sistema
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (!localStorage.getItem('darkMode')) {
-      body.classList.toggle('dark-mode', e.matches);
-    }
-  });
 }
 
 // Função global para toggle dark mode (para uso inline)
