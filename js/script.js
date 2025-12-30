@@ -3,6 +3,10 @@
 // === Inicialização ===
 document.addEventListener('DOMContentLoaded', async () => {
   try {
+    // Limpar cache para debug
+    console.log('Limpando cache...');
+    localStorage.removeItem('productsCsvCache:v7');
+    
     // Otimização: pré-carregar imagens críticas
     preloadCriticalImages();
     
@@ -12,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     showCategory('inicio');
     optimizeProductImages(document);
     initTabsDragScroll();
-    
+    addCartButtons(); // Adicionar botões do carrinho
     
     // Otimização: lazy loading dinâmico
     initDynamicLazyLoading();
@@ -110,6 +114,7 @@ const CONFIG = {
 // === Estado Global ===
 let __allProducts = [];
 let __categoryLabels = new Map();
+let __categoryState = new Map();
 let __cart = [];
 
 // === Carrinho de Compras ===
@@ -589,18 +594,39 @@ function parseCsvLine(line) {
 }
 
 function parseCsv(text) {
-  if (!text || typeof text !== 'string') return [];
+  console.log('ParseCsv iniciado com texto de tamanho:', text?.length || 0);
+  
+  if (!text || typeof text !== 'string') {
+    console.error('Texto inválido para parseCsv');
+    return [];
+  }
   
   const lines = text.split('\n').filter(line => line.trim());
-  if (lines.length < 2) return [];
+  console.log('Linhas encontradas:', lines.length);
+  
+  if (lines.length < 2) {
+    console.error('CSV não tem linhas suficientes');
+    return [];
+  }
 
   const headers = lines[0].split(';').map(h => h.trim().toLowerCase());
+  console.log('Headers:', headers);
+  
   const requiredFields = ['codigo', 'nome', 'categoria', 'preco', 'qt'];
+  const hasRequiredFields = requiredFields.every(field => headers.includes(field));
+  
+  if (!hasRequiredFields) {
+    console.error('CSV não tem todos os campos obrigatórios. Campos encontrados:', headers);
+    return [];
+  }
   
   const products = [];
   for (let i = 1; i < lines.length; i++) {
     const product = parseCsvLine(lines[i]);
-    if (!product) continue;
+    if (!product) {
+      console.warn('Produto inválido na linha', i + 1, ':', lines[i]);
+      continue;
+    }
 
     // Normalização
     product.codigo = String(product.codigo).trim();
@@ -612,6 +638,7 @@ function parseCsv(text) {
     products.push(product);
   }
 
+  console.log(`ParseCsv concluído: ${products.length} produtos válidos`);
   return products;
 }
 
@@ -651,19 +678,52 @@ function writeCsvCache(data) {
 }
 
 async function loadProductsFromCsv() {
+  console.log('Iniciando carregamento de produtos...');
+  
   // Tenta carregar do cache primeiro
   const cached = readCsvCache();
   if (cached) {
     try {
+      console.log('Usando cache do CSV');
       const products = parseCsv(cached);
       if (products.length) {
+        console.log(`Carregados ${products.length} produtos do cache`);
         applyProductsAndRender(products);
         refreshCacheInBackground();
         return;
       }
-    } catch (_) {}
+    } catch (error) {
+      console.error('Erro ao processar cache:', error);
+    }
   }
   
+  console.log('Buscando CSV do servidor...');
+  fetch('data/products.csv')
+    .then(r => {
+      console.log('Resposta do servidor:', r.status, r.ok);
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.text();
+    })
+    .then(text => {
+      console.log('CSV recebido, tamanho:', text.length);
+      console.log('Primeiras linhas:', text.split('\n').slice(0, 3));
+      const products = parseCsv(text);
+      console.log('Produtos parseados:', products.length);
+      if (products.length) {
+        applyProductsAndRender(products);
+        writeCsvCache(text);
+        console.log('Produtos aplicados com sucesso');
+      } else {
+        console.warn('Nenhum produto válido encontrado no CSV');
+      }
+    })
+    .catch(err => {
+      console.error('Erro ao carregar CSV:', err);
+    });
+}
+
+// Função para atualizar cache em segundo plano
+function refreshCacheInBackground() {
   fetch('data/products.csv')
     .then(r => {
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
@@ -672,14 +732,12 @@ async function loadProductsFromCsv() {
     .then(text => {
       const products = parseCsv(text);
       if (products.length) {
-        applyProductsAndRender(products);
         writeCsvCache(text);
-      } else {
-        console.warn('Nenhum produto válido encontrado no CSV');
+        console.log('Cache atualizado em segundo plano');
       }
     })
     .catch(err => {
-      console.error('Erro ao carregar CSV:', err);
+      console.warn('Erro ao atualizar cache em segundo plano:', err);
     });
 }
 
@@ -820,6 +878,8 @@ function titleizeCategory(str) {
 
 // === Funções de renderização ===
 function applyProductsAndRender(products) {
+  console.log('applyProductsAndRender iniciado com', products.length, 'produtos');
+  
   __allProducts = products;
   __categoryLabels.clear();
   
@@ -830,28 +890,45 @@ function applyProductsAndRender(products) {
     }
   });
 
+  console.log('Categorias encontradas:', Array.from(__categoryLabels.keys()));
+  
   ensureCategoriesFromCsv();
   renderProducts(products);
   populateHomeCategories();
   populateHomeHighlights();
+  
+  console.log('applyProductsAndRender concluído');
 }
 
 // === UI & Navigation ===
 function showCategory(id) {
+  console.log('showCategory chamado com id:', id);
+  
   document.querySelectorAll('.category').forEach(el => el.style.display = 'none');
   document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  
   const target = document.getElementById(id);
-  if (target) target.style.display = 'block';
+  if (target) {
+    target.style.display = 'block';
+    console.log('Categoria', id, 'exibida');
+  } else {
+    console.error('Categoria não encontrada:', id);
+  }
+  
   const btn = document.querySelector(`[data-target="${id}"]`);
   if (btn) btn.classList.add('active');
   
   if (id === 'promo') {
+    console.log('Exibindo promoções');
     populatePromo();
   } else if (__categoryState.has(id)) {
+    console.log('Renderizando categoria existente:', id);
     renderCategory(id);
   } else {
     // Para categorias manuais (como "placa mãe"), inicializa e renderiza
+    console.log('Inicializando categoria manual:', id);
     const products = __allProducts.filter(p => p.categoria === id);
+    console.log('Produtos encontrados para categoria', id, ':', products.length);
     if (products.length > 0) {
       __categoryState.set(id, {
         products: products.slice(0, CONFIG.PAGE_SIZE),
@@ -1166,17 +1243,24 @@ function renderCategory(categoryId) {
 
 // === Promo Section ===
 function populatePromo() {
+  console.log('populatePromo iniciado');
   const promoContainer = document.getElementById('promo-list');
-  if (!promoContainer) return;
+  if (!promoContainer) {
+    console.error('Container promo-list não encontrado');
+    return;
+  }
   promoContainer.innerHTML = '';
 
   // Filtra apenas produtos marcados como promoção
   const items = __allProducts.filter(p => p.promocao === true);
+  console.log('Produtos em promoção encontrados:', items.length);
+  
   const frag = document.createDocumentFragment();
   items.forEach(p => {
     frag.appendChild(createProductElement(p, 'promo'));
   });
   promoContainer.appendChild(frag);
   optimizeProductImages(promoContainer);
+  console.log('populatePromo concluído');
 }
 
