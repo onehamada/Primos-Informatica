@@ -3245,7 +3245,7 @@ body.dark-mode header {
 }
 
 body.dark-mode .header-tabs {
-  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 }
 
 body.dark-mode .header-tabs::-webkit-scrollbar-track {
@@ -3655,6 +3655,25 @@ body.dark-mode ::-webkit-scrollbar-track {
   
   body.dark-mode .toggle-thumb {
     transform: translateX(25px);
+  }
+  
+  /* Ajuste do moon icon no mobile */
+  .moon-icon {
+    font-size: 14px;
+  }
+  
+  body.dark-mode .moon-icon {
+    font-size: 14px;
+    transform: rotate(0deg) scale(1);
+  }
+  
+  .sun-icon {
+    font-size: 14px;
+  }
+  
+  body.dark-mode .sun-icon {
+    font-size: 14px;
+    transform: rotate(180deg) scale(0.5);
   }
 }
 
