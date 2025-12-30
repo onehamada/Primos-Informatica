@@ -3248,8 +3248,16 @@ body.dark-mode .header-tabs {
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 }
 
+body.dark-mode .header-tabs::before {
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+}
+
+body.dark-mode .header-tabs::after {
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.1), transparent);
+}
+
 body.dark-mode .header-tabs::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: transparent !important;
 }
 
 body.dark-mode .header-tabs::-webkit-scrollbar-thumb {
