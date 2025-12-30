@@ -1588,7 +1588,8 @@ body {
   
   .cart-btn {
     padding: 6px 10px;
-    font-sizleft: 16px;
+    font-size: 11px;
+    min-height: 32px;
     right: 16px;
   }
 }
@@ -3303,6 +3304,168 @@ body.dark-mode .feature-item:hover {
 body.dark-mode footer {
   background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Melhorias adicionais para Dark Mode */
+body.dark-mode .product {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+  border-color: rgba(148, 163, 184, 0.1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+body.dark-mode .product:hover {
+  transform: translateY(-8px) scale(1.02) !important;
+  box-shadow: 0 12px 40px rgba(99, 102, 241, 0.2) !important;
+}
+
+body.dark-mode .product-info h4 {
+  color: #f1f5f9 !important;
+}
+
+body.dark-mode .product-info h4:hover {
+  color: #60a5fa !important;
+}
+
+body.dark-mode .price {
+  color: #60a5fa !important;
+}
+
+body.dark-mode .stock-status {
+  background: rgba(34, 197, 94, 0.2) !important;
+  color: #4ade80 !important;
+}
+
+body.dark-mode .stock-status.out-of-stock {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #f87171 !important;
+}
+
+body.dark-mode .add {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  color: white !important;
+}
+
+body.dark-mode .add:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+body.dark-mode .add:disabled {
+  background: #4b5563 !important;
+  color: #9ca3af !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+body.dark-mode .category-card {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+  border-color: rgba(148, 163, 184, 0.1) !important;
+}
+
+body.dark-mode .category-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.2) !important;
+}
+
+body.dark-mode .category-card h3 {
+  color: #f1f5f9 !important;
+}
+
+body.dark-mode .category-card p {
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode .box {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+  border-color: rgba(148, 163, 184, 0.1) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2) !important;
+}
+
+body.dark-mode .box h3 {
+  color: #f1f5f9 !important;
+}
+
+body.dark-mode .box p,
+body.dark-mode .box li {
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode .box ul li:hover {
+  background: rgba(99, 102, 241, 0.1) !important;
+}
+
+body.dark-mode .section h2 {
+  color: #f1f5f9 !important;
+}
+
+body.dark-mode .empty-state {
+  background: rgba(30, 41, 59, 0.8) !important;
+  border-color: rgba(99, 102, 241, 0.2) !important;
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode .search-results {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+  border-color: rgba(148, 163, 184, 0.2) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-mode .search-result-item {
+  border-color: rgba(148, 163, 184, 0.1) !important;
+}
+
+body.dark-mode .search-result-item:hover {
+  background: rgba(99, 102, 241, 0.1) !important;
+}
+
+body.dark-mode .search-result-name {
+  color: #f1f5f9 !important;
+}
+
+body.dark-mode .search-result-category {
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode .search-result-price {
+  color: #60a5fa !important;
+}
+
+body.dark-mode .search-no-results {
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode .search-highlight {
+  background: rgba(99, 102, 241, 0.3) !important;
+  color: #f1f5f9 !important;
+}
+
+body.dark-mode .notification {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(148, 163, 184, 0.2) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-mode .notification.success {
+  border-color: rgba(34, 197, 94, 0.3) !important;
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 100%) !important;
+}
+
+body.dark-mode .notification.error {
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%) !important;
+}
+
+body.dark-mode .back-to-top {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+}
+
+body.dark-mode .back-to-top:hover {
+  background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%) !important;
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4) !important;
 }
 
 /* === Micro-interações Premium === */
