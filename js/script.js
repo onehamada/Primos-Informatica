@@ -1400,7 +1400,7 @@ function parseCsvLine(line) {
   return {
     codigo: codigo.trim(),
     nome: nome.trim(),
-    categoria: categoria.trim().toLowerCase(),
+    categoria: categoria.trim(),
     preco: precoNum,
     qt: qtNum,
     descricao: descricao ? descricao.trim() : '',
@@ -1426,7 +1426,7 @@ function parseCsv(text) {
 
     product.codigo = String(product.codigo).trim();
     product.nome = String(product.nome).trim();
-    product.categoria = String(product.categoria).toLowerCase().trim();
+    product.categoria = String(product.categoria).trim();
     product.precoRaw = product.preco;
     product.preco = formatPrice(product.preco);
 
