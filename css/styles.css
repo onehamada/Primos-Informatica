@@ -458,7 +458,7 @@ header .brand-logo:hover {
   top: 0;
   bottom: 0;
   width: 20px;
-  background: linear-gradient(90deg, #ffffff 0%, transparent 100%);
+  background: linear-gradient(90deg, #117aa3 0%, transparent 100%);
   z-index: 1;
   pointer-events: none;
 }
