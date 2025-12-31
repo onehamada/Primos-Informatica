@@ -463,18 +463,6 @@ header .brand-logo:hover {
   pointer-events: none;
 }
 
-.header-tabs::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 20px;
-  background: linear-gradient(90deg, transparent 0%, #117aa3 100%);
-  z-index: 1;
-  pointer-events: none;
-}
-
 .header-tabs::-webkit-scrollbar {
   height: 6px;
 }
