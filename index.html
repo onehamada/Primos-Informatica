@@ -180,6 +180,10 @@
                 <span>Placas Mãe</span>
               </label>
               <label class="checkbox-label">
+                <input type="checkbox" value="Monitor" onchange="applyFilters()">
+                <span>Monitores</span>
+              </label>
+              <label class="checkbox-label">
                 <input type="checkbox" value="ssd" onchange="applyFilters()">
                 <span>SSDs</span>
               </label>
@@ -268,6 +272,7 @@
     <button type="button" class="tab-btn" data-target="processador" onclick="showCategory('processador')">Processadores</button>
     <button type="button" class="tab-btn" data-target="placa de vídeo" onclick="showCategory('placa de vídeo')">Placas de Vídeo</button>
     <button type="button" class="tab-btn" data-target="placa mãe" onclick="showCategory('placa mãe')">Placas Mãe</button>
+    <button type="button" class="tab-btn" data-target="Monitor" onclick="showCategory('Monitor')">Monitores</button>
     <button type="button" class="tab-btn" data-target="ssd" onclick="showCategory('ssd')">SSDs</button>
     <button type="button" class="tab-btn" data-target="hd externo" onclick="showCategory('hd externo')">HDs Externos</button>
     <button type="button" class="tab-btn" data-target="hd interno" onclick="showCategory('hd interno')">HDs Internos</button>
@@ -479,6 +484,11 @@
     <div class="products-grid"></div>
   </div>
 
+  <div id="Monitor" class="category" style="display:none;">
+    <h2>Monitores</h2>
+    <div class="products-grid"></div>
+  </div>
+
   <div id="ssd" class="category" style="display:none;">
     <h2>SSDs</h2>
     <div class="products-grid"></div>
@@ -506,6 +516,7 @@
   <button type="button" onclick="showCategory('processador')">Processadores</button>
   <button type="button" onclick="showCategory('placa de vídeo')">Placas de Vídeo</button>
   <button type="button" onclick="showCategory('placa mãe')">Placas Mãe</button>
+  <button type="button" onclick="showCategory('Monitor')">Monitores</button>
   <button type="button" onclick="showCategory('ssd')">SSDs</button>
   <button type="button" onclick="showCategory('hd externo')">HDs Externos</button>
   <button type="button" onclick="showCategory('hd interno')">HDs Internos</button>
