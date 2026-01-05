@@ -1962,7 +1962,6 @@ function populatePromo() {
 // === Inicialização do Site ===
 document.addEventListener('DOMContentLoaded', () => {
   // Inicializa funcionalidades premium
-  initDarkMode();
   initPerformanceMonitor();
   initNotifications();
   initAdvancedLazyLoading();
@@ -1982,4 +1981,3 @@ document.addEventListener('DOMContentLoaded', () => {
     hideLoading();
   }, 1000);
 });
-
