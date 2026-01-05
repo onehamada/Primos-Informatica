@@ -1419,11 +1419,14 @@ function writeCsvCache(data) {
 }
 
 async function loadProductsFromCsv() {
+  console.log('Iniciando carregamento de produtos...');
+  
   const cached = readCsvCache();
   if (cached) {
     try {
       const products = parseCsv(cached);
       if (products.length) {
+        console.log('Usando cache com', products.length, 'produtos');
         applyProductsAndRender(products);
         refreshCacheInBackground();
         return;
@@ -1432,13 +1435,17 @@ async function loadProductsFromCsv() {
       console.warn('Erro ao processar cache:', error);
     }
   }
-  
+
+  console.log('Buscando CSV do servidor...');
   fetch('data/products.csv')
     .then(r => {
+      console.log('Response status:', r.status);
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       return r.text();
     })
     .then(text => {
+      console.log('CSV recebido, tamanho:', text.length, 'caracteres');
+      
       // Corrigir encoding: substituir caracteres corrompidos
       const correctedText = text
         .replace(/ǟ/g, 'ÇÃO')
@@ -1462,10 +1469,14 @@ async function loadProductsFromCsv() {
         .replace(/PROMOǟO/g, 'PROMOÇÃO');
       
       const products = parseCsv(correctedText);
-      
+      console.log('Produtos parseados:', products.length);
+
       if (products.length) {
         applyProductsAndRender(products);
         writeCsvCache(correctedText);
+        console.log('Produtos aplicados com sucesso!');
+      } else {
+        console.error('Nenhum produto encontrado no CSV');
       }
     })
     .catch(err => {
