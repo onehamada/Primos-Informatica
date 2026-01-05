@@ -1570,7 +1570,7 @@ function ensureCategoriesFromCsv() {
 
     // Inicializa estado da categoria
     if (!__categoryState.has(id)) {
-      const products = __allProducts.filter(p => p.categoria === id);
+      const products = __allProducts.filter(p => p.categoria.toLowerCase() === id.toLowerCase());
       __categoryState.set(id, {
         products: products.slice(0, CONFIG.PAGE_SIZE),
         hasMore: products.length > CONFIG.PAGE_SIZE
