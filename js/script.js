@@ -1492,10 +1492,17 @@ async function loadProductsFromCsv() {
       return r.text();
     })
     .then(text => {
-      const products = parseCsv(text);
+      // Corrigir encoding: substituir caracteres corrompidos
+      const correctedText = text
+        .replace(/ǟ/g, 'ÇÃO')
+        .replace(/\?/g, 'ÇÃO')
+        .replace(/\?\?/g, 'ÇÃO')
+        .replace(/\?\?\?/g, 'ÇÃO');
+      
+      const products = parseCsv(correctedText);
       if (products.length) {
         applyProductsAndRender(products);
-        writeCsvCache(text);
+        writeCsvCache(correctedText);
       }
     })
     .catch(err => {
