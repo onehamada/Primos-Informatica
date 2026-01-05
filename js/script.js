@@ -1976,6 +1976,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Mostra loading ao carregar produtos
   showLoading();
   
+  // Carrega produtos do CSV
+  loadProductsFromCsv();
+  
   // Esconde loading após carregar
   setTimeout(() => {
     hideLoading();
