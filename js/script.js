@@ -1,59 +1,6 @@
 // Este arquivo é destinado a scripts JavaScript que podem ser usados para adicionar interatividade à loja, como funcionalidades de busca ou manipulação de produtos.
 
-// === Dark Mode Premium ===
-function initDarkMode() {
-  const darkModeToggle = document.getElementById('darkModeToggle');
-  const body = document.body;
-  
-  // Sempre começa no modo claro, só respeita preferência salva explicitamente
-  const savedMode = localStorage.getItem('darkMode');
-  
-  if (savedMode === 'true') {
-    body.classList.add('dark-mode');
-  }
-  
-  // Toggle do dark mode com animação
-  if (darkModeToggle) {
-    darkModeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark-mode');
-      const isDark = body.classList.contains('dark-mode');
-      localStorage.setItem('darkMode', isDark);
-      
-      // Feedback tátil (se disponível)
-      if (navigator.vibrate) {
-        navigator.vibrate(50);
-      }
-      
-      // Animação extra
-      darkModeToggle.style.transform = 'scale(0.95)';
-      setTimeout(() => {
-        darkModeToggle.style.transform = '';
-      }, 150);
-    });
-  }
-}
-
-// Função global para toggle dark mode (para uso inline)
-function toggleDarkMode() {
-  const body = document.body;
-  body.classList.toggle('dark-mode');
-  const isDark = body.classList.contains('dark-mode');
-  localStorage.setItem('darkMode', isDark);
-  
-  // Feedback tátil (se disponível)
-  if (navigator.vibrate) {
-    navigator.vibrate(50);
-  }
-  
-  // Feedback visual
-  const toggle = document.getElementById('darkModeToggle');
-  if (toggle) {
-    toggle.style.transform = 'scale(0.95)';
-    setTimeout(() => {
-      toggle.style.transform = '';
-    }, 150);
-  }
-}
+// === Configurações ===
 
 // === Performance Monitor ===
 function initPerformanceMonitor() {
@@ -1497,9 +1444,25 @@ async function loadProductsFromCsv() {
         .replace(/ǟ/g, 'ÇÃO')
         .replace(/\?/g, 'ÇÃO')
         .replace(/\?\?/g, 'ÇÃO')
-        .replace(/\?\?\?/g, 'ÇÃO');
+        .replace(/\?\?\?/g, 'ÇÃO')
+        .replace(/ǟ/g, 'ÇÃO')
+        .replace(/\??/g, 'ÇÃO')
+        .replace(/\??\?/g, 'ÇÃO')
+        .replace(/\uFFFD/g, 'ÇÃO')
+        .replace(/Placa mǜe/g, 'Placa mãe')
+        .replace(/Placa de vǜdeo/g, 'Placa de vídeo')
+        .replace(/placa de vǜdeo/g, 'placa de vídeo')
+        .replace(/geraǜo/g, 'geração')
+        .replace(/4G/g, '4ªG')
+        .replace(/10G/g, '10ªG')
+        .replace(/11/g, '11ª')
+        .replace(/12/g, '12ª')
+        .replace(/13/g, '13ª')
+        .replace(/14/g, '14ª')
+        .replace(/PROMOǟO/g, 'PROMOÇÃO');
       
       const products = parseCsv(correctedText);
+      
       if (products.length) {
         applyProductsAndRender(products);
         writeCsvCache(correctedText);
@@ -1699,7 +1662,8 @@ function showCategory(id) {
   } else if (__categoryState.has(id)) {
     renderCategory(id);
   } else {
-    const products = __allProducts.filter(p => p.categoria === id);
+    const products = __allProducts.filter(p => p.categoria.toLowerCase() === id.toLowerCase());
+    
     if (products.length > 0) {
       __categoryState.set(id, {
         products: products.slice(0, CONFIG.PAGE_SIZE),
@@ -1818,6 +1782,16 @@ function createProductElement(product, categoryId) {
   
   // Para mobile: não usar srcset para evitar problemas
   const isMobile = window.innerWidth <= 768;
+  
+  // Debug para monitores
+  if (product.categoria && product.categoria.toLowerCase() === 'monitor') {
+    console.log('Monitor image paths:', {
+      specificImagePath,
+      categoryImagePath,
+      productImage: product.imagem,
+      productCode
+    });
+  }
   
   if (isMobile) {
     // Mobile: usar apenas src simples

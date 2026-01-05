@@ -1823,64 +1823,6 @@ body {
   transition: all 0.3s ease;
 }
 
-/* Dark Mode para Avaliações */
-body.dark-mode .rating-text {
-  color: #cbd5e1;
-}
-
-body.dark-mode .rating-count {
-  color: #9ca3af;
-}
-
-body.dark-mode .review-item {
-  background: rgba(30, 41, 59, 0.5);
-  border-left-color: #6366f1;
-}
-
-body.dark-mode .review-author {
-  color: #f1f5f9;
-}
-
-body.dark-mode .review-text {
-  color: #d1d5db;
-}
-
-body.dark-mode .add-review-btn {
-  background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
-  color: #d1d5db;
-  border-color: rgba(148, 163, 184, 0.2);
-}
-
-body.dark-mode .add-review-btn:hover {
-  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-}
-
-body.dark-mode .review-modal-content {
-  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-  color: #f1f5f9;
-}
-
-body.dark-mode .review-modal h3 {
-  color: #f1f5f9;
-}
-
-body.dark-mode .review-form-group label {
-  color: #e2e8f0;
-}
-
-body.dark-mode .review-form-group input,
-body.dark-mode .review-form-group textarea {
-  background: rgba(30, 41, 59, 0.8);
-  border-color: rgba(148, 163, 184, 0.2);
-  color: #f1f5f9;
-}
-
-body.dark-mode .review-form-group input:focus,
-body.dark-mode .review-form-group textarea:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-}
-
 /* Desktop (acima de 768px) */
 @media (min-width: 769px) {
   header {
@@ -3296,49 +3238,6 @@ main {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-}
-
-/* Dark Mode para Filtros */
-body.dark-mode .filters-toggle {
-  background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
-  color: #d1d5db;
-  border-color: rgba(148, 163, 184, 0.2);
-}
-
-body.dark-mode .filters-toggle:hover {
-  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-}
-
-body.dark-mode .filters-panel {
-  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-  border-color: rgba(148, 163, 184, 0.2);
-}
-
-body.dark-mode .filter-group label {
-  color: #f1f5f9;
-}
-
-body.dark-mode .price-range input {
-  background: rgba(30, 41, 59, 0.8);
-  border-color: rgba(148, 163, 184, 0.2);
-  color: #f1f5f9;
-}
-
-body.dark-mode .price-range input:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-}
-
-body.dark-mode .checkbox-label {
-  color: #cbd5e1;
-}
-
-body.dark-mode .checkbox-label:hover {
-  background: rgba(99, 102, 241, 0.1);
-}
-
-body.dark-mode .filter-actions {
-  border-top-color: rgba(148, 163, 184, 0.1);
 }
 
 /* Responsive para Filtros */
