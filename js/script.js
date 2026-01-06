@@ -1701,6 +1701,7 @@ function parseCsvOptimized(csvText) {
             break;
           case 'promocao':
             product.promocao = value.toLowerCase() === 'sim';
+            console.log(`🔍 Debug promoção: "${value}" -> ${product.promocao}`);
             break;
           case 'imagem':
             product.imagem = value;
