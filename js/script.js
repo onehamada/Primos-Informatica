@@ -2287,11 +2287,19 @@ function renderCategory(categoryId) {
 
 // === Promo Section ===
 function populatePromo() {
+  console.log('🔥 Iniciando populatePromo()');
+  console.log('📦 Total de produtos carregados:', __allProducts.length);
+  
   const promoContainer = document.getElementById('promo-list');
-  if (!promoContainer) return;
+  if (!promoContainer) {
+    console.log('❌ Container #promo-list não encontrado');
+    return;
+  }
   
   // Pega apenas produtos em promoção
   const promoProducts = __allProducts.filter(p => p.promocao === 'sim');
+  console.log('🎯 Produtos em promoção encontrados:', promoProducts.length);
+  console.log('📋 Produtos promo:', promoProducts.map(p => p.nome));
   
   promoContainer.innerHTML = '';
   const frag = document.createDocumentFragment();
@@ -2300,6 +2308,7 @@ function populatePromo() {
   });
   promoContainer.appendChild(frag);
   optimizeProductImages(promoContainer);
+  console.log('✅ Promoções populadas com sucesso!');
 }
 
 // === Inicialização Otimizada ===
