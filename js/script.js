@@ -1445,7 +1445,7 @@ async function loadProductsFromCsv() {
   }
 
   console.log('Buscando CSV do servidor...');
-  fetch('data/products.csv')
+  fetch('data/products_data.csv')
     .then(r => {
       console.log('Response status:', r.status);
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
