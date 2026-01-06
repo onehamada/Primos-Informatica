@@ -1831,7 +1831,7 @@ function populateHomeHighlights() {
   if (!grid) return;
   grid.innerHTML = '';
 
-  // Pega um produto por categoria (se houver), ignorando monitores
+  // Pega um produto por categoria (se houver)
   const highlights = [];
   Object.keys(CATEGORIES_MAP).forEach(categoryKey => {
     const products = getProductsByCategory(categoryKey);
@@ -1868,6 +1868,7 @@ function applyProductsAndRender(products) {
 
 // === Sistema de Categorias Refeito do Zero ===
 const CATEGORIES_MAP = {
+  'monitor': 'monitor',
   'processador': 'processador', 
   'placa de vídeo': 'placa de vídeo',
   'placa mãe': 'placa mãe',
@@ -1882,11 +1883,6 @@ function getProductsByCategory(categoryKey) {
   return __allProducts.filter(product => {
     const productCategory = product.categoria ? product.categoria.trim().toLowerCase() : '';
     const targetCategory = categoryKey.toLowerCase();
-    
-    // Ignora completamente produtos da categoria monitor
-    if (productCategory === 'monitor') {
-      return false;
-    }
     
     // Comparação direta e normalizada
     return productCategory === targetCategory;
@@ -2224,10 +2220,8 @@ function populatePromo() {
   const promoContainer = document.getElementById('promo-list');
   if (!promoContainer) return;
   
-  // Pega apenas produtos em promoção, ignorando monitores
-  const promoProducts = __allProducts.filter(p => 
-    p.promocao === 'sim' && p.categoria.toLowerCase() !== 'monitor'
-  );
+  // Pega apenas produtos em promoção
+  const promoProducts = __allProducts.filter(p => p.promocao === 'sim');
   
   promoContainer.innerHTML = '';
   const frag = document.createDocumentFragment();
