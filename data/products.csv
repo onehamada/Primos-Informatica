@@ -27,11 +27,18 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1890;PROCESSADOR INTEL I5 14400 LGA1700;processador;1699,00;3;Intel Core i5 14400 14ª geração;Intel;nao;i514400.webp
 402614;PROCESSADOR INTEL I7 3770 LGA1155;processador;432,45;1;Intel Core i7 3770 3.9GHz;Intel;nao;i73770.webp
 1890;PROCESSADOR INTEL PENTIUM G5400T;processador;399,00;4;Intel Pentium G5400T 3.1GHz;Intel;nao;g5400t.webp
-2001;PLACA MÃE ASUS PRIME H510M LGA1200;placa mãe;389,00;5;Placa Mãe ASUS Prime H510M LGA1200;ASUS;nao;asus_h510m.webp
-2002;PLACA MÃE GIGABYTE H510M S LGA1200;placa mãe;359,00;3;Placa Mãe Gigabyte H510M S LGA1200;Gigabyte;sim;gigabyte_h510m.webp
-2003;PLACA MÃE ASROCK H510M-HVS LGA1200;placa mãe;319,00;4;Placa Mãe ASRock H510M-HVS LGA1200;ASRock;nao;asrock_h510m.webp
-2004;PLACA MÃE ASUS PRIME H610M LGA1700;placa mãe;429,00;2;Placa Mãe ASUS Prime H610M LGA1700;ASUS;nao;asus_h610m.webp
-2005;PLACA MÃE MSI PRO H610M-G LGA1700;placa mãe;399,00;3;Placa Mãe MSI Pro H610M-G LGA1700;MSI;sim;msi_h610m.webp
+2001;PLACA MÃE BPC H61 ITX;placa mãe;189,00;3;Placa Mãe BPC H61 ITX;BPC;nao;bpc-h61-itx.webp
+2002;PLACA MÃE BPC H81M;placa mãe;219,00;2;Placa Mãe BPC H81M;BPC;sim;bpch81m.webp
+2003;PLACA MÃE H310M E PRIME;placa mãe;289,00;4;Placa Mãe H310M E PRIME;Intel;nao;h310meprime.webp
+2004;PLACA MÃE H310M H;placa mãe;269,00;3;Placa Mãe H310M H;Intel;nao;h310mh.webp
+2005;PLACA MÃE H610M CS PRIME;placa mãe;349,00;2;Placa Mãe H610M CS PRIME;Intel;sim;h610mcsprime.webp
+2006;PLACA MÃE H610M K;placa mãe;329,00;3;Placa Mãe H610M K;Intel;nao;h610mk.webp
+2007;PLACA MÃE H610M K PRIME;placa mãe;339,00;2;Placa Mãe H610M K PRIME;Intel;nao;h610mkprime.webp
+2008;PLACA MÃE IPM B360;placa mãe;299,00;1;Placa Mãe IPM B360;IPM;nao;ipmb360.webp
+2009;PLACA MÃE IPM H310G;placa mãe;259,00;3;Placa Mãe IPM H310G;IPM;sim;ipmh310g.webp
+2010;PLACA MÃE IPM H310G PRO;placa mãe;279,00;2;Placa Mãe IPM H310G PRO;IPM;nao;ipmh310gpro.webp
+2011;PLACA MÃE PLM 2300;placa mãe;199,00;4;Placa Mãe PLM 2300;PLM;nao;plm2300.webp
+2012;PLACA MÃE PLM 2301;placa mãe;209,00;3;Placa Mãe PLM 2301;PLM;sim;plm2301.webp
 1828;PLACA DE VÍDEO NVIDIA INNO3D RTX3060 12GB DDR6;placa de vídeo;2185,50;1;RTX 3060 12GB DDR6 PCIe 4.0;NVIDIA;nao;rtx3060.webp
 402487;PLACA DE VÍDEO NVIDIA GTX 550 1GB DDR5 128 BITS;placa de vídeo;303,18;1;GTX 550 1GB DDR5 128 bits;NVIDIA;sim;gtx550.webp
 1572;PLACA DE VÍDEO NVIDIA GT740 2GB DDR3 BLUECASE;placa de vídeo;337,59;1;GT740 2GB DDR3 128 bits BlueCase;NVIDIA;sim;gt740.webp
