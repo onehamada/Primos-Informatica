@@ -2285,6 +2285,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Carrega produtos do CSV com cache
     await loadProductsFromCsv();
     
+    // Mostra categoria inicial após carregar produtos
+    if (typeof showCategory === 'function') {
+      showCategory('inicio');
+    }
+    
     // Esconde loading
     setTimeout(() => {
       hideLoading();
