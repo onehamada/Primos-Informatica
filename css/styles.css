@@ -458,7 +458,7 @@ header .brand-logo:hover {
 .header-tabs::-webkit-scrollbar-track {
   background: rgba(226, 232, 240, 0.3);
   border-radius: 6px;
-  margin: 8px 20px 0 20px;
+  margin: 12px 24px 0 24px;
 }
 
 .header-tabs::-webkit-scrollbar-thumb {
