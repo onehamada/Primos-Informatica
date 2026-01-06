@@ -2337,9 +2337,9 @@ function populatePromo() {
   }
   
   // Pega apenas produtos em promoção
-  const promoProducts = __allProducts.filter(p => p.promocao === 'sim');
+  const promoProducts = __allProducts.filter(p => p.promocao === true);
   console.log('🎯 Produtos em promoção encontrados:', promoProducts.length);
-  console.log('📋 Produtos promo:', promoProducts.map(p => p.nome));
+  console.log('📋 Produtos promo:', promoProducts.map(p => ({nome: p.nome, promocao: p.promocao})));
   
   // Limpa container
   promoContainer.innerHTML = '';
