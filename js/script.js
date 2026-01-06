@@ -2001,6 +2001,11 @@ function renderCategoryProducts(categoryId, products) {
   const frag = document.createDocumentFragment();
   products.forEach((product, index) => {
     console.log(`📦 Criando produto ${index + 1}:`, product.nome, product.codigo);
+    const productImg = document.createElement('img');
+    productImg.src = product.imagem;
+    productImg.alt = product.nome;
+    productImg.loading = 'lazy';
+    productImg.decoding = 'async';
     const productElement = createProductElement(product, categoryId);
     frag.appendChild(productElement);
   });
