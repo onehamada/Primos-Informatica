@@ -2435,6 +2435,10 @@ main {
   color: #fff;
 }
 
+.text-center {
+  text-align: center;
+}
+
 .home-section {
   margin-bottom: 48px;
   max-width: 1000px;
