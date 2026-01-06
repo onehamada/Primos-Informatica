@@ -2020,6 +2020,8 @@ function showCategory(id) {
 }
 
 function renderCategoryProducts(categoryId, products) {
+  console.log(`🎨 renderCategoryProducts chamado para ${categoryId} com ${products.length} produtos`);
+  
   const container = document.getElementById(categoryId);
   if (!container) {
     console.error('❌ Container da categoria não encontrado:', categoryId);
@@ -2036,15 +2038,21 @@ function renderCategoryProducts(categoryId, products) {
   grid.innerHTML = '';
   
   const frag = document.createDocumentFragment();
-  products.forEach(product => {
-    frag.appendChild(createProductElement(product, categoryId));
+  products.forEach((product, index) => {
+    console.log(`📦 Criando produto ${index + 1}:`, product.nome, product.codigo);
+    const productElement = createProductElement(product, categoryId);
+    frag.appendChild(productElement);
   });
+  
   grid.appendChild(frag);
+  console.log(`✅ ${products.length} produtos adicionados ao grid da categoria ${categoryId}`);
   
   // Adiciona botões de carrinho
   addCartButtons();
   // Otimiza imagens
   optimizeProductImages(grid);
+  
+  console.log(`🎯 Grid final da categoria ${categoryId}:`, grid.children.length, 'elementos');
 }
 
 function renderEmptyCategory(categoryId) {
