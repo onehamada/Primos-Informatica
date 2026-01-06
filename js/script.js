@@ -1426,6 +1426,65 @@ function writeCsvCache(data) {
   }
 }
 
+// Dados de fallback dos monitores
+const MONITOR_PRODUCTS_FALLBACK = [
+  {
+    codigo: "1006",
+    nome: "MONITOR 19\" HAYOM MO6001 PROMOÇÃO",
+    categoria: "monitor",
+    preco: 285.00,
+    qt: 1,
+    descricao: "Monitor 19\" MO6001",
+    marca: "Hayom",
+    promocao: true,
+    imagem: "monitor-hayom-19-mo6001.webp"
+  },
+  {
+    codigo: "400772",
+    nome: "MONITOR 21.5 PHILIPS LED FULL HD 221V8 WVA HDMI",
+    categoria: "monitor",
+    preco: 825.00,
+    qt: 1,
+    descricao: "Monitor 21,5\" Full HD 221V8 WVA HDMI",
+    marca: "Philips",
+    promocao: false,
+    imagem: "monitor-philips-215-fullhd-221v8.webp"
+  },
+  {
+    codigo: "1117",
+    nome: "MONITOR 15,4 HAYOM MO 6006",
+    categoria: "monitor",
+    preco: 300.00,
+    qt: 1,
+    descricao: "Monitor 15,4\" MO6006",
+    marca: "Hayom",
+    promocao: false,
+    imagem: "monitor-hayom-154-mo6006.webp"
+  },
+  {
+    codigo: "1115",
+    nome: "MONITOR 17,1 HAYOM MO6004",
+    categoria: "monitor",
+    preco: 330.00,
+    qt: 1,
+    descricao: "Monitor 17,1\" MO6004",
+    marca: "Hayom",
+    promocao: false,
+    imagem: "monitor-hayom-171-mo6004.webp"
+  },
+  {
+    codigo: "1617",
+    nome: "MONITOR 21,5 GBT LED HDMI E VGA GBT-M218",
+    categoria: "monitor",
+    preco: 312.00,
+    qt: 1,
+    descricao: "Monitor 21,5\" GBT-M218 HDMI/VGA",
+    marca: "GBT",
+    promocao: false,
+    imagem: "monitor-gbt-215-hdmi-vga-m218.webp"
+  }
+];
+
 async function loadProductsFromJson() {
   console.log('Tentando carregar produtos do JSON...');
   try {
@@ -1436,7 +1495,9 @@ async function loadProductsFromJson() {
     applyProductsAndRender(products);
     return true;
   } catch (error) {
-    console.error('Erro ao carregar JSON:', error);
+    console.error('Erro ao carregar JSON, usando fallback hardcoded:', error);
+    // Fallback final: usar dados hardcoded dos monitores
+    applyProductsAndRender(MONITOR_PRODUCTS_FALLBACK);
     return false;
   }
 }
