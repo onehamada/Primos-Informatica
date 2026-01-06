@@ -1621,6 +1621,12 @@ async function loadProductsFromCsv() {
     
     // Debug: mostrar produtos em promoção DEPOIS do parsing
     try {
+      // Limitar para evitar loops infinitos
+      if (products.length > 200) {
+        console.warn('⚠️ Limitando produtos para evitar loop infinito');
+        return [];
+      }
+      
       const promoProducts = products.filter(p => p.promocao === 'sim');
       console.log('🎯 Produtos em promoção encontrados no CSV:', promoProducts.length);
       console.log('📋 Lista promo:', promoProducts.map(p => ({nome: p.nome, promocao: p.promocao})));
