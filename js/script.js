@@ -1618,36 +1618,76 @@ async function loadProductsFromCsv() {
 }
 
 function parseCsvOptimized(csvText) {
-  const lines = csvText.split('\n').filter(line => line.trim());
-  const headers = lines[0].split(';').map(h => h.trim());
-  
-  return lines.slice(1).map(line => {
-    const values = line.split(';');
-    const product = {};
+  try {
+    const lines = csvText.split('\n').filter(line => line.trim());
+    if (lines.length < 2) {
+      console.error('CSV vazio ou inválido');
+      return [];
+    }
     
-    headers.forEach((header, index) => {
-      let value = values[index] || '';
-      value = value.trim();
+    const headers = lines[0].split(';').map(h => h.trim());
+    console.log('📋 Headers encontrados:', headers);
+    
+    const products = lines.slice(1).map((line, index) => {
+      const values = line.split(';');
+      const product = {};
       
-      // Processamento específico por campo
-      switch(header) {
-        case 'preco':
-          product.precoRaw = parseFloat(value.replace(',', '.')) || 0;
-          product.preco = formatPrice(product.precoRaw);
-          break;
-        case 'qt':
-          product.qt = parseInt(value) || 0;
-          break;
-        case 'promocao':
-          product.promocao = value.toLowerCase() === 'sim';
-          break;
-        default:
-          product[header] = value;
+      headers.forEach((header, headerIndex) => {
+        let value = values[headerIndex] || '';
+        value = value.trim();
+        
+        // Processamento específico por campo
+        switch(header) {
+          case 'codigo':
+            product.codigo = value;
+            break;
+          case 'nome':
+            product.nome = value;
+            break;
+          case 'categoria':
+            product.categoria = value;
+            break;
+          case 'preco':
+            product.precoRaw = parseFloat(value.replace(',', '.')) || 0;
+            product.preco = formatPrice(product.precoRaw);
+            break;
+          case 'qt':
+            product.qt = parseInt(value) || 0;
+            break;
+          case 'descricao':
+            product.descricao = value;
+            break;
+          case 'marca':
+            product.marca = value;
+            break;
+          case 'promocao':
+            product.promocao = value.toLowerCase() === 'sim';
+            break;
+          case 'imagem':
+            product.imagem = value;
+            break;
+          default:
+            product[header] = value;
+        }
+      });
+      
+      // Validação básica
+      if (!product.codigo || !product.nome) {
+        console.warn(`Produto inválido na linha ${index + 2}:`, line);
+        return null;
       }
-    });
+      
+      return product;
+    }).filter(p => p !== null && p.codigo); // Remove produtos inválidos
     
-    return product;
-  }).filter(p => p.codigo); // Remove produtos sem código
+    console.log(`✅ Parseado ${products.length} produtos com sucesso`);
+    return products;
+    
+  } catch (error) {
+    console.error('❌ Erro no parsing do CSV:', error);
+    // Retorna array vazio em caso de erro
+    return [];
+  }
 }
 
 function showErrorMessage(message) {
