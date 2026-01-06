@@ -1619,7 +1619,7 @@ async function loadProductsFromCsv() {
     const products = parseCsvOptimized(csvText);
     console.log('✅ Parseado', products.length, 'produtos com sucesso');
     
-    // Debug: mostrar produtos em promoção
+    // Debug: mostrar produtos em promoção DEPOIS do parsing
     const promoProducts = products.filter(p => p.promocao === 'sim');
     console.log('🎯 Produtos em promoção encontrados no CSV:', promoProducts.length);
     console.log('📋 Lista promo:', promoProducts.map(p => ({nome: p.nome, promocao: p.promocao})));
