@@ -2080,14 +2080,21 @@ function createProductElement(product, categoryId) {
   // Simplificado: usar apenas imagem específica se existir
   if (product.imagem) {
     img.src = `images/products/thumbnail/${product.imagem}`;
+    console.log(`🖼️ Carregando imagem: ${img.src} para produto: ${product.nome}`);
   } else {
     img.src = `images/products/thumbnail/${product.codigo}.webp`;
+    console.log(`🖼️ Carregando imagem por código: ${img.src} para produto: ${product.nome}`);
   }
   
   // Fallback simples para categoria
   img.onerror = function() {
+    console.error(`❌ Erro ao carregar imagem: ${this.src}`);
     this.onerror = null;
     this.src = `images/products/thumbnail/${slugify(product.categoria || 'default')}.webp`;
+  };
+
+  img.onload = function() {
+    console.log(`✅ Imagem carregada com sucesso: ${this.src}`);
   };
 
   const info = document.createElement('div');
