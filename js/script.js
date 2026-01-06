@@ -1426,8 +1426,9 @@ function writeCsvCache(data) {
   }
 }
 
-// Dados de fallback dos monitores
-const MONITOR_PRODUCTS_FALLBACK = [
+// Dados de fallback completos
+const ALL_PRODUCTS_FALLBACK = [
+  // Monitores
   {
     codigo: "1006",
     nome: "MONITOR 19\" HAYOM MO6001 PROMOÇÃO",
@@ -1482,6 +1483,86 @@ const MONITOR_PRODUCTS_FALLBACK = [
     marca: "GBT",
     promocao: false,
     imagem: "monitor-gbt-215-hdmi-vga-m218.webp"
+  },
+  // Processadores
+  {
+    codigo: "1888",
+    nome: "PROCESSADOR INTEL CELERON 1151 LGA1200 G5905 4MB",
+    categoria: "processador",
+    preco: 214.99,
+    qt: 23,
+    descricao: "Intel Celeron G5905 LGA1200 4MB",
+    marca: "Intel",
+    promocao: false,
+    imagem: "g5905.webp"
+  },
+  {
+    codigo: "1889",
+    nome: "PROCESSADOR INTEL CELERON 1151 LGA1200 G5925 3.6GHZ",
+    categoria: "processador",
+    preco: 214.99,
+    qt: 16,
+    descricao: "Intel Celeron G5925 3.6GHz LGA1200",
+    marca: "Intel",
+    promocao: false,
+    imagem: "g5925.webp"
+  },
+  {
+    codigo: "1039",
+    nome: "PROCESSADOR INTEL I3 LGA1150 4150/4160 3.4GHZ 3MB OEM",
+    categoria: "processador",
+    preco: 75.90,
+    qt: 5,
+    descricao: "Intel Core i3 4150/4160 3.4GHz 3MB OEM",
+    marca: "Intel",
+    promocao: false,
+    imagem: "i34150.webp"
+  },
+  // Placas de vídeo
+  {
+    codigo: "1828",
+    nome: "NVIDIA PLACA DE VIDEO INNO3D RTX3060 12GB DDR6",
+    categoria: "placa de vídeo",
+    preco: 2185.50,
+    qt: 1,
+    descricao: "RTX 3060 12GB DDR6 PCIe 4.0",
+    marca: "NVIDIA",
+    promocao: false,
+    imagem: "rtx3060.webp"
+  },
+  {
+    codigo: "402487",
+    nome: "NVIDIA PLACA DE VIDEO GTX 550 1GB DDR5 128 BITS",
+    categoria: "placa de vídeo",
+    preco: 303.18,
+    qt: 1,
+    descricao: "GTX 550 1GB DDR5 128 bits",
+    marca: "NVIDIA",
+    promocao: true,
+    imagem: "gtx550.webp"
+  },
+  // SSDs
+  {
+    codigo: "1001",
+    nome: "SSD KINGSTON 240GB A400 SATA3",
+    categoria: "ssd",
+    preco: 189.90,
+    qt: 15,
+    descricao: "SSD Kingston 240GB A400 SATA3",
+    marca: "Kingston",
+    promocao: false,
+    imagem: "ssd240gb_kingston.webp"
+  },
+  {
+    codigo: "1002",
+    nome: "SSD KINGSTON 480GB A400 SATA3",
+    categoria: "ssd",
+    preco: 289.90,
+    qt: 10,
+    descricao: "SSD Kingston 480GB A400 SATA3",
+    marca: "Kingston",
+    promocao: false,
+    imagem: "ssd480gb_kingston.webp"
   }
 ];
 
@@ -1496,8 +1577,8 @@ async function loadProductsFromJson() {
     return true;
   } catch (error) {
     console.error('Erro ao carregar JSON, usando fallback hardcoded:', error);
-    // Fallback final: usar dados hardcoded dos monitores
-    applyProductsAndRender(MONITOR_PRODUCTS_FALLBACK);
+    // Fallback final: usar dados hardcoded de todos os produtos
+    applyProductsAndRender(ALL_PRODUCTS_FALLBACK);
     return false;
   }
 }
