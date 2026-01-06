@@ -1596,6 +1596,8 @@ const ALL_PRODUCTS_FALLBACK = [
 
 async function loadProductsFromCsv() {
   try {
+    console.log('🔄 Iniciando carregamento de produtos...');
+    
     // Verifica cache primeiro
     const cached = readCsvCache();
     if (cached) {
@@ -1606,10 +1608,14 @@ async function loadProductsFromCsv() {
 
     console.log('Carregando produtos do CSV...');
     const response = await fetch('data/products.csv');
+    console.log('Response status:', response.status);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     
     const csvText = await response.text();
+    console.log('CSV recebido, tamanho:', csvText.length, 'caracteres');
+    
     const products = parseCsvOptimized(csvText);
+    console.log('Produtos parseados:', products.length);
     
     // Salva no cache
     writeCsvCache(products);
@@ -1914,6 +1920,7 @@ function getProductsByCategory(categoryKey) {
 // === UI & Navigation ===
 function showCategory(id) {
   console.log('🔍 Mostrando categoria:', id);
+  console.log('📦 Produtos disponíveis:', __allProducts.length);
   
   // Esconde todas as categorias
   document.querySelectorAll('.category').forEach(el => el.style.display = 'none');
@@ -1921,13 +1928,22 @@ function showCategory(id) {
   
   // Mostra a categoria selecionada
   const target = document.getElementById(id);
+  console.log('🎯 Elemento alvo encontrado:', !!target);
   if (target) {
     target.style.display = 'block';
+    console.log('✅ Categoria exibida');
+  } else {
+    console.log('❌ Elemento da categoria não encontrado:', id);
   }
   
   // Ativa o botão da tab
   const btn = document.querySelector(`[data-target="${id}"]`);
-  if (btn) btn.classList.add('active');
+  if (btn) {
+    btn.classList.add('active');
+    console.log('✅ Botão ativado');
+  } else {
+    console.log('❌ Botão não encontrado:', id);
+  }
   
   if (id === 'promo') {
     populatePromo();
