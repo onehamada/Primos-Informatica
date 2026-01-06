@@ -322,6 +322,8 @@ document.addEventListener('click', (e) => {
   if (!filtersContainer.contains(e.target) && filtersPanel.classList.contains('active')) {
     toggleFilters();
   }
+});
+
 function initSearch() {
   const searchInput = document.getElementById('searchInput');
   const searchResults = document.getElementById('searchResults');
