@@ -106,18 +106,17 @@
   
   <!-- Service Worker Registration -->
   <script>
-    // Service Worker desativado temporariamente para debug
-    // if ('serviceWorker' in navigator) {
-    //   window.addEventListener('load', () => {
-    //     navigator.serviceWorker.register('./sw.js')
-    //       .then(registration => {
-    //         console.log('✅ Service Worker registrado:', registration.scope);
-    //       })
-    //       .catch(error => {
-    //         console.log('❌ Falha no registro do Service Worker:', error);
-    //       });
-    //   });
-    // }
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(registration => {
+            console.log('✅ Service Worker registrado:', registration.scope);
+          })
+          .catch(error => {
+            console.log('❌ Falha no registro do Service Worker:', error);
+          });
+      });
+    }
   </script>
 </head>
 <body>
@@ -524,6 +523,6 @@
   <button type="button" onclick="showCategory('fonte')">Fontes</button>
 </footer>
 
-<script src="js/script.js?v=123456"></script>
+<script src="js/script.js"></script>
 </body>
 </html>
