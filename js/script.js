@@ -1597,20 +1597,32 @@ const ALL_PRODUCTS_FALLBACK = [
 ];
 
 async function loadProductsFromCsv() {
+  console.log('🔄 Iniciando carregamento de produtos...');
+  
   try {
-    console.log('🔄 Iniciando carregamento de produtos...');
-    
-    // Sempre tenta carregar do CSV primeiro em hard refresh
-    console.log('Carregando produtos do CSV...');
-    const response = await fetch('data/products.csv', { cache: 'no-cache' });
+    // Força cache busting com timestamp
+    const timestamp = Date.now();
+    const response = await fetch(`data/products.csv?t=${timestamp}`);
     console.log('Response status:', response.status);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     
     const csvText = await response.text();
     console.log('CSV recebido, tamanho:', csvText.length, 'caracteres');
     
+    if (!csvText.trim()) {
+      throw new Error('CSV vazio ou inválido');
+    }
+    
     const products = parseCsvOptimized(csvText);
-    console.log('Produtos parseados:', products.length);
+    console.log('✅ Parseado', products.length, 'produtos com sucesso');
+    
+    // Debug: mostrar produtos em promoção
+    const promoProducts = products.filter(p => p.promocao === 'sim');
+    console.log('🎯 Produtos em promoção encontrados no CSV:', promoProducts.length);
+    console.log('📋 Lista promo:', promoProducts.map(p => ({nome: p.nome, promocao: p.promocao})));
     
     if (products.length > 0) {
       // Salva no cache
