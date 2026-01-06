@@ -1563,6 +1563,30 @@ const ALL_PRODUCTS_FALLBACK = [
     marca: "Kingston",
     promocao: false,
     imagem: "ssd480gb_kingston.webp"
+  },
+  // HDs
+  {
+    codigo: "1485",
+    nome: "HD EXTERNO 1 TERA SEAGATE EXPANSION USB 3.0",
+    categoria: "hd externo",
+    preco: 490.00,
+    qt: 1,
+    descricao: "HD externo 1TB Seagate Expansion USB 3.0",
+    marca: "Seagate",
+    promocao: false,
+    imagem: "hd1tb_sea.webp"
+  },
+  // Fontes
+  {
+    codigo: "1883",
+    nome: "FONTE REAL 750W 80 PLUS MGS",
+    categoria: "fonte",
+    preco: 390.00,
+    qt: 1,
+    descricao: "Fonte Real 750W 80 Plus MGS",
+    marca: "MGS",
+    promocao: false,
+    imagem: "mgs_fonte750w.webp"
   }
 ];
 
