@@ -352,6 +352,10 @@ function initSearch() {
 }
 
 function performSearch(query) {
+  const results = [];
+  const normalizedQuery = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  
+  for (let i = 0; i < __allProducts.length; i++) {
     const product = __allProducts[i];
     const searchText = [
       product.nome || '',
@@ -1723,84 +1727,8 @@ async function loadProductsFromJson() {
   }
 }
 
-    } catch (error) {
-      console.warn('Erro ao processar cache:', error);
-    }
-  }
-
-  console.log('Buscando CSV do servidor...');
-  fetch('data/products.csv')
-    .then(r => {
-      console.log('Response status:', r.status);
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      return r.text();
-    })
-    .then(text => {
-      console.log('CSV recebido, tamanho:', text.length, 'caracteres');
-      
-      // Corrigir encoding: substituir caracteres corrompidos
-      const correctedText = text
-        .replace(/ǟ/g, 'ÇÃO')
-        .replace(/\?/g, 'ÇÃO')
-        .replace(/\?\?/g, 'ÇÃO')
-        .replace(/\?\?\?/g, 'ÇÃO')
-        .replace(/ǟ/g, 'ÇÃO')
-        .replace(/\??/g, 'ÇÃO')
-        .replace(/\??\?/g, 'ÇÃO')
-        .replace(/\uFFFD/g, 'ÇÃO')
-        .replace(/Placa mǜe/g, 'Placa mãe')
-        .replace(/Placa de vǜdeo/g, 'Placa de vídeo')
-        .replace(/placa de vǜdeo/g, 'placa de vídeo')
-        .replace(/geraǜo/g, 'geração')
-        .replace(/4G/g, '4ªG')
-        .replace(/10G/g, '10ªG')
-        .replace(/11/g, '11ª')
-        .replace(/12/g, '12ª')
-        .replace(/13/g, '13ª')
-        .replace(/14/g, '14ª')
-        .replace(/PROMOǟO/g, 'PROMOÇÃO');
-      
-      const products = parseCsv(correctedText);
-      console.log('Produtos parseados:', products.length);
-
-      if (products.length) {
-        applyProductsAndRender(products);
-        writeCsvCache(correctedText);
-        console.log('Produtos aplicados com sucesso!');
-      } else {
-        console.error('Nenhum produto encontrado no CSV, tentando JSON...');
-        loadProductsFromJson().then(jsonLoaded => {
-          if (!jsonLoaded) {
-            console.error('Falha ao carregar produtos do JSON também');
-          }
-        });
-      }
-    })
-    .catch(err => {
-      console.error('Erro ao carregar CSV, tentando JSON:', err);
-      loadProductsFromJson();
-    });
-}
-
-// Função para atualizar cache em segundo plano
-function refreshCacheInBackground() {
-  fetch('data/products.csv')
-    .then(r => {
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      return r.text();
-    })
-    .then(text => {
-      const products = parseCsv(text);
-      if (products.length) {
-        writeCsvCache(text);
-      }
-    })
-    .catch(err => {
-      console.warn('Erro ao atualizar cache em segundo plano:', err);
-    });
-}
-
-// === Gerenciamento de Categorias ===
+    
+  // === Gerenciamento de Categorias ===
 function limparCategoriasOrfas() {
   // Pegar categorias que existem no CSV
   const categoriasCSV = new Set(__allProducts.map(p => p.categoria));
