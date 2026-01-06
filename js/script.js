@@ -315,11 +315,13 @@ function hasActiveFilters() {
 }
 
 // Fecha filtros ao clicar fora
-document.addEventListener('click', (e) => {
+document.addEventListener('click', function(e) {
   const filtersContainer = document.getElementById('filtersContainer');
   const filtersPanel = document.getElementById('filtersPanel');
   
-  if (!filtersContainer.contains(e.target) && filtersPanel.classList.contains('active')) {
+  if (filtersContainer && filtersPanel && 
+      !filtersContainer.contains(e.target) && 
+      filtersPanel.classList.contains('active')) {
     toggleFilters();
   }
 });
