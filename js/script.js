@@ -1340,6 +1340,7 @@ function parseCsvLine(line) {
   const [codigo, nome, categoria, preco, qt, descricao, marca, promocao, imagem] = parts;
   if (!codigo || !nome || !categoria || !preco || qt === undefined) return null;
   
+  // Converter preço brasileiro (ex: 285,00) para ponto decimal (285.00)
   const precoNum = parseFloat(preco.replace(',', '.'));
   const qtNum = parseInt(qt) || 0;
   if (isNaN(precoNum) || isNaN(qtNum)) return null;
