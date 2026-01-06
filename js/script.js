@@ -1426,6 +1426,21 @@ function writeCsvCache(data) {
   }
 }
 
+async function loadProductsFromJson() {
+  console.log('Tentando carregar produtos do JSON...');
+  try {
+    const response = await fetch('data/products.json');
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const products = await response.json();
+    console.log('Produtos carregados do JSON:', products.length);
+    applyProductsAndRender(products);
+    return true;
+  } catch (error) {
+    console.error('Erro ao carregar JSON:', error);
+    return false;
+  }
+}
+
 async function loadProductsFromCsv() {
   console.log('Iniciando carregamento de produtos...');
   
@@ -1484,11 +1499,17 @@ async function loadProductsFromCsv() {
         writeCsvCache(correctedText);
         console.log('Produtos aplicados com sucesso!');
       } else {
-        console.error('Nenhum produto encontrado no CSV');
+        console.error('Nenhum produto encontrado no CSV, tentando JSON...');
+        loadProductsFromJson().then(jsonLoaded => {
+          if (!jsonLoaded) {
+            console.error('Falha ao carregar produtos do JSON também');
+          }
+        });
       }
     })
     .catch(err => {
-      console.error('Erro ao carregar CSV:', err);
+      console.error('Erro ao carregar CSV, tentando JSON:', err);
+      loadProductsFromJson();
     });
 }
 

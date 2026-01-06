@@ -1,0 +1,123 @@
+[
+  {
+    "codigo": "1006",
+    "nome": "MONITOR 19\" HAYOM MO6001 PROMOÇÃO",
+    "categoria": "monitor",
+    "preco": 285.00,
+    "qt": 1,
+    "descricao": "Monitor 19\" MO6001",
+    "marca": "Hayom",
+    "promocao": true,
+    "imagem": "monitor-hayom-19-mo6001.webp"
+  },
+  {
+    "codigo": "400772",
+    "nome": "MONITOR 21.5 PHILIPS LED FULL HD 221V8 WVA HDMI",
+    "categoria": "monitor",
+    "preco": 825.00,
+    "qt": 1,
+    "descricao": "Monitor 21,5\" Full HD 221V8 WVA HDMI",
+    "marca": "Philips",
+    "promocao": false,
+    "imagem": "monitor-philips-215-fullhd-221v8.webp"
+  },
+  {
+    "codigo": "1117",
+    "nome": "MONITOR 15,4 HAYOM MO 6006",
+    "categoria": "monitor",
+    "preco": 300.00,
+    "qt": 1,
+    "descricao": "Monitor 15,4\" MO6006",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "monitor-hayom-154-mo6006.webp"
+  },
+  {
+    "codigo": "1115",
+    "nome": "MONITOR 17,1 HAYOM MO6004",
+    "categoria": "monitor",
+    "preco": 330.00,
+    "qt": 1,
+    "descricao": "Monitor 17,1\" MO6004",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "monitor-hayom-171-mo6004.webp"
+  },
+  {
+    "codigo": "1617",
+    "nome": "MONITOR 21,5 GBT LED HDMI E VGA GBT-M218",
+    "categoria": "monitor",
+    "preco": 312.00,
+    "qt": 1,
+    "descricao": "Monitor 21,5\" GBT-M218 HDMI/VGA",
+    "marca": "GBT",
+    "promocao": false,
+    "imagem": "monitor-gbt-215-hdmi-vga-m218.webp"
+  },
+  {
+    "codigo": "1618",
+    "nome": "MONITOR 23,5 GBT LED HDMI VGA GBT-M218",
+    "categoria": "monitor",
+    "preco": 410.88,
+    "qt": 1,
+    "descricao": "Monitor 23,5\" GBT-M218 HDMI/VGA",
+    "marca": "GBT",
+    "promocao": false,
+    "imagem": "monitor-gbt-235-hdmi-vga-m218.webp"
+  },
+  {
+    "codigo": "1932",
+    "nome": "MONITOR 32 SAMSUNG GAMER QHD LS32CG55 ODYSSEY",
+    "categoria": "monitor",
+    "preco": 1650.00,
+    "qt": 1,
+    "descricao": "Monitor gamer 32\" QHD LS32CG55 Odyssey",
+    "marca": "Samsung",
+    "promocao": false,
+    "imagem": "monitor-samsung-32-gamer-qhd-odyssey.webp"
+  },
+  {
+    "codigo": "1633",
+    "nome": "MONITOR 24\" DX 1K 165HZ CURVO ALT FALANT 3W HDMI",
+    "categoria": "monitor",
+    "preco": 955.00,
+    "qt": 1,
+    "descricao": "Monitor curvo 24\" 1K 165Hz c/ alto-falante",
+    "marca": "DX",
+    "promocao": false,
+    "imagem": "monitor-dx-24-curvo-165hz-speaker.webp"
+  },
+  {
+    "codigo": "1634",
+    "nome": "MONITOR 27 DX 165HZ SPEKER ALTFALANTE IPS BOX",
+    "categoria": "monitor",
+    "preco": 1050.00,
+    "qt": 1,
+    "descricao": "Monitor 27\" IPS 165Hz c/ alto-falante",
+    "marca": "DX",
+    "promocao": false,
+    "imagem": "monitor-dx-27-ips-165hz-speaker.webp"
+  },
+  {
+    "codigo": "401115",
+    "nome": "MONITOR 18,5 AOC LED E970SWNHL HDMI",
+    "categoria": "monitor",
+    "preco": 563.00,
+    "qt": 1,
+    "descricao": "Monitor 18,5\" E970SWNHL HDMI",
+    "marca": "AOC",
+    "promocao": false,
+    "imagem": "monitor-aoc-185-led-e970swnhl.webp"
+  },
+  {
+    "codigo": "400759",
+    "nome": "MONITOR 21.5 LED SAMSUNG LS22F350FHLMZD",
+    "categoria": "monitor",
+    "preco": 1168.00,
+    "qt": 1,
+    "descricao": "Monitor 21,5\" LS22F350FHLMZD",
+    "marca": "Samsung",
+    "promocao": false,
+    "imagem": "monitor-samsung-215-led-ls22f350fhlmzd.webp"
+  }
+]
