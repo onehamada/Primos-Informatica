@@ -26,7 +26,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1042;PROCESSADOR INTEL I5 13400 LGA1700;processador;1634,00;2;Intel Core i5 13400 2.5GHz 20MB 13ª geração;Intel;nao;i513400.webp
 1890;PROCESSADOR INTEL I5 14400 LGA1700;processador;1699,00;3;Intel Core i5 14400 14ª geração;Intel;nao;i514400.webp
 402614;PROCESSADOR INTEL I7 3770 LGA1155;processador;432,45;1;Intel Core i7 3770 3.9GHz;Intel;nao;i73770.webp
-1890;PROCESSADOR INTEL PENTIUM G5400T;processador;399,00;4;Intel Pentium G5400T 3.1GHz;Intel;nao;g5400t.webp
+1890;PROCESSADOR INTEL PENTIUM G5400T;processador;425,00;4;Intel Pentium G5400T 3.1GHz;Intel;nao;g5400t.webp
 2001;PLACA MAE BRAZIL PC H61 ITX M.2;placa mãe;189,00;3;Placa Mãe Brazil PC H61 ITX M.2;Brazil PC;nao;bpc-h61-itx.webp
 2002;PLACA MAE BRASIL PC B1150 H81 BPCH81M;placa mãe;219,00;2;Placa Mãe Brasil PC B1150 H81;Brasil PC;sim;bpch81m.webp
 2003;PLACA MAE ASUS PRIME H310M-E HDMI DDR4;placa mãe;289,00;4;Placa Mãe ASUS Prime H310M-E HDMI DDR4;ASUS;nao;h310meprime.webp
