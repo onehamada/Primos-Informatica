@@ -697,20 +697,31 @@ function initDragScroll() {
   }, true);
 }
 
-// === Inicialização ===
+// === Inicialização Otimizada ===
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    initDragScroll(); // Inicializar drag & scroll
+    console.log('🚀 Iniciando sistema otimizado...');
+    
+    // Inicializa funcionalidades básicas
+    initDragScroll();
+    initBackToTop();
+    initDragScroll();
     preloadCriticalImages();
     stripStaticProductsFromHtml();
+    
+    // Carrega produtos do CSV (já chama populatePromo internamente)
     await loadProductsFromCsv();
-    populatePromo();
+    
     showCategory('inicio');
     optimizeProductImages(document);
     addCartButtons();
-    initDynamicLazyLoading();
+    
+    console.log('✅ Sistema otimizado inicializado com sucesso!');
   } catch (error) {
-    console.error('Erro na inicialização:', error);
+    console.error('❌ Erro na inicialização:', error);
+    showErrorMessage('Erro ao carregar o site. Tente recarregar a página.');
+  } finally {
+    hideLoading();
   }
 });
 
