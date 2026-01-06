@@ -1620,9 +1620,13 @@ async function loadProductsFromCsv() {
     console.log('✅ Parseado', products.length, 'produtos com sucesso');
     
     // Debug: mostrar produtos em promoção DEPOIS do parsing
-    const promoProducts = products.filter(p => p.promocao === 'sim');
-    console.log('🎯 Produtos em promoção encontrados no CSV:', promoProducts.length);
-    console.log('📋 Lista promo:', promoProducts.map(p => ({nome: p.nome, promocao: p.promocao})));
+    try {
+      const promoProducts = products.filter(p => p.promocao === 'sim');
+      console.log('🎯 Produtos em promoção encontrados no CSV:', promoProducts.length);
+      console.log('📋 Lista promo:', promoProducts.map(p => ({nome: p.nome, promocao: p.promocao})));
+    } catch (error) {
+      console.error('❌ Erro no filtro de promoções:', error);
+    }
     
     if (products.length > 0) {
       // Salva no cache
