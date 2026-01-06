@@ -2306,13 +2306,29 @@ function populatePromo() {
   console.log('🎯 Produtos em promoção encontrados:', promoProducts.length);
   console.log('📋 Produtos promo:', promoProducts.map(p => p.nome));
   
+  // Limpa container
   promoContainer.innerHTML = '';
+  
+  if (promoProducts.length === 0) {
+    promoContainer.innerHTML = `
+      <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #6b7280;">
+        <h3>Nenhuma promoção no momento</h3>
+        <p>Volte em breve para conferir nossas ofertas!</p>
+      </div>
+    `;
+    return;
+  }
+  
+  // Renderiza produtos
   const frag = document.createDocumentFragment();
   promoProducts.forEach(p => {
-    frag.appendChild(createProductElement(p, 'promo'));
+    const productElement = createProductElement(p, 'promo');
+    console.log('📦 Criando elemento para:', p.nome);
+    frag.appendChild(productElement);
   });
   promoContainer.appendChild(frag);
   optimizeProductImages(promoContainer);
+  addCartButtons();
   console.log('✅ Promoções populadas com sucesso!');
 }
 
