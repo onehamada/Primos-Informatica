@@ -554,27 +554,6 @@ function hideLoading() {
   }
 }
 
-// === Botão Voltar ao Topo ===
-function initBackToTop() {
-  const backToTop = document.getElementById('backToTop');
-  if (!backToTop) return;
-  
-  window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 300) {
-      backToTop.classList.add('visible');
-    } else {
-      backToTop.classList.remove('visible');
-    }
-  });
-  
-  backToTop.addEventListener('click', () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  });
-}
-
 // === Animações de Entrada ===
 function animateElements() {
   const observer = new IntersectionObserver((entries) => {
@@ -703,8 +682,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('🚀 Iniciando sistema otimizado...');
     
     // Inicializa funcionalidades básicas
-    initDragScroll();
-    initBackToTop();
     initDragScroll();
     preloadCriticalImages();
     stripStaticProductsFromHtml();
