@@ -1700,6 +1700,7 @@ function parseCsvOptimized(csvText) {
             product.marca = value;
             break;
           case 'promocao':
+            console.log(`🔍 Debug header promocao encontrado, valor: "${value}"`);
             product.promocao = value.toLowerCase() === 'sim';
             console.log(`🔍 Debug promoção: "${value}" -> ${product.promocao}`);
             break;
