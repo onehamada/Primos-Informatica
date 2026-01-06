@@ -1807,22 +1807,18 @@ function populateHomeCategories() {
   if (!grid) return;
   grid.innerHTML = '';
 
-  const categories = Array.from(__categoryLabels.entries()).slice(0, CONFIG.MAX_HOME_CATEGORIES);
-  categories.forEach(([id, label]) => {
+  // Usa as categorias definidas no mapa
+  Object.keys(CATEGORIES_MAP).forEach(categoryKey => {
+    const products = getProductsByCategory(categoryKey);
     const card = document.createElement('div');
     card.className = 'category-card';
-    card.addEventListener('click', () => showCategory(id));
+    card.addEventListener('click', () => showCategory(categoryKey));
 
     const h3 = document.createElement('h3');
-    h3.textContent = titleizeCategory(label);
+    h3.textContent = categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1);
 
     const p = document.createElement('p');
-    const count = __allProducts.filter(p => {
-      const normalizedCategory = normalizeCategory(p.categoria);
-      const normalizedId = normalizeCategory(id);
-      return normalizedCategory.toLowerCase() === normalizedId.toLowerCase();
-    }).length;
-    p.textContent = `${count} produto${count !== 1 ? 's' : ''}`;
+    p.textContent = `${products.length} produto${products.length !== 1 ? 's' : ''}`;
 
     card.appendChild(h3);
     card.appendChild(p);
@@ -1836,19 +1832,17 @@ function populateHomeHighlights() {
   grid.innerHTML = '';
 
   // Pega um produto por categoria (se houver)
-  const seenCats = new Set();
   const highlights = [];
-  for (const p of __allProducts) {
-    if (!seenCats.has(p.categoria)) {
-      seenCats.add(p.categoria);
-      highlights.push(p);
-      if (highlights.length >= CONFIG.MAX_HIGHLIGHTS) break;
+  Object.keys(CATEGORIES_MAP).forEach(categoryKey => {
+    const products = getProductsByCategory(categoryKey);
+    if (products.length > 0) {
+      highlights.push(products[0]); // Pega o primeiro produto de cada categoria
     }
-  }
+  });
 
   const frag = document.createDocumentFragment();
-  highlights.forEach(p => {
-    frag.appendChild(createProductElement(p, p.categoria));
+  highlights.slice(0, CONFIG.MAX_HIGHLIGHTS).forEach(p => {
+    frag.appendChild(createProductElement(p, 'promo'));
   });
   grid.appendChild(frag);
   optimizeProductImages(grid);
@@ -1861,87 +1855,122 @@ function titleizeCategory(str) {
 // === Funções de renderização ===
 function applyProductsAndRender(products) {
   __allProducts = products;
-  __categoryLabels.clear();
+  console.log('📦 Produtos carregados:', products.length);
   
-  products.forEach(p => {
-    if (!p.categoria) return;
-    if (!__categoryLabels.has(p.categoria)) {
-      __categoryLabels.set(p.categoria, p.categoriaLabel || p.categoria);
-    }
-  });
-
-  ensureCategoriesFromCsv();
-  renderProducts(products);
+  // Mostra categorias disponíveis no console para debug
+  const availableCategories = [...new Set(products.map(p => p.categoria))];
+  console.log('📂 Categorias disponíveis:', availableCategories);
+  
+  // Renderiza elementos da página inicial
   populateHomeCategories();
   populateHomeHighlights();
 }
 
-// === Função para normalizar categorias e resolver problemas de encoding ===
-function normalizeCategory(category) {
-  if (!category) return category;
-  
-  // Remove caracteres problemáticos e substitui por equivalentes corretos
-  return category
-    .replace(/[�]/g, 'í')  // Caracteres corrompidos para í
-    .replace(/[�]/g, 'ê')  // Caracteres corrompidos para ê  
-    .replace(/[�]/g, 'é')  // Caracteres corrompidos para é
-    .replace(/[�]/g, 'ã')  // Caracteres corrompidos para ã
-    .replace(/[�]/g, 'á')  // Caracteres corrompidos para á
-    .replace(/placa de v[^a-z]deo/gi, 'placa de vídeo')  // Corrige "placa de vídeo"
-    .replace(/placa m[^a-z]e/gi, 'placa mãe');           // Corrige "placa mãe"
+// === Sistema de Categorias Refeito do Zero ===
+const CATEGORIES_MAP = {
+  'monitor': 'monitor',
+  'processador': 'processador', 
+  'placa de vídeo': 'placa de vídeo',
+  'placa mãe': 'placa mãe',
+  'ssd': 'ssd',
+  'hd externo': 'hd externo',
+  'hd interno': 'hd interno',
+  'fonte': 'fonte'
+};
+
+// Função simples para obter produtos de uma categoria
+function getProductsByCategory(categoryKey) {
+  return __allProducts.filter(product => {
+    const productCategory = product.categoria ? product.categoria.trim().toLowerCase() : '';
+    const targetCategory = categoryKey.toLowerCase();
+    
+    // Comparação direta e normalizada
+    return productCategory === targetCategory;
+  });
 }
 
 // === UI & Navigation ===
 function showCategory(id) {
+  console.log('🔍 Mostrando categoria:', id);
+  
+  // Esconde todas as categorias
   document.querySelectorAll('.category').forEach(el => el.style.display = 'none');
   document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
   
+  // Mostra a categoria selecionada
   const target = document.getElementById(id);
   if (target) {
     target.style.display = 'block';
   }
   
+  // Ativa o botão da tab
   const btn = document.querySelector(`[data-target="${id}"]`);
   if (btn) btn.classList.add('active');
   
   if (id === 'promo') {
     populatePromo();
-  } else if (__categoryState.has(id)) {
-    renderCategory(id);
+  } else if (id === 'inicio') {
+    // Página inicial já tem conteúdo próprio
+    console.log('🏠 Página inicial');
   } else {
-    // Normaliza o ID e filtra produtos usando comparação normalizada
-    const normalizedId = normalizeCategory(id);
-    const products = __allProducts.filter(p => {
-      const normalizedCategory = normalizeCategory(p.categoria);
-      return normalizedCategory.toLowerCase() === normalizedId.toLowerCase();
-    });
+    // Busca produtos da categoria
+    const products = getProductsByCategory(id);
+    console.log(`📦 Encontrados ${products.length} produtos para categoria "${id}"`);
     
     if (products.length > 0) {
-      __categoryState.set(id, {
-        products: products.slice(0, CONFIG.PAGE_SIZE),
-        hasMore: products.length > CONFIG.PAGE_SIZE
-      });
-      renderCategory(id);
+      renderCategoryProducts(id, products);
     } else {
-      // Se não encontrou produtos, mostra mensagem
-      const container = document.getElementById(id);
-      if (container) {
-        let grid = container.querySelector('.products-grid');
-        if (!grid) {
-          grid = document.createElement('div');
-          grid.className = 'products-grid';
-          container.appendChild(grid);
-        }
-        grid.innerHTML = `
-          <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #6b7280;">
-            <h3>Nenhum produto encontrado</h3>
-            <p>Categoria: ${id}</p>
-            <p>Procurando por: ${normalizedId}</p>
-          </div>
-        `;
-      }
+      renderEmptyCategory(id);
     }
   }
+}
+
+function renderCategoryProducts(categoryId, products) {
+  const container = document.getElementById(categoryId);
+  if (!container) {
+    console.error('❌ Container da categoria não encontrado:', categoryId);
+    return;
+  }
+  
+  let grid = container.querySelector('.products-grid');
+  if (!grid) {
+    grid = document.createElement('div');
+    grid.className = 'products-grid';
+    container.appendChild(grid);
+  }
+  
+  grid.innerHTML = '';
+  
+  const frag = document.createDocumentFragment();
+  products.forEach(product => {
+    frag.appendChild(createProductElement(product, categoryId));
+  });
+  grid.appendChild(frag);
+  
+  // Adiciona botões de carrinho
+  addCartButtons();
+  // Otimiza imagens
+  optimizeProductImages(grid);
+}
+
+function renderEmptyCategory(categoryId) {
+  const container = document.getElementById(categoryId);
+  if (!container) return;
+  
+  let grid = container.querySelector('.products-grid');
+  if (!grid) {
+    grid = document.createElement('div');
+    grid.className = 'products-grid';
+    container.appendChild(grid);
+  }
+  
+  grid.innerHTML = `
+    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #6b7280;">
+      <h3>Nenhum produto encontrado</h3>
+      <p>Categoria: ${categoryId}</p>
+      <p>Verifique se o nome da categoria corresponde ao CSV</p>
+    </div>
+  `;
 }
 
 // === Image Optimization ===
@@ -2203,27 +2232,29 @@ function populatePromo() {
 }
 
 // === Inicialização do Site ===
-document.addEventListener('DOMContentLoaded', () => {
-  // Inicializa funcionalidades premium
-  initPerformanceMonitor();
-  initNotifications();
-  initAdvancedLazyLoading();
-  initMicroInteractions();
-  
-  // Inicializa funcionalidades existentes
-  initDragScroll();
-  initBackToTop();
-  animateElements();
-  initSearch();
-  
-  // Mostra loading ao carregar produtos
-  showLoading();
-  
-  // Carrega produtos do CSV
-  loadProductsFromCsv();
-  
-  // Esconde loading após carregar
-  setTimeout(() => {
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    console.log('🚀 Iniciando sistema de categorias refeito...');
+    
+    // Inicializa funcionalidades básicas
+    initDragScroll();
+    initBackToTop();
+    initSearch();
+    
+    // Mostra loading
+    showLoading();
+    
+    // Carrega produtos do CSV
+    await loadProductsFromCsv();
+    
+    // Esconde loading
+    setTimeout(() => {
+      hideLoading();
+    }, 1000);
+    
+    console.log('✅ Sistema inicializado com sucesso!');
+  } catch (error) {
+    console.error('❌ Erro na inicialização:', error);
     hideLoading();
-  }, 1000);
+  }
 });
