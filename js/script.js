@@ -1783,7 +1783,11 @@ function ensureCategoriesFromCsv() {
 
     // Inicializa estado da categoria
     if (!__categoryState.has(id)) {
-      const products = __allProducts.filter(p => p.categoria.toLowerCase() === id.toLowerCase());
+      const products = __allProducts.filter(p => {
+        const normalizedCategory = normalizeCategory(p.categoria);
+        const normalizedId = normalizeCategory(id);
+        return normalizedCategory.toLowerCase() === normalizedId.toLowerCase();
+      });
       __categoryState.set(id, {
         products: products.slice(0, CONFIG.PAGE_SIZE),
         hasMore: products.length > CONFIG.PAGE_SIZE
@@ -1813,7 +1817,11 @@ function populateHomeCategories() {
     h3.textContent = titleizeCategory(label);
 
     const p = document.createElement('p');
-    const count = __allProducts.filter(p => p.categoria === id).length;
+    const count = __allProducts.filter(p => {
+      const normalizedCategory = normalizeCategory(p.categoria);
+      const normalizedId = normalizeCategory(id);
+      return normalizedCategory.toLowerCase() === normalizedId.toLowerCase();
+    }).length;
     p.textContent = `${count} produto${count !== 1 ? 's' : ''}`;
 
     card.appendChild(h3);
@@ -1868,6 +1876,21 @@ function applyProductsAndRender(products) {
   populateHomeHighlights();
 }
 
+// === Função para normalizar categorias e resolver problemas de encoding ===
+function normalizeCategory(category) {
+  if (!category) return category;
+  
+  // Remove caracteres problemáticos e substitui por equivalentes corretos
+  return category
+    .replace(/[�]/g, 'í')  // Caracteres corrompidos para í
+    .replace(/[�]/g, 'ê')  // Caracteres corrompidos para ê  
+    .replace(/[�]/g, 'é')  // Caracteres corrompidos para é
+    .replace(/[�]/g, 'ã')  // Caracteres corrompidos para ã
+    .replace(/[�]/g, 'á')  // Caracteres corrompidos para á
+    .replace(/placa de v[^a-z]deo/gi, 'placa de vídeo')  // Corrige "placa de vídeo"
+    .replace(/placa m[^a-z]e/gi, 'placa mãe');           // Corrige "placa mãe"
+}
+
 // === UI & Navigation ===
 function showCategory(id) {
   document.querySelectorAll('.category').forEach(el => el.style.display = 'none');
@@ -1886,7 +1909,12 @@ function showCategory(id) {
   } else if (__categoryState.has(id)) {
     renderCategory(id);
   } else {
-    const products = __allProducts.filter(p => p.categoria.toLowerCase() === id.toLowerCase());
+    // Normaliza o ID e filtra produtos usando comparação normalizada
+    const normalizedId = normalizeCategory(id);
+    const products = __allProducts.filter(p => {
+      const normalizedCategory = normalizeCategory(p.categoria);
+      return normalizedCategory.toLowerCase() === normalizedId.toLowerCase();
+    });
     
     if (products.length > 0) {
       __categoryState.set(id, {
@@ -1908,6 +1936,7 @@ function showCategory(id) {
           <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #6b7280;">
             <h3>Nenhum produto encontrado</h3>
             <p>Categoria: ${id}</p>
+            <p>Procurando por: ${normalizedId}</p>
           </div>
         `;
       }
@@ -1992,7 +2021,11 @@ function loadMoreProducts(categoryId) {
   if (!state || !state.hasMore) return;
   
   const next = state.products.length;
-  const more = __allProducts.filter(p => p.categoria === categoryId).slice(next, next + CONFIG.PAGE_SIZE);
+  const more = __allProducts.filter(p => {
+    const normalizedCategory = normalizeCategory(p.categoria);
+    const normalizedId = normalizeCategory(categoryId);
+    return normalizedCategory.toLowerCase() === normalizedId.toLowerCase();
+  }).slice(next, next + CONFIG.PAGE_SIZE);
   state.products.push(...more);
   state.hasMore = more.length === CONFIG.PAGE_SIZE;
   renderCategory(categoryId);
