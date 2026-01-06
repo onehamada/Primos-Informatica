@@ -322,75 +322,36 @@ document.addEventListener('click', (e) => {
   if (!filtersContainer.contains(e.target) && filtersPanel.classList.contains('active')) {
     toggleFilters();
   }
-});
-
-// === Sistema de Busca Inteligente ===
-let searchTimeout;
-let currentSearchResults = [];
-let searchCache = new Map(); // Cache para resultados
-
 function initSearch() {
   const searchInput = document.getElementById('searchInput');
   const searchResults = document.getElementById('searchResults');
-  
   if (!searchInput || !searchResults) return;
-  
-  // Evento de input com debounce otimizado
+
+  // Debounce para evitar muitas buscas
   searchInput.addEventListener('input', (e) => {
-    clearTimeout(searchTimeout);
-    const query = e.target.value.trim();
-    
-    // Atualiza filtro de busca
-    currentFilters.searchQuery = query;
-    
-    if (query.length < 2) {
-      hideSearchResults();
-      // Se há filtros ativos, aplica-os mesmo sem busca
-      if (hasActiveFilters()) {
-        filterProducts();
-      }
-      return;
-    }
-    
-    // Verifica cache primeiro
-    if (searchCache.has(query)) {
-      displaySearchResults(searchCache.get(query), query);
-      return;
-    }
-    
-    // Debounce reduzido para melhor UX
-    searchTimeout = setTimeout(() => {
-      performSearch(query);
-    }, 200);
+    clearTimeout(__searchTimeout);
+    __searchTimeout = setTimeout(() => {
+      performSearch(e.target.value.trim());
+    }, CONFIG.DEBOUNCE_DELAY);
   });
-  
-  // Fecha resultados ao clicar fora
+
+  // Fechar busca ao clicar fora
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('.search-container')) {
-      hideSearchResults();
+    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+      searchResults.style.display = 'none';
     }
   });
-  
-  // Fecha resultados ao pressionar Escape
-  document.addEventListener('keydown', (e) => {
+
+  // Fechar busca com ESC
+  searchInput.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      hideSearchResults();
+      searchResults.style.display = 'none';
       searchInput.blur();
     }
   });
 }
 
 function performSearch(query) {
-  // Verifica se os produtos foram carregados
-  if (!__allProducts || __allProducts.length === 0) {
-    return;
-  }
-  
-  const normalizedQuery = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  
-  // Busca otimizada com break early
-  const results = [];
-  for (let i = 0; i < __allProducts.length && results.length < 8; i++) {
     const product = __allProducts[i];
     const searchText = [
       product.nome || '',
@@ -763,16 +724,37 @@ function stripStaticProductsFromHtml() {
 const CONFIG = {
   PAGE_SIZE: 30, // Aumentado para menos recargas
   CSV_CACHE_KEY: 'productsCsvCache:v8', // Versão atualizada para forçar limpeza
-  CSV_CACHE_TTL: 30 * 60 * 1000, // 30 minutos
-  MAX_HIGHLIGHTS: 8, // Aumentado para mais destaques
-  MAX_HOME_CATEGORIES: 8
 };
 
-// === Estado Global ===
+// === Sistema de Cache Otimizado ===
+const Cache = {
+  data: new Map(),
+  timestamps: new Map(),
+  
+  get(key) {
+    const timestamp = this.timestamps.get(key);
+    if (timestamp && Date.now() - timestamp < CONFIG.CACHE_DURATION) {
+      return this.data.get(key);
+    }
+    return null;
+  },
+  
+  set(key, value) {
+    this.data.set(key, value);
+    this.timestamps.set(key, Date.now());
+  },
+  
+  clear() {
+    this.data.clear();
+    this.timestamps.clear();
+  }
+};
+
+// === Estado Global Otimizado ===
 let __allProducts = [];
-let __categoryLabels = new Map();
 let __categoryState = new Map();
-let __cart = [];
+let __categoryLabels = new Map();
+let __searchTimeout = null;
 
 // === Carrinho de Compras ===
 class Cart {
@@ -1608,6 +1590,82 @@ const ALL_PRODUCTS_FALLBACK = [
   }
 ];
 
+async function loadProductsFromCsv() {
+  try {
+    // Verifica cache primeiro
+    const cached = readCsvCache();
+    if (cached) {
+      console.log('Usando produtos em cache');
+      applyProductsAndRender(cached);
+      return;
+    }
+
+    console.log('Carregando produtos do CSV...');
+    const response = await fetch('data/products.csv');
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    
+    const csvText = await response.text();
+    const products = parseCsvOptimized(csvText);
+    
+    // Salva no cache
+    writeCsvCache(products);
+    
+    applyProductsAndRender(products);
+  } catch (error) {
+    console.error('Erro ao carregar produtos:', error);
+    showErrorMessage('Não foi possível carregar os produtos. Tente recarregar a página.');
+  }
+}
+
+function parseCsvOptimized(csvText) {
+  const lines = csvText.split('\n').filter(line => line.trim());
+  const headers = lines[0].split(';').map(h => h.trim());
+  
+  return lines.slice(1).map(line => {
+    const values = line.split(';');
+    const product = {};
+    
+    headers.forEach((header, index) => {
+      let value = values[index] || '';
+      value = value.trim();
+      
+      // Processamento específico por campo
+      switch(header) {
+        case 'preco':
+          product.precoRaw = parseFloat(value.replace(',', '.')) || 0;
+          product.preco = formatPrice(product.precoRaw);
+          break;
+        case 'qt':
+          product.qt = parseInt(value) || 0;
+          break;
+        case 'promocao':
+          product.promocao = value.toLowerCase() === 'sim';
+          break;
+        default:
+          product[header] = value;
+      }
+    });
+    
+    return product;
+  }).filter(p => p.codigo); // Remove produtos sem código
+}
+
+function showErrorMessage(message) {
+  const errorDiv = document.createElement('div');
+  errorDiv.className = 'error-message';
+  errorDiv.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <p>${message}</p>
+  `;
+  
+  document.body.appendChild(errorDiv);
+  setTimeout(() => errorDiv.remove(), 5000);
+}
+
 async function loadProductsFromJson() {
   console.log('Tentando carregar produtos do JSON...');
   try {
@@ -1625,19 +1683,6 @@ async function loadProductsFromJson() {
   }
 }
 
-async function loadProductsFromCsv() {
-  console.log('Iniciando carregamento de produtos...');
-  
-  const cached = readCsvCache();
-  if (cached) {
-    try {
-      const products = parseCsv(cached);
-      if (products.length) {
-        console.log('Usando cache com', products.length, 'produtos');
-        applyProductsAndRender(products);
-        refreshCacheInBackground();
-        return;
-      }
     } catch (error) {
       console.warn('Erro ao processar cache:', error);
     }
@@ -2239,10 +2284,10 @@ function populatePromo() {
   optimizeProductImages(promoContainer);
 }
 
-// === Inicialização do Site ===
+// === Inicialização Otimizada ===
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    console.log('🚀 Iniciando sistema de categorias refeito...');
+    console.log('🚀 Iniciando sistema otimizado...');
     
     // Inicializa funcionalidades básicas
     initDragScroll();
@@ -2252,7 +2297,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Mostra loading
     showLoading();
     
-    // Carrega produtos do CSV
+    // Carrega produtos do CSV com cache
     await loadProductsFromCsv();
     
     // Esconde loading
@@ -2260,7 +2305,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       hideLoading();
     }, 1000);
     
-    console.log('✅ Sistema inicializado com sucesso!');
+    console.log('✅ Sistema otimizado inicializado com sucesso!');
   } catch (error) {
     console.error('❌ Erro na inicialização:', error);
     hideLoading();
