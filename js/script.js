@@ -1361,19 +1361,33 @@ function parseCsvLine(line) {
 function parseCsv(text) {
   if (!text || typeof text !== 'string') return [];
   
-  // Remover BOM (Byte Order Mark) se presente
-  text = text.replace(/^\uFEFF/, '');
+  console.log('🔍 CSV Debug - Texto recebido (primeiros 200 chars):', text.substring(0, 200));
   
   const lines = text.split('\n').filter(line => line.trim());
+  console.log('📊 CSV Debug - Total de linhas:', lines.length);
+  
   if (lines.length < 2) return [];
 
   const headers = lines[0].split(';').map(h => h.trim().toLowerCase());
+  console.log('📋 CSV Debug - Headers:', headers);
+  
   const requiredFields = ['codigo', 'nome', 'categoria', 'preco', 'qt'];
   
   const products = [];
+  const categoryCount = {};
+  
   for (let i = 1; i < lines.length; i++) {
     const product = parseCsvLine(lines[i]);
-    if (!product) continue;
+    if (!product) {
+      console.log(`⚠️ CSV Debug - Linha ${i} inválida:`, lines[i]);
+      continue;
+    }
+
+    // Contar categorias
+    if (!categoryCount[product.categoria]) {
+      categoryCount[product.categoria] = 0;
+    }
+    categoryCount[product.categoria]++;
 
     product.codigo = String(product.codigo).trim();
     product.nome = String(product.nome).trim();
@@ -1384,6 +1398,9 @@ function parseCsv(text) {
     products.push(product);
   }
 
+  console.log('📦 CSV Debug - Categorias encontradas:', categoryCount);
+  console.log('📦 CSV Debug - Total de produtos parseados:', products.length);
+  
   return products;
 }
 
