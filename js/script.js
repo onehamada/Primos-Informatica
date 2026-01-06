@@ -1598,16 +1598,9 @@ async function loadProductsFromCsv() {
   try {
     console.log('🔄 Iniciando carregamento de produtos...');
     
-    // Verifica cache primeiro
-    const cached = readCsvCache();
-    if (cached) {
-      console.log('Usando produtos em cache');
-      applyProductsAndRender(cached);
-      return;
-    }
-
+    // Sempre tenta carregar do CSV primeiro em hard refresh
     console.log('Carregando produtos do CSV...');
-    const response = await fetch('data/products.csv');
+    const response = await fetch('data/products.csv', { cache: 'no-cache' });
     console.log('Response status:', response.status);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     
@@ -1617,13 +1610,35 @@ async function loadProductsFromCsv() {
     const products = parseCsvOptimized(csvText);
     console.log('Produtos parseados:', products.length);
     
-    // Salva no cache
-    writeCsvCache(products);
-    
-    applyProductsAndRender(products);
+    if (products.length > 0) {
+      // Salva no cache
+      writeCsvCache(products);
+      applyProductsAndRender(products);
+    } else {
+      // Fallback para cache se CSV estiver vazio
+      const cached = readCsvCache();
+      if (cached) {
+        console.log('Usando produtos em cache (fallback)');
+        applyProductsAndRender(cached);
+      } else {
+        // Fallback final para hardcoded
+        console.log('Usando produtos hardcoded (fallback final)');
+        applyProductsAndRender(ALL_PRODUCTS_FALLBACK);
+      }
+    }
   } catch (error) {
     console.error('Erro ao carregar produtos:', error);
-    showErrorMessage('Não foi possível carregar os produtos. Tente recarregar a página.');
+    
+    // Tenta cache como fallback
+    const cached = readCsvCache();
+    if (cached) {
+      console.log('Usando produtos em cache (fallback após erro)');
+      applyProductsAndRender(cached);
+    } else {
+      // Fallback final
+      console.log('Usando produtos hardcoded (fallback final após erro)');
+      applyProductsAndRender(ALL_PRODUCTS_FALLBACK);
+    }
   }
 }
 
