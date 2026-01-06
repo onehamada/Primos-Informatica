@@ -1939,16 +1939,25 @@ function titleizeCategory(str) {
 
 // === Funções de renderização ===
 function applyProductsAndRender(products) {
-  __allProducts = products;
-  console.log('📦 Produtos carregados:', products.length);
+  console.log('📦 applyProductsAndRender chamado com', products.length, 'produtos');
   
-  // Mostra categorias disponíveis no console para debug
-  const availableCategories = [...new Set(products.map(p => p.categoria))];
-  console.log('📂 Categorias disponíveis:', availableCategories);
+  if (!products || products.length === 0) {
+    console.error('❌ Nenhum produto para renderizar!');
+    showErrorMessage('Nenhum produto encontrado. Verifique o arquivo CSV.');
+    return;
+  }
+  
+  __allProducts = products;
+  console.log('📂 Categorias disponíveis:', [...new Set(products.map(p => p.categoria))]);
   
   // Renderiza elementos da página inicial
-  populateHomeCategories();
-  populateHomeHighlights();
+  try {
+    populateHomeCategories();
+    populateHomeHighlights();
+    console.log('✅ Home categories e highlights renderizados');
+  } catch (error) {
+    console.error('❌ Erro ao renderizar home:', error);
+  }
 }
 
 // === Sistema de Categorias Refeito do Zero ===
