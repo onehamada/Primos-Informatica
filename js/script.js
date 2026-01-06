@@ -1360,6 +1360,9 @@ function parseCsvLine(line) {
 function parseCsv(text) {
   if (!text || typeof text !== 'string') return [];
   
+  // Remover BOM (Byte Order Mark) se presente
+  text = text.replace(/^\uFEFF/, '');
+  
   const lines = text.split('\n').filter(line => line.trim());
   if (lines.length < 2) return [];
 
@@ -1384,6 +1387,11 @@ function parseCsv(text) {
 }
 
 // === CSV Cache ===
+function clearCsvCache() {
+  localStorage.removeItem(CONFIG.CSV_CACHE_KEY);
+  console.log('Cache CSV limpo');
+}
+
 function readCsvCache() {
   try {
     const raw = localStorage.getItem(CONFIG.CSV_CACHE_KEY);
@@ -1681,6 +1689,23 @@ function showCategory(id) {
         hasMore: products.length > CONFIG.PAGE_SIZE
       });
       renderCategory(id);
+    } else {
+      // Se não encontrou produtos, mostra mensagem
+      const container = document.getElementById(id);
+      if (container) {
+        let grid = container.querySelector('.products-grid');
+        if (!grid) {
+          grid = document.createElement('div');
+          grid.className = 'products-grid';
+          container.appendChild(grid);
+        }
+        grid.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #6b7280;">
+            <h3>Nenhum produto encontrado</h3>
+            <p>Categoria: ${id}</p>
+          </div>
+        `;
+      }
     }
   }
 }
@@ -1785,49 +1810,18 @@ function createProductElement(product, categoryId) {
   img.loading = 'lazy';
   img.decoding = 'async';
   
-  // Usa imagem específica se existir, senão usa código, senão usa categoria
-  const productCode = product.codigo || '';
-  const specificImagePath = product.imagem ? `images/products/thumbnail/${product.imagem}` : `images/products/thumbnail/${productCode}.webp`;
-  const catSlug = slugify(product.categoria || 'default');
-  const categoryImagePath = `images/products/thumbnail/${catSlug}.webp`;
-  
-  // Para mobile: não usar srcset para evitar problemas
-  const isMobile = window.innerWidth <= 768;
-  
-  // Debug para monitores
-  if (product.categoria && product.categoria.toLowerCase() === 'monitor') {
-    console.log('Monitor image paths:', {
-      specificImagePath,
-      categoryImagePath,
-      productImage: product.imagem,
-      productCode
-    });
-  }
-  
-  if (isMobile) {
-    // Mobile: usar apenas src simples
-    img.src = specificImagePath;
-    img.onerror = function() {
-      this.onerror = null;
-      this.src = categoryImagePath;
-    };
+  // Simplificado: usar apenas imagem específica se existir
+  if (product.imagem) {
+    img.src = `images/products/thumbnail/${product.imagem}`;
   } else {
-    // Desktop: usar srcset completo
-    img.src = specificImagePath;
-    img.onerror = function() {
-      this.onerror = null;
-      this.src = categoryImagePath;
-    };
-    
-    // Define srcset baseado na imagem específica ou código
-    if (product.imagem) {
-      const baseName = product.imagem.replace('.webp', '');
-      img.srcset = `${specificImagePath} 150w, images/products/medium/${baseName}.webp 400w, images/products/large/${baseName}.webp 800w`;
-    } else {
-      img.srcset = `${specificImagePath} 150w, images/products/medium/${productCode}.webp 400w, images/products/large/${productCode}.webp 800w`;
-    }
-    img.sizes = '(max-width: 900px) 86px, 110px';
+    img.src = `images/products/thumbnail/${product.codigo}.webp`;
   }
+  
+  // Fallback simples para categoria
+  img.onerror = function() {
+    this.onerror = null;
+    this.src = `images/products/thumbnail/${slugify(product.categoria || 'default')}.webp`;
+  };
 
   const info = document.createElement('div');
   info.className = 'product-info';

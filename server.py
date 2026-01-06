@@ -13,8 +13,18 @@ class UTF8HTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def send_response(self, code, message=None):
         super().send_response(code, message)
-        if self.path.endswith('.csv'):
+        
+        # Enviar charset UTF-8 para diferentes tipos de arquivo
+        if self.path.endswith('.html'):
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+        elif self.path.endswith('.css'):
+            self.send_header('Content-Type', 'text/css; charset=utf-8')
+        elif self.path.endswith('.js'):
+            self.send_header('Content-Type', 'application/javascript; charset=utf-8')
+        elif self.path.endswith('.csv'):
             self.send_header('Content-Type', 'text/csv; charset=utf-8')
+        elif self.path.endswith('.json'):
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
 
 # Criar o servidor
 handler = UTF8HTTPRequestHandler
