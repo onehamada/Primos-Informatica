@@ -64,11 +64,11 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1486;HD EXTERNO 2TB SEAGATE PORTÁTIL EXPANSION USB 3.0;hd externo;620,00;1;HD externo portátil 2TB Seagate Expansion USB 3.0;Seagate;nao;hd2tb_sea.webp
 1779;HD EXTERNO 4TB SEAGATE USB 3.0 EXPANSION;hd externo;1110,00;1;HD externo 4TB Seagate Expansion USB 3.0;Seagate;nao;hd4tb_sea.webp
 1598;HD INTERNO 3TB SATA3 SEAGATE CONSTELLATION 7200;hd interno;710,45;1;HD interno 3TB Seagate Constellation SATA3 7200 RPM;Seagate;nao;hd3tb_sea.webp
-1883;FONTE AEROCOOL VX PLUS 400W 80 PLUS BRONZE;fonte;189,00;5;Fonte Aerocool VX Plus 400W 80 Plus Bronze;Aerocool;nao;aerocool_fonte400w.webp
-1884;FONTE AEROCOOL VX PLUS 500W 80 PLUS BRONZE;fonte;219,00;4;Fonte Aerocool VX Plus 500W 80 Plus Bronze;Aerocool;sim;aerocool_fonte500w.webp
+1883;FONTE REAL 500W ATX AEROCOOL VX 500;fonte;220,00;3;Fonte Real 500W ATX Aerocool VX 500;Aerocool;nao;aerocool_fonte400w.webp
+1884;FONTE REAL 500W ATX AEROCOOL VX 500;fonte;220,00;3;Fonte Real 500W ATX Aerocool VX 500;Aerocool;nao;aerocool_fonte500w.webp
 1885;FONTE AEROCOOL VX PLUS 700W 80 PLUS BRONZE;fonte;289,00;3;Fonte Aerocool VX Plus 700W 80 Plus Bronze;Aerocool;nao;aerocool_fonte700w.webp
-1886;FONTE AEROCOOL VX PLUS 1000W 80 PLUS GOLD;fonte;449,00;2;Fonte Aerocool VX Plus 1000W 80 Plus Gold;Aerocool;sim;aerocool_fonte1000w.webp
+1886;FONTE REAL 1000W ATX AEROCOOL KCAS PLUS S/CABO;fonte;945,00;4;Fonte Real 1000W ATX Aerocool KCAS Plus S/Cabo;Aerocool;nao;aerocool_fonte1000w.webp
 1887;FONTE CORSAIR CV550 550W 80 PLUS BRONZE;fonte;329,00;3;Fonte Corsair CV550 550W 80 Plus Bronze;Corsair;nao;corsair_fonte500w.webp
 1888;FONTE HAYOM HX-200W 80 PLUS;fonte;129,00;6;Fonte Hayom HX-200W 80 Plus;Hayom;nao;hayom_fonte200w.webp
-1889;FONTE MGS VP-500 500W 80 PLUS;fonte;179,00;4;Fonte MGS VP-500 500W 80 Plus;MGS;sim;mgs_fonte500w.webp
+1889;FONTE REAL 500WR ATX MGS;fonte;148,00;4;Fonte Real 500WR ATX MGS;MGS;nao;mgs_fonte500w.webp
 1890;FONTE MGS VP-750 750W 80 PLUS BRONZE;fonte;249,00;3;Fonte MGS VP-750 750W 80 Plus Bronze;MGS;nao;mgs_fonte750w.webp
