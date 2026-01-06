@@ -106,14 +106,14 @@
 /* === Barra de Pesquisa Moderna === */
 .search-container {
   position: relative;
-  flex: 2;
-  max-width: 700px;
+  flex: 1;
+  max-width: 400px;
   margin: 0 auto;
 }
 
 .search-input {
   width: 100%;
-  padding: 14px 55px 14px 20px;
+  padding: 10px 45px 10px 15px;
   border: 2px solid transparent;
   border-radius: 30px;
   background: #ffffff;
