@@ -41,8 +41,8 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1840;MOUSE LOGITECH WIRELESS M196 BT BRANCO;mouse;92,00;1;Mouse wireless M196 BT branco;Logitech;nao;mouse-logitech-m196-branco.webp
 1837;MOUSE LOGITECH WIRELESS ANYWHERE S3 GRAF;mouse;600,00;1;Mouse wireless Anywhere S3 grafite;Logitech;nao;mouse-logitech-anywhere-s3.webp
 1290;MOUSE FEASSO SEM FIO FAMS-11;mouse;45,00;1;Mouse sem fio FAMS-11;Feasso;nao;mouse-feasso-fams11.webp
-1949;PLACA MAE BRAZILPC A520 AM4 ULTRA;placa-mae;555,00;1;Placa-mãe chipset A520 socket AM4;BrazilPC;nao;placa-mae-brazilpc-a520.webp
-1950;PLACA MAE BRAZILPC H510 1200 DDR4;placa-mae;605,00;1;Placa-mãe H510 socket LGA1200 DDR4;BrazilPC;nao;placa-mae-brazilpc-h510.webp
+1949;PLACA MAE BRAZILPC A520 AM4 ULTRA;placa mãe;555,00;1;Placa-mãe chipset A520 socket AM4;BrazilPC;nao;placa-mae-brazilpc-a520.webp
+1950;PLACA MAE BRAZILPC H510 1200 DDR4;placa mãe;605,00;1;Placa-mãe H510 socket LGA1200 DDR4;BrazilPC;nao;placa-mae-brazilpc-h510.webp
 1659;CAIXA DE SOM JBL BOOMBOX 3 BLACK;audio;3102,45;1;Caixa de som bluetooth JBL Boombox 3 IPX7;JBL;nao;jbl-boombox-3-black.webp
 1967;KVM 2 PORTAS SWITCH USB;redes;155,00;1;Switch KVM USB com 2 portas;Generico;nao;kvm-2-portas-usb.webp
 1499;SPLITTER HDMI 8 PORTAS KNUK PK-SW100;acessorios;180,00;1;Splitter HDMI com 8 portas;Knuk;nao;splitter-hdmi-8-portas.webp
