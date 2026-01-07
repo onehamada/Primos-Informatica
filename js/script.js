@@ -2359,7 +2359,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Inicializa funcionalidades básicas
     initDragScroll();
-    initBackToTop();
     initSearch();
     
     // Mostra loading
