@@ -354,6 +354,14 @@ function initSearch() {
 }
 
 function performSearch(query) {
+  console.log('🔍 Busca iniciada para:', query);
+  console.log('📦 Produtos carregados:', __allProducts.length);
+  
+  if (!query || query.length < 2) {
+    hideSearchResults();
+    return;
+  }
+  
   const results = [];
   const normalizedQuery = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   
