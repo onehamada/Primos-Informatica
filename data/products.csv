@@ -97,9 +97,11 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 400936;MOUSE MULTILASER SEM FIO PRETO MO307;mouse;45,00;2;Mouse Multilaser sem fio MO307 preto;Multilaser;nao;mouse-multilaser-mo307-v2.webp
 1938;MOUSE MULTILASER SEM FIO RECARREGAVEL 2.4 GHZ MO277;mouse;75,00;1;Mouse Multilaser recarregável MO277 2.4GHz;Multilaser;nao;mouse-multilaser-mo277-v2.webp
 1938;MOUSE MULTILASER S/FIO BLUETOOTH M5750 MO403;mouse;90,00;1;Mouse Multilaser Bluetooth M5750 MO403;Multilaser;nao;mouse-multilaser-mo403-v2.webp
-1316;ROTEADOR TP-LINK MESH AC1200 EC220-G5;roteador;201,00;1;Roteador Mesh AC1200 EC220-G5;TP-Link;nao;roteador-tplink-ec220g5-v2.webp
-1879;ROTEADOR MERCUSYS AC1200 DUAL BAND MR30G;roteador;199,00;1;Roteador AC1200 Dual Band MR30G;Mercusys;nao;roteador-mercusys-mr30g-v2.webp
-1881;ROTEADOR TP-LINK AC1350 C60 ARCHER DUAL BAND;roteador;209,00;1;Roteador AC1350 C60 Archer;TP-Link;nao;roteador-tplink-c60-archer-v2.webp
+1562;UBIQUITI AP UNIFI AC U6-PRO 4X4 S/FONTE;access-point;1775,00;1;Access Point UniFi AC U6-Pro 4x4 sem fonte;Ubiquiti;nao;ap-ubiquiti-u6pro.webp
+1072;UBIQUITI AP UNIFI UAP-AC-LITE-BR;access-point;890,00;1;Access Point UniFi UAP-AC-Lite;Ubiquiti;nao;ap-ubiquiti-uap-ac-lite.webp
+1559;REPETIDOR WIRELES TP LINK DUAL BAND AC750 RE200;repetidor;189,00;1;Repetidor Dual Band AC750 RE200;TP-Link;nao;repetidor-tplink-re200.webp
+1291;ADAPTADOR USB REDE RJ45 2.0 EMPIRE;adaptador;89,00;1;Adaptador USB para rede RJ45 2.0;Empree;nao;adaptador-usb-rj45-empree-v2.webp
+1557;ADAPTADOR USB WIRELESS TX20U PLUS TP-LINK WI-FI 6;adaptador;225,00;1;Adaptador USB TX20U Plus WiFi 6;TP-Link;nao;adaptador-tplink-tx20u-plus.webp
 1617;MONITOR 21.5 GBT LED HDMI E VGA GBT-M218;monitor;312,00;1;Monitor 21.5 GBT-M218 HDMI VGA;GBT;nao;monitor-gbt-215-hdmi-vga-m218.webp
 1618;MONITOR 23.5 GBT LED HDMI VGA GBT-M218;monitor;410,88;1;Monitor 23.5 GBT-M218 HDMI VGA;GBT;nao;monitor-gbt-235-hdmi-vga-m218.webp
 1932;MONITOR 32 SAMSUNG GAMER QHD LS32CG55 ODYSSEY;monitor;1650,00;1;Monitor gamer 32 QHD LS32CG55 Odyssey;Samsung;nao;monitor-samsung-32-gamer-qhd-odyssey.webp
