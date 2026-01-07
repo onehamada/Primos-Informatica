@@ -41,6 +41,25 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1840;MOUSE LOGITECH WIRELESS M196 BT BRANCO;mouse;92,00;1;Mouse wireless M196 BT branco;Logitech;nao;mouse-logitech-m196-branco.webp
 1837;MOUSE LOGITECH WIRELESS ANYWHERE S3 GRAF;mouse;600,00;1;Mouse wireless Anywhere S3 grafite;Logitech;nao;mouse-logitech-anywhere-s3.webp
 1290;MOUSE FEASSO SEM FIO FAMS-11;mouse;45,00;1;Mouse sem fio FAMS-11;Feasso;nao;mouse-feasso-fams11.webp
+1949;PLACA MAE BRAZILPC A520 AM4 ULTRA;placa-mae;555,00;1;Placa-mãe chipset A520 socket AM4;BrazilPC;nao;placa-mae-brazilpc-a520.webp
+1950;PLACA MAE BRAZILPC H510 1200 DDR4;placa-mae;605,00;1;Placa-mãe H510 socket LGA1200 DDR4;BrazilPC;nao;placa-mae-brazilpc-h510.webp
+1659;CAIXA DE SOM JBL BOOMBOX 3 BLACK;audio;3102,45;1;Caixa de som bluetooth JBL Boombox 3 IPX7;JBL;nao;jbl-boombox-3-black.webp
+1967;KVM 2 PORTAS SWITCH USB;redes;155,00;1;Switch KVM USB com 2 portas;Generico;nao;kvm-2-portas-usb.webp
+1499;SPLITTER HDMI 8 PORTAS KNUK PK-SW100;acessorios;180,00;1;Splitter HDMI com 8 portas;Knuk;nao;splitter-hdmi-8-portas.webp
+1951;CABO DE REDE CAT6 305M LAN MAX;cabos;860,00;1;Cabo de rede CAT6 caixa 305 metros;Lan Max;nao;cabo-rede-cat6-305m-lanmax.webp
+1948;CABO DE REDE CAT6 100M AZUL MPT;cabos;261,00;1;Cabo de rede CAT6 azul caixa 100 metros;MPT;nao;cabo-rede-cat6-100m-mpt.webp
+1592;CABO DE REDE CAT6 305M SOHPLUS AZUL;cabos;1333,00;1;Cabo de rede CAT6 azul caixa 305 metros;Sohplus;nao;cabo-rede-cat6-305m-sohplus.webp
+1561;SWITCH TP-LINK 16 PORTAS GIGABIT TL-SG1016;redes;640,00;1;Switch Gigabit 16 portas TP-Link;TP-Link;nao;switch-tplink-tl-sg1016.webp
+1351;SWITCH TP-LINK 24 PORTAS GIGABIT SG1024D;redes;850,00;1;Switch Gigabit 24 portas TP-Link;TP-Link;nao;switch-tplink-sg1024d.webp
+1353;SWITCH TP-LINK 8 PORTAS GIGABIT LS1008G;redes;183,00;1;Switch Gigabit 8 portas TP-Link;TP-Link;nao;switch-tplink-ls1008g.webp
+1204;SWITCH TP-LINK 5 PORTAS GIGABIT LS1005G;redes;115,00;1;Switch Gigabit 5 portas TP-Link;TP-Link;nao;switch-tplink-ls1005g.webp
+1058;SWITCH MERCUSYS 8 PORTAS GIGABIT MS108G;redes;105,00;1;Switch Gigabit 8 portas Mercusys;Mercusys;nao;switch-mercusys-ms108g.webp
+1059;SWITCH MERCUSYS 5 PORTAS GIGABIT MS105G;redes;84,30;1;Switch Gigabit 5 portas Mercusys;Mercusys;nao;switch-mercusys-ms105g.webp
+400548;KVM D-LINK 16 PORTAS USB PS2 KVM-450;redes;1655,00;1;Switch KVM 16 portas USB e PS/2;D-Link;nao;kvm-dlink-kvm450.webp
+1823;CABO CONSOLE USB RJ45;cabos;70,00;1;Cabo console USB para RJ45;Generico;nao;cabo-console-usb-rj45.webp
+1631;WEB CAMERA USB FULL HD 1080P;webcam;78,00;1;Webcam USB resolução Full HD 1080p;Generico;nao;webcam-usb-fullhd.webp
+401767;WEBCAM LED 1.5MP USB COM MICROFONE;webcam;145,00;1;Webcam USB 1.5MP com microfone;BrazilPC;nao;webcam-led-15mp-brazilpc.webp
+1838;WEBCAM LOGITECH BRIO 100 GRAFITE;webcam;325,00;1;Webcam Logitech Brio 100 Full HD;Logitech;nao;webcam-logitech-brio-100.webp
 1617;MONITOR 21.5 GBT LED HDMI E VGA GBT-M218;monitor;312,00;1;Monitor 21.5 GBT-M218 HDMI VGA;GBT;nao;monitor-gbt-215-hdmi-vga-m218.webp
 1618;MONITOR 23.5 GBT LED HDMI VGA GBT-M218;monitor;410,88;1;Monitor 23.5 GBT-M218 HDMI VGA;GBT;nao;monitor-gbt-235-hdmi-vga-m218.webp
 1932;MONITOR 32 SAMSUNG GAMER QHD LS32CG55 ODYSSEY;monitor;1650,00;1;Monitor gamer 32 QHD LS32CG55 Odyssey;Samsung;nao;monitor-samsung-32-gamer-qhd-odyssey.webp
