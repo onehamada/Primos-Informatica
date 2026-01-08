@@ -43,10 +43,13 @@ function showCategory(category) {
 
 // === MOSTRAR PROMOÇÕES ===
 function showPromocoes() {
+  console.log('showPromocoes() chamada');
+  
   // Verificar se seção já existe
   let promocoesSection = document.getElementById('promoções');
   
   if (!promocoesSection) {
+    console.log('Criando seção de promoções');
     promocoesSection = document.createElement('section');
     promocoesSection.id = 'promoções';
     promocoesSection.className = 'products-section';
@@ -57,11 +60,16 @@ function showPromocoes() {
   
   // Filtrar produtos em promoção
   const promocoesProducts = [];
+  console.log('Total de produtos:', allProducts.length);
+  
   for (let i = 0; i < allProducts.length; i++) {
     if (allProducts[i].promocao === 'sim') {
       promocoesProducts.push(allProducts[i]);
+      console.log('Produto em promoção:', allProducts[i].nome);
     }
   }
+  
+  console.log('Produtos em promoção encontrados:', promocoesProducts.length);
   
   // Criar HTML
   let productsHTML = '<h2>Promoções</h2>';
@@ -77,6 +85,8 @@ function showPromocoes() {
   
   promocoesSection.innerHTML = productsHTML;
   promocoesSection.style.display = 'block';
+  
+  console.log('Seção de promoções exibida');
   
   // Lazy loading para promoções
   setTimeout(function() {
