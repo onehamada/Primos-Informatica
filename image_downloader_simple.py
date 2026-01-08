@@ -343,7 +343,7 @@ def main():
             downloader.show_summary()
             return
         
-        print(f"{len(products_to_download)} produtos precisam de imagens")
+        print(f"{len(products_to_download)} produtos precisam de imagens (de {len(products)} total)")
         confirm = input("Deseja baixar as imagens faltantes? (S/N): ").strip().upper()
         
         if confirm == "S":
