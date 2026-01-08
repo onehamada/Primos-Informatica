@@ -21,7 +21,17 @@ function showCategory(category) {
     if (targetSection) {
       targetSection.style.display = 'block';
       
+      // Lazy loading das imagens da seção
       setTimeout(function() {
+        const images = targetSection.querySelectorAll('img[data-src]');
+        images.forEach(function(img) {
+          const src = img.dataset.src;
+          if (src) {
+            img.src = src;
+            img.removeAttribute('data-src');
+          }
+        });
+        
         const headerHeight = document.querySelector('header')?.offsetHeight || 0;
         const sectionTop = targetSection.offsetTop - headerHeight - 20;
         window.scrollTo({ top: sectionTop, behavior: 'smooth' });
@@ -119,7 +129,7 @@ function createProductCard(product) {
   
   return '<div class="product-card">' +
     '<div class="product-image">' +
-    '<img src="' + imagePath + '" alt="' + product.nome + '" loading="lazy" onerror="this.src=\'images/placeholder.png\'">' +
+    '<img data-src="' + imagePath + '" alt="' + product.nome + '" loading="lazy" onerror="this.src=\'images/placeholder.png\'">' +
     '</div>' +
     '<div class="product-info">' +
     '<h3>' + product.nome + '</h3>' +

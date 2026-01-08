@@ -138,6 +138,17 @@
   
   <!-- Analytics placeholder -->
   <!-- Google Analytics will be added here -->
+  
+  <!-- Desativar Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+  </script>
 </head>
 <body>
 
