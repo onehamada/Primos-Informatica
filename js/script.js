@@ -13,7 +13,7 @@ function showCategory(category) {
   }
   
   // Mostrar seção alvo
-  if (category === 'promoções') {
+  if (category === 'promo' || category === 'promoções') {
     // Criar seção de promoções dinamicamente
     showPromocoes();
   } else {
