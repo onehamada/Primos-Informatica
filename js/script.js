@@ -6,49 +6,35 @@ function clearAllCache() {
   
   // Limpar localStorage
   localStorage.clear();
-  console.log('✅ localStorage limpo');
   
   // Limpar sessionStorage
   sessionStorage.clear();
-  console.log('✅ sessionStorage limpo');
   
   // Limpar caches do navegador
   if ('caches' in window) {
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
-          console.log(`🗑️ Removendo cache: ${cacheName}`);
           return caches.delete(cacheName);
         })
       );
     }).then(() => {
-      console.log('✅ Todos os caches do navegador limpos');
+      console.log('✅ Cache limpo com sucesso!');
     });
   }
   
   // Limpar variáveis globais de cache
   if (typeof __allProducts !== 'undefined') {
     __allProducts = [];
-    console.log('✅ Cache de produtos limpo');
   }
   
   if (typeof searchCache !== 'undefined') {
     searchCache.clear();
-    console.log('✅ Cache de busca limpo');
   }
   
   if (typeof currentSearchResults !== 'undefined') {
     currentSearchResults = [];
-    console.log('✅ Resultados de busca limpos');
   }
-  
-  // Limpar cache de imagens
-  if (typeof imageCache !== 'undefined') {
-    imageCache.clear();
-    console.log('✅ Cache de imagens limpo');
-  }
-  
-  console.log('🎉 Cache limpo com sucesso!');
   
   // Recarregar página após limpeza
   setTimeout(() => {
@@ -56,23 +42,19 @@ function clearAllCache() {
   }, 1000);
 }
 
-// === Configurações ===
-
 // Comando global para limpar cache
 window.clearCache = clearAllCache;
-console.log('💡 Para limpar o cache, digite: clearCache() no console');
 
 // === Performance Monitor ===
 function initPerformanceMonitor() {
   if ('PerformanceObserver' in window) {
-    // Monitora métricas de performance
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
         if (entry.entryType === 'largest-contentful-paint') {
-          console.log(`⚡ LCP: ${entry.startTime}ms`);
+          // LCP sem log
         }
         if (entry.entryType === 'first-input') {
-          console.log(`⚡ FID: ${entry.processingStart - entry.startTime}ms`);
+          // FID sem log
         }
       }
     });
@@ -2061,53 +2043,39 @@ function getProductsByCategory(categoryKey) {
 
 // === UI & Navigation ===
 function showCategory(id) {
-  console.log('🔍 Mostrando categoria:', id);
-  console.log('📦 Produtos disponíveis:', __allProducts.length);
-  
   // Esconde todas as categorias
   document.querySelectorAll('.category').forEach(el => el.style.display = 'none');
   document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
   
   // Mostra a categoria selecionada
   const target = document.getElementById(id);
-  console.log('🎯 Elemento alvo encontrado:', !!target);
   if (target) {
     target.style.display = 'block';
-    console.log('✅ Categoria exibida');
-  } else {
-    console.log('❌ Elemento da categoria não encontrado:', id);
   }
   
   // Ativa o botão da tab
   const btn = document.querySelector(`[data-target="${id}"]`);
   if (btn) {
     btn.classList.add('active');
-    console.log('✅ Botão ativado');
-  } else {
-    console.log('❌ Botão não encontrado:', id);
   }
   
   if (id === 'promo') {
     populatePromo();
   } else if (id === 'inicio') {
     // Página inicial já tem conteúdo próprio
-    console.log('🏠 Página inicial');
   } else {
     // Busca produtos da categoria
     const products = getProductsByCategory(id);
-    console.log(`📦 Encontrados ${products.length} produtos para categoria "${id}"`);
     
     if (products.length > 0) {
       renderCategoryProducts(id, products);
     } else {
       renderEmptyCategory(id);
     }
-  }
+}  }
 }
 
 function renderCategoryProducts(categoryId, products) {
-  console.log(`🎨 renderCategoryProducts chamado para ${categoryId} com ${products.length} produtos`);
-  
   const container = document.getElementById(categoryId);
   if (!container) {
     console.error('❌ Container da categoria não encontrado:', categoryId);
@@ -2125,7 +2093,6 @@ function renderCategoryProducts(categoryId, products) {
   
   const frag = document.createDocumentFragment();
   products.forEach((product, index) => {
-    console.log(`📦 Criando produto ${index + 1}:`, product.nome, product.codigo);
     const productImg = document.createElement('img');
     productImg.src = product.imagem;
     productImg.alt = product.nome;
@@ -2136,14 +2103,11 @@ function renderCategoryProducts(categoryId, products) {
   });
   
   grid.appendChild(frag);
-  console.log(`✅ ${products.length} produtos adicionados ao grid da categoria ${categoryId}`);
   
   // Adiciona botões de carrinho
   addCartButtons();
   // Otimiza imagens
   optimizeProductImages(grid);
-  
-  console.log(`🎯 Grid final da categoria ${categoryId}:`, grid.children.length, 'elementos');
 }
 
 function renderEmptyCategory(categoryId) {
@@ -2415,34 +2379,18 @@ function renderCategory(categoryId) {
 
 // === Promo Section ===
 function populatePromo() {
-  console.log('🔥 Iniciando populatePromo()');
-  console.log('📦 Total de produtos carregados:', __allProducts.length);
-  
   const promoContainer = document.getElementById('promo-list');
   if (!promoContainer) {
-    console.log('❌ Container #promo-list não encontrado');
+    console.error('❌ Container #promo-list não encontrado');
     return;
   }
   
   // Pega apenas produtos em promoção
   const promoProducts = __allProducts.filter(p => p.promocao === true);
-  console.log('🎯 Produtos em promoção encontrados:', promoProducts.length);
-  console.log('📋 Produtos promo:', promoProducts.map(p => ({nome: p.nome, promocao: p.promocao})));
   
   // Limpa container
   promoContainer.innerHTML = '';
   
-  if (promoProducts.length === 0) {
-    promoContainer.innerHTML = `
-      <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #6b7280;">
-        <h3>Nenhuma promoção no momento</h3>
-        <p>Volte em breve para conferir nossas ofertas!</p>
-      </div>
-    `;
-    return;
-  }
-  
-  // Renderiza produtos
   const frag = document.createDocumentFragment();
   promoProducts.forEach(p => {
     const productElement = createProductElement(p, 'promo');
