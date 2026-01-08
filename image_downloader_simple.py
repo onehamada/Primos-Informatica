@@ -366,14 +366,20 @@ def main():
             print(f"Arquivo nao encontrado: {input_file}")
             
     elif choice == "4":
-        if downloader.output_dir.exists():
-            existing_images = list(downloader.output_dir.glob("*.webp"))
-            print(f"\n{len(existing_images)} imagens encontradas:")
-            for img in sorted(existing_images):
-                size_kb = img.stat().st_size / 1024
-                print(f"  {img.name} ({size_kb:.1f} KB)")
-        else:
-            print("Nenhuma imagem encontrada. A pasta nao existe.")
+        try:
+            if downloader.output_dir.exists():
+                existing_images = list(downloader.output_dir.glob("*.webp"))
+                print(f"\n{len(existing_images)} imagens encontradas:")
+                for img in sorted(existing_images):
+                    try:
+                        size_kb = img.stat().st_size / 1024
+                        print(f"  {img.name} ({size_kb:.1f} KB)")
+                    except:
+                        print(f"  {img.name}")
+            else:
+                print("Nenhuma imagem encontrada. A pasta nao existe.")
+        except Exception as e:
+            print(f"Erro ao listar imagens: {e}")
             
     else:
         print("Opcao invalida!")
