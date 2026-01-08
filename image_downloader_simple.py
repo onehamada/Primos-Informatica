@@ -333,6 +333,7 @@ def main():
             print(f"Arquivo do site nao encontrado: {input_file}")
             return
         
+        # Usar função especial para CSV do site
         products = downloader.read_site_products_csv()
         print(f"{len(products)} produtos encontrados no site")
         
