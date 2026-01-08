@@ -1,6 +1,66 @@
 // Este arquivo é destinado a scripts JavaScript que podem ser usados para adicionar interatividade à loja, como funcionalidades de busca ou manipulação de produtos.
 
+// === LIMPEZA DE CACHE ===
+function clearAllCache() {
+  console.log('🧹 Limpando todo o cache...');
+  
+  // Limpar localStorage
+  localStorage.clear();
+  console.log('✅ localStorage limpo');
+  
+  // Limpar sessionStorage
+  sessionStorage.clear();
+  console.log('✅ sessionStorage limpo');
+  
+  // Limpar caches do navegador
+  if ('caches' in window) {
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          console.log(`🗑️ Removendo cache: ${cacheName}`);
+          return caches.delete(cacheName);
+        })
+      );
+    }).then(() => {
+      console.log('✅ Todos os caches do navegador limpos');
+    });
+  }
+  
+  // Limpar variáveis globais de cache
+  if (typeof __allProducts !== 'undefined') {
+    __allProducts = [];
+    console.log('✅ Cache de produtos limpo');
+  }
+  
+  if (typeof searchCache !== 'undefined') {
+    searchCache.clear();
+    console.log('✅ Cache de busca limpo');
+  }
+  
+  if (typeof currentSearchResults !== 'undefined') {
+    currentSearchResults = [];
+    console.log('✅ Resultados de busca limpos');
+  }
+  
+  // Limpar cache de imagens
+  if (typeof imageCache !== 'undefined') {
+    imageCache.clear();
+    console.log('✅ Cache de imagens limpo');
+  }
+  
+  console.log('🎉 Cache limpo com sucesso!');
+  
+  // Recarregar página após limpeza
+  setTimeout(() => {
+    window.location.reload();
+  }, 1000);
+}
+
 // === Configurações ===
+
+// Comando global para limpar cache
+window.clearCache = clearAllCache;
+console.log('💡 Para limpar o cache, digite: clearCache() no console');
 
 // === Performance Monitor ===
 function initPerformanceMonitor() {
