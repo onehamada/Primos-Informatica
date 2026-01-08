@@ -193,32 +193,40 @@ class ProductImageDownloader:
         
         products_to_download = self.check_existing_images(products)
         
+        existing_count = len(products) - len(products_to_download)
+        logging.info(f"{existing_count} imagens ja existentes")
+        logging.info(f"{len(products_to_download)} produtos precisam de imagens")
+        
         if not products_to_download:
-            logging.info("Todos os produtos ja tem imagens!")
+            print("Todos os produtos ja tem imagens!")
             self.show_summary()
             return
         
-        logging.info(f"{len(products_to_download)} produtos precisam de imagens")
+        print(f"{len(products_to_download)} produtos precisam de imagens (de {len(products)} total)")
+        confirm = input("Deseja baixar as imagens faltantes? (S/N): ").strip().upper()
         
-        for i, product in enumerate(products_to_download, 1):
-            logging.info(f"Processando produto {i}/{len(products_to_download)}")
+        if confirm == "S":
+            for i, product in enumerate(products_to_download, 1):
+                logging.info(f"Processando produto {i}/{len(products_to_download)}")
+                
+                query = f"{product['name']} {product['model']}".strip()
+                filename = self.slugify(f"{product['name']}_{product['model']}")
+                
+                img_url = self.search_google_images(query)
+                
+                if img_url:
+                    self.download_and_convert_image(img_url, filename)
+                else:
+                    logging.error(f"Nao foi possivel encontrar imagem para: {query}")
+                    self.error_count += 1
+                
+                if i < len(products_to_download):
+                    time.sleep(1)
             
-            query = f"{product['name']} {product['model']}".strip()
-            filename = self.slugify(f"{product['name']}_{product['model']}")
-            
-            img_url = self.search_google_images(query)
-            
-            if img_url:
-                self.download_and_convert_image(img_url, filename)
-            else:
-                logging.error(f"Nao foi possivel encontrar imagem para: {query}")
-                self.error_count += 1
-            
-            if i < len(products_to_download):
-                time.sleep(1)
-        
-        self.save_status()
-        self.show_summary()
+            self.save_status()
+            self.show_summary()
+        else:
+            print("Operacao cancelada.")
     
     def read_site_products_csv(self, filename="data/products.csv"):
         """Le arquivo CSV de produtos do site"""
