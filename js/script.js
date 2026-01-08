@@ -13,14 +13,19 @@ function showCategory(category) {
   }
   
   // Mostrar seção alvo
-  const targetSection = document.getElementById(category);
-  if (targetSection) {
-    targetSection.style.display = 'block';
-    
-    // Lazy loading simplificado
-    setTimeout(function() {
-      loadImagesOnScroll(targetSection);
-    }, 200);
+  if (category === 'promoções') {
+    // Criar seção de promoções dinamicamente
+    showPromocoes();
+  } else {
+    const targetSection = document.getElementById(category);
+    if (targetSection) {
+      targetSection.style.display = 'block';
+      
+      // Lazy loading simplificado
+      setTimeout(function() {
+        loadImagesOnScroll(targetSection);
+      }, 200);
+    }
   }
   
   // Atualizar botões
@@ -34,6 +39,49 @@ function showCategory(category) {
   
   // Atualizar URL
   history.pushState(null, null, '#' + category);
+}
+
+// === MOSTRAR PROMOÇÕES ===
+function showPromocoes() {
+  // Verificar se seção já existe
+  let promocoesSection = document.getElementById('promoções');
+  
+  if (!promocoesSection) {
+    promocoesSection = document.createElement('section');
+    promocoesSection.id = 'promoções';
+    promocoesSection.className = 'products-section';
+    
+    const container = document.querySelector('.container');
+    if (container) container.appendChild(promocoesSection);
+  }
+  
+  // Filtrar produtos em promoção
+  const promocoesProducts = [];
+  for (let i = 0; i < allProducts.length; i++) {
+    if (allProducts[i].promocao === 'sim') {
+      promocoesProducts.push(allProducts[i]);
+    }
+  }
+  
+  // Criar HTML
+  let productsHTML = '<h2>Promoções</h2>';
+  if (promocoesProducts.length === 0) {
+    productsHTML += '<p style="text-align: center; padding: 40px; color: #666;">Nenhuma promoção no momento.</p>';
+  } else {
+    productsHTML += '<div class="products-grid">';
+    for (let i = 0; i < promocoesProducts.length; i++) {
+      productsHTML += createProductCard(promocoesProducts[i]);
+    }
+    productsHTML += '</div>';
+  }
+  
+  promocoesSection.innerHTML = productsHTML;
+  promocoesSection.style.display = 'block';
+  
+  // Lazy loading para promoções
+  setTimeout(function() {
+    loadImagesOnScroll(promocoesSection);
+  }, 200);
 }
 
 // === LAZY LOADING SIMPLIFICADO ===
