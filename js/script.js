@@ -1,12 +1,28 @@
 // === FUNÇÃO PRINCIPAL - CATEGORIAS ===
 function showCategory(category) {
+  // Limpar observers antigos para evitar memory leak
+  if (window.currentImageObserver) {
+    window.currentImageObserver.disconnect();
+    window.currentImageObserver = null;
+  }
+  
   // Se for "inicio", mostrar a seção hero e esconder produtos
   if (category === 'inicio') {
     const inicioSection = document.getElementById('inicio');
     if (inicioSection) inicioSection.style.display = 'block';
     
     document.querySelectorAll('.products-section, .category').forEach(function(section) {
-      if (section.id !== 'inicio') section.style.display = 'none';
+      if (section.id !== 'inicio') {
+        section.style.display = 'none';
+        // Limpar imagens não visíveis
+        const imgs = section.querySelectorAll('img[data-src]');
+        imgs.forEach(img => {
+          if (img.src && !img.src.includes('placeholder')) {
+            img.src = '';
+            img.removeAttribute('src');
+          }
+        });
+      }
     });
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -15,6 +31,16 @@ function showCategory(category) {
     
     document.querySelectorAll('.products-section, .category').forEach(function(section) {
       section.style.display = 'none';
+      // Limpar imagens de seções não visíveis
+      if (section.id !== category) {
+        const imgs = section.querySelectorAll('img');
+        imgs.forEach(img => {
+          if (img.src && !img.src.includes('placeholder')) {
+            img.src = '';
+            img.classList.remove('loaded');
+          }
+        });
+      }
     });
     
     const targetSection = document.getElementById(category);
@@ -41,16 +67,26 @@ function showCategory(category) {
   if (history.pushState) {
     history.pushState({}, '', window.location.pathname + '#' + category);
   }
+  
+  // Forçar garbage collection se disponível
+  if (window.gc) {
+    setTimeout(() => window.gc(), 1000);
+  }
 }
 
 // === LAZY LOADING OTIMIZADO ===
 function setupLazyLoading(container) {
   const images = container.querySelectorAll('img[data-src]');
   
+  // Limitar número de imagens simultâneas
+  let loadingCount = 0;
+  const maxSimultaneous = 3;
+  
   const imageObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
+      if (entry.isIntersecting && loadingCount < maxSimultaneous) {
         const img = entry.target;
+        loadingCount++;
         
         // Criar imagem temporária para pré-carregar
         const tempImg = new Image();
@@ -58,6 +94,20 @@ function setupLazyLoading(container) {
           img.src = img.dataset.src;
           img.classList.add('loaded');
           imageObserver.unobserve(img);
+          loadingCount--;
+          
+          // Processar próxima imagem na fila
+          const nextImg = container.querySelector('img[data-src]:not(.loaded)');
+          if (nextImg) {
+            const nextEntry = { target: nextImg, isIntersecting: true };
+            setTimeout(() => imageObserver.callback([nextEntry]), 100);
+          }
+        };
+        tempImg.onerror = function() {
+          img.src = 'images/placeholder.png';
+          img.classList.add('loaded');
+          imageObserver.unobserve(img);
+          loadingCount--;
         };
         tempImg.src = img.dataset.src;
       }
@@ -66,6 +116,9 @@ function setupLazyLoading(container) {
     rootMargin: '50px',
     threshold: 0.1
   });
+  
+  // Guardar referência global para limpeza
+  window.currentImageObserver = imageObserver;
   
   images.forEach(img => imageObserver.observe(img));
 }
@@ -178,6 +231,22 @@ function addToCart(productCode) {
   console.log('Produto adicionado:', product.nome);
 }
 
+// === LIMPEZA DE MEMÓRIA ===
+function cleanupMemory() {
+  // Limpar imagens não visíveis
+  document.querySelectorAll('.products-section:not([style*="block"]) img').forEach(img => {
+    if (img.src && !img.src.includes('placeholder')) {
+      img.src = '';
+      img.classList.remove('loaded');
+    }
+  });
+  
+  // Limpar observers antigos
+  if (window.currentImageObserver) {
+    window.currentImageObserver.disconnect();
+  }
+}
+
 // === INICIALIZAÇÃO ===
 document.addEventListener('DOMContentLoaded', function() {
   loadProducts().then(() => showCategory('inicio'));
@@ -186,8 +255,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const hash = window.location.hash.substring(1) || 'inicio';
     showCategory(hash);
   });
+  
+  // Limpeza periódica de memória
+  setInterval(cleanupMemory, 30000); // A cada 30 segundos
+  
+  // Limpar ao mudar de categoria
+  let lastCategory = 'inicio';
+  setInterval(() => {
+    const currentHash = window.location.hash.substring(1) || 'inicio';
+    if (currentHash !== lastCategory) {
+      cleanupMemory();
+      lastCategory = currentHash;
+    }
+  }, 1000);
 });
 
 // === COMANDOS GLOBAIS ===
 window.showCategory = showCategory;
 window.addToCart = addToCart;
+window.cleanupMemory = cleanupMemory;
