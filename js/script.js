@@ -21,16 +21,9 @@ function showCategory(category) {
     if (targetSection) {
       targetSection.style.display = 'block';
       
-      // Lazy loading das imagens da seção
+      // Lazy loading apenas quando imagem fica visível
       setTimeout(function() {
-        const images = targetSection.querySelectorAll('img[data-src]');
-        images.forEach(function(img) {
-          const src = img.dataset.src;
-          if (src) {
-            img.src = src;
-            img.removeAttribute('data-src');
-          }
-        });
+        setupLazyLoading(targetSection);
         
         const headerHeight = document.querySelector('header')?.offsetHeight || 0;
         const sectionTop = targetSection.offsetTop - headerHeight - 20;
@@ -48,6 +41,33 @@ function showCategory(category) {
   if (history.pushState) {
     history.pushState({}, '', window.location.pathname + '#' + category);
   }
+}
+
+// === LAZY LOADING OTIMIZADO ===
+function setupLazyLoading(container) {
+  const images = container.querySelectorAll('img[data-src]');
+  
+  const imageObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        
+        // Criar imagem temporária para pré-carregar
+        const tempImg = new Image();
+        tempImg.onload = function() {
+          img.src = img.dataset.src;
+          img.classList.add('loaded');
+          imageObserver.unobserve(img);
+        };
+        tempImg.src = img.dataset.src;
+      }
+    });
+  }, {
+    rootMargin: '50px',
+    threshold: 0.1
+  });
+  
+  images.forEach(img => imageObserver.observe(img));
 }
 
 // === CARREGAR PRODUTOS ===
@@ -129,6 +149,7 @@ function createProductCard(product) {
   
   return '<div class="product-card">' +
     '<div class="product-image">' +
+    '<div class="image-placeholder">📦</div>' +
     '<img data-src="' + imagePath + '" alt="' + product.nome + '" loading="lazy" onerror="this.src=\'images/placeholder.png\'">' +
     '</div>' +
     '<div class="product-info">' +
