@@ -92,17 +92,31 @@ function showPromocoes() {
   }
   
   promocoesSection.innerHTML = productsHTML;
-  promocoesSection.style.display = 'block';
-  promocoesSection.style.visibility = 'visible';
-  promocoesSection.style.opacity = '1';
-  promocoesSection.style.position = 'relative';
-  promocoesSection.style.zIndex = '1';
+  promocoesSection.style.cssText = `
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 9999 !important;
+    background: red !important;
+    color: white !important;
+    padding: 20px !important;
+    margin: 20px 0 !important;
+    border: 3px solid yellow !important;
+    font-size: 24px !important;
+    text-align: center !important;
+    min-height: 200px !important;
+    width: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+  `;
   
   console.log('Seção de promoções exibida');
   console.log('Elemento seção:', promocoesSection);
   console.log('Display:', promocoesSection.style.display);
   console.log('Visibility:', promocoesSection.style.visibility);
   console.log('InnerHTML length:', promocoesSection.innerHTML.length);
+  console.log('CSS Text:', promocoesSection.style.cssText);
   
   // Lazy loading para promoções
   setTimeout(function() {
