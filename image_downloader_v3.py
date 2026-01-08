@@ -212,7 +212,21 @@ class ProductImageDownloader:
     
     def process_downloads(self, products):
         """Processa downloads dos produtos"""
-        products_to_download = self.check_existing_images(products)
+        existing_images = set()
+        
+        if self.output_dir.exists():
+            for file in self.output_dir.glob("*.webp"):
+                existing_images.add(file.stem)
+        
+        products_to_download = []
+        for product in products:
+            filename = self.slugify(f"{product['name']}_{product['model']}")
+            
+            if filename in existing_images or filename in self.downloaded_images:
+                logging.info(f"Imagem ja existe: {filename}.webp")
+            else:
+                logging.info(f"Imagem faltante: {filename}.webp")
+                products_to_download.append(product)
         
         if not products_to_download:
             print("Todos os produtos ja tem imagens!")
