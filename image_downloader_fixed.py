@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-🖼️  Download Automatizado de Imagens de Produtos v2.0
+Download Automatizado de Imagens de Produtos v2.0
 Autor: Cascade AI
-Descrição: Baixa automaticamente imagens de produtos do Google Images com verificação inteligente
+Descricao: Baixa automaticamente imagens de produtos do Google Images
 """
 
 import os
@@ -18,7 +18,7 @@ from pathlib import Path
 import json
 from datetime import datetime
 
-# Configuração de logging
+# Configuracao de logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -33,10 +33,10 @@ class ProductImageDownloader:
         self.output_dir = Path(output_dir)
         self.session = requests.Session()
         self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         })
         
-        # Criar diretório de saída
+        # Criar diretorio de saida
         self.output_dir.mkdir(parents=True, exist_ok=True)
         
         # Contadores
@@ -54,7 +54,7 @@ class ProductImageDownloader:
             try:
                 with open(self.status_file, 'r', encoding='utf-8') as f:
                     self.downloaded_images = set(json.load(f).get('downloaded', []))
-                logging.info(f"📋 Status carregado: {len(self.downloaded_images)} imagens já baixadas")
+                logging.info(f"Status carregado: {len(self.downloaded_images)} imagens ja baixadas")
             except:
                 self.downloaded_images = set()
         else:
@@ -81,37 +81,34 @@ class ProductImageDownloader:
         return text.strip('-')
     
     def search_google_images(self, query, max_retries=3):
-        """Busca imagens no Google Images com método melhorado"""
+        """Busca imagens no Google Images"""
         for attempt in range(max_retries):
             try:
-                # URL de busca melhorada
-                search_url = f"https://www.google.com/search?q={quote(query)}&tbm=isch&tbs=itp:photo,ift:jpg&safe=off"
+                search_url = f"https://www.google.com/search?q={quote(query)}&tbm=isch&tbs=itp:photo,ift:jpg"
                 
-                logging.info(f"🔍 Buscando: {query} (tentativa {attempt + 1})")
+                logging.info(f"Buscando: {query} (tentativa {attempt + 1})")
                 
                 response = self.session.get(search_url, timeout=15)
                 response.raise_for_status()
                 
-                # Extrair URLs das imagens do HTML
                 img_urls = self.extract_image_urls(response.text)
                 
                 if img_urls:
-                    # Tentar baixar a primeira imagem válida
-                    for i, url in enumerate(img_urls[:3]):  # Tentar até 3 imagens
+                    for url in img_urls[:3]:
                         if self.validate_image_url(url):
                             return url
                     
-                    logging.warning(f"⚠️  Nenhuma imagem válida encontrada para: {query}")
+                    logging.warning(f"Nenhuma imagem valida encontrada para: {query}")
                 
             except Exception as e:
-                logging.error(f"❌ Erro na busca (tentativa {attempt + 1}): {e}")
+                logging.error(f"Erro na busca (tentativa {attempt + 1}): {e}")
                 if attempt < max_retries - 1:
-                    time.sleep(2 ** attempt)  # Exponential backoff
+                    time.sleep(2 ** attempt)
                     
         return None
     
     def validate_image_url(self, url):
-        """Valida se URL é uma imagem válida"""
+        """Valida se URL e uma imagem valida"""
         try:
             parsed = urlparse(url)
             valid_extensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif']
@@ -120,8 +117,7 @@ class ProductImageDownloader:
             return False
     
     def extract_image_urls(self, html_content):
-        """Extrai URLs das imagens do HTML do Google Images"""
-        # Múltiplos padrões regex para encontrar URLs
+        """Extrai URLs das imagens do HTML"""
         patterns = [
             r'"https://[^"]*\.(?:jpg|jpeg|png|webp|gif)[^"]*"',
             r"'https://[^']*\.(?:jpg|jpeg|png|webp|gif)[^']*'",
@@ -136,43 +132,28 @@ class ProductImageDownloader:
                 if self.validate_image_url(url):
                     img_urls.append(url)
         
-        # Remover duplicados e filtrar URLs de alta qualidade
-        unique_urls = list(dict.fromkeys(img_urls))  # Remove duplicados mantendo ordem
-        
-        # Priorizar URLs de alta qualidade
-        quality_urls = []
-        for url in unique_urls:
-            if any(keyword in url.lower() for keyword in ['googleusercontent', 'gstatic', 'wikimedia']):
-                quality_urls.append(url)
-        
-        # Mesclar URLs de qualidade com as outras
-        final_urls = quality_urls + [url for url in unique_urls if url not in quality_urls]
-        
-        return final_urls[:10]  # Retornar até 10 URLs
+        unique_urls = list(dict.fromkeys(img_urls))
+        return unique_urls[:10]
     
     def download_and_convert_image(self, img_url, filename):
-        """Baixa e converte imagem para WebP com validação"""
+        """Baixa e converte imagem para WebP"""
         try:
-            # Verificar se já foi baixada
             if filename in self.downloaded_images:
-                logging.info(f"⏭️  Imagem já baixada anteriormente: {filename}.webp")
+                logging.info(f"Imagem ja baixada anteriormente: {filename}.webp")
                 self.skip_count += 1
                 return True
             
-            # Baixar imagem
             response = self.session.get(img_url, timeout=20)
             response.raise_for_status()
             
-            # Validar se é realmente uma imagem
             try:
                 img = Image.open(BytesIO(response.content))
-                img.verify()  # Verificar integridade
-                img = Image.open(BytesIO(response.content))  # Reabrir após verify
+                img.verify()
+                img = Image.open(BytesIO(response.content))
             except Exception as e:
-                logging.error(f"❌ Imagem inválida: {e}")
+                logging.error(f"Imagem invalida: {e}")
                 return False
             
-            # Converter para RGB se necessário
             if img.mode in ('RGBA', 'LA', 'P'):
                 background = Image.new('RGB', img.size, (255, 255, 255))
                 if img.mode == 'P':
@@ -180,55 +161,49 @@ class ProductImageDownloader:
                 background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
                 img = background
             
-            # Redimensionar se muito grande (max 800x800)
             max_size = 800
             if img.width > max_size or img.height > max_size:
                 img.thumbnail((max_size, max_size), Image.Resampling.LANCZOS)
             
-            # Salvar como WebP
             output_path = self.output_dir / f"{filename}.webp"
-            img.save(output_path, 'WebP', quality=85, optimize=True, method=6)
+            img.save(output_path, 'WebP', quality=85, optimize=True)
             
-            # Adicionar ao status
             self.downloaded_images.add(filename)
             
-            logging.info(f"✅ Imagem salva: {output_path}")
+            logging.info(f"Imagem salva: {output_path}")
             self.success_count += 1
             return True
             
         except Exception as e:
-            logging.error(f"❌ Erro ao processar imagem: {e}")
+            logging.error(f"Erro ao processar imagem: {e}")
             self.error_count += 1
             return False
     
     def check_existing_images(self, products):
-        """Verifica quais produtos já têm imagens"""
+        """Verifica quais produtos ja tem imagens"""
         existing_images = set()
         
-        # Listar arquivos .webp existentes
         if self.output_dir.exists():
             for file in self.output_dir.glob("*.webp"):
-                existing_images.add(file.stem)  # Nome sem extensão
+                existing_images.add(file.stem)
         
-        logging.info(f"📁 {len(existing_images)} imagens já existentes no disco")
-        logging.info(f"📋 {len(self.downloaded_images)} imagens no status de downloads")
+        logging.info(f"{len(existing_images)} imagens ja existentes no disco")
+        logging.info(f"{len(self.downloaded_images)} imagens no status de downloads")
         
-        # Verificar quais produtos precisam de download
         products_to_download = []
         for product in products:
             filename = self.slugify(f"{product['name']}_{product['model']}")
             
-            # Verificar no disco e no status
             if filename in existing_images or filename in self.downloaded_images:
-                logging.info(f"✅ Imagem já existe: {filename}.webp")
+                logging.info(f"Imagem ja existe: {filename}.webp")
             else:
-                logging.info(f"❌ Imagem faltante: {filename}.webp")
+                logging.info(f"Imagem faltante: {filename}.webp")
                 products_to_download.append(product)
         
         return products_to_download
     
     def process_product_list(self, input_file):
-        """Processa lista de produtos de um arquivo CSV ou TXT"""
+        """Processa lista de produtos"""
         products = []
         
         if input_file.endswith('.csv'):
@@ -236,88 +211,75 @@ class ProductImageDownloader:
         else:
             products = self.read_txt_file(input_file)
             
-        logging.info(f"📦 {len(products)} produtos encontrados no arquivo")
+        logging.info(f"{len(products)} produtos encontrados no arquivo")
         
-        # Verificar imagens existentes
         products_to_download = self.check_existing_images(products)
         
         if not products_to_download:
-            logging.info("🎉 Todos os produtos já têm imagens! Nada a baixar.")
+            logging.info("Todos os produtos ja tem imagens! Nada a baixar.")
             self.show_summary()
             return
         
-        logging.info(f"🎯 {len(products_to_download)} produtos precisam de imagens")
-        logging.info(f"📊 {len(products) - len(products_to_download)} produtos já têm imagens")
+        logging.info(f"{len(products_to_download)} produtos precisam de imagens")
+        logging.info(f"{len(products) - len(products_to_download)} produtos ja tem imagens")
         
-        # Confirmar download
-        print(f"\n📥 Resumo:")
+        print(f"\nResumo:")
         print(f"   • {len(products_to_download)} imagens para baixar")
-        print(f"   • {len(products) - len(products_to_download)} imagens já existentes")
-        print(f"   • Tempo estimado: {len(products_to_download) * 2} segundos")
+        print(f"   • {len(products) - len(products_to_download)} imagens ja existentes")
         
-        confirm = input("\n📥 Deseja baixar as imagens faltantes? (S/N): ").strip().upper()
+        confirm = input("\nDeseja baixar as imagens faltantes? (S/N): ").strip().upper()
         
         if confirm != "S":
-            logging.info("❌ Operação cancelada pelo usuário.")
+            logging.info("Operacao cancelada pelo usuario.")
             return
         
-        # Processar downloads
         start_time = time.time()
         
         for i, product in enumerate(products_to_download, 1):
             logging.info(f"\n{'='*60}")
-            logging.info(f"📦 Processando produto {i}/{len(products_to_download)}")
+            logging.info(f"Processando produto {i}/{len(products_to_download)}")
             
-            # Criar query de busca
             query = f"{product['name']} {product['model']}".strip()
             filename = self.slugify(f"{product['name']}_{product['model']}")
             
-            # Buscar imagem
             img_url = self.search_google_images(query)
             
             if img_url:
-                # Baixar e converter
                 success = self.download_and_convert_image(img_url, filename)
                 if not success:
-                    logging.warning(f"⚠️  Tentando próxima imagem para: {query}")
-                    # Tentar buscar novamente com query diferente
+                    logging.warning(f"Tentando proxima imagem para: {query}")
                     alternative_query = f"{product['name']} {product.get('categoria', '')}"
                     img_url_alt = self.search_google_images(alternative_query)
                     if img_url_alt:
                         self.download_and_convert_image(img_url_alt, filename)
             else:
-                logging.error(f"❌ Não foi possível encontrar imagem para: {query}")
+                logging.error(f"Nao foi possivel encontrar imagem para: {query}")
                 self.error_count += 1
             
-            # Rate limiting progressivo
             if i < len(products_to_download):
-                delay = min(1 + (i * 0.1), 3)  # Aumenta delay progressivamente
+                delay = min(1 + (i * 0.1), 3)
                 time.sleep(delay)
         
-        # Salvar status final
         self.save_status()
         
-        # Mostrar tempo total
         total_time = time.time() - start_time
-        logging.info(f"⏱️  Tempo total: {total_time:.2f} segundos")
+        logging.info(f"Tempo total: {total_time:.2f} segundos")
         
         self.show_summary()
     
     def read_site_products_csv(self, filename="data/products.csv"):
-        """Lê arquivo CSV de produtos do site (formato específico)"""
+        """Le arquivo CSV de produtos do site"""
         products = []
         
         if not Path(filename).exists():
-            logging.error(f"❌ Arquivo do site não encontrado: {filename}")
+            logging.error(f"Arquivo do site nao encontrado: {filename}")
             return []
         
         with open(filename, 'r', encoding='utf-8') as file:
             reader = csv.DictReader(file, delimiter=';')
             for row in reader:
-                # Extrair nome e modelo do campo 'nome'
                 full_name = row.get('nome', '').strip()
                 
-                # Tentar separar nome e modelo
                 if ' ' in full_name:
                     parts = full_name.split(' ', 1)
                     name = parts[0]
@@ -326,7 +288,6 @@ class ProductImageDownloader:
                     name = full_name
                     model = ''
                 
-                # Usar categoria como fallback se não tiver modelo
                 if not model and row.get('categoria'):
                     model = row.get('categoria', '').strip()
                 
@@ -340,7 +301,7 @@ class ProductImageDownloader:
         return products
     
     def read_csv_file(self, filename):
-        """Lê arquivo CSV com produtos"""
+        """Le arquivo CSV com produtos"""
         products = []
         
         with open(filename, 'r', encoding='utf-8') as file:
@@ -354,7 +315,7 @@ class ProductImageDownloader:
         return products
     
     def read_txt_file(self, filename):
-        """Lê arquivo TXT com produtos (formato: nome|modelo)"""
+        """Le arquivo TXT com produtos"""
         products = []
         
         with open(filename, 'r', encoding='utf-8') as file:
@@ -372,24 +333,22 @@ class ProductImageDownloader:
     def show_summary(self):
         """Mostra resumo final"""
         logging.info(f"\n{'='*60}")
-        logging.info(f"📊 RESUMO FINAL")
-        logging.info(f"✅ Sucessos: {self.success_count}")
-        logging.info(f"⏭️  Pulados: {self.skip_count}")
-        logging.info(f"❌ Erros: {self.error_count}")
-        logging.info(f"📁 Imagens salvas em: {self.output_dir.absolute()}")
-        logging.info(f"📋 Status salvo em: {self.status_file.absolute()}")
+        logging.info(f"RESUMO FINAL")
+        logging.info(f"Sucessos: {self.success_count}")
+        logging.info(f"Pulados: {self.skip_count}")
+        logging.info(f"Erros: {self.error_count}")
+        logging.info(f"Imagens salvas em: {self.output_dir.absolute()}")
+        logging.info(f"Status salvo em: {self.status_file.absolute()}")
         logging.info(f"{'='*60}")
 
 def main():
-    """Função principal"""
+    """Funcao principal"""
     print("Download Automatizado de Imagens de Produtos v2.0")
     print("=" * 60)
     
-    # Criar downloader
     downloader = ProductImageDownloader()
     
-    # Menu de opções avançado
-    print("\nEscolha uma opção:")
+    print("\nEscolha uma opcao:")
     print("1. Usar CSV do site (data/products.csv)")
     print("2. Usar arquivo CSV personalizado")
     print("3. Usar arquivo TXT personalizado")
@@ -398,7 +357,7 @@ def main():
     print("6. Mostrar resumo do status")
     print("0. Sair")
     
-    choice = input("\nDigite sua opção (0-6): ").strip()
+    choice = input("\nDigite sua opcao (0-6): ").strip()
     
     if choice == "0":
         print("Ate logo!")
@@ -406,18 +365,16 @@ def main():
     elif choice == "1":
         input_file = "data/products.csv"
         if not os.path.exists(input_file):
-            print(f"Arquivo do site não encontrado: {input_file}")
+            print(f"Arquivo do site nao encontrado: {input_file}")
             return
         
-        # Usar função especial para CSV do site
         products = downloader.read_site_products_csv()
         print(f"{len(products)} produtos encontrados no site")
         
-        # Verificar imagens existentes
         products_to_download = downloader.check_existing_images(products)
         
         if not products_to_download:
-            print("Todos os produtos já têm imagens! Nada a baixar.")
+            print("Todos os produtos ja tem imagens! Nada a baixar.")
             downloader.show_summary()
             return
         
@@ -427,24 +384,23 @@ def main():
         if confirm == "S":
             downloader.process_product_list(input_file)
         else:
-            print("Operação cancelada.")
+            print("Operacao cancelada.")
             
     elif choice == "2":
         input_file = input("Digite o caminho do arquivo CSV: ").strip()
         if os.path.exists(input_file):
             downloader.process_product_list(input_file)
         else:
-            print(f"Arquivo não encontrado: {input_file}")
+            print(f"Arquivo nao encontrado: {input_file}")
             
     elif choice == "3":
         input_file = input("Digite o caminho do arquivo TXT: ").strip()
         if os.path.exists(input_file):
             downloader.process_product_list(input_file)
         else:
-            print(f"Arquivo não encontrado: {input_file}")
+            print(f"Arquivo nao encontrado: {input_file}")
             
     elif choice == "4":
-        # Verificar imagens existentes
         if downloader.output_dir.exists():
             existing_images = list(downloader.output_dir.glob("*.webp"))
             print(f"\n{len(existing_images)} imagens encontradas:")
@@ -452,10 +408,9 @@ def main():
                 size_kb = img.stat().st_size / 1024
                 print(f"  {img.name} ({size_kb:.1f} KB)")
         else:
-            print("Nenhuma imagem encontrada. A pasta não existe.")
+            print("Nenhuma imagem encontrada. A pasta nao existe.")
             
     elif choice == "5":
-        # Limpar status
         if downloader.status_file.exists():
             downloader.status_file.unlink()
             downloader.downloaded_images.clear()
@@ -464,14 +419,13 @@ def main():
             print("Nenhum status encontrado para limpar.")
             
     elif choice == "6":
-        # Mostrar resumo do status
         if downloader.status_file.exists():
             try:
                 with open(downloader.status_file, 'r', encoding='utf-8') as f:
                     status = json.load(f)
                 
                 print(f"\nRESUMO DO STATUS:")
-                print(f"Ultima atualização: {status.get('last_update', 'N/A')}")
+                print(f"Ultima atualizacao: {status.get('last_update', 'N/A')}")
                 print(f"Downloads bem-sucedidos: {status.get('success_count', 0)}")
                 print(f"Erros: {status.get('error_count', 0)}")
                 print(f"Pulados: {status.get('skip_count', 0)}")
@@ -482,16 +436,15 @@ def main():
             print("Nenhum status encontrado.")
             
     else:
-        print("Opção inválida!")
+        print("Opcao invalida!")
         
     try:
         pass
     except KeyboardInterrupt:
-        print("\n⏹️  Processo interrompido pelo usuário")
-        # Salvar status mesmo em interrupção
+        print("\nProcesso interrompido pelo usuario")
         downloader.save_status()
     except Exception as e:
-        print(f"❌ Erro durante o processamento: {e}")
+        print(f"Erro durante o processamento: {e}")
         downloader.save_status()
 
 if __name__ == "__main__":
