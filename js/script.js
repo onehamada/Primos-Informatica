@@ -67,13 +67,12 @@ function initPerformanceMonitor() {
 function initNotifications() {
   if ('Notification' in window && Notification.permission === 'granted') {
     // Sistema de notificações push já autorizado
-    console.log('🔔 Notificações habilitadas');
   } else if ('Notification' in window && Notification.permission !== 'denied') {
     // Pede permissão de forma sutil
     setTimeout(() => {
       Notification.requestPermission().then(permission => {
         if (permission === 'granted') {
-          console.log('🔔 Notificações autorizadas');
+          // Notificações autorizadas
         }
       });
     }, 5000);
@@ -1820,18 +1819,14 @@ function showErrorMessage(message) {
 }
 
 async function loadProductsFromJson() {
-  console.log('Tentando carregar produtos do JSON...');
   try {
     const response = await fetch('data/products.json');
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const products = await response.json();
-    console.log('Produtos carregados do JSON:', products.length);
     applyProductsAndRender(products);
     return true;
   } catch (error) {
-    console.error('Erro ao carregar JSON, usando fallback hardcoded:', error);
-    // Fallback final: usar dados hardcoded de todos os produtos
-    applyProductsAndRender(ALL_PRODUCTS_FALLBACK);
+    console.error('❌ Erro ao carregar produtos do JSON:', error);
     return false;
   }
 }
