@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Preços</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .product { border: 1px solid #ccc; margin: 10px; padding: 10px; }
+        .price { font-weight: bold; color: green; }
+        .debug { background: #f0f0f0; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Teste de Processamento de Preços</h1>
+    <div id="results"></div>
+
+    <script>
+        // Função formatPrice do site
+        function formatPrice(value) {
+            if (typeof value === 'number') return `R$ ${value.toFixed(2).replace('.', ',')}`;
+            if (typeof value === 'string') {
+                const num = parseFloat(value.replace(',', '.').replace(/[^\d.]/g, ''));
+                if (!isNaN(num)) return `R$ ${num.toFixed(2).replace('.', ',')}`;
+            }
+            return 'R$ 0,00';
+        }
+
+        // Função parseCsvLine do site
+        function parseCsvLine(line) {
+            const parts = line.split(';').map(p => p.trim());
+            if (parts.length < 8) return null;
+            
+            const [codigo, nome, categoria, preco, qt, descricao, marca, promocao, imagem] = parts;
+            if (!codigo || !nome || !categoria || !preco || qt === undefined) return null;
+            
+            // Converter preço brasileiro (ex: 285,00) para ponto decimal (285.00)
+            const precoNum = parseFloat(preco.replace(',', '.'));
+            const qtNum = parseInt(qt) || 0;
+            if (isNaN(precoNum) || isNaN(qtNum)) return null;
+            
+            return {
+                codigo: codigo.trim(),
+                nome: nome.trim(),
+                categoria: categoria.trim(),
+                preco: precoNum,
+                qt: qtNum,
+                descricao: descricao ? descricao.trim() : '',
+                marca: marca ? marca.trim() : '',
+                promocao: promocao ? promocao.trim().toLowerCase() === 'sim' : false,
+                imagem: imagem ? imagem.trim() : ''
+            };
+        }
+
+        // Testar com algumas linhas do CSV
+        const testLines = [
+            '1006;MONITOR 19 HAYOM MO6001 PROMOCAO;monitor;285,00;1;Monitor 19 MO6001;Hayom;sim;monitor-hayom-19-mo6001.webp',
+            '400772;MONITOR 21.5 PHILIPS LED FULL HD 221V8 WVA HDMI;monitor;825,00;1;Monitor 21.5 Full HD 221V8 WVA HDMI;Philips;nao;monitor-philips-215-fullhd-221v8.webp',
+            '1888;PROCESSADOR INTEL CELERON 1151 LGA1200 G5905 4MB;processador;214,99;23;Intel Celeron G5905 LGA1200 4MB;Intel;nao;g5905.webp'
+        ];
+
+        const results = document.getElementById('results');
+        
+        testLines.forEach((line, index) => {
+            const product = parseCsvLine(line);
+            if (product) {
+                // Simular o processamento de precoRaw e preco
+                product.precoRaw = product.preco;
+                product.preco = formatPrice(product.precoRaw);
+                
+                const div = document.createElement('div');
+                div.className = 'product';
+                div.innerHTML = `
+                    <h3>Produto ${index + 1}</h3>
+                    <div class="debug">
+                        <strong>Linha CSV:</strong> ${line}<br>
+                        <strong>Preço original:</strong> ${line.split(';')[3]}<br>
+                        <strong>precoRaw:</strong> ${product.precoRaw} (tipo: ${typeof product.precoRaw})<br>
+                        <strong>preco formatado:</strong> ${product.preco}
+                    </div>
+                    <strong>Nome:</strong> ${product.nome}<br>
+                    <strong>Preço:</strong> <span class="price">${product.preco}</span><br>
+                    <strong>Preço Raw:</strong> ${product.precoRaw}
+                `;
+                results.appendChild(div);
+            }
+        });
+    </script>
+</body>
+</html>

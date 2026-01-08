@@ -327,7 +327,11 @@ document.addEventListener('click', function(e) {
 function initSearch() {
   const searchInput = document.getElementById('searchInput');
   const searchResults = document.getElementById('searchResults');
-  if (!searchInput || !searchResults) return;
+  
+  if (!searchInput || !searchResults) {
+    console.error('❌ Elementos de busca não encontrados!');
+    return;
+  }
 
   // Debounce para evitar muitas buscas
   searchInput.addEventListener('input', (e) => {
@@ -340,23 +344,20 @@ function initSearch() {
   // Fechar busca ao clicar fora
   document.addEventListener('click', (e) => {
     if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-      searchResults.style.display = 'none';
+      hideSearchResults();
     }
   });
 
   // Fechar busca com ESC
   searchInput.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      searchResults.style.display = 'none';
+      hideSearchResults();
       searchInput.blur();
     }
   });
 }
 
 function performSearch(query) {
-  console.log('🔍 Busca iniciada para:', query);
-  console.log('📦 Produtos carregados:', __allProducts.length);
-  
   if (!query || query.length < 2) {
     hideSearchResults();
     return;
@@ -685,47 +686,13 @@ function initDragScroll() {
 }
 
 // === Inicialização Otimizada ===
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    console.log('🚀 Iniciando sistema otimizado...');
-    
-    // Inicializa funcionalidades básicas
-    initDragScroll();
-    preloadCriticalImages();
-    stripStaticProductsFromHtml();
-    
-    // Carrega produtos do CSV (já chama populatePromo internamente)
-    await loadProductsFromCsv();
-    
-    showCategory('inicio');
-    optimizeProductImages(document);
-    addCartButtons();
-    
-    console.log('✅ Sistema otimizado inicializado com sucesso!');
-  } catch (error) {
-    console.error('❌ Erro na inicialização:', error);
-    showErrorMessage('Erro ao carregar o site. Tente recarregar a página.');
-  } finally {
-    hideLoading();
-  }
-});
-
-function stripStaticProductsFromHtml() {
-  const categories = Array.from(document.querySelectorAll('.category'));
-  categories.forEach(catEl => {
-    const id = catEl.id;
-    if (!id || id === 'inicio' || id === 'promo') return;
-
-    const title = catEl.querySelector('h2');
-    catEl.innerHTML = '';
-    if (title) catEl.appendChild(title);
-  });
-}
-
-// === Configurações ===
 const CONFIG = {
   PAGE_SIZE: 30, // Aumentado para menos recargas
-  CSV_CACHE_KEY: 'productsCsvCache:v8', // Versão atualizada para forçar limpeza
+  CSV_CACHE_KEY: 'productsCsvCache:v9', // Versão atualizada para forçar limpeza
+  CSV_CACHE_TTL: 30 * 60 * 1000, // 30 minutos
+  DEBOUNCE_DELAY: 300,
+  CACHE_DURATION: 10 * 60 * 1000, // 10 minutos
+  MAX_HIGHLIGHTS: 8 // Máximo de produtos em destaque na home
 };
 
 // === Sistema de Cache Otimizado ===
@@ -757,6 +724,10 @@ let __allProducts = [];
 let __categoryState = new Map();
 let __categoryLabels = new Map();
 let __searchTimeout = null;
+
+// Variáveis para o sistema de busca
+const searchCache = new Map();
+let currentSearchResults = [];
 
 // === Carrinho de Compras ===
 class Cart {
@@ -1342,56 +1313,12 @@ function parseCsvLine(line) {
   };
 }
 
-function parseCsv(text) {
-  if (!text || typeof text !== 'string') return [];
-  
-  console.log('🔍 CSV Debug - Texto recebido (primeiros 200 chars):', text.substring(0, 200));
-  
-  const lines = text.split('\n').filter(line => line.trim());
-  console.log('📊 CSV Debug - Total de linhas:', lines.length);
-  
-  if (lines.length < 2) return [];
-
-  const headers = lines[0].split(';').map(h => h.trim().toLowerCase());
-  console.log('📋 CSV Debug - Headers:', headers);
-  
-  const requiredFields = ['codigo', 'nome', 'categoria', 'preco', 'qt'];
-  
-  const products = [];
-  const categoryCount = {};
-  
-  for (let i = 1; i < lines.length; i++) {
-    const product = parseCsvLine(lines[i]);
-    if (!product) {
-      console.log(`⚠️ CSV Debug - Linha ${i} inválida:`, lines[i]);
-      continue;
-    }
-
-    // Contar categorias
-    if (!categoryCount[product.categoria]) {
-      categoryCount[product.categoria] = 0;
-    }
-    categoryCount[product.categoria]++;
-
-    product.codigo = String(product.codigo).trim();
-    product.nome = String(product.nome).trim();
-    product.categoria = String(product.categoria).trim();
-    product.precoRaw = product.preco;
-    product.preco = formatPrice(product.preco);
-
-    products.push(product);
-  }
-
-  console.log('📦 CSV Debug - Categorias encontradas:', categoryCount);
-  console.log('📦 CSV Debug - Total de produtos parseados:', products.length);
-  
-  return products;
-}
+// Função parseCsv foi substituída por parseCsvOptimized para melhor processamento de preços
 
 // === CSV Cache ===
 function clearCsvCache() {
   localStorage.removeItem(CONFIG.CSV_CACHE_KEY);
-  console.log('Cache CSV limpo');
+  localStorage.removeItem(CONFIG.CSV_CACHE_KEY + '_timestamp');
 }
 
 function readCsvCache() {
@@ -1593,42 +1520,22 @@ const ALL_PRODUCTS_FALLBACK = [
 ];
 
 async function loadProductsFromCsv() {
-  console.log('🔄 Iniciando carregamento de produtos...');
-  
   try {
     // Força cache busting com timestamp
     const timestamp = Date.now();
     const response = await fetch(`data/products.csv?t=${timestamp}`);
-    console.log('Response status:', response.status);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     
     const csvText = await response.text();
-    console.log('CSV recebido, tamanho:', csvText.length, 'caracteres');
     
     if (!csvText.trim()) {
       throw new Error('CSV vazio ou inválido');
     }
     
     const products = parseCsvOptimized(csvText);
-    console.log('✅ Parseado', products.length, 'produtos com sucesso');
-    
-    // Debug: mostrar produtos em promoção DEPOIS do parsing
-    try {
-      // Limitar para evitar loops infinitos
-      if (products.length > 200) {
-        console.warn('⚠️ Limitando produtos para evitar loop infinito');
-        return [];
-      }
-      
-      const promoProducts = products.filter(p => p.promocao === 'sim');
-      console.log('🎯 Produtos em promoção encontrados no CSV:', promoProducts.length);
-      console.log('📋 Lista promo:', promoProducts.map(p => ({nome: p.nome, promocao: p.promocao})));
-    } catch (error) {
-      console.error('❌ Erro no filtro de promoções:', error);
-    }
     
     if (products.length > 0) {
       // Salva no cache
@@ -1638,11 +1545,9 @@ async function loadProductsFromCsv() {
       // Fallback para cache se CSV estiver vazio
       const cached = readCsvCache();
       if (cached) {
-        console.log('Usando produtos em cache (fallback)');
         applyProductsAndRender(cached);
       } else {
         // Fallback final para hardcoded
-        console.log('Usando produtos hardcoded (fallback final)');
         applyProductsAndRender(ALL_PRODUCTS_FALLBACK);
       }
     }
@@ -1652,11 +1557,9 @@ async function loadProductsFromCsv() {
     // Tenta cache como fallback
     const cached = readCsvCache();
     if (cached) {
-      console.log('Usando produtos em cache (fallback após erro)');
       applyProductsAndRender(cached);
     } else {
       // Fallback final
-      console.log('Usando produtos hardcoded (fallback final após erro)');
       applyProductsAndRender(ALL_PRODUCTS_FALLBACK);
     }
   }
@@ -1671,7 +1574,6 @@ function parseCsvOptimized(csvText) {
     }
     
     const headers = lines[0].split(';').map(h => h.trim());
-    console.log('📋 Headers encontrados:', headers);
     
     const products = lines.slice(1).map((line, index) => {
       const values = line.split(';');
@@ -1706,9 +1608,7 @@ function parseCsvOptimized(csvText) {
             product.marca = value;
             break;
           case 'promocao':
-            console.log(`🔍 Debug header promocao encontrado, valor: "${value}"`);
             product.promocao = value.toLowerCase() === 'sim';
-            console.log(`🔍 Debug promoção: "${value}" -> ${product.promocao}`);
             break;
           case 'imagem':
             product.imagem = value;
@@ -1727,7 +1627,6 @@ function parseCsvOptimized(csvText) {
       return product;
     }).filter(p => p !== null && p.codigo); // Remove produtos inválidos
     
-    console.log(`✅ Parseado ${products.length} produtos com sucesso`);
     return products;
     
   } catch (error) {
@@ -1910,8 +1809,6 @@ function titleizeCategory(str) {
 
 // === Funções de renderização ===
 function applyProductsAndRender(products) {
-  console.log('📦 applyProductsAndRender chamado com', products.length, 'produtos');
-  
   if (!products || products.length === 0) {
     console.error('❌ Nenhum produto para renderizar!');
     showErrorMessage('Nenhum produto encontrado. Verifique o arquivo CSV.');
@@ -1919,13 +1816,11 @@ function applyProductsAndRender(products) {
   }
   
   __allProducts = products;
-  console.log('📂 Categorias disponíveis:', [...new Set(products.map(p => p.categoria))]);
   
   // Renderiza elementos da página inicial
   try {
     populateHomeCategories();
     populateHomeHighlights();
-    console.log('✅ Home categories e highlights renderizados');
   } catch (error) {
     console.error('❌ Erro ao renderizar home:', error);
   }
@@ -2168,10 +2063,8 @@ function createProductElement(product, categoryId) {
   // Simplificado: usar apenas imagem específica se existir
   if (product.imagem) {
     img.src = `images/products/thumbnail/${product.imagem}`;
-    console.log(`🖼️ Carregando imagem: ${img.src} para produto: ${product.nome}`);
   } else {
     img.src = `images/products/thumbnail/${product.codigo}.webp`;
-    console.log(`🖼️ Carregando imagem por código: ${img.src} para produto: ${product.nome}`);
   }
   
   // Fallback simples para categoria
@@ -2182,7 +2075,7 @@ function createProductElement(product, categoryId) {
   };
 
   img.onload = function() {
-    console.log(`✅ Imagem carregada com sucesso: ${this.src}`);
+    // Imagem carregada com sucesso
   };
 
   const info = document.createElement('div');
@@ -2343,23 +2236,24 @@ function populatePromo() {
   const frag = document.createDocumentFragment();
   promoProducts.forEach(p => {
     const productElement = createProductElement(p, 'promo');
-    console.log('📦 Criando elemento para:', p.nome);
     frag.appendChild(productElement);
   });
   promoContainer.appendChild(frag);
   optimizeProductImages(promoContainer);
   addCartButtons();
-  console.log('✅ Promoções populadas com sucesso!');
 }
 
 // === Inicialização Otimizada ===
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    console.log('🚀 Iniciando sistema otimizado...');
+    // Limpar cache antigo para forçar recarregamento com preços corrigidos
+    clearCsvCache();
     
     // Inicializa funcionalidades básicas
     initDragScroll();
     initSearch();
+    preloadCriticalImages();
+    stripStaticProductsFromHtml();
     
     // Mostra loading
     showLoading();
@@ -2372,14 +2266,29 @@ document.addEventListener('DOMContentLoaded', async () => {
       showCategory('inicio');
     }
     
+    optimizeProductImages(document);
+    addCartButtons();
+    
     // Esconde loading
     setTimeout(() => {
       hideLoading();
     }, 1000);
     
-    console.log('✅ Sistema otimizado inicializado com sucesso!');
   } catch (error) {
     console.error('❌ Erro na inicialização:', error);
+    showErrorMessage('Erro ao carregar o site. Tente recarregar a página.');
     hideLoading();
   }
 });
+
+function stripStaticProductsFromHtml() {
+  const categories = Array.from(document.querySelectorAll('.category'));
+  categories.forEach(catEl => {
+    const id = catEl.id;
+    if (!id || id === 'inicio' || id === 'promo') return;
+
+    const title = catEl.querySelector('h2');
+    catEl.innerHTML = '';
+    if (title) catEl.appendChild(title);
+  });
+}
