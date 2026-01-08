@@ -85,8 +85,16 @@ function showPromocoes() {
   
   promocoesSection.innerHTML = productsHTML;
   promocoesSection.style.display = 'block';
+  promocoesSection.style.visibility = 'visible';
+  promocoesSection.style.opacity = '1';
+  promocoesSection.style.position = 'relative';
+  promocoesSection.style.zIndex = '1';
   
   console.log('Seção de promoções exibida');
+  console.log('Elemento seção:', promocoesSection);
+  console.log('Display:', promocoesSection.style.display);
+  console.log('Visibility:', promocoesSection.style.visibility);
+  console.log('InnerHTML length:', promocoesSection.innerHTML.length);
   
   // Lazy loading para promoções
   setTimeout(function() {
