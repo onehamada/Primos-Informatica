@@ -42,33 +42,53 @@ function loadImagesOnScroll(container) {
   const loaded = [];
   
   function checkImages() {
-    const scrollTop = window.pageYOffset;
     const windowHeight = window.innerHeight;
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     
     for (let i = 0; i < images.length; i++) {
       const img = images[i];
       if (loaded.indexOf(img) !== -1) continue;
       
       const rect = img.getBoundingClientRect();
-      const isInViewport = rect.top < windowHeight + 100 && rect.bottom > -100;
+      const elemTop = rect.top + scrollTop;
+      const elemBottom = rect.bottom + scrollTop;
+      
+      const isInViewport = elemTop < scrollTop + windowHeight + 200 && 
+                          elemBottom > scrollTop - 200;
       
       if (isInViewport) {
         img.src = img.dataset.src;
         img.removeAttribute('data-src');
         loaded.push(img);
         
-        // Parar após 5 imagens para não sobrecarregar
-        if (loaded.length >= 5) break;
+        // Adicionar classe para fade-in
+        img.style.opacity = '0';
+        setTimeout(function() {
+          img.style.transition = 'opacity 0.3s ease';
+          img.style.opacity = '1';
+        }, 50);
       }
     }
     
     // Continuar verificando se ainda há imagens
     if (loaded.length < images.length) {
-      requestAnimationFrame(checkImages);
+      setTimeout(checkImages, 100);
     }
   }
   
+  // Verificar imediatamente
   checkImages();
+  
+  // Verificar no scroll
+  var scrollHandler = function() {
+    if (loaded.length < images.length) {
+      checkImages();
+    } else {
+      window.removeEventListener('scroll', scrollHandler);
+    }
+  };
+  
+  window.addEventListener('scroll', scrollHandler);
 }
 
 // === CARREGAR PRODUTOS ===
