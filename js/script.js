@@ -55,7 +55,15 @@ function showPromocoes() {
     promocoesSection.className = 'products-section';
     
     const container = document.querySelector('.container');
-    if (container) container.appendChild(promocoesSection);
+    if (container) {
+      // Inserir após a hero section
+      const heroSection = document.querySelector('.hero');
+      if (heroSection) {
+        container.insertBefore(promocoesSection, heroSection.nextSibling);
+      } else {
+        container.appendChild(promocoesSection);
+      }
+    }
   }
   
   // Filtrar produtos em promoção
