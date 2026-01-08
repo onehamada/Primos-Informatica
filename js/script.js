@@ -582,107 +582,232 @@ function animateElements() {
   });
 }
 
-// === Drag & Scroll para Header Tabs ===
+// === Drag & Scroll Ultra Suave para Header Tabs ===
 function initDragScroll() {
   const headerTabs = document.querySelector('.header-tabs');
-  if (!headerTabs) return;
+  const container = document.querySelector('.header-tabs-container');
+  if (!headerTabs || !container) return;
   
   let isDown = false;
-  let startX;
-  let scrollLeft;
+  let startX = 0;
+  let scrollLeft = 0;
   let isDragging = false;
-  let dragStartTime = 0;
+  let clickedButton = null;
+  let animationId = null;
+  let velocity = 0;
+  let lastX = 0;
+  let lastTime = 0;
   
-  // Mouse events
+  // Função de animação suave
+  function smoothScroll() {
+    if (Math.abs(velocity) > 0.1) {
+      headerTabs.scrollLeft += velocity;
+      velocity *= 0.92; // Menos fricção para mais sensibilidade
+      animationId = requestAnimationFrame(smoothScroll);
+    } else {
+      velocity = 0;
+      cancelAnimationFrame(animationId);
+    }
+  }
+  
+  // Atualizar indicadores de scroll
+  function updateScrollIndicators() {
+    const scrollLeft = headerTabs.scrollLeft;
+    const maxScroll = headerTabs.scrollWidth - headerTabs.clientWidth;
+    
+    container.classList.remove('scroll-start', 'scroll-middle', 'scroll-end');
+    
+    if (scrollLeft <= 0) {
+      container.classList.add('scroll-start');
+    } else if (scrollLeft >= maxScroll - 10) {
+      container.classList.add('scroll-end');
+    } else {
+      container.classList.add('scroll-middle');
+    }
+  }
+  
+  // Mouse wheel super suave e mais sensível
+  headerTabs.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    
+    const delta = e.deltaY * 0.6; // Aumentar sensibilidade
+    const targetScroll = headerTabs.scrollLeft + delta;
+    
+    // Animação suave para wheel
+    const startScroll = headerTabs.scrollLeft;
+    const distance = targetScroll - startScroll;
+    const duration = 200; // Mais rápido
+    const startTime = performance.now();
+    
+    function animateWheel(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Ease out cubic
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      headerTabs.scrollLeft = startScroll + distance * easeProgress;
+      
+      if (progress < 1) {
+        requestAnimationFrame(animateWheel);
+      }
+      
+      updateScrollIndicators();
+    }
+    
+    requestAnimationFrame(animateWheel);
+  }, { passive: false });
+  
+  // Mouse events ultra responsivos - permite drag sobre botões
   headerTabs.addEventListener('mousedown', (e) => {
-    // Verifica se não está clicando em um botão
-    if (e.target.classList.contains('tab-btn')) return;
+    // Sempre permite drag, mesmo sobre botões
+    clickedButton = e.target.classList.contains('tab-btn') ? e.target : null;
     
     isDown = true;
-    isDragging = false;
-    dragStartTime = Date.now();
+    headerTabs.style.cursor = 'grabbing';
     startX = e.pageX - headerTabs.offsetLeft;
     scrollLeft = headerTabs.scrollLeft;
+    lastX = e.pageX;
+    lastTime = performance.now();
+    velocity = 0;
+    isDragging = false;
+    
+    // Cancelar animação anterior
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+    }
+    
     e.preventDefault();
   });
   
   headerTabs.addEventListener('mouseleave', () => {
+    if (isDown && Math.abs(velocity) > 0.5) {
+      // Continuar animação de inércia
+      animationId = requestAnimationFrame(smoothScroll);
+    }
+    
     isDown = false;
+    isDragging = false;
+    headerTabs.style.cursor = 'grab';
+    clickedButton = null;
   });
   
-  headerTabs.addEventListener('mouseup', () => {
+  headerTabs.addEventListener('mouseup', (e) => {
     isDown = false;
     
-    // Se foi um arrasto rápido, previne o clique por um tempo maior
-    if (isDragging) {
-      const dragDuration = Date.now() - dragStartTime;
-      const preventTime = Math.max(200, dragDuration); // Mínimo 200ms
+    // Se não houve drag e havia um botão clicado
+    if (!isDragging && clickedButton) {
       setTimeout(() => {
-        isDragging = false;
-      }, preventTime);
+        if (clickedButton) clickedButton.click();
+      }, 50);
     }
+    
+    // Continuar animação de inércia
+    if (Math.abs(velocity) > 0.5) {
+      animationId = requestAnimationFrame(smoothScroll);
+    }
+    
+    headerTabs.style.cursor = 'grab';
+    clickedButton = null;
   });
   
   headerTabs.addEventListener('mousemove', (e) => {
     if (!isDown) return;
-    
     e.preventDefault();
-    isDragging = true;
-    const x = e.pageX - headerTabs.offsetLeft;
-    const walk = (x - startX) * 2; // Velocidade do arrasto
-    headerTabs.scrollLeft = scrollLeft - walk;
-  });
-  
-  // Touch events para mobile - simplificado e mais confiável
-  headerTabs.addEventListener('touchstart', (e) => {
-    // Permite arrasto em qualquer área, inclusive botões
-    isDown = true;
-    isDragging = false;
-    dragStartTime = Date.now();
-    startX = e.touches[0].pageX - headerTabs.offsetLeft;
-    scrollLeft = headerTabs.scrollLeft;
-  }, { passive: false });
-  
-  headerTabs.addEventListener('touchend', () => {
-    isDown = false;
     
-    // Se foi um arrasto rápido, previne o clique por um tempo maior
-    if (isDragging) {
-      const dragDuration = Date.now() - dragStartTime;
-      const preventTime = Math.max(200, dragDuration); // Mínimo 200ms
-      setTimeout(() => {
-        isDragging = false;
-      }, preventTime);
+    const currentTime = performance.now();
+    const currentX = e.pageX;
+    const deltaTime = currentTime - lastTime;
+    
+    if (deltaTime > 0) {
+      const deltaX = currentX - lastX;
+      velocity = deltaX / deltaTime * 16; // Normalizar para 60fps
     }
+    
+    isDragging = true;
+    const x = currentX - headerTabs.offsetLeft;
+    const walk = (x - startX) * 1.5; // Aumentar sensibilidade
+    
+    headerTabs.scrollLeft = scrollLeft - walk;
+    
+    lastX = currentX;
+    lastTime = currentTime;
+    updateScrollIndicators();
   });
+  
+  // Touch events super suaves
+  let touchStartX = 0;
+  let touchScrollLeft = 0;
+  let touchVelocity = 0;
+  let lastTouchX = 0;
+  let lastTouchTime = 0;
+  
+  headerTabs.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchScrollLeft = headerTabs.scrollLeft;
+    lastTouchX = touchStartX;
+    lastTouchTime = performance.now();
+    touchVelocity = 0;
+    
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+    }
+  }, { passive: true });
   
   headerTabs.addEventListener('touchmove', (e) => {
-    if (!isDown) return;
+    const currentTime = performance.now();
+    const currentX = e.touches[0].clientX;
+    const deltaTime = currentTime - lastTouchTime;
     
-    e.preventDefault();
-    isDragging = true;
-    const x = e.touches[0].pageX - headerTabs.offsetLeft;
-    const walk = (x - startX) * 2; // Velocidade do arrasto
-    headerTabs.scrollLeft = scrollLeft - walk;
-  }, { passive: false });
+    if (deltaTime > 0) {
+      const deltaX = currentX - lastTouchX;
+      touchVelocity = deltaX / deltaTime * 16;
+    }
+    
+    const walk = (touchStartX - currentX) * 0.8; // Mais sensível
+    headerTabs.scrollLeft = touchScrollLeft + walk;
+    
+    lastTouchX = currentX;
+    lastTouchTime = currentTime;
+    updateScrollIndicators();
+  }, { passive: true });
   
-  // Prevenir clique em botões durante arrasto (mouse)
-  headerTabs.addEventListener('click', (e) => {
-    if (isDragging && e.target.classList.contains('tab-btn')) {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
+  headerTabs.addEventListener('touchend', () => {
+    // Continuar com inércia no touch
+    if (Math.abs(touchVelocity) > 0.5) {
+      velocity = -touchVelocity * 2.5; // Mais sensibilidade
+      animationId = requestAnimationFrame(smoothScroll);
     }
   });
   
-  // Prevenir clique em qualquer elemento durante arrasto (mouse)
+  // Prevenir clique acidental durante o drag
   headerTabs.addEventListener('click', (e) => {
     if (isDragging) {
       e.preventDefault();
       e.stopPropagation();
       return false;
     }
-  }, true);
+  });
+  
+  // Scroll com setas do teclado mais sensível
+  headerTabs.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      velocity = -8; // Mais sensível
+      animationId = requestAnimationFrame(smoothScroll);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      velocity = 8; // Mais sensível
+      animationId = requestAnimationFrame(smoothScroll);
+    }
+  });
+  
+  headerTabs.setAttribute('tabindex', '0');
+  
+  // Inicializar indicadores
+  updateScrollIndicators();
+  
+  // Atualizar indicadores no scroll
+  headerTabs.addEventListener('scroll', updateScrollIndicators);
 }
 
 // === Inicialização Otimizada ===
@@ -1835,17 +1960,42 @@ const CATEGORIES_MAP = {
   'ssd': 'ssd',
   'hd externo': 'hd externo',
   'hd interno': 'hd interno',
-  'fonte': 'fonte'
+  'fonte': 'fonte',
+  'teclado': 'teclado',
+  'mouse': 'mouse',
+  'redes': 'redes',
+  'access-point': 'access-point',
+  'repetidor': 'repetidor',
+  'adaptador': 'adaptador',
+  'audio': 'audio',
+  'acessorios': 'acessorios',
+  'cabos': 'cabos',
+  'webcam': 'webcam'
 };
 
 // Função simples para obter produtos de uma categoria
 function getProductsByCategory(categoryKey) {
+  const targetCategory = categoryKey.toLowerCase().trim();
+  
   return __allProducts.filter(product => {
-    const productCategory = product.categoria ? product.categoria.trim().toLowerCase() : '';
-    const targetCategory = categoryKey.toLowerCase();
+    if (!product || !product.categoria) return false;
     
-    // Comparação direta e normalizada
-    return productCategory === targetCategory;
+    const productCategory = product.categoria.trim().toLowerCase();
+    
+    // Comparação direta
+    if (productCategory === targetCategory) return true;
+    
+    // Comparação com remoção de acentos e caracteres especiais
+    const normalizeCategory = (str) => {
+      return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+        .replace(/[^\w\s-]/g, '') // Remove caracteres especiais exceto espaço e hífen
+        .replace(/\s+/g, ' ') // Normaliza espaços
+        .trim();
+    };
+    
+    return normalizeCategory(productCategory) === normalizeCategory(targetCategory);
   });
 }
 

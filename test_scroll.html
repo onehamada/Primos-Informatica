@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Scroll Categorias</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            border: 2px solid red;
+        }
+        
+        .header-tabs {
+            display: flex;
+            padding: 12px 20px;
+            overflow-x: scroll !important;
+            overflow-y: hidden !important;
+            background: #ffffff;
+            border: 2px solid blue;
+            gap: 8px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .header-tabs::-webkit-scrollbar {
+            display: none !important;
+        }
+        
+        .tab-btn {
+            flex-shrink: 0;
+            padding: 10px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            color: #64748b;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+        
+        .tab-btn:hover {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            transform: translateY(-1px);
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .info {
+            padding: 20px;
+            background: #f0f0f0;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <h2>🧪 Teste de Scroll Horizontal</h2>
+        <p>Tente: 
+        1. Clicar e arrastar na área azul
+        2. Usar a roda do mouse
+        3. Swipe em dispositivos móveis</p>
+        <p id="debug"></p>
+    </div>
+    
+    <div class="container">
+        <div class="header-tabs" id="headerTabs">
+            <button type="button" class="tab-btn active">Início</button>
+            <button type="button" class="tab-btn">Promoções</button>
+            <button type="button" class="tab-btn">Processadores</button>
+            <button type="button" class="tab-btn">Placas de Vídeo</button>
+            <button type="button" class="tab-btn">Placas Mãe</button>
+            <button type="button" class="tab-btn">Monitores</button>
+            <button type="button" class="tab-btn">Teclados</button>
+            <button type="button" class="tab-btn">Mouses</button>
+            <button type="button" class="tab-btn">Redes</button>
+            <button type="button" class="tab-btn">Access Points</button>
+            <button type="button" class="tab-btn">Repetidores</button>
+            <button type="button" class="tab-btn">Adaptadores</button>
+            <button type="button" class="tab-btn">Áudio</button>
+            <button type="button" class="tab-btn">Acessórios</button>
+            <button type="button" class="tab-btn">Cabos</button>
+            <button type="button" class="tab-btn">Webcams</button>
+            <button type="button" class="tab-btn">SSDs</button>
+            <button type="button" class="tab-btn">HDs Externos</button>
+            <button type="button" class="tab-btn">HDs Internos</button>
+            <button type="button" class="tab-btn">Fontes</button>
+        </div>
+    </div>
+
+    <script>
+        const headerTabs = document.getElementById('headerTabs');
+        const debug = document.getElementById('debug');
+        
+        // Debug info
+        debug.innerHTML = `
+            Largura total: ${headerTabs.scrollWidth}px<br>
+            Largura visível: ${headerTabs.clientWidth}px<br>
+            Scroll necessário: ${headerTabs.scrollWidth > headerTabs.clientWidth ? 'SIM' : 'NÃO'}<br>
+            Scroll atual: ${headerTabs.scrollLeft}px
+        `;
+        
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        
+        // Mouse wheel scroll
+        headerTabs.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            headerTabs.scrollLeft += e.deltaY * 0.5;
+            debug.innerHTML = `
+                Largura total: ${headerTabs.scrollWidth}px<br>
+                Largura visível: ${headerTabs.clientWidth}px<br>
+                Scroll necessário: ${headerTabs.scrollWidth > headerTabs.clientWidth ? 'SIM' : 'NÃO'}<br>
+                Scroll atual: ${headerTabs.scrollLeft}px
+            `;
+        }, { passive: false });
+        
+        // Drag scroll
+        headerTabs.addEventListener('mousedown', (e) => {
+            if (e.target.classList.contains('tab-btn')) return;
+            isDown = true;
+            startX = e.pageX - headerTabs.offsetLeft;
+            scrollLeft = headerTabs.scrollLeft;
+            e.preventDefault();
+        });
+        
+        headerTabs.addEventListener('mouseleave', () => {
+            isDown = false;
+        });
+        
+        headerTabs.addEventListener('mouseup', () => {
+            isDown = false;
+        });
+        
+        headerTabs.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - headerTabs.offsetLeft;
+            const walk = (x - startX) * 2;
+            headerTabs.scrollLeft = scrollLeft - walk;
+            
+            debug.innerHTML = `
+                Largura total: ${headerTabs.scrollWidth}px<br>
+                Largura visível: ${headerTabs.clientWidth}px<br>
+                Scroll necessário: ${headerTabs.scrollWidth > headerTabs.clientWidth ? 'SIM' : 'NÃO'}<br>
+                Scroll atual: ${headerTabs.scrollLeft}px
+            `;
+        });
+        
+        // Touch scroll
+        let touchStartX = 0;
+        let touchScrollLeft = 0;
+        
+        headerTabs.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchScrollLeft = headerTabs.scrollLeft;
+        }, { passive: true });
+        
+        headerTabs.addEventListener('touchmove', (e) => {
+            const touchX = e.touches[0].clientX;
+            const walk = (touchStartX - touchX) * 1.5;
+            headerTabs.scrollLeft = touchScrollLeft + walk;
+        }, { passive: true });
+    </script>
+</body>
+</html>
