@@ -215,6 +215,11 @@ class OptimizedPersistentDownloader:
             if width < 200 or height < 200:
                 return False, "Imagem muito pequena"
             
+            # Verificar se é muito quadrado (possível ícone)
+            ratio = width / height if height > 0 else 0
+            if 0.8 < ratio < 1.2 and max(width, height) < 300:
+                return False, "Imagem muito quadrada e pequena (possível ícone)"
+            
             # Analisar fundo
             bg_analysis = self.analyze_background(img)
             
@@ -230,9 +235,20 @@ class OptimizedPersistentDownloader:
                 return False, "Imagem muito escura"
             
             # Verificar proporções razoáveis
-            ratio = width / height if height > 0 else 0
             if ratio > 5 or ratio < 0.2:
                 return False, "Proporções muito estranhas"
+            
+            # NOVO: Verificar se tem marca d'água ou logo
+            if self.has_watermark_or_logo(img):
+                return False, "Marca d'água ou logomarca detectada"
+            
+            # NOVO: Verificar se está cortada
+            if self.is_cropped_image(img):
+                return False, "Imagem appears to be cropped"
+            
+            # NOVO: Verificar se tem texto sobreposto
+            if self.has_text_overlay(img):
+                return False, "Texto sobreposto detectado"
             
             return True, "Imagem adequada"
             
@@ -620,21 +636,21 @@ class OptimizedPersistentDownloader:
                             matches = re.findall(pattern, html)
                             
                             for match in matches[:3]:  # Primeiras 3 por padrão
-                                # Limpar URL - remover aspas se existirem
-                                clean_url = match.strip('"')
+                            # Limpar URL - remover aspas se existirem
+                            clean_url = match.strip('"')
+                            
+                            # Filtros avançados
+                            if (len(clean_url) > 40 and 
+                                'ssl.gstatic.com' not in clean_url and
+                                'logo' not in clean_url.lower() and
+                                'icon' not in clean_url.lower() and
+                                'sprite' not in clean_url.lower() and
+                                'placeholder' not in clean_url.lower() and
+                                'loading' not in clean_url.lower() and
+                                'thumbnail' not in clean_url.lower() and
+                                'small' not in clean_url.lower() and
+                                'mini' not in clean_url.lower()):
                                 
-                                # Filtros avançados
-                                if (len(clean_url) > 40 and 
-                                    'ssl.gstatic.com' not in clean_url and
-                                    'logo' not in clean_url.lower() and
-                                    'icon' not in clean_url.lower() and
-                                    'sprite' not in clean_url.lower() and
-                                    'placeholder' not in clean_url.lower() and
-                                    'loading' not in clean_url.lower() and
-                                    'thumbnail' not in clean_url.lower() and
-                                    'small' not in clean_url.lower() and
-                                    'mini' not in clean_url.lower()):
-                                    
                                     print(f"      Tentando: {clean_url[:60]}...")
                                     
                                     if self.download_image_from_url(clean_url, product):
