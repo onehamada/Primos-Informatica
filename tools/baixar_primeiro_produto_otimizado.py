@@ -220,6 +220,22 @@ class OptimizedPersistentDownloader:
             if 0.8 < ratio < 1.2 and max(width, height) < 300:
                 return False, "Imagem muito quadrada e pequena (possível ícone)"
             
+            # NOVO: Verificar proporções adequadas para produtos
+            # Proporções ideais para produtos: entre 0.7:1 e 2:1
+            if ratio > 2.5:  # Muito larga (como 800x294 = 2.72:1)
+                return False, f"Imagem muito larga (proporção {ratio:.2f}:1)"
+            if ratio < 0.4:  # Muito alta
+                return False, f"Imagem muito alta (proporção {ratio:.2f}:1)"
+            
+            # NOVO: Verificar dimensões máximas razoáveis
+            if max(width, height) > 1200:  # Imagens muito grandes
+                return False, f"Imagem muito grande ({width}x{height})"
+            
+            # NOVO: Verificar área mínima para garantir qualidade
+            area = width * height
+            if area < 40000:  # Menos de 200x200 pixels
+                return False, f"Área muito pequena ({area} pixels)"
+            
             # Analisar fundo
             bg_analysis = self.analyze_background(img)
             
@@ -234,19 +250,15 @@ class OptimizedPersistentDownloader:
             if avg_brightness < 50:
                 return False, "Imagem muito escura"
             
-            # Verificar proporções razoáveis
-            if ratio > 5 or ratio < 0.2:
-                return False, "Proporções muito estranhas"
-            
-            # NOVO: Verificar se tem marca d'água ou logo
+            # Verificar se tem marca d'água ou logo
             if self.has_watermark_or_logo(img):
                 return False, "Marca d'água ou logomarca detectada"
             
-            # NOVO: Verificar se está cortada
+            # Verificar se está cortada
             if self.is_cropped_image(img):
                 return False, "Imagem appears to be cropped"
             
-            # NOVO: Verificar se tem texto sobreposto
+            # Verificar se tem texto sobreposto
             if self.has_text_overlay(img):
                 return False, "Texto sobreposto detectado"
             
@@ -255,6 +267,73 @@ class OptimizedPersistentDownloader:
         except Exception as e:
             print(f"    Erro ao verificar adequação: {e}")
             return True, "Verificação falhou"
+    
+    def resize_product_image(self, img):
+        """Redimensiona imagem para proporções adequadas de produto"""
+        try:
+            width, height = img.size
+            ratio = width / height if height > 0 else 1
+            
+            # Dimensões padrão para produtos
+            standard_sizes = [
+                (400, 400),   # Quadrado
+                (500, 375),   # 4:3
+                (600, 400),   # 3:2
+                (800, 450),   # 16:9
+                (500, 500),   # Quadrado maior
+            ]
+            
+            # Se a proporção for muito inadequada, redimensionar
+            if ratio > 2.5 or ratio < 0.4:
+                # Escolher o tamanho padrão mais próximo
+                best_size = (500, 375)  # Default 4:3
+                
+                # Calcular proporção atual
+                current_ratio = width / height
+                
+                # Encontrar tamanho padrão com proporção mais próxima
+                min_diff = float('inf')
+                for std_width, std_height in standard_sizes:
+                    std_ratio = std_width / std_height
+                    diff = abs(current_ratio - std_ratio)
+                    if diff < min_diff:
+                        min_diff = diff
+                        best_size = (std_width, std_height)
+                
+                # Redimensionar mantendo qualidade
+                print(f"    📏 Redimensionando de {width}x{height} para {best_size[0]}x{best_size[1]}")
+                
+                # Usar LANCZOS para melhor qualidade
+                img_resized = img.resize(best_size, Image.Resampling.LANCZOS)
+                
+                # Melhorar um pouco após redimensionamento
+                img_resized = self.enhance_product_image(img_resized)
+                
+                return img_resized
+            
+            # Se dimensões forem muito grandes, reduzir mantendo proporção
+            elif max(width, height) > 800:
+                max_size = 800
+                if width > height:
+                    new_width = max_size
+                    new_height = int(height * max_size / width)
+                else:
+                    new_height = max_size
+                    new_width = int(width * max_size / height)
+                
+                new_size = (new_width, new_height)
+                print(f"    📏 Reduzindo de {width}x{height} para {new_width}x{new_height}")
+                
+                img_resized = img.resize(new_size, Image.Resampling.LANCZOS)
+                img_resized = self.enhance_product_image(img_resized)
+                
+                return img_resized
+            
+            return img
+            
+        except Exception as e:
+            print(f"    Erro ao redimensionar: {e}")
+            return img
     
     def process_image_background(self, img):
         """Processa o fundo da imagem conforme necessário"""
@@ -269,6 +348,9 @@ class OptimizedPersistentDownloader:
                 print(f"    🔄 Removendo fundo preto...")
                 img = self.remove_black_background(img)
                 print(f"    ✅ Fundo preto removido")
+            
+            # Redimensionar se necessário
+            img = self.resize_product_image(img)
             
             # Melhorar qualidade da imagem
             img = self.enhance_product_image(img)
