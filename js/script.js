@@ -16,6 +16,25 @@ function showCategory(category) {
   if (category === 'promo' || category === 'promoções') {
     // Criar seção de promoções dinamicamente
     showPromocoes();
+  } else if (category === 'inicio') {
+    // Mostrar a home
+    const homeSection = document.getElementById('inicio');
+    if (homeSection) {
+      homeSection.style.display = 'block';
+      
+      // Garantir que a home seja preenchida
+      if (allProducts.length > 0) {
+        populateHome();
+      }
+      
+      // Lazy loading para imagens da home
+      setTimeout(function() {
+        const homeGrids = homeSection.querySelectorAll('.categories-grid, .products-grid');
+        for (let i = 0; i < homeGrids.length; i++) {
+          loadImagesOnScroll(homeGrids[i]);
+        }
+      }, 200);
+    }
   } else {
     const targetSection = document.getElementById(category);
     if (targetSection) {
@@ -45,26 +64,16 @@ function showCategory(category) {
 function showPromocoes() {
   console.log('showPromocoes() chamada');
   
-  // Verificar se seção já existe
-  let promocoesSection = document.getElementById('promoções');
+  // Usar a seção existente no HTML
+  let promocoesSection = document.getElementById('promo');
   
   if (!promocoesSection) {
-    console.log('Criando seção de promoções');
-    promocoesSection = document.createElement('section');
-    promocoesSection.id = 'promoções';
-    promocoesSection.className = 'products-section';
-    
-    const container = document.querySelector('.container');
-    if (container) {
-      // Inserir após a hero section
-      const heroSection = document.querySelector('.hero');
-      if (heroSection) {
-        container.insertBefore(promocoesSection, heroSection.nextSibling);
-      } else {
-        container.appendChild(promocoesSection);
-      }
-    }
+    console.error('Seção #promo não encontrada no HTML');
+    return;
   }
+  
+  // Mostrar a seção
+  promocoesSection.style.display = 'block';
   
   // Filtrar produtos em promoção
   const promocoesProducts = [];
@@ -80,7 +89,7 @@ function showPromocoes() {
   console.log('Produtos em promoção encontrados:', promocoesProducts.length);
   
   // Criar HTML
-  let productsHTML = '<h2>Promoções</h2>';
+  let productsHTML = '<h2>PRODUTOS EM PROMOÇÃO</h2>';
   if (promocoesProducts.length === 0) {
     productsHTML += '<p style="text-align: center; padding: 40px; color: #666;">Nenhuma promoção no momento.</p>';
   } else {
@@ -92,31 +101,8 @@ function showPromocoes() {
   }
   
   promocoesSection.innerHTML = productsHTML;
-  promocoesSection.style.cssText = `
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative !important;
-    z-index: 9999 !important;
-    background: red !important;
-    color: white !important;
-    padding: 20px !important;
-    margin: 20px 0 !important;
-    border: 3px solid yellow !important;
-    font-size: 24px !important;
-    text-align: center !important;
-    min-height: 200px !important;
-    width: 100% !important;
-    top: 0 !important;
-    left: 0 !important;
-  `;
   
-  console.log('Seção de promoções exibida');
-  console.log('Elemento seção:', promocoesSection);
-  console.log('Display:', promocoesSection.style.display);
-  console.log('Visibility:', promocoesSection.style.visibility);
-  console.log('InnerHTML length:', promocoesSection.innerHTML.length);
-  console.log('CSS Text:', promocoesSection.style.cssText);
+  console.log('Seção de promoções exibida com', promocoesProducts.length, 'produtos');
   
   // Lazy loading para promoções
   setTimeout(function() {
@@ -145,6 +131,28 @@ function loadImagesOnScroll(container) {
                           elemBottom > scrollTop - 200;
       
       if (isInViewport) {
+        // Encontrar o placeholder dentro do mesmo container
+        const placeholder = img.parentElement.querySelector('.image-placeholder');
+        
+        // Configurar eventos de carregamento da imagem
+        img.onload = function() {
+          // Remover placeholder com animação suave
+          if (placeholder) {
+            placeholder.classList.add('hiding');
+            setTimeout(function() {
+              placeholder.remove();
+            }, 300);
+          }
+          // Adicionar classe de carregado
+          img.classList.add('loaded');
+        };
+        
+        img.onerror = function() {
+          // Manter placeholder se a imagem falhar
+          console.log('Falha ao carregar imagem:', img.dataset.src);
+        };
+        
+        // Iniciar carregamento
         img.src = img.dataset.src;
         img.removeAttribute('data-src');
         loaded.push(img);
@@ -252,6 +260,122 @@ function displayProducts(products) {
     productsHTML += '</div>';
     section.innerHTML = productsHTML;
   }
+  
+  // Preencher HOME após carregar produtos
+  populateHome();
+}
+
+// === PREENCHER HOME ===
+function populateHome() {
+  console.log('Preenchendo home...');
+  
+  // Preencher categorias na home
+  populateHomeCategories();
+  
+  // Preencher produtos em destaque na home
+  populateHomeHighlights();
+}
+
+// === PREENCHER CATEGORIAS DA HOME ===
+function populateHomeCategories() {
+  const categoriesGrid = document.getElementById('home-categories-grid');
+  if (!categoriesGrid) {
+    console.error('Elemento #home-categories-grid não encontrado');
+    return;
+  }
+  
+  // Obter categorias únicas dos produtos
+  const categories = {};
+  for (let i = 0; i < allProducts.length; i++) {
+    const category = allProducts[i].categoria;
+    if (!categories[category]) {
+      categories[category] = {
+        name: category,
+        count: 0,
+        sample: allProducts[i]
+      };
+    }
+    categories[category].count++;
+  }
+  
+  // Criar cards de categorias
+  let categoriesHTML = '';
+  const categoryNames = Object.keys(categories);
+  
+  for (let i = 0; i < categoryNames.length; i++) {
+    const category = categories[categoryNames[i]];
+    const displayName = category.name.charAt(0).toUpperCase() + category.name.slice(1);
+    
+    categoriesHTML += `
+      <div class="category-card" onclick="showCategory('${category.name}')" style="cursor: pointer;">
+        <div class="category-image">
+          <div class="image-placeholder">📦</div>
+          <img data-src="images/products/thumbnail/${category.sample.imagem || category.sample.codigo + '.webp'}" 
+               alt="${displayName}" 
+               style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px;">
+        </div>
+        <div class="category-info">
+          <h3>${displayName}</h3>
+          <p class="category-count">${category.count} produtos</p>
+          <button class="btn-primary">Ver Produtos</button>
+        </div>
+      </div>
+    `;
+  }
+  
+  categoriesGrid.innerHTML = categoriesHTML;
+  
+  // Lazy loading para imagens das categorias
+  setTimeout(function() {
+    loadImagesOnScroll(categoriesGrid);
+  }, 200);
+  
+  console.log('Categorias da home preenchidas:', categoryNames.length);
+}
+
+// === PREENCHER PRODUTOS EM DESTAQUE DA HOME ===
+function populateHomeHighlights() {
+  const highlightsGrid = document.getElementById('home-highlights-grid');
+  if (!highlightsGrid) {
+    console.error('Elemento #home-highlights-grid não encontrado');
+    return;
+  }
+  
+  // Obter produtos em destaque (promoções + alguns produtos aleatórios)
+  const highlights = [];
+  
+  // Adicionar produtos em promoção primeiro
+  for (let i = 0; i < allProducts.length; i++) {
+    if (allProducts[i].promocao === 'sim') {
+      highlights.push(allProducts[i]);
+    }
+  }
+  
+  // Se tiver menos de 6 produtos em destaque, adicionar produtos aleatórios
+  if (highlights.length < 6) {
+    const otherProducts = allProducts.filter(p => p.promocao !== 'sim');
+    const needed = 6 - highlights.length;
+    const selected = otherProducts.sort(() => 0.5 - Math.random()).slice(0, needed);
+    highlights.push(...selected);
+  }
+  
+  // Limitar a 8 produtos no máximo
+  const finalHighlights = highlights.slice(0, 8);
+  
+  // Criar HTML dos produtos em destaque
+  let highlightsHTML = '';
+  for (let i = 0; i < finalHighlights.length; i++) {
+    highlightsHTML += createProductCard(finalHighlights[i]);
+  }
+  
+  highlightsGrid.innerHTML = highlightsHTML;
+  
+  // Lazy loading para imagens dos destaques
+  setTimeout(function() {
+    loadImagesOnScroll(highlightsGrid);
+  }, 200);
+  
+  console.log('Produtos em destaque da home preenchidos:', finalHighlights.length);
 }
 
 // === CARD DE PRODUTO ===
