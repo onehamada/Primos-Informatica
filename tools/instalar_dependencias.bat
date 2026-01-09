@@ -1,7 +1,10 @@
 @echo off
+cd /d "%~dp0"
 echo ====================================
 echo INSTALANDO DEPENDENCIAS DO SCRIPT
 echo ====================================
+echo.
+echo Diretorio atual: %CD%
 echo.
 
 echo Verificando Python...
@@ -24,7 +27,7 @@ if %errorlevel% equ 0 (
     echo ====================================
     echo.
     echo Agora voce pode executar:
-    echo python baixar_primeiro_produto_otimizado.py
+    echo baixar_primeiro_produto_otimizado.bat
 ) else (
     echo.
     echo ====================================

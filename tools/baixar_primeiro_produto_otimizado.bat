@@ -1,8 +1,11 @@
 @echo off
+cd /d "%~dp0"
 echo ====================================
 echo DOWNLOAD OTIMIZADO DE IMAGENS
 echo COM DETECAO E REMOCAO DE FUNDO PRETO
 echo ====================================
+echo.
+echo Diretorio atual: %CD%
 echo.
 
 echo Verificando dependencias...
