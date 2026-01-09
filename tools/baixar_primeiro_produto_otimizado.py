@@ -718,26 +718,26 @@ class OptimizedPersistentDownloader:
                             matches = re.findall(pattern, html)
                             
                             for match in matches[:3]:  # Primeiras 3 por padrão
-                            # Limpar URL - remover aspas se existirem
-                            clean_url = match.strip('"')
-                            
-                            # Filtros avançados
-                            if (len(clean_url) > 40 and 
-                                'ssl.gstatic.com' not in clean_url and
-                                'logo' not in clean_url.lower() and
-                                'icon' not in clean_url.lower() and
-                                'sprite' not in clean_url.lower() and
-                                'placeholder' not in clean_url.lower() and
-                                'loading' not in clean_url.lower() and
-                                'thumbnail' not in clean_url.lower() and
-                                'small' not in clean_url.lower() and
-                                'mini' not in clean_url.lower()):
+                                # Limpar URL - remover aspas se existirem
+                                clean_url = match.strip('"')
                                 
-                                    print(f"      Tentando: {clean_url[:60]}...")
+                                # Filtros avançados
+                                if (len(clean_url) > 40 and 
+                                    'ssl.gstatic.com' not in clean_url and
+                                    'logo' not in clean_url.lower() and
+                                    'icon' not in clean_url.lower() and
+                                    'sprite' not in clean_url.lower() and
+                                    'placeholder' not in clean_url.lower() and
+                                    'loading' not in clean_url.lower() and
+                                    'thumbnail' not in clean_url.lower() and
+                                    'small' not in clean_url.lower() and
+                                    'mini' not in clean_url.lower()):
                                     
-                                    if self.download_image_from_url(clean_url, product):
-                                        print(f"      ✓ SUCESSO com {engine_name}!")
-                                        return True
+                                        print(f"      Tentando: {clean_url[:60]}...")
+                                        
+                                        if self.download_image_from_url(clean_url, product):
+                                            print(f"      ✓ SUCESSO com {engine_name}!")
+                                            return True
                     
                     else:
                         print(f"      HTTP {response.status_code} em {engine_name}")
