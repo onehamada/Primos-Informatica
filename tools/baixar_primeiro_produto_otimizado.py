@@ -394,7 +394,77 @@ class OptimizedPersistentDownloader:
         print(f"Encontrados {len(missing_products)} produtos sem imagem")
         return missing_products
     
-    def method_1_requests_google(self, product):
+    def method_1_kabum_priority(self, product):
+        """Método 1: Kabum Priority - Busca prioritária na Kabum"""
+        print("\n" + "="*60)
+        print("MÉTODO 1: Kabum Priority (Prioridade Máxima)")
+        print("="*60)
+        
+        # Múltiplas URLs de busca na Kabum
+        kabum_urls = [
+            f"https://www.kabum.com.br/busca/{quote(product['nome'])}",
+            f"https://www.kabum.com.br/busca/{quote(product['nome'])}?page_number=1",
+            f"https://www.kabum.com.br/busca/{quote(product['nome'])}?page_number=2&sort=price",
+            f"https://www.kabum.com.br/hardware/{quote(product['nome'])}",
+            f"https://www.kabum.com.br/perifericos/{quote(product['nome'])}"
+        ]
+        
+        for url in kabum_urls:
+            try:
+                print(f"  Buscando em: {url}")
+                response = self.session.get(url, timeout=15)
+                
+                if response.status_code == 200:
+                    html = response.text
+                    
+                    # Padrões ESPECÍFICOS da Kabum - apenas URLs confiáveis
+                    kabum_patterns = [
+                        r'"(https://http2\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+                        r'"(https://http2\.kabum\.com\.br/produtos/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+                        r'"(https://images\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+                        r'"(https://http2\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp))"',
+                        r'data-src="(https://http2\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+                        r'src="(https://http2\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"'
+                    ]
+                    
+                    for pattern in kabum_patterns:
+                        matches = re.findall(pattern, html)
+                        
+                        for match in matches[:5]:  # Primeiras 5 por padrão
+                            # Limpar URL
+                            clean_url = match.strip('"').replace('\\', '')
+                            
+                            # Verificar se é URL da Kabum genuína
+                            if ('http2.kabum.com.br' in clean_url or 
+                                'images.kabum.com.br' in clean_url):
+                                
+                                # Filtros específicos para Kabum
+                                if (len(clean_url) > 50 and 
+                                    clean_url.endswith(('.jpg', '.jpeg', '.png', '.webp')) and
+                                    '/produtos/' in clean_url and  # Apenas URLs de produtos
+                                    'placeholder' not in clean_url.lower() and
+                                    'logo' not in clean_url.lower() and
+                                    'icon' not in clean_url.lower() and
+                                    'sprite' not in clean_url.lower()):
+                                    
+                                    print(f"    URL Kabum encontrada: {clean_url[:80]}...")
+                                    
+                                    if self.download_image_from_url(clean_url, product):
+                                        print(f"    ✅ SUCESSO com Kabum!")
+                                        return True
+                    
+                    print(f"    Nenhuma imagem válida nesta página Kabum")
+                else:
+                    print(f"    HTTP {response.status_code} na Kabum")
+                
+                time.sleep(2)  # Delay entre requisições Kabum
+                
+            except Exception as e:
+                print(f"    Erro na busca Kabum: {e}")
+                continue
+        
+        print("  Nenhuma imagem encontrada na Kabum")
+        return False
         """Método 1: Requests direto no Google - MELHORADO COM FILTRO DE FUNDO"""
         print("\n" + "="*60)
         print("MÉTODO 1: Requests direto no Google")
@@ -852,9 +922,10 @@ class OptimizedPersistentDownloader:
         print(f"{'='*80}")
     
     def download_single_product_image(self, product):
-        """Tenta todos os métodos para um único produto - OTIMIZADO"""
-        # Métodos reordenados por eficiência (Método 4 primeiro)
+        """Tenta todos os métodos para um único produto - KABUM PRIORITY"""
+        # NOVA ordem: Kabum primeiro, depois os outros
         methods = [
+            ("Kabum Priority", lambda: self.method_1_kabum_priority(product)),
             ("Busca Direta", lambda: self.method_4_direct_product_search(product)),
             ("Fontes Alternativas", lambda: self.method_3_alternative_sources(product)),
             ("Requests Google", lambda: self.method_1_requests_google(product)),
@@ -878,23 +949,28 @@ class OptimizedPersistentDownloader:
 
 def main():
     print("="*80)
-    print("   DOWNLOAD SUPER PERSISTENTE - VERSÃO OTIMIZADA V3")
+    print("   DOWNLOAD SUPER PERSISTENTE - VERSÃO OTIMIZADA V4")
     print("="*80)
     print("🎨 NOVAS FUNCIONALIDADES:")
+    print("✅ KABUM PRIORITY - Busca prioritária na Kabum")
     print("✅ DETECÇÃO AUTOMÁTICA DE FUNDO PRETO")
     print("✅ REMOÇÃO AVANÇADA DE FUNDO PRETO")
     print("✅ BUSCA POR IMAGENS COM FUNDO BRANCO/TRANSPARENTE")
     print("✅ MELHORIA AUTOMÁTICA DE QUALIDADE")
     print("✅ FILTRO INTELIGENTE DE IMAGENS ADEQUADAS")
+    print("✅ REDIMENSIONAMENTO AUTOMÁTICO")
     print("="*80)
     print("MÉTODOS DISPONÍVEIS:")
-    print("✅ MÉTODO 1: Requests Google - COM BUSCA POR FUNDO BRANCO")
-    print("✅ MÉTODO 2: Selenium Google - OTIMIZADO")
+    print("🥇 MÉTODO 1: Kabum Priority - PRIORIDADE MÁXIMA")
+    print("✅ MÉTODO 2: Busca direta - COM TERMOS ESPECÍFICOS")
     print("✅ MÉTODO 3: Fontes alternativas - MERCADO LIVRE + ALIEXPRESS")
-    print("✅ MÉTODO 4: Busca direta - COM TERMOS ESPECÍFICOS")
+    print("✅ MÉTODO 4: Requests Google - COM BUSCA POR FUNDO BRANCO")
+    print("✅ MÉTODO 5: Selenium Google - OTIMIZADO")
+    print("- PRIORIDADE KABUM PARA MELHOR QUALIDADE")
     print("- EVITA IMAGENS COM FUNDO PRETO")
     print("- REMOVE FUNDO PRETO QUANDO NECESSÁRIO")
     print("- MELHORA QUALIDADE DA IMAGEM")
+    print("- REDIMENSIONA PARA TAMANHOS PADRÃO")
     print("- MAIOR TAXA DE SUCESSO!")
     print("="*80)
     print()
