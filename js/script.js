@@ -398,6 +398,35 @@ function createProductCard(product) {
     '</div>';
 }
 
+// === MOBILE MENU ===
+function toggleMobileMenu() {
+  const navButtons = document.getElementById('navButtons');
+  const menuToggle = document.querySelector('.mobile-menu-toggle');
+  
+  navButtons.classList.toggle('active');
+  menuToggle.classList.toggle('active');
+  
+  // Fecha o menu ao clicar fora
+  if (navButtons.classList.contains('active')) {
+    setTimeout(() => {
+      document.addEventListener('click', closeMobileMenuOutside);
+    }, 100);
+  } else {
+    document.removeEventListener('click', closeMobileMenuOutside);
+  }
+}
+
+function closeMobileMenuOutside(event) {
+  const navButtons = document.getElementById('navButtons');
+  const menuToggle = document.querySelector('.mobile-menu-toggle');
+  
+  if (!navButtons.contains(event.target) && !menuToggle.contains(event.target)) {
+    navButtons.classList.remove('active');
+    menuToggle.classList.remove('active');
+    document.removeEventListener('click', closeMobileMenuOutside);
+  }
+}
+
 // === CARRINHO ===
 let cart = [];
 
