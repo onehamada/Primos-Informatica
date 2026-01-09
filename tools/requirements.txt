@@ -1,0 +1,7 @@
+# Dependências para o script de download otimizado
+requests>=2.31.0
+Pillow>=10.0.0
+numpy>=1.24.0
+scipy>=1.10.0
+selenium>=4.15.0
+webdriver-manager>=4.0.0
