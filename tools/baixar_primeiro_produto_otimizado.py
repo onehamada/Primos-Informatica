@@ -395,76 +395,219 @@ class OptimizedPersistentDownloader:
         return missing_products
     
     def method_1_kabum_priority(self, product):
-        """Método 1: Kabum Priority - Busca prioritária na Kabum"""
+        """Método 1: Kabum Priority - Busca EXATA e precisa"""
         print("\n" + "="*60)
-        print("MÉTODO 1: Kabum Priority (Prioridade Máxima)")
+        print("MÉTODO 1: Kabum Priority (Busca EXATA)")
         print("="*60)
         
-        # Múltiplas URLs de busca na Kabum
-        kabum_urls = [
-            f"https://www.kabum.com.br/busca/{quote(product['nome'])}",
-            f"https://www.kabum.com.br/busca/{quote(product['nome'])}?page_number=1",
-            f"https://www.kabum.com.br/busca/{quote(product['nome'])}?page_number=2&sort=price",
-            f"https://www.kabum.com.br/hardware/{quote(product['nome'])}",
-            f"https://www.kabum.com.br/perifericos/{quote(product['nome'])}"
+        product_name = product['nome'].strip()
+        print(f"  Buscando EXATAMENTE: '{product_name}'")
+        
+        # Estratégia de busca em camadas - da mais específica para a mais geral
+        search_strategies = [
+            # 1. Busca EXATA (maior prioridade)
+            {
+                'name': 'Busca EXATA',
+                'urls': [
+                    f"https://www.kabum.com.br/busca/{quote(product_name)}",
+                    f"https://www.kabum.com.br/busca/{quote(product_name)}?page_number=1",
+                    f"https://www.kabum.com.br/busca/{quote(product_name)}&sort=exact"
+                ],
+                'priority': 1
+            },
+            # 2. Busca com aspas (força correspondência exata)
+            {
+                'name': 'Busca com Aspas',
+                'urls': [
+                    f"https://www.kabum.com.br/busca/{quote('\"' + product_name + '\"')}",
+                    f"https://www.kabum.com.br/busca/{quote(product_name)}?sort=relevance"
+                ],
+                'priority': 2
+            },
+            # 3. Busca por palavras chave (se as anteriores falharem)
+            {
+                'name': 'Busca por Palavras-Chave',
+                'urls': [
+                    f"https://www.kabum.com.br/busca/{quote(product_name)}?sort=price",
+                    f"https://www.kabum.com.br/hardware/{quote(product_name)}",
+                    f"https://www.kabum.com.br/perifericos/{quote(product_name)}"
+                ],
+                'priority': 3
+            }
         ]
         
-        for url in kabum_urls:
-            try:
-                print(f"  Buscando em: {url}")
-                response = self.session.get(url, timeout=15)
-                
-                if response.status_code == 200:
-                    html = response.text
+        for strategy in search_strategies:
+            print(f"\n  🎯 {strategy['name']} (Prioridade {strategy['priority']})")
+            
+            for url in strategy['urls']:
+                try:
+                    print(f"    🔍 Buscando: {url}")
+                    response = self.session.get(url, timeout=15)
                     
-                    # Padrões ESPECÍFICOS da Kabum - apenas URLs confiáveis
-                    kabum_patterns = [
-                        r'"(https://http2\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
-                        r'"(https://http2\.kabum\.com\.br/produtos/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
-                        r'"(https://images\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
-                        r'"(https://http2\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp))"',
-                        r'data-src="(https://http2\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
-                        r'src="(https://http2\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"'
-                    ]
-                    
-                    for pattern in kabum_patterns:
-                        matches = re.findall(pattern, html)
+                    if response.status_code == 200:
+                        html = response.text
                         
-                        for match in matches[:5]:  # Primeiras 5 por padrão
-                            # Limpar URL
-                            clean_url = match.strip('"').replace('\\', '')
+                        # Verificar se encontrou o produto exato
+                        exact_match_found = self.check_exact_product_match(html, product_name)
+                        
+                        if exact_match_found or strategy['priority'] > 1:
+                            # Padrões ESPECÍFICOS da Kabum
+                            kabum_patterns = [
+                                r'"(https://http2\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+                                r'"(https://http2\.kabum\.com\.br/produtos/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+                                r'"(https://images\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+                                r'data-src="(https://http2\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+                                r'src="(https://http2\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"'
+                            ]
                             
-                            # Verificar se é URL da Kabum genuína
-                            if ('http2.kabum.com.br' in clean_url or 
-                                'images.kabum.com.br' in clean_url):
+                            for pattern in kabum_patterns:
+                                matches = re.findall(pattern, html)
                                 
-                                # Filtros específicos para Kabum
-                                if (len(clean_url) > 50 and 
-                                    clean_url.endswith(('.jpg', '.jpeg', '.png', '.webp')) and
-                                    '/produtos/' in clean_url and  # Apenas URLs de produtos
-                                    'placeholder' not in clean_url.lower() and
-                                    'logo' not in clean_url.lower() and
-                                    'icon' not in clean_url.lower() and
-                                    'sprite' not in clean_url.lower()):
+                                # Ordenar por relevância (URLs mais específicas primeiro)
+                                matches = self.sort_kabum_urls_by_relevance(matches, product_name)
+                                
+                                for i, match in enumerate(matches[:8]):  # Primeiras 8 por padrão
+                                    # Limpar URL
+                                    clean_url = match.strip('"').replace('\\', '')
                                     
-                                    print(f"    URL Kabum encontrada: {clean_url[:80]}...")
-                                    
-                                    if self.download_image_from_url(clean_url, product):
-                                        print(f"    ✅ SUCESSO com Kabum!")
-                                        return True
+                                    # Verificar se é URL da Kabum genuína
+                                    if ('http2.kabum.com.br' in clean_url or 
+                                        'images.kabum.com.br' in clean_url):
+                                        
+                                        # Verificar se a URL corresponde ao produto exato
+                                        url_relevance = self.calculate_url_relevance(clean_url, product_name)
+                                        
+                                        # Filtros específicos para Kabum
+                                        if (len(clean_url) > 50 and 
+                                            clean_url.endswith(('.jpg', '.jpeg', '.png', '.webp')) and
+                                            '/produtos/' in clean_url and  # Apenas URLs de produtos
+                                            'placeholder' not in clean_url.lower() and
+                                            'logo' not in clean_url.lower() and
+                                            'icon' not in clean_url.lower() and
+                                            'sprite' not in clean_url.lower() and
+                                            url_relevance > 0.3):  # Mínimo de relevância
+                                            
+                                            print(f"      📸 URL Kabum (relevância {url_relevance:.2f}): {clean_url[:80]}...")
+                                            
+                                            if self.download_image_from_url(clean_url, product):
+                                                print(f"      ✅ SUCESSO com Kabum - Produto EXATO!")
+                                                return True
+                        
+                        print(f"      ❌ Nenhuma imagem válida encontrada")
+                    else:
+                        print(f"      HTTP {response.status_code} na Kabum")
                     
-                    print(f"    Nenhuma imagem válida nesta página Kabum")
-                else:
-                    print(f"    HTTP {response.status_code} na Kabum")
-                
-                time.sleep(2)  # Delay entre requisições Kabum
-                
-            except Exception as e:
-                print(f"    Erro na busca Kabum: {e}")
-                continue
+                    time.sleep(1.5)  # Delay entre requisições Kabum
+                    
+                except Exception as e:
+                    print(f"      Erro na busca Kabum: {e}")
+                    continue
+            
+            # Se encontrou correspondência exata, não continua para próximas estratégias
+            if exact_match_found:
+                break
         
-        print("  Nenhuma imagem encontrada na Kabum")
+        print("  ❌ Nenhuma imagem encontrada na Kabum")
         return False
+    
+    def check_exact_product_match(self, html, product_name):
+        """Verifica se o HTML contém correspondência exata do produto"""
+        try:
+            # Converter para minúsculas para comparação
+            html_lower = html.lower()
+            product_lower = product_name.lower()
+            
+            # Procurar pelo nome exato do produto no HTML
+            exact_patterns = [
+                f'"{product_lower}"',  # Entre aspas
+                f'>{product_lower}<',  # Em tags
+                f'product-name.*{product_lower}',  # Em classes de produto
+                f'title.*{product_lower}',  # Em títulos
+                f'data-name.*{product_lower}',  # Em atributos de dados
+            ]
+            
+            for pattern in exact_patterns:
+                if pattern in html_lower:
+                    print(f"      ✅ Correspondência exata encontrada: {pattern}")
+                    return True
+            
+            # Verificar correspondência parcial alta (pelo menos 80% do nome)
+            words = product_lower.split()
+            if len(words) >= 2:
+                # Para produtos com múltiplas palavras
+                word_matches = sum(1 for word in words if word in html_lower)
+                if word_matches >= len(words) * 0.8:
+                    print(f"      ⚠️ Correspondência parcial alta: {word_matches}/{len(words)} palavras")
+                    return True
+            
+            return False
+            
+        except Exception as e:
+            print(f"      Erro ao verificar correspondência: {e}")
+            return False
+    
+    def sort_kabum_urls_by_relevance(self, urls, product_name):
+        """Ordena URLs da Kabum por relevância com o produto"""
+        try:
+            def calculate_relevance(url):
+                url_lower = url.lower()
+                product_lower = product_name.lower()
+                
+                relevance = 0.0
+                
+                # Palavras do produto
+                product_words = product_lower.split()
+                
+                # Verificar cada palavra do produto na URL
+                for word in product_words:
+                    if word in url_lower:
+                        relevance += 1.0
+                
+                # Bônus para URLs mais específicas
+                if '/produtos/' in url_lower:
+                    relevance += 0.5
+                
+                # Penalidade para URLs genéricas
+                if any(generic in url_lower for generic in ['generic', 'default', 'placeholder']):
+                    relevance -= 0.3
+                
+                return relevance
+            
+            # Ordenar URLs por relevância (maior primeiro)
+            return sorted(urls, key=calculate_relevance, reverse=True)
+            
+        except Exception as e:
+            print(f"      Erro ao ordenar URLs: {e}")
+            return urls
+    
+    def calculate_url_relevance(self, url, product_name):
+        """Calcula relevância de uma URL específica para o produto"""
+        try:
+            url_lower = url.lower()
+            product_lower = product_name.lower()
+            
+            relevance = 0.0
+            product_words = product_lower.split()
+            
+            # Contar palavras do produto na URL
+            matched_words = sum(1 for word in product_words if word in url_lower)
+            
+            if len(product_words) > 0:
+                relevance = matched_words / len(product_words)
+            
+            # Bônus para correspondências exatas
+            if product_lower in url_lower:
+                relevance += 0.3
+            
+            # Bônus para URLs de produtos
+            if '/produtos/' in url_lower:
+                relevance += 0.2
+            
+            return min(relevance, 1.0)  # Máximo 1.0
+            
+        except Exception as e:
+            print(f"      Erro ao calcular relevância: {e}")
+            return 0.0
         """Método 1: Requests direto no Google - MELHORADO COM FILTRO DE FUNDO"""
         print("\n" + "="*60)
         print("MÉTODO 1: Requests direto no Google")
