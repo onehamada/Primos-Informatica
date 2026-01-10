@@ -260,8 +260,8 @@ function displayProducts(products) {
       section.className = 'products-section';
       section.style.display = 'none';
       
-      const container = document.querySelector('.container');
-      if (container) container.appendChild(section);
+      const main = document.querySelector('main');
+      if (main) main.appendChild(section);
     }
     
     // Criar HTML de produtos
