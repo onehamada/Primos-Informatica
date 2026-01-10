@@ -37,20 +37,44 @@
   100% { transform: rotate(360deg); }
 }
 
-/* === IMAGENS OTIMIZADAS - CORREÇÃO URGENTE */
-.product img, .products-grid .product img, .product-card img, .product-image img {
+/* === RESET GERAL DE IMAGENS - FORÇADO === */
+img {
+  opacity: 1 !important;
+  display: block !important;
+  visibility: visible !important;
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+}
+
+/* === IMAGENS DOS PRODUTOS - FORÇADO ABSOLUTO === */
+.product img, 
+.products-grid .product img, 
+.product-card img, 
+.product-image img,
+.category-card img,
+.categories-grid img {
   width: 100% !important;
   height: 200px !important;
   object-fit: contain !important;
-  opacity: 1 !important; /* FORÇADO PARA APARECER */
-  transition: opacity 0.3s ease;
-}
-
-.product img.loaded, .products-grid .product img.loaded, .product-card img.loaded, .product-image img.loaded {
   opacity: 1 !important;
+  display: block !important;
+  visibility: visible !important;
+  position: relative !important;
+  z-index: 10 !important;
+  background: transparent !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: 100% !important;
+  max-height: none !important;
+  min-height: 200px !important;
+  min-width: 100% !important;
 }
 
-.products-grid .product-image, .product-image {
+/* === CONTAINERS DE IMAGEM - FORÇADO === */
+.product-image,
+.category-image {
   width: 100% !important;
   height: 200px !important;
   display: flex !important;
@@ -58,24 +82,17 @@
   justify-content: center !important;
   background: #f8f9fa !important;
   position: relative !important;
+  overflow: visible !important;
+  border-radius: 8px !important;
 }
 
+/* === PLACEHOLDER - FORÇADO === */
 .image-placeholder {
   position: absolute !important;
   font-size: 2rem !important;
   color: #ddd !important;
   z-index: 1 !important;
-}
-
-.product-image img {
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-.product-image img {
-  position: relative !important;
-  z-index: 2 !important;
-  transition: opacity 0.3s ease, transform 0.3s ease !important;
+  display: none !important; /* ESCONDER PLACEHOLDER */
 }
 
 /* Efeito hover nas imagens */
