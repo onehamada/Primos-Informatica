@@ -166,11 +166,15 @@ function loadImagesOnScroll(container) {
               }
             }, 300);
           }
-          // Adicionar classe de carregado
+          
+          // Adicionar classe de carregado com animação
+          img.classList.remove('loading');
           img.classList.add('loaded');
+          
           // Remover data-src para evitar processamento futuro
           img.removeAttribute('data-src');
-          console.log('✅ Imagem carregada e classe loaded adicionada:', img.src);
+          
+          console.log('✅ Imagem carregada e animação aplicada:', img.src);
         };
         
         img.onerror = function() {
@@ -207,11 +211,14 @@ function loadImagesOnScroll(container) {
         };
         
         // Iniciar carregamento
-        img.src = img.dataset.src;
-        loaded.push(img);
-        
-        // Adicionar classe para fade-in
         img.classList.add('loading');
+        
+        // Pequeno delay para garantir que a animação seja aplicada
+        setTimeout(() => {
+          img.src = img.dataset.src;
+        }, 50);
+        
+        loaded.push(img);
       }
     }
     
@@ -538,6 +545,44 @@ function clearCart() {
   updateCartDisplay();
 }
 
+// === FUNÇÕES DE CHECKOUT ===
+function showCheckoutOptions() {
+  if (cart.length === 0) {
+    alert('Seu carrinho está vazio! Adicione produtos para continuar.');
+    return;
+  }
+  
+  // Enviar diretamente para o WhatsApp
+  finalizeViaWhatsApp();
+}
+
+function finalizeViaWhatsApp() {
+  let message = '🛒 *Pedido Primos Informática*\n\n';
+  
+  // Adicionar itens do carrinho
+  cart.forEach((item, index) => {
+    const price = parseFloat(item.preco.replace(',', '.'));
+    message += `${index + 1}. ${item.nome}\n`;
+    message += `   💰 R$ ${price.toFixed(2).replace('.', ',')}\n`;
+    message += `   🏷️ ${item.marca || ''}\n\n`;
+  });
+  
+  // Calcular total
+  const total = cart.reduce((sum, item) => {
+    return sum + parseFloat(item.preco.replace(',', '.'));
+  }, 0);
+  
+  message += `*Total: R$ ${total.toFixed(2).replace('.', ',')}*\n\n`;
+  message += 'Gostaria de finalizar este pedido! 🛍️';
+  
+  // Abrir WhatsApp com a mensagem
+  const whatsappUrl = `https://wa.me/556133406740?text=${encodeURIComponent(message)}`;
+  window.open(whatsappUrl, '_blank');
+  
+  // Fechar carrinho após enviar
+  toggleCart();
+}
+
 function toggleMobileMenu() {
   const navTabs = document.querySelector('.nav-tabs');
   const mobileMenuBtn = document.querySelector('.mobile-menu-toggle');
@@ -836,3 +881,5 @@ window.toggleMobileMenu = toggleMobileMenu;
 window.toggleFilters = toggleFilters;
 window.applyFilters = applyFilters;
 window.clearFilters = clearFilters;
+window.showCheckoutOptions = showCheckoutOptions;
+window.finalizeViaWhatsApp = finalizeViaWhatsApp;
