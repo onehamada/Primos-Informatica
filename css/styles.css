@@ -311,25 +311,29 @@
 /* REMOVIDO - Agora o WhatsApp está dentro das nav-tabs */
 
 /* Botão WhatsApp dentro das nav-tabs */
-.nav-tabs .whatsapp-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-  color: white;
-  text-decoration: none;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  margin-left: auto;
-  white-space: nowrap;
+.nav-tabs .whatsapp-btn,
+.nav-tabs .contact-btn.whatsapp-btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 12px 20px !important;
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%) !important;
+  color: white !important;
+  text-decoration: none !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+  margin-left: auto !important;
+  white-space: nowrap !important;
+  position: relative !important;
+  z-index: 1 !important;
 }
 
-.nav-tabs .whatsapp-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+.nav-tabs .whatsapp-btn:hover,
+.nav-tabs .contact-btn.whatsapp-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3) !important;
 }
 
 /* === Mobile Responsive === */
