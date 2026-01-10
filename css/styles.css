@@ -231,7 +231,7 @@
   background: white;
   border-bottom: 1px solid #e2e8f0;
   position: relative;
-  z-index: 10;
+  z-index: 100 !important;
 }
 
 .header-nav .header-container {
@@ -249,6 +249,8 @@
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
+  position: relative;
+  z-index: 100 !important;
 }
 
 .nav-tabs::-webkit-scrollbar {
@@ -310,7 +312,7 @@
   display: flex;
   align-items: center;
   position: relative;
-  z-index: 5;
+  z-index: 1 !important;
 }
 
 .contact-btn {
@@ -326,7 +328,7 @@
   font-weight: 600;
   transition: all 0.2s ease;
   position: relative;
-  z-index: 5;
+  z-index: 1 !important;
 }
 
 .contact-btn:hover {
