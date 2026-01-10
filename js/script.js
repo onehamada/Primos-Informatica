@@ -1,5 +1,7 @@
 // === FUNÇÃO PRINCIPAL - CATEGORIAS ===
 function showCategory(category) {
+  console.log('📂 showCategory chamada com:', category);
+  
   // Limpar observer anterior
   if (window.currentObserver) {
     window.currentObserver.disconnect();
@@ -8,28 +10,32 @@ function showCategory(category) {
   
   // Esconder todas as seções
   const sections = document.querySelectorAll('.products-section, .category');
+  console.log('🔍 Seções encontradas para esconder:', sections.length);
   for (let i = 0; i < sections.length; i++) {
     sections[i].style.display = 'none';
   }
   
   // Mostrar seção alvo
   if (category === 'promo' || category === 'promoções') {
-    // Criar seção de promoções dinamicamente
+    console.log('🎯 Exibindo promoções...');
     showPromocoes();
   } else if (category === 'inicio') {
-    // Mostrar a home
+    console.log('🏠 Exibindo página inicial...');
     const homeSection = document.getElementById('inicio');
+    console.log('📍 Seção início encontrada:', !!homeSection);
     if (homeSection) {
       homeSection.style.display = 'block';
       
       // Garantir que a home seja preenchida
       if (allProducts.length > 0) {
+        console.log('📦 Preenchendo home com', allProducts.length, 'produtos...');
         populateHome();
       }
       
       // Lazy loading para imagens da home
       setTimeout(function() {
         const homeGrids = homeSection.querySelectorAll('.categories-grid, .products-grid');
+        console.log('🖼️ Grids encontrados para lazy loading:', homeGrids.length);
         for (let i = 0; i < homeGrids.length; i++) {
           loadImagesOnScroll(homeGrids[i]);
         }
@@ -37,6 +43,7 @@ function showCategory(category) {
     }
   } else {
     const targetSection = document.getElementById(category);
+    console.log('📍 Seção alvo encontrada:', !!targetSection, 'para categoria:', category);
     if (targetSection) {
       targetSection.style.display = 'block';
       
@@ -44,6 +51,8 @@ function showCategory(category) {
       setTimeout(function() {
         loadImagesOnScroll(targetSection);
       }, 200);
+    } else {
+      console.error('❌ Seção não encontrada:', category);
     }
   }
   
@@ -431,12 +440,19 @@ function addToCart(productCode) {
 
 // === INICIALIZAÇÃO ===
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('🚀 DOM Carregado - Iniciando aplicação...');
+  
   loadProducts().then(function() {
+    console.log('📦 Produtos carregados:', allProducts.length);
+    console.log('🏠 Exibindo página inicial...');
     showCategory('inicio');
+  }).catch(function(error) {
+    console.error('❌ Erro ao carregar produtos:', error);
   });
   
   window.addEventListener('hashchange', function() {
     const hash = window.location.hash.substring(1) || 'inicio';
+    console.log('🔗 Hash change:', hash);
     showCategory(hash);
   });
 });
