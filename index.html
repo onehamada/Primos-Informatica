@@ -159,21 +159,26 @@
       
       <!-- Ações do Header -->
       <div class="header-actions">
-        <!-- Barra de Pesquisa -->
+        <!-- Barra de Pesquisa Responsiva -->
         <div class="search-container">
-          <input 
-            type="text" 
-            class="search-input" 
-            id="searchInput"
-            placeholder="Buscar produtos..."
-            autocomplete="off"
-          >
-          <button class="search-btn" onclick="searchProducts(document.getElementById('searchInput').value)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.35-4.35"></path>
-            </svg>
-          </button>
+          <div class="search-input-wrapper">
+            <input 
+              type="text" 
+              class="search-input" 
+              id="searchInput"
+              placeholder="🔍 Buscar produtos..."
+              autocomplete="off"
+              oninput="handleSearchInput(event)"
+              onfocus="showSearchResults()"
+              onblur="hideSearchResults()"
+            >
+            <button class="search-btn" onclick="searchProducts(document.getElementById('searchInput').value)" title="Buscar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
+            </button>
+          </div>
           <div class="search-results" id="searchResults"></div>
         </div>
         
