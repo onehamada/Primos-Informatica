@@ -159,23 +159,31 @@ function loadImagesOnScroll(container) {
         
         img.onerror = function() {
           // Tentar carregar imagem fallback
-          const fallbackSrc = img.dataset.src.replace(/\.webp$/i, '.jpg');
-          if (fallbackSrc !== img.dataset.src) {
-            console.log('Tentando fallback para:', fallbackSrc);
-            img.src = fallbackSrc;
-          } else {
-            // Tentar fallback para placeholder genérico
-            const genericFallback = 'images/products/thumbnail/placeholder.webp';
-            if (genericFallback !== img.dataset.src) {
-              console.log('Tentando placeholder genérico:', genericFallback);
-              img.src = genericFallback;
+          if (img.dataset && img.dataset.src) {
+            const fallbackSrc = img.dataset.src.replace(/\.webp$/i, '.jpg');
+            if (fallbackSrc !== img.dataset.src) {
+              console.log('Tentando fallback para:', fallbackSrc);
+              img.src = fallbackSrc;
             } else {
-              // Manter placeholder se todas as tentativas falharem
-              console.log('Falha ao carregar imagem:', img.dataset.src);
-              if (placeholder) {
-                placeholder.textContent = '❌';
-                placeholder.style.opacity = '0.3';
+              // Tentar fallback para placeholder genérico
+              const genericFallback = 'images/products/thumbnail/placeholder.webp';
+              if (genericFallback !== img.dataset.src) {
+                console.log('Tentando placeholder genérico:', genericFallback);
+                img.src = genericFallback;
+              } else {
+                // Manter placeholder se todas as tentativas falharem
+                console.log('Falha ao carregar imagem:', img.dataset.src);
+                if (placeholder) {
+                  placeholder.textContent = '❌';
+                  placeholder.style.opacity = '0.3';
+                }
               }
+            }
+          } else {
+            console.log('Erro: dataset.src não disponível');
+            if (placeholder) {
+              placeholder.textContent = '❌';
+              placeholder.style.opacity = '0.3';
             }
           }
         };

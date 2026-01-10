@@ -1689,11 +1689,11 @@ img[data-src] {
 }
 
 img.lazy:not([src]) {
-  opacity: 0.7;
+  opacity: 1 !important; /* CORRIGIDO - não esconder imagens */
 }
 
 img.lazy.loaded {
-  opacity: 1;
+  opacity: 1 !important; /* CORRIGIDO - garantir visibilidade */
 }
 
 /* === Reset & Variables === */
