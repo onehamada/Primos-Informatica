@@ -47,6 +47,18 @@ img {
   max-width: 100% !important;
 }
 
+/* === EXCEÇÃO: LOGO DO HEADER === */
+.header-logo img,
+.logo img,
+header img {
+  width: auto !important;
+  height: 40px !important;
+  max-width: none !important;
+  max-height: 40px !important;
+  min-height: auto !important;
+  min-width: auto !important;
+}
+
 /* === IMAGENS DOS PRODUTOS - FORÇADO ABSOLUTO === */
 .product img, 
 .products-grid .product img, 
