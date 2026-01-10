@@ -155,169 +155,167 @@
 </head>
 <body>
 
-<header>
-  <div class="header-main">
-    <div class="header-brand">
-      <img class="brand-logo" src="images/logo.png" alt="Primos Informática" onclick="showCategory('inicio')" style="cursor: pointer;" />
-      <h1 onclick="showCategory('inicio')" style="cursor: pointer;">Primos Informática</h1>
-    </div>
-    
-    <div class="header-actions">
-      <!-- Barra de Pesquisa centralizada -->
-      <div class="search-container">
-        <input 
-          type="text" 
-          class="search-input" 
-          id="searchInput"
-          placeholder="Buscar produtos..."
-          autocomplete="off"
-        >
-        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"></circle>
-          <path d="m21 21-4.35-4.35"></path>
-        </svg>
-        <div class="search-results" id="searchResults"></div>
-      </div>
-      
-      <!-- Filtros Avançados -->
-      <div class="filters-container" id="filtersContainer">
-        <button class="filters-toggle" id="filtersToggle" onclick="toggleFilters()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-          </svg>
-          Filtros
-        </button>
-        
-        <div class="filters-panel" id="filtersPanel">
-          <div class="filter-group">
-            <label>Faixa de Preço</label>
-            <div class="price-range">
-              <input type="number" id="minPrice" placeholder="Min" placeholder="R$ 0">
-              <span>-</span>
-              <input type="number" id="maxPrice" placeholder="Max" placeholder="R$ 5000">
-            </div>
-          </div>
-          
-          <div class="filter-group">
-            <label>Categorias</label>
-            <div class="category-filters">
-              <label class="checkbox-label">
-                <input type="checkbox" value="processador" onchange="applyFilters()">
-                <span>Processadores</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="placa de vídeo" onchange="applyFilters()">
-                <span>Placas de Vídeo</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="placa mãe" onchange="applyFilters()">
-                <span>Placas Mãe</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="monitor" onchange="applyFilters()">
-                <span>Monitores</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="ssd" onchange="applyFilters()">
-                <span>SSDs</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="hd externo" onchange="applyFilters()">
-                <span>HDs Externos</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="hd interno" onchange="applyFilters()">
-                <span>HDs Internos</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="fonte" onchange="applyFilters()">
-                <span>Fontes</span>
-              </label>
-            </div>
-          </div>
-          
-          <div class="filter-group">
-            <label>Marcas</label>
-            <div class="brand-filters">
-              <label class="checkbox-label">
-                <input type="checkbox" value="Intel" onchange="applyFilters()">
-                <span>Intel</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="AMD" onchange="applyFilters()">
-                <span>AMD</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="NVIDIA" onchange="applyFilters()">
-                <span>NVIDIA</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="ASUS" onchange="applyFilters()">
-                <span>ASUS</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="Gigabyte" onchange="applyFilters()">
-                <span>Gigabyte</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="Kingston" onchange="applyFilters()">
-                <span>Kingston</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="Seagate" onchange="applyFilters()">
-                <span>Seagate</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="Corsair" onchange="applyFilters()">
-                <span>Corsair</span>
-              </label>
-            </div>
-          </div>
-          
-          <div class="filter-group">
-            <label class="checkbox-label">
-              <input type="checkbox" id="promoOnly" onchange="applyFilters()">
-              <span>Apenas Promoções</span>
-            </label>
-          </div>
-          
-          <div class="filter-actions">
-            <button class="btn-outline" onclick="clearFilters()">Limpar Filtros</button>
-            <button class="btn-primary" onclick="applyFilters()">Aplicar</button>
-          </div>
+<header class="modern-header">
+  <div class="header-top">
+    <div class="header-container">
+      <!-- Logo e Nome -->
+      <div class="header-brand">
+        <img class="brand-logo" src="images/logo.png" alt="Primos Informática" onclick="showCategory('inicio')" />
+        <div class="brand-info">
+          <h1 onclick="showCategory('inicio')">Primos Informática</h1>
+          <span class="brand-tagline">Hardware em Brasília</span>
         </div>
       </div>
       
-      <button class="cart-btn" onclick="toggleCart()" aria-label="Carrinho de compras">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="9" cy="21" r="1"></circle>
-          <circle cx="20" cy="21" r="1"></circle>
-          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-        </svg>
-        <span class="cart-count" id="cartCount">0</span>
-      </button>
+      <!-- Ações do Header -->
+      <div class="header-actions">
+        <!-- Barra de Pesquisa -->
+        <div class="search-container">
+          <input 
+            type="text" 
+            class="search-input" 
+            id="searchInput"
+            placeholder="Buscar produtos..."
+            autocomplete="off"
+          >
+          <button class="search-btn" onclick="searchProducts(document.getElementById('searchInput').value)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+          </button>
+          <div class="search-results" id="searchResults"></div>
+        </div>
+        
+        <!-- Botões de Ação -->
+        <div class="action-buttons">
+          <!-- Filtros -->
+          <button class="action-btn filters-btn" onclick="toggleFilters()" title="Filtros">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            <span>Filtros</span>
+          </button>
+          
+          <!-- Carrinho -->
+          <button class="action-btn cart-btn" onclick="toggleCart()" title="Carrinho">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span class="cart-count" id="cartCount">0</span>
+          </button>
+          
+          <!-- Menu Mobile -->
+          <button class="action-btn mobile-menu-toggle" onclick="toggleMobileMenu()" title="Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
   
-  <!-- Tabs integradas ao header -->
-  <div class="header-tabs-container">
-    <div class="header-tabs">
-      <button type="button" class="tab-btn active" data-target="inicio" onclick="showCategory('inicio')">Início</button>
-      <button type="button" class="tab-btn" data-target="promo" onclick="showCategory('promo')">Promoções</button>
-      <button type="button" class="tab-btn" data-target="processador" onclick="showCategory('processador')">Processadores</button>
-      <button type="button" class="tab-btn" data-target="placa de vídeo" onclick="showCategory('placa de vídeo')">Placas de Vídeo</button>
-      <button type="button" class="tab-btn" data-target="placa mãe" onclick="showCategory('placa mãe')">Placas Mãe</button>
-      <button type="button" class="tab-btn" data-target="monitor" onclick="showCategory('monitor')">Monitores</button>
-      <button type="button" class="tab-btn" data-target="kit-teclado-mouse" onclick="showCategory('kit-teclado-mouse')">Kits Teclado/Mouse</button>
-      <button type="button" class="tab-btn" data-target="teclado" onclick="showCategory('teclado')">Teclados</button>
-      <button type="button" class="tab-btn" data-target="mouse" onclick="showCategory('mouse')">Mouses</button>
-      <button type="button" class="tab-btn" data-target="redes" onclick="showCategory('redes')">Redes</button>
-      <button type="button" class="tab-btn" data-target="access-point" onclick="showCategory('access-point')">Access Points</button>
-      <button type="button" class="tab-btn" data-target="repetidor" onclick="showCategory('repetidor')">Repetidores</button>
-      <button type="button" class="tab-btn" data-target="adaptador" onclick="showCategory('adaptador')">Adaptadores</button>
-      <button type="button" class="tab-btn" data-target="audio" onclick="showCategory('audio')">Áudio</button>
-      <button type="button" class="tab-btn" data-target="acessorios" onclick="showCategory('acessorios')">Acessórios</button>
-      <button type="button" class="tab-btn" data-target="cabos" onclick="showCategory('cabos')">Cabos</button>
+  <!-- Navegação Principal -->
+  <nav class="header-nav">
+    <div class="header-container">
+      <div class="nav-tabs">
+        <button type="button" class="nav-tab active" data-target="inicio" onclick="showCategory('inicio')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span>Início</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="promo" onclick="showCategory('promo')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+          </svg>
+          <span>Promoções</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="processador" onclick="showCategory('processador')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+            <rect x="9" y="9" width="6" height="6"></rect>
+            <line x1="9" y1="1" x2="9" y2="4"></line>
+            <line x1="15" y1="1" x2="15" y2="4"></line>
+            <line x1="9" y1="20" x2="9" y2="23"></line>
+            <line x1="15" y1="20" x2="15" y2="23"></line>
+            <line x1="20" y1="9" x2="23" y2="9"></line>
+            <line x1="20" y1="14" x2="23" y2="14"></line>
+            <line x1="1" y1="9" x2="4" y2="9"></line>
+            <line x1="1" y1="14" x2="4" y2="14"></line>
+          </svg>
+          <span>Processadores</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="placa de vídeo" onclick="showCategory('placa de vídeo')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          <span>Placas de Vídeo</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="placa mãe" onclick="showCategory('placa mãe')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          <span>Placas Mãe</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="monitor" onclick="showCategory('monitor')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          <span>Monitores</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="ssd" onclick="showCategory('ssd')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+            <line x1="12" y1="6" x2="12.01" y2="6"></line>
+          </svg>
+          <span>SSDs</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="hd externo" onclick="showCategory('hd externo')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <ellipse cx="12" cy="12" rx="10" ry="3"></ellipse>
+            <path d="M2 12v6c0 1.66 4.48 3 10 3s10-1.34 10-3v-6"></path>
+          </svg>
+          <span>HDs Externos</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="fonte" onclick="showCategory('fonte')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+          </svg>
+          <span>Fontes</span>
+        </button>
+      </div>
+      
+      <!-- Contato Rápido -->
+      <div class="header-contact">
+        <a href="https://wa.me/556133406740" target="_blank" class="contact-btn whatsapp-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.149-.67.149-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.299.3-.449.099-.15.05-.3-.025-.458-.074-.15-.672-1.658-.927-2.266-.255-.597-.51-.517-.67-.517-.157 0-.335-.018-.514-.018-.179 0-.47.067-.716.335-.247.267-.944.923-.944 2.254s.969 2.614 1.104 2.799c.135.184 1.907 2.915 4.624 4.089 2.317 1.022 3.228 1.082 3.938.966.644-.099 1.907-.78 2.179-1.539.272-.759.272-1.409.197-1.548-.075-.139-.272-.223-.57-.372z"/>
+            <path d="M21.5 2c-.6 0-1.2.2-1.7.6L2.8 16.8c-.8.6-1.2 1.6-1.2 2.6v2.5c0 1.1.9 2 2 2h2.5c1 0 2-.4 2.6-1.2L21.9 4.2c.4-.5.6-1.1.6-1.7 0-1.1-.9-2-2-2z"/>
+          </svg>
+          <span>(61) 3340-6740</span>
+        </a>
+      </div>
       <button type="button" class="tab-btn" data-target="webcam" onclick="showCategory('webcam')">Webcams</button>
       <button type="button" class="tab-btn" data-target="ssd" onclick="showCategory('ssd')">SSDs</button>
       <button type="button" class="tab-btn" data-target="hd externo" onclick="showCategory('hd externo')">HDs Externos</button>
