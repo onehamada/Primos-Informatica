@@ -57,12 +57,12 @@ function showCategory(category) {
   }
   
   // Atualizar botões
-  const buttons = document.querySelectorAll('.tab-btn');
+  const buttons = document.querySelectorAll('.nav-tab');
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].classList.remove('active');
   }
   
-  const activeBtn = document.querySelector('[data-target="' + category + '"]');
+  const activeBtn = document.querySelector('.nav-tab[data-target="' + category + '"]');
   if (activeBtn) activeBtn.classList.add('active');
   
   // Atualizar URL
