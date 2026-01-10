@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Carrinho Mobile</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #2563eb;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success { background: #d1fae5; color: #065f46; }
+        .error { background: #fee2e2; color: #991b1b; }
+        .info { background: #dbeafe; color: #1e40af; }
+    </style>
+</head>
+<body>
+    <h1>Teste do Carrinho Mobile</h1>
+    
+    <div class="test-section">
+        <h2>Teste de Funcionalidade</h2>
+        <button class="test-button" onclick="testCartVisibility()">Testar Visibilidade do Carrinho</button>
+        <button class="test-button" onclick="testCartAdd()">Testar Adicionar Item</button>
+        <button class="test-button" onclick="testCartRemove()">Testar Remover Item</button>
+        <button class="test-button" onclick="testCartClear()">Testar Limpar Carrinho</button>
+        <div id="testResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Simulação de Produtos</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-image">
+                    <div class="image-placeholder">📦</div>
+                </div>
+                <div class="product-info">
+                    <h3>Produto Teste 1</h3>
+                    <p class="price">R$ 100,00</p>
+                    <button class="btn-primary" onclick="addToCart('TEST001')">Adicionar</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <div class="image-placeholder">📦</div>
+                </div>
+                <div class="product-info">
+                    <h3>Produto Teste 2</h3>
+                    <p class="price">R$ 200,00</p>
+                    <button class="btn-primary" onclick="addToCart('TEST002')">Adicionar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header com carrinho (importado do site principal) -->
+    <header class="modern-header">
+        <div class="header-top">
+            <div class="header-container">
+                <div class="header-brand">
+                    <h1>Teste Carrinho</h1>
+                </div>
+                <div class="header-actions">
+                    <button class="action-btn cart-btn" onclick="toggleCart()" title="Carrinho">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Carrinho Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Meu Carrinho</h3>
+            <button class="cart-close" onclick="toggleCart()">×</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Items do carrinho -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total: <strong id="cartTotal">R$ 0,00</strong></span>
+            </div>
+            <button class="btn-primary" onclick="showCheckoutOptions()">Finalizar Pedido</button>
+            <button class="btn-outline" onclick="clearCart()">Esvaziar Carrinho</button>
+        </div>
+    </div>
+
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+    <script>
+        // Dados de teste
+        let allProducts = [
+            { codigo: 'TEST001', nome: 'Produto Teste 1', preco: '100.00', marca: 'Teste' },
+            { codigo: 'TEST002', nome: 'Produto Teste 2', preco: '200.00', marca: 'Teste' }
+        ];
+        
+        let cart = [];
+
+        // Funções de teste
+        function log(message, type = 'info') {
+            const results = document.getElementById('testResults');
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            results.appendChild(div);
+            console.log(message);
+        }
+
+        function testCartVisibility() {
+            log('Testando visibilidade do carrinho...', 'info');
+            
+            const cartSidebar = document.getElementById('cartSidebar');
+            const cartOverlay = document.getElementById('cartOverlay');
+            
+            // Testar abrir
+            toggleCart();
+            setTimeout(() => {
+                if (cartSidebar.classList.contains('active') && cartOverlay.classList.contains('active')) {
+                    log('✅ Carrinho abriu corretamente', 'success');
+                } else {
+                    log('❌ Carrinho não abriu corretamente', 'error');
+                }
+                
+                // Testar fechar
+                toggleCart();
+                setTimeout(() => {
+                    if (!cartSidebar.classList.contains('active') && !cartOverlay.classList.contains('active')) {
+                        log('✅ Carrinho fechou corretamente', 'success');
+                    } else {
+                        log('❌ Carrinho não fechou corretamente', 'error');
+                    }
+                }, 500);
+            }, 500);
+        }
+
+        function testCartAdd() {
+            log('Testando adicionar item ao carrinho...', 'info');
+            const initialCount = cart.length;
+            addToCart('TEST001');
+            
+            setTimeout(() => {
+                if (cart.length > initialCount) {
+                    log('✅ Item adicionado ao carrinho', 'success');
+                } else {
+                    log('❌ Item não foi adicionado ao carrinho', 'error');
+                }
+            }, 100);
+        }
+
+        function testCartRemove() {
+            log('Testando remover item do carrinho...', 'info');
+            if (cart.length === 0) {
+                addToCart('TEST001');
+                setTimeout(() => {
+                    removeFromCart('TEST001');
+                    setTimeout(() => {
+                        if (cart.length === 0) {
+                            log('✅ Item removido do carrinho', 'success');
+                        } else {
+                            log('❌ Item não foi removido do carrinho', 'error');
+                        }
+                    }, 100);
+                }, 100);
+            } else {
+                const firstItem = cart[0];
+                removeFromCart(firstItem.codigo);
+                setTimeout(() => {
+                    if (!cart.find(item => item.codigo === firstItem.codigo)) {
+                        log('✅ Item removido do carrinho', 'success');
+                    } else {
+                        log('❌ Item não foi removido do carrinho', 'error');
+                    }
+                }, 100);
+            }
+        }
+
+        function testCartClear() {
+            log('Testando limpar carrinho...', 'info');
+            if (cart.length === 0) {
+                addToCart('TEST001');
+                addToCart('TEST002');
+                setTimeout(() => {
+                    clearCart();
+                    setTimeout(() => {
+                        if (cart.length === 0) {
+                            log('✅ Carrinho limpo corretamente', 'success');
+                        } else {
+                            log('❌ Carrinho não foi limpo corretamente', 'error');
+                        }
+                    }, 100);
+                }, 100);
+            } else {
+                clearCart();
+                setTimeout(() => {
+                    if (cart.length === 0) {
+                        log('✅ Carrinho limpo corretamente', 'success');
+                    } else {
+                        log('❌ Carrinho não foi limpo corretamente', 'error');
+                    }
+                }, 100);
+            }
+        }
+
+        // Importar funções do carrinho do script principal
+        function toggleCart() {
+            const cartSidebar = document.getElementById('cartSidebar');
+            const cartOverlay = document.getElementById('cartOverlay');
+            const cartBtn = document.querySelector('.cart-btn');
+            
+            cartBtn.classList.remove('animate', 'shake');
+            void cartBtn.offsetWidth;
+            cartBtn.classList.add('animate');
+            
+            setTimeout(() => {
+                cartBtn.classList.remove('animate');
+            }, 300);
+            
+            if (cartSidebar.classList.contains('active')) {
+                cartSidebar.classList.remove('active');
+                cartOverlay.classList.remove('active');
+            } else {
+                cartSidebar.classList.add('active');
+                cartOverlay.classList.add('active');
+                updateCartDisplay();
+            }
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            const cartCount = document.getElementById('cartCount');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            cartItems.innerHTML = '';
+            let total = 0;
+            let itemCount = 0;
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p style="text-align: center; padding: 20px; color: #666;">Seu carrinho está vazio</p>';
+            } else {
+                for (let i = 0; i < cart.length; i++) {
+                    const item = cart[i];
+                    total += parseFloat(item.preco.replace(',', '.'));
+                    itemCount++;
+                    
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'cart-item';
+                    itemElement.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee;">
+                            <div>
+                                <h4 style="margin: 0; font-size: 14px;">${item.nome}</h4>
+                                <p style="margin: 5px 0; color: #666; font-size: 12px;">${item.marca}</p>
+                                <p style="margin: 0; font-weight: bold; color: #3b82f6;">R$ ${item.preco}</p>
+                            </div>
+                            <button onclick="removeFromCart('${item.codigo}')" style="background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">×</button>
+                        </div>
+                    `;
+                    cartItems.appendChild(itemElement);
+                }
+            }
+            
+            const currentCount = parseInt(cartCount.textContent) || 0;
+            if (currentCount !== itemCount) {
+                cartCount.classList.remove('animate');
+                void cartCount.offsetWidth;
+                cartCount.classList.add('animate');
+            }
+            
+            cartCount.textContent = itemCount;
+            cartTotal.textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+        }
+
+        function addToCart(productCode) {
+            const cartBtn = document.querySelector('.cart-btn');
+            
+            for (let i = 0; i < allProducts.length; i++) {
+                if (allProducts[i].codigo === productCode) {
+                    cart.push({
+                        ...allProducts[i],
+                        quantity: 1
+                    });
+                    
+                    cartBtn.classList.remove('animate', 'shake');
+                    void cartBtn.offsetWidth;
+                    cartBtn.classList.add('shake');
+                    
+                    setTimeout(() => {
+                        cartBtn.classList.remove('shake');
+                    }, 300);
+                    
+                    updateCartDisplay();
+                    break;
+                }
+            }
+        }
+
+        function removeFromCart(productCode) {
+            cart = cart.filter(item => item.codigo !== productCode);
+            updateCartDisplay();
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCartDisplay();
+        }
+
+        function showCheckoutOptions() {
+            log('Função de checkout não implementada no teste', 'info');
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            log('Página de teste carregada', 'success');
+            updateCartDisplay();
+        });
+    </script>
+</body>
+</html>
