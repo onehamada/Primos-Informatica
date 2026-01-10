@@ -163,52 +163,143 @@
     </div>
     
     <div class="header-actions">
-  <!-- Barra de Pesquisa centralizada -->
-  <div class="search-container">
-    <input 
-      type="text" 
-      class="search-input" 
-      id="searchInput"
-      placeholder="Buscar produtos..."
-      autocomplete="off"
-      onkeyup="searchProducts(this.value)"
-    >
-    <button class="search-btn" onclick="searchProducts(document.getElementById('searchInput').value)">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"></circle>
-        <path d="m21 21-4.35-4.35"></path>
-      </svg>
-    </button>
+      <!-- Barra de Pesquisa centralizada -->
+      <div class="search-container">
+        <input 
+          type="text" 
+          class="search-input" 
+          id="searchInput"
+          placeholder="Buscar produtos..."
+          autocomplete="off"
+        >
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+      
+      <!-- Filtros Avançados -->
+      <div class="filters-container" id="filtersContainer">
+        <button class="filters-toggle" id="filtersToggle" onclick="toggleFilters()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+          Filtros
+        </button>
+        
+        <div class="filters-panel" id="filtersPanel">
+          <div class="filter-group">
+            <label>Faixa de Preço</label>
+            <div class="price-range">
+              <input type="number" id="minPrice" placeholder="Min" placeholder="R$ 0">
+              <span>-</span>
+              <input type="number" id="maxPrice" placeholder="Max" placeholder="R$ 5000">
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <label>Categorias</label>
+            <div class="category-filters">
+              <label class="checkbox-label">
+                <input type="checkbox" value="processador" onchange="applyFilters()">
+                <span>Processadores</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="placa de vídeo" onchange="applyFilters()">
+                <span>Placas de Vídeo</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="placa mãe" onchange="applyFilters()">
+                <span>Placas Mãe</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="monitor" onchange="applyFilters()">
+                <span>Monitores</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="ssd" onchange="applyFilters()">
+                <span>SSDs</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="hd externo" onchange="applyFilters()">
+                <span>HDs Externos</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="hd interno" onchange="applyFilters()">
+                <span>HDs Internos</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="fonte" onchange="applyFilters()">
+                <span>Fontes</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <label>Marcas</label>
+            <div class="brand-filters">
+              <label class="checkbox-label">
+                <input type="checkbox" value="Intel" onchange="applyFilters()">
+                <span>Intel</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="AMD" onchange="applyFilters()">
+                <span>AMD</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="NVIDIA" onchange="applyFilters()">
+                <span>NVIDIA</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="ASUS" onchange="applyFilters()">
+                <span>ASUS</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="Gigabyte" onchange="applyFilters()">
+                <span>Gigabyte</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="Kingston" onchange="applyFilters()">
+                <span>Kingston</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="Seagate" onchange="applyFilters()">
+                <span>Seagate</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="Corsair" onchange="applyFilters()">
+                <span>Corsair</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="promoOnly" onchange="applyFilters()">
+              <span>Apenas Promoções</span>
+            </label>
+          </div>
+          
+          <div class="filter-actions">
+            <button class="btn-outline" onclick="clearFilters()">Limpar Filtros</button>
+            <button class="btn-primary" onclick="applyFilters()">Aplicar</button>
+          </div>
+        </div>
+      </div>
+      
+      <button class="cart-btn" onclick="toggleCart()" aria-label="Carrinho de compras">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
   </div>
   
-  <!-- Filtros -->
-  <button class="filter-btn" onclick="toggleFilters()">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <line x1="4" y1="21" x2="4" y2="14"></line>
-      <line x1="4" y1="10" x2="4" y2="3"></line>
-      <line x1="12" y1="21" x2="12" y2="12"></line>
-      <line x1="12" y1="8" x2="12" y2="3"></line>
-      <line x1="20" y1="21" x2="20" y2="16"></line>
-      <line x1="20" y1="12" x2="20" y2="3"></line>
-      <line x1="1" y1="14" x2="7" y2="14"></line>
-      <line x1="9" y1="8" x2="15" y2="8"></line>
-      <line x1="17" y1="16" x2="23" y2="16"></line>
-    </svg>
-    <span>Filtros</span>
-  </button>
-  
-  <button class="cart-btn" onclick="toggleCart()" aria-label="Carrinho de compras">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="9" cy="21" r="1"></circle>
-      <circle cx="20" cy="21" r="1"></circle>
-      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-    </svg>
-    <span class="cart-count" id="cartCount">0</span>
-  </button>
-</div>
-  </div>
-  
-  <!-- Tabs integradas ao header (Desktop) -->
+  <!-- Tabs integradas ao header -->
   <div class="header-tabs-container">
     <div class="header-tabs">
       <button type="button" class="tab-btn active" data-target="inicio" onclick="showCategory('inicio')">Início</button>
@@ -235,129 +326,6 @@
     </div>
   </div>
 </header>
-
-<!-- Main Content -->
-<main>
-  <!-- Seção Início -->
-  <section id="inicio" class="category products-section">
-    <div class="container">
-      <h2>Bem-vindo à Primos Informática</h2>
-      <div class="products-grid" id="inicio-products">
-        <!-- Produtos serão carregados aqui -->
-      </div>
-    </div>
-  </section>
-
-  <!-- Seção Promoções -->
-  <section id="promo" class="category products-section" style="display: none;">
-    <div class="container">
-      <h2>Promoções</h2>
-      <div class="products-grid" id="promo-products">
-        <!-- Produtos serão carregados aqui -->
-      </div>
-    </div>
-  </section>
-
-  <!-- Seções de categorias serão adicionadas dinamicamente -->
-</main>
-
-<!-- Painel de Filtros Flutuante -->
-<div class="filters-panel" id="filtersPanel">
-  <div class="filters-header">
-    <h3>Filtrar Produtos</h3>
-    <button class="filters-close" onclick="toggleFilters()">×</button>
-  </div>
-  
-  <div class="filters-content">
-    <div class="filter-group">
-      <label>Categorias</label>
-      <div class="category-filters">
-        <label class="checkbox-label">
-          <input type="checkbox" value="processador" onchange="applyFilters()">
-          <span>Processadores</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" value="placa de vídeo" onchange="applyFilters()">
-          <span>Placas de Vídeo</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" value="placa mãe" onchange="applyFilters()">
-          <span>Placas Mãe</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" value="monitor" onchange="applyFilters()">
-          <span>Monitores</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" value="ssd" onchange="applyFilters()">
-          <span>SSDs</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" value="hd externo" onchange="applyFilters()">
-          <span>HDs Externos</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" value="hd interno" onchange="applyFilters()">
-          <span>HDs Internos</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" value="fonte" onchange="applyFilters()">
-          <span>Fontes</span>
-        </label>
-      </div>
-    </div>
-    
-    <div class="filter-group">
-      <label>Marcas</label>
-      <div class="brand-filters">
-        <label class="checkbox-label">
-          <input type="checkbox" value="Intel" onchange="applyFilters()">
-          <span>Intel</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" value="AMD" onchange="applyFilters()">
-          <span>AMD</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" value="NVIDIA" onchange="applyFilters()">
-          <span>NVIDIA</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" value="ASUS" onchange="applyFilters()">
-          <span>ASUS</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" value="Gigabyte" onchange="applyFilters()">
-          <span>Gigabyte</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" value="Kingston" onchange="applyFilters()">
-          <span>Kingston</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" value="Seagate" onchange="applyFilters()">
-          <span>Seagate</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" value="Corsair" onchange="applyFilters()">
-          <span>Corsair</span>
-        </label>
-      </div>
-    </div>
-    
-    <div class="filter-group">
-      <label class="checkbox-label">
-        <input type="checkbox" id="promoOnly" onchange="applyFilters()">
-        <span>Apenas Promoções</span>
-      </label>
-    </div>
-    
-    <div class="filter-actions">
-      <button class="btn-outline" onclick="clearFilters()">Limpar Filtros</button>
-      <button class="btn-primary" onclick="applyFilters()">Aplicar</button>
-    </div>
-  </div>
-</div>
 
 <!-- Carrinho Flutuante -->
 <div class="cart-sidebar" id="cartSidebar">

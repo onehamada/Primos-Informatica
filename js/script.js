@@ -110,7 +110,7 @@ function showPromocoes() {
   }, 200);
 }
 
-// === LAZY LOADING SIMPLIFICADO ===
+// === LAZY LOADING MELHORADO ===
 function loadImagesOnScroll(container) {
   const images = container.querySelectorAll('img[data-src]');
   const loaded = [];
@@ -145,11 +145,30 @@ function loadImagesOnScroll(container) {
           }
           // Adicionar classe de carregado
           img.classList.add('loaded');
+          console.log('Imagem carregada:', img.src);
         };
         
         img.onerror = function() {
-          // Manter placeholder se a imagem falhar
-          console.log('Falha ao carregar imagem:', img.dataset.src);
+          // Tentar carregar imagem fallback
+          const fallbackSrc = img.dataset.src.replace(/\.webp$/i, '.jpg');
+          if (fallbackSrc !== img.dataset.src) {
+            console.log('Tentando fallback para:', fallbackSrc);
+            img.src = fallbackSrc;
+          } else {
+            // Tentar fallback para placeholder genérico
+            const genericFallback = 'images/products/thumbnail/placeholder.webp';
+            if (genericFallback !== img.dataset.src) {
+              console.log('Tentando placeholder genérico:', genericFallback);
+              img.src = genericFallback;
+            } else {
+              // Manter placeholder se todas as tentativas falharem
+              console.log('Falha ao carregar imagem:', img.dataset.src);
+              if (placeholder) {
+                placeholder.textContent = '❌';
+                placeholder.style.opacity = '0.3';
+              }
+            }
+          }
         };
         
         // Iniciar carregamento
@@ -158,20 +177,17 @@ function loadImagesOnScroll(container) {
         loaded.push(img);
         
         // Adicionar classe para fade-in
-        img.style.opacity = '0';
-        setTimeout(function() {
-          img.style.transition = 'opacity 0.3s ease';
-          img.style.opacity = '1';
-        }, 50);
+        img.classList.add('loading');
       }
     }
     
-    // Continuar verificando se ainda há imagens
+    // Continuar verificando se ainda há imagens para carregar
     if (loaded.length < images.length) {
-      setTimeout(checkImages, 100);
+      requestAnimationFrame(checkImages);
     }
   }
   
+  // Iniciar verificação
   // Verificar imediatamente
   checkImages();
   
@@ -396,35 +412,6 @@ function createProductCard(product) {
     '<button class="btn-primary" onclick="addToCart(\'' + product.codigo + '\')">Adicionar</button>' +
     '</div>' +
     '</div>';
-}
-
-// === MOBILE MENU ===
-function toggleMobileMenu() {
-  const navButtons = document.getElementById('navButtons');
-  const menuToggle = document.querySelector('.mobile-menu-toggle');
-  
-  navButtons.classList.toggle('active');
-  menuToggle.classList.toggle('active');
-  
-  // Fecha o menu ao clicar fora
-  if (navButtons.classList.contains('active')) {
-    setTimeout(() => {
-      document.addEventListener('click', closeMobileMenuOutside);
-    }, 100);
-  } else {
-    document.removeEventListener('click', closeMobileMenuOutside);
-  }
-}
-
-function closeMobileMenuOutside(event) {
-  const navButtons = document.getElementById('navButtons');
-  const menuToggle = document.querySelector('.mobile-menu-toggle');
-  
-  if (!navButtons.contains(event.target) && !menuToggle.contains(event.target)) {
-    navButtons.classList.remove('active');
-    menuToggle.classList.remove('active');
-    document.removeEventListener('click', closeMobileMenuOutside);
-  }
 }
 
 // === CARRINHO ===
