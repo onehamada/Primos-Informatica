@@ -308,14 +308,10 @@
 }
 
 /* === Contact Button === */
-.header-contact {
-  display: flex;
-  align-items: center;
-  position: relative;
-  z-index: 1 !important;
-}
+/* REMOVIDO - Agora o WhatsApp está dentro das nav-tabs */
 
-.contact-btn {
+/* Botão WhatsApp dentro das nav-tabs */
+.nav-tabs .whatsapp-btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -327,11 +323,11 @@
   font-size: 14px;
   font-weight: 600;
   transition: all 0.2s ease;
-  position: relative;
-  z-index: 1 !important;
+  margin-left: auto;
+  white-space: nowrap;
 }
 
-.contact-btn:hover {
+.nav-tabs .whatsapp-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
 }
