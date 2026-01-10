@@ -70,33 +70,34 @@
 .header-brand {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   cursor: pointer;
   transition: transform 0.2s ease;
+  padding: 4px 0;
 }
 
 .header-brand:hover {
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
 .brand-logo {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
-  border-radius: 10px;
+  border-radius: 8px;
   background: white;
-  padding: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .brand-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .brand-info h1 {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
   color: #1e293b;
   margin: 0;
@@ -108,11 +109,11 @@
 }
 
 .brand-tagline {
-  font-size: 12px;
+  font-size: 11px;
   color: #64748b;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
 }
 
 /* === Header Actions === */
@@ -174,19 +175,19 @@
 .action-buttons {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .action-btn {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 14px;
+  padding: 8px 12px;
   border: 2px solid #e2e8f0;
   background: white;
-  border-radius: 10px;
+  border-radius: 8px;
   color: #64748b;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -274,14 +275,14 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 12px 16px;
+  padding: 10px 14px;
   border: none;
   background: transparent;
   color: #64748b;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 6px;
   transition: all 0.2s ease;
   white-space: nowrap;
   position: relative;
