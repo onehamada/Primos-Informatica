@@ -154,7 +154,7 @@ function loadImagesOnScroll(container) {
           }
           // Adicionar classe de carregado
           img.classList.add('loaded');
-          console.log('Imagem carregada:', img.src);
+          console.log('✅ Imagem carregada e classe loaded adicionada:', img.src);
         };
         
         img.onerror = function() {
