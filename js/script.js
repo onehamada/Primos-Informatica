@@ -124,6 +124,9 @@ function loadImagesOnScroll(container) {
   const images = container.querySelectorAll('img[data-src]');
   const loaded = [];
   
+  console.log('🔍 Procurando imagens com data-src em:', container);
+  console.log('📊 Imagens encontradas:', images.length);
+  
   function checkImages() {
     const windowHeight = window.innerHeight;
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -131,6 +134,13 @@ function loadImagesOnScroll(container) {
     for (let i = 0; i < images.length; i++) {
       const img = images[i];
       if (loaded.indexOf(img) !== -1) continue;
+      
+      // Verificar se tem data-src válido
+      if (!img.dataset || !img.dataset.src) {
+        console.log('⚠️ Imagem sem data-src válido, pulando:', img);
+        loaded.push(img);
+        continue;
+      }
       
       const rect = img.getBoundingClientRect();
       const elemTop = rect.top + scrollTop;
@@ -140,6 +150,8 @@ function loadImagesOnScroll(container) {
                           elemBottom > scrollTop - 200;
       
       if (isInViewport) {
+        console.log('🎯 Carregando imagem:', img.dataset.src);
+        
         // Encontrar o placeholder dentro do mesmo container
         const placeholder = img.parentElement.querySelector('.image-placeholder');
         
@@ -205,7 +217,6 @@ function loadImagesOnScroll(container) {
   }
   
   // Iniciar verificação
-  // Verificar imediatamente
   checkImages();
   
   // Verificar no scroll
