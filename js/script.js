@@ -135,9 +135,9 @@ function loadImagesOnScroll(container) {
       const img = images[i];
       if (loaded.indexOf(img) !== -1) continue;
       
-      // Verificar se tem data-src válido
-      if (!img.dataset || !img.dataset.src) {
-        console.log('⚠️ Imagem sem data-src válido, pulando:', img);
+      // Verificar se tem data-src válido E se ainda não foi carregada
+      if (!img.dataset || !img.dataset.src || img.classList.contains('loaded')) {
+        console.log('⚠️ Imagem sem data-src válido ou já carregada, pulando:', img);
         loaded.push(img);
         continue;
       }
@@ -161,11 +161,15 @@ function loadImagesOnScroll(container) {
           if (placeholder) {
             placeholder.classList.add('hiding');
             setTimeout(function() {
-              placeholder.remove();
+              if (placeholder.parentNode) {
+                placeholder.remove();
+              }
             }, 300);
           }
           // Adicionar classe de carregado
           img.classList.add('loaded');
+          // Remover data-src para evitar processamento futuro
+          img.removeAttribute('data-src');
           console.log('✅ Imagem carregada e classe loaded adicionada:', img.src);
         };
         
@@ -198,11 +202,12 @@ function loadImagesOnScroll(container) {
               placeholder.style.opacity = '0.3';
             }
           }
+          // Marcar como processado mesmo em caso de erro
+          img.removeAttribute('data-src');
         };
         
         // Iniciar carregamento
         img.src = img.dataset.src;
-        img.removeAttribute('data-src');
         loaded.push(img);
         
         // Adicionar classe para fade-in
@@ -445,13 +450,162 @@ function createProductCard(product) {
 // === CARRINHO ===
 let cart = [];
 
+function toggleCart() {
+  const cartSidebar = document.getElementById('cartSidebar');
+  const cartOverlay = document.getElementById('cartOverlay');
+  const cartBtn = document.querySelector('.cart-btn');
+  const whatsappBtn = document.querySelector('.whatsapp-float');
+  
+  // Animação no botão do carrinho
+  cartBtn.classList.remove('animate', 'shake');
+  void cartBtn.offsetWidth; // Força reflow
+  cartBtn.classList.add('animate');
+  
+  setTimeout(() => {
+    cartBtn.classList.remove('animate');
+  }, 300);
+  
+  if (cartSidebar.classList.contains('active')) {
+    cartSidebar.classList.remove('active');
+    cartOverlay.classList.remove('active');
+    // Mostra WhatsApp novamente
+    if (whatsappBtn) {
+      whatsappBtn.style.display = 'flex';
+    }
+  } else {
+    cartSidebar.classList.add('active');
+    cartOverlay.classList.add('active');
+    // Esconde WhatsApp quando carrinho abre
+    if (whatsappBtn) {
+      whatsappBtn.style.display = 'none';
+    }
+    updateCartDisplay();
+  }
+}
+
+function updateCartDisplay() {
+  const cartItems = document.getElementById('cartItems');
+  const cartCount = document.getElementById('cartCount');
+  const cartTotal = document.getElementById('cartTotal');
+  
+  cartItems.innerHTML = '';
+  let total = 0;
+  let itemCount = 0;
+  
+  if (cart.length === 0) {
+    cartItems.innerHTML = '<p style="text-align: center; padding: 20px; color: #666;">Seu carrinho está vazio</p>';
+  } else {
+    for (let i = 0; i < cart.length; i++) {
+      const item = cart[i];
+      total += parseFloat(item.preco.replace(',', '.'));
+      itemCount++;
+      
+      const itemElement = document.createElement('div');
+      itemElement.className = 'cart-item';
+      itemElement.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee;">
+          <div>
+            <h4 style="margin: 0; font-size: 14px;">${item.nome}</h4>
+            <p style="margin: 5px 0; color: #666; font-size: 12px;">${item.marca}</p>
+            <p style="margin: 0; font-weight: bold; color: #3b82f6;">R$ ${item.preco}</p>
+          </div>
+          <button onclick="removeFromCart('${item.codigo}')" style="background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; transition: all 0.2s ease;">×</button>
+        </div>
+      `;
+      cartItems.appendChild(itemElement);
+    }
+  }
+  
+  // Animação no contador se houver mudança
+  const currentCount = parseInt(cartCount.textContent) || 0;
+  if (currentCount !== itemCount) {
+    cartCount.classList.remove('animate');
+    void cartCount.offsetWidth; // Força reflow
+    cartCount.classList.add('animate');
+  }
+  
+  cartCount.textContent = itemCount;
+  cartTotal.textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+}
+
+function removeFromCart(productCode) {
+  cart = cart.filter(item => item.codigo !== productCode);
+  updateCartDisplay();
+}
+
+function clearCart() {
+  cart = [];
+  updateCartDisplay();
+}
+
+function toggleMobileMenu() {
+  const navTabs = document.querySelector('.nav-tabs');
+  const mobileMenuBtn = document.querySelector('.mobile-menu-toggle');
+  
+  if (!navTabs || !mobileMenuBtn) return;
+  
+  if (navTabs.classList.contains('mobile-open')) {
+    // Fechar menu
+    navTabs.classList.remove('mobile-open');
+    
+    // Voltar ícone de hambúrguer
+    mobileMenuBtn.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    `;
+  } else {
+    // Abrir menu
+    navTabs.classList.add('mobile-open');
+    
+    // Transformar o ícone em X
+    mobileMenuBtn.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    `;
+  }
+}
+
 function addToCart(productCode) {
+  const cartBtn = document.querySelector('.cart-btn');
+  const clickedButton = event.target;
+  
   for (let i = 0; i < allProducts.length; i++) {
     if (allProducts[i].codigo === productCode) {
       cart.push({
         ...allProducts[i],
         quantity: 1
       });
+      
+      // Animação no botão clicado
+      clickedButton.classList.remove('adding', 'added');
+      void clickedButton.offsetWidth; // Força reflow
+      clickedButton.classList.add('adding');
+      
+      setTimeout(() => {
+        clickedButton.classList.remove('adding');
+        clickedButton.classList.add('added');
+        
+        // Remove o checkmark após 1.5s
+        setTimeout(() => {
+          clickedButton.classList.remove('added');
+        }, 1500);
+      }, 600);
+      
+      // Animação de shake no botão do carrinho
+      cartBtn.classList.remove('animate', 'shake');
+      void cartBtn.offsetWidth; // Força reflow
+      cartBtn.classList.add('shake');
+      
+      setTimeout(() => {
+        cartBtn.classList.remove('shake');
+      }, 300);
+      
+      updateCartDisplay();
       break;
     }
   }
@@ -476,6 +630,209 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+// === FUNÇÕES DE FILTRO ===
+let currentFilters = {
+  categories: [],
+  minPrice: null,
+  maxPrice: null,
+  searchQuery: ''
+};
+
+function toggleFilters() {
+  const filtersPanel = document.getElementById('filtersPanel');
+  const filtersToggle = document.getElementById('filtersToggle');
+  
+  if (!filtersPanel || !filtersToggle) {
+    console.error('Elementos de filtro não encontrados');
+    return;
+  }
+  
+  if (filtersPanel.classList.contains('active')) {
+    filtersPanel.classList.remove('active');
+    filtersToggle.classList.remove('active');
+  } else {
+    filtersPanel.classList.add('active');
+    filtersToggle.classList.add('active');
+  }
+}
+
+function applyFilters() {
+  console.log('Aplicando filtros...');
+  
+  // Coletar categorias selecionadas
+  const categoryCheckboxes = document.querySelectorAll('.category-filters input[type="checkbox"]:checked');
+  currentFilters.categories = Array.from(categoryCheckboxes).map(cb => cb.value.toLowerCase());
+  
+  // Coletar faixa de preço
+  const minPriceInput = document.getElementById('minPrice');
+  const maxPriceInput = document.getElementById('maxPrice');
+  currentFilters.minPrice = minPriceInput.value ? parseFloat(minPriceInput.value) : null;
+  currentFilters.maxPrice = maxPriceInput.value ? parseFloat(maxPriceInput.value) : null;
+  
+  console.log('Filtros aplicados:', currentFilters);
+  
+  // Filtrar produtos
+  filterProducts();
+  
+  // Fecha o painel de filtros
+  toggleFilters();
+}
+
+function clearFilters() {
+  console.log('Limpando filtros...');
+  
+  // Resetar filtros
+  currentFilters = {
+    categories: [],
+    minPrice: null,
+    maxPrice: null,
+    searchQuery: currentFilters.searchQuery // Mantém busca
+  };
+  
+  // Limpar UI
+  const checkboxes = document.querySelectorAll('.category-filters input[type="checkbox"]');
+  checkboxes.forEach(cb => cb.checked = false);
+  
+  document.getElementById('minPrice').value = '';
+  document.getElementById('maxPrice').value = '';
+  
+  console.log('Filtros limpos:', currentFilters);
+  
+  // Aplicar filtros vazios (mostra tudo)
+  filterProducts();
+  
+  // Fecha o painel
+  toggleFilters();
+}
+
+function filterProducts() {
+  console.log('Filtrando produtos com:', currentFilters);
+  
+  let filteredProducts = allProducts.filter(product => {
+    // Filtro de categorias
+    if (currentFilters.categories.length > 0) {
+      const productCategory = (product.categoria || '').toLowerCase();
+      if (!currentFilters.categories.includes(productCategory)) {
+        return false;
+      }
+    }
+    
+    // Filtro de preço mínimo
+    if (currentFilters.minPrice !== null) {
+      const productPrice = parseFloat(product.preco || '0');
+      if (productPrice < currentFilters.minPrice) {
+        return false;
+      }
+    }
+    
+    // Filtro de preço máximo
+    if (currentFilters.maxPrice !== null) {
+      const productPrice = parseFloat(product.preco || '0');
+      if (productPrice > currentFilters.maxPrice) {
+        return false;
+      }
+    }
+    
+    // Filtro de busca
+    if (currentFilters.searchQuery) {
+      const searchTerm = currentFilters.searchQuery.toLowerCase();
+      const productName = (product.nome || '').toLowerCase();
+      const productBrand = (product.marca || '').toLowerCase();
+      const productCategory = (product.categoria || '').toLowerCase();
+      
+      if (!productName.includes(searchTerm) && 
+          !productBrand.includes(searchTerm) && 
+          !productCategory.includes(searchTerm)) {
+        return false;
+      }
+    }
+    
+    return true;
+  });
+  
+  console.log('Produtos filtrados:', filteredProducts.length);
+  
+  // Atualizar display com produtos filtrados
+  displayFilteredProducts(filteredProducts);
+}
+
+function displayFilteredProducts(filteredProducts) {
+  // Se há busca ativa, mostrar resultados na seção atual
+  if (currentFilters.searchQuery) {
+    const activeSection = document.querySelector('.category:not([style*="display: none"])');
+    if (activeSection) {
+      const productsGrid = activeSection.querySelector('.products-grid');
+      if (productsGrid) {
+        let html = '';
+        if (filteredProducts.length === 0) {
+          html = '<p style="text-align: center; padding: 40px; color: #666;">Nenhum produto encontrado com os filtros aplicados.</p>';
+        } else {
+          filteredProducts.forEach(product => {
+            html += createProductCard(product);
+          });
+        }
+        productsGrid.innerHTML = html;
+        
+        // Lazy loading para imagens filtradas
+        setTimeout(() => {
+          loadImagesOnScroll(activeSection);
+        }, 200);
+      }
+    }
+  } else {
+    // Se não há busca, mostrar produtos nas categorias corretas
+    const categories = {};
+    
+    // Agrupar produtos filtrados por categoria
+    filteredProducts.forEach(product => {
+      const category = product.categoria || 'outros';
+      if (!categories[category]) {
+        categories[category] = [];
+      }
+      categories[category].push(product);
+    });
+    
+    // Atualizar cada seção de categoria
+    Object.keys(categories).forEach(category => {
+      const section = document.getElementById(category);
+      if (section) {
+        const productsGrid = section.querySelector('.products-grid');
+        if (productsGrid) {
+          let html = '';
+          categories[category].forEach(product => {
+            html += createProductCard(product);
+          });
+          productsGrid.innerHTML = html;
+          
+          // Lazy loading
+          setTimeout(() => {
+            loadImagesOnScroll(section);
+          }, 200);
+        }
+      }
+    });
+  }
+}
+
+// Event listener para fechar filtros ao clicar fora
+document.addEventListener('click', function(e) {
+  const filtersContainer = document.getElementById('filtersContainer');
+  const filtersPanel = document.getElementById('filtersPanel');
+  
+  if (filtersContainer && filtersPanel && 
+      !filtersContainer.contains(e.target) && 
+      filtersPanel.classList.contains('active')) {
+    toggleFilters();
+  }
+});
+
 // === COMANDOS GLOBAIS ===
 window.showCategory = showCategory;
 window.addToCart = addToCart;
+window.toggleCart = toggleCart;
+window.removeFromCart = removeFromCart;
+window.clearCart = clearCart;
+window.toggleMobileMenu = toggleMobileMenu;
+window.toggleFilters = toggleFilters;
+window.applyFilters = applyFilters;
+window.clearFilters = clearFilters;

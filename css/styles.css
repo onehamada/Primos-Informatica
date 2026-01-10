@@ -13,7 +13,7 @@
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.95);
 }
 
 .loading.active {
@@ -35,6 +35,201 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* === Botão Flutuante WhatsApp === */
+.whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background: #25d366;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+  z-index: 1000;
+  transition: all 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+  text-decoration: none;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+.whatsapp-float svg {
+  width: 28px;
+  height: 28px;
+}
+
+.whatsapp-tooltip {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  background: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.whatsapp-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 20px;
+  border: 6px solid transparent;
+  border-top-color: #333;
+}
+
+.whatsapp-float:hover .whatsapp-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* === Animações do Carrinho === */
+@keyframes cartBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+@keyframes cartShake {
+  0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+}
+
+.cart-btn {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.cart-btn.animate {
+  animation: cartBounce 0.3s ease;
+}
+
+.cart-btn.shake {
+  animation: cartShake 0.3s ease;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.cart-count.animate {
+  animation: pulse 0.6s ease;
+}
+
+.cart-sidebar {
+  animation: fadeInUp 0.3s ease;
+}
+
+.cart-item {
+  animation: fadeInUp 0.3s ease;
+  transition: all 0.2s ease;
+}
+
+.cart-item:hover {
+  background: #f8f9fa;
+  transform: translateX(-5px);
+}
+
+/* === Animações nos Botões Adicionar === */
+@keyframes buttonSuccess {
+  0% { transform: scale(1); background: #3b82f6; }
+  50% { transform: scale(0.95); background: #10b981; }
+  100% { transform: scale(1); background: #3b82f6; }
+}
+
+@keyframes checkmark {
+  0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+  50% { transform: scale(1.2) rotate(-45deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-45deg); opacity: 1; }
+}
+
+.btn-primary {
+  position: relative;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.btn-primary.adding {
+  animation: buttonSuccess 0.6s ease;
+}
+
+.btn-primary.added::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  animation: checkmark 0.4s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+@media (max-width: 768px) {
+  .whatsapp-float {
+    width: 50px;
+    height: 50px;
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  .whatsapp-float svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .whatsapp-tooltip {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
 }
 
 /* === HEADER MODERNO - NOVO DESIGN === */
@@ -201,27 +396,50 @@
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
-.action-btn.cart-btn {
+/* === Cart Button === */
+.cart-btn {
   position: relative;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  border-color: #3b82f6;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
 }
 
-.action-btn.cart-btn:hover {
-  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+.cart-btn:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.cart-btn:active {
+  transform: translateY(0);
 }
 
 .cart-count {
   position: absolute;
   top: -8px;
   right: -8px;
-  background: #ef4444;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 11px;
   font-weight: 700;
   padding: 2px 6px;
-  border-radius: 10px;
   min-width: 18px;
   text-align: center;
   line-height: 1;
@@ -392,6 +610,71 @@
     display: none;
   }
   
+  /* Garante que o span do carrinho continue visível */
+  .cart-btn span {
+    display: inline !important;
+  }
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+  display: none;
+}
+
+/* Força carrinho visível em todos os tamanhos */
+.action-buttons .cart-btn {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-toggle {
+    display: flex;
+  }
+  
+  .nav-tabs {
+    display: none !important;
+  }
+  
+  .nav-tabs.mobile-open {
+    display: flex !important;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    border-radius: 0 0 12px 12px;
+  }
+  
+  /* Garante que o carrinho sempre esteja visível no mobile */
+  .cart-btn {
+    display: flex !important;
+    padding: 12px 16px;
+    font-size: 14px;
+    height: 48px;
+    min-width: 48px;
+    touch-action: manipulation;
+    position: relative;
+    z-index: 1002 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  .cart-count {
+    top: -8px;
+    right: -8px;
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
   .action-btn {
     padding: 12px;
   }
@@ -402,20 +685,10 @@
     padding: 16px;
   }
   
-  .nav-tabs {
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  
-  .nav-tab {
+  .nav-tabs.mobile-open .nav-tab {
     padding: 12px 16px;
     font-size: 13px;
-  }
-  
-  .header-contact {
-    width: 100%;
-    justify-content: center;
+    border-bottom: 1px solid #e5e7eb;
   }
 }
 
@@ -601,6 +874,9 @@ img {
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   will-change: transform;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .product-card:hover {
@@ -616,6 +892,7 @@ img {
   justify-content: center;
   background: #f8f9fa;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .product-image img {
@@ -623,6 +900,14 @@ img {
   height: 100%;
   object-fit: contain;
   transition: transform 0.3s ease;
+}
+
+.product-info {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .product-card:hover .product-image img {
@@ -1040,14 +1325,11 @@ header .brand-logo:hover {
   align-items: center;
   gap: 8px;
   position: relative;
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
-  right: 3px;
 }
 
 .cart-btn:hover {
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
 }
 
 .cart-btn:active {
@@ -1165,7 +1447,7 @@ header .brand-logo:hover {
   border-radius: 2px;
 }
 
-.header-tabs::-webkit-scrollbar-thumb:hover {
+.header-tabs:hover::-webkit-scrollbar-thumb {
   background: #64748b;
 }
 
@@ -1530,19 +1812,22 @@ header .brand-logo:hover {
 .cart-sidebar {
   position: fixed;
   top: 0;
-  right: -400px;
+  right: 0;
   width: 400px;
   height: 100vh;
   background: white;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  transition: right 0.3s ease;
+  z-index: 1001;
+  transition: transform 0.3s ease;
   display: flex;
   flex-direction: column;
+  transform: translateX(100%);
+  visibility: hidden;
 }
 
 .cart-sidebar.active {
-  right: 0;
+  transform: translateX(0);
+  visibility: visible;
 }
 
 .cart-header {
@@ -1705,22 +1990,30 @@ header .brand-logo:hover {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
+  z-index: 1000;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
+  display: none;
 }
 
 .cart-overlay.active {
   opacity: 1;
   visibility: visible;
+  display: block;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .cart-sidebar {
     width: 100%;
-    right: -100%;
+    transform: translateX(100%);
+    visibility: hidden;
+  }
+  
+  .cart-sidebar.active {
+    transform: translateX(0);
+    visibility: visible;
   }
   
   .header-actions {
@@ -1729,6 +2022,45 @@ header .brand-logo:hover {
   
   .cart-btn {
     padding: 0.75rem;
+    z-index: 1002;
+  }
+  
+  .cart-count {
+    z-index: 1003;
+  }
+}
+
+/* Extra Small Mobile */
+@media (max-width: 480px) {
+  .cart-sidebar {
+    width: 100vw;
+    max-width: 100vw;
+  }
+  
+  .cart-header {
+    padding: 0.75rem;
+  }
+  
+  .cart-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .cart-items {
+    padding: 0.75rem;
+  }
+  
+  .cart-item {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .cart-footer {
+    padding: 0.75rem;
+  }
+  
+  .cart-footer button {
+    width: 100%;
+    margin-bottom: 0.5rem;
   }
 }
 
@@ -1759,8 +2091,6 @@ header .brand-logo:hover {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.7);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
 }
 
 .checkout-content {
@@ -2635,11 +2965,8 @@ main {
   line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  display: -moz-box;
-  -moz-line-clamp: 2;
-  -moz-box-orient: vertical;
   line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
@@ -2759,8 +3086,6 @@ footer {
   z-index: 100;
   transform: translateY(0);
   transition: transform 0.3s ease, opacity 0.3s ease;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.95);
 }
 
@@ -2846,13 +3171,13 @@ main {
 }
 
 .tabs::-webkit-scrollbar-thumb {
-  background: rgba(15, 91, 134, 0.26);
-  border-radius: 999px;
+  background: rgba(15, 91, 134, 0.3);
+  border-radius: 2px;
   border: 3px solid transparent;
   background-clip: content-box;
 }
 
-.tabs::-webkit-scrollbar-thumb:hover {
+.tabs:hover::-webkit-scrollbar-thumb {
   background: rgba(15, 91, 134, 0.42);
   border: 3px solid transparent;
   background-clip: content-box;
@@ -3103,6 +3428,7 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 16px;
+  align-items: stretch;
 }
 
 /* === Category Cards === */
@@ -3115,11 +3441,59 @@ main {
   cursor: pointer;
   text-decoration: none;
   color: inherit;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .category-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.category-image {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.category-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.category-info {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.category-info h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--brand-700);
+}
+
+.category-info p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.category-info .btn-primary {
+  margin-top: auto;
 }
 
 .category-image {
@@ -3419,6 +3793,7 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
+  align-items: stretch;
   width: 100%;
   container-type: inline-size;
 }
@@ -3556,7 +3931,7 @@ main {
     border-radius: 2px;
   }
   
-  .tabs::-webkit-scrollbar-thumb:hover {
+  .tabs:hover::-webkit-scrollbar-thumb {
     background: rgba(59, 130, 246, 0.7);
   }
   
@@ -3628,11 +4003,8 @@ main {
     line-height: 1.3;
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    display: -moz-box;
-    -moz-line-clamp: 2;
-    -moz-box-orient: vertical;
     line-clamp: 2;
+    -webkit-box-orient: vertical;
     min-height: 2.6em;
     margin: 0 4px 4px 4px;
     word-break: keep-all;

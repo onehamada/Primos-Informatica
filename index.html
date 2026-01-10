@@ -20,12 +20,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme-color" content="#3b82f6">
   <meta name="msapplication-TileColor" content="#3b82f6">
-  <meta name="msapplication-config" content="/browserconfig.xml">
   
   <!-- Preconnect para Performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="dns-prefetch" href="//www.google-analytics.com">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   
   <!-- Critical CSS Inline -->
   <style>
@@ -114,14 +116,9 @@
   <link rel="canonical" href="https://onehamada.github.io/Primos-Informatica/" />
   
   <!-- Favicon completo para todos os dispositivos -->
-  <link rel="icon" href="favicon1.ico" sizes="any">
+  <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" href="images/favicons/favicon-32x32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="images/favicons/favicon-16x16.png" type="image/png" sizes="16x16">
-  <link rel="icon" href="images/favicons/favicon-96x96.png" type="image/png" sizes="96x96">
-  <link rel="icon" href="images/favicons/favicon-128x128.png" type="image/png" sizes="128x128">
-  <link rel="icon" href="images/favicons/favicon-196x196.png" type="image/png" sizes="196x196">
-  <link rel="icon" href="images/favicons/favicon-256x256.png" type="image/png" sizes="256x256">
-  <link rel="icon" href="images/favicons/favicon-512x512.png" type="image/png" sizes="512x512">
   
   <!-- Apple Touch Icon -->
   <link rel="apple-touch-icon" href="images/favicons/apple-touch-icon.png" sizes="180x180">
@@ -133,14 +130,7 @@
   <!-- Manifest para Android -->
   <link rel="manifest" href="manifest.json">
   
-  <!-- Preconnect for performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
-  
-  <!-- Analytics placeholder -->
-  <!-- Google Analytics will be added here -->
   
   <!-- Desativar Service Worker -->
   <script>
@@ -198,13 +188,13 @@
           </button>
           
           <!-- Carrinho -->
-          <button class="action-btn cart-btn" onclick="toggleCart()" title="Carrinho">
+          <button class="action-btn cart-btn" onclick="toggleCart()" title="Carrinho" style="display: flex !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 1003 !important;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="9" cy="21" r="1"></circle>
               <circle cx="20" cy="21" r="1"></circle>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
-            <span class="cart-count" id="cartCount">0</span>
+            <span class="cart-count" id="cartCount" style="display: inline !important; visibility: visible !important; opacity: 1 !important;">0</span>
           </button>
           
           <!-- Menu Mobile -->
@@ -215,6 +205,74 @@
               <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
           </button>
+        </div>
+        
+        <!-- Filtros Avançados -->
+        <div class="filters-container" id="filtersContainer">
+          <button class="filters-toggle" id="filtersToggle" onclick="toggleFilters()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            Filtros
+          </button>
+          
+          <div class="filters-panel" id="filtersPanel">
+            <div class="filter-group">
+              <label>Faixa de Preço</label>
+              <div class="price-range">
+                <input type="number" id="minPrice" placeholder="Min" placeholder="R$ 0">
+                <span>-</span>
+                <input type="number" id="maxPrice" placeholder="Max" placeholder="R$ 5000">
+              </div>
+            </div>
+            
+            <div class="filter-group">
+              <label>Categorias</label>
+              <div class="category-filters">
+                <label class="checkbox-label">
+                  <input type="checkbox" value="processador" onchange="applyFilters()">
+                  <span>Processadores</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" value="placa de vídeo" onchange="applyFilters()">
+                  <span>Placas de Vídeo</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" value="placa mãe" onchange="applyFilters()">
+                  <span>Placas Mãe</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" value="monitor" onchange="applyFilters()">
+                  <span>Monitores</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" value="ssd" onchange="applyFilters()">
+                  <span>SSDs</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" value="hd externo" onchange="applyFilters()">
+                  <span>HDs Externos</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" value="fonte" onchange="applyFilters()">
+                  <span>Fontes</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" value="teclado" onchange="applyFilters()">
+                  <span>Teclados</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" value="mouse" onchange="applyFilters()">
+                  <span>Mouses</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="filter-actions">
+              <button class="btn-primary" onclick="applyFilters()">Aplicar Filtros</button>
+              <button class="btn-outline" onclick="clearFilters()">Limpar</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -305,13 +363,105 @@
           <span>Fontes</span>
         </button>
         
-        <a href="https://wa.me/556133406740" target="_blank" class="contact-btn whatsapp-btn" style="margin-left: auto; z-index: 1 !important;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.149-.67.149-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.299.3-.449.099-.15.05-.3-.025-.458-.074-.15-.672-1.658-.927-2.266-.255-.597-.51-.517-.67-.517-.157 0-.335-.018-.514-.018-.179 0-.47.067-.716.335-.247.267-.944.923-.944 2.254s.969 2.614 1.104 2.799c.135.184 1.907 2.915 4.624 4.089 2.317 1.022 3.228 1.082 3.938.966.644-.099 1.907-.78 2.179-1.539.272-.759.272-1.409.197-1.548-.075-.139-.272-.223-.57-.372z"/>
-            <path d="M21.5 2c-.6 0-1.2.2-1.7.6L2.8 16.8c-.8.6-1.2 1.6-1.2 2.6v2.5c0 1.1.9 2 2 2h2.5c1 0 2-.4 2.6-1.2L21.9 4.2c.4-.5.6-1.1.6-1.7 0-1.1-.9-2-2-2z"/>
+        <button type="button" class="nav-tab" data-target="hd interno" onclick="showCategory('hd interno')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <ellipse cx="12" cy="12" rx="10" ry="3"></ellipse>
+            <path d="M2 12v6c0 1.66 4.48 3 10 3s10-1.34 10-3v-6"></path>
           </svg>
-          <span>(61) 3340-6740</span>
-        </a>
+          <span>HDs Internos</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="mouse" onclick="showCategory('mouse')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+            <path d="M19.07 13.93a7 7 0 0 1-6.14 0"></path>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span>Mouses</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="teclado" onclick="showCategory('teclado')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+            <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"></path>
+          </svg>
+          <span>Teclados</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="kit-teclado-mouse" onclick="showCategory('kit-teclado-mouse')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="4" width="20" height="8" rx="2" ry="2"></rect>
+            <rect x="2" y="14" width="20" height="6" rx="2" ry="2"></rect>
+          </svg>
+          <span>Kits Teclado/Mouse</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="redes" onclick="showCategory('redes')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+            <path d="M19.07 13.93a7 7 0 0 1-6.14 0"></path>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span>Redes</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="access-point" onclick="showCategory('access-point')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+            <path d="M19.07 13.93a7 7 0 0 1-6.14 0"></path>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span>Access Points</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="repetidor" onclick="showCategory('repetidor')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <span>Repetidores</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="adaptador" onclick="showCategory('adaptador')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect>
+            <path d="M8 12h.01M12 12h.01M16 12h.01"></path>
+          </svg>
+          <span>Adaptadores</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="audio" onclick="showCategory('audio')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <span>Áudio</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="acessorios" onclick="showCategory('acessorios')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 1.54l4.24 4.24M20.46 20.46l-4.24-4.24M1.54 20.46l4.24-4.24"></path>
+          </svg>
+          <span>Acessórios</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="cabos" onclick="showCategory('cabos')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+          <span>Cabos</span>
+        </button>
+        
+        <button type="button" class="nav-tab" data-target="webcam" onclick="showCategory('webcam')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 7l-7 5 7 5V7z"></path>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+          </svg>
+          <span>Webcams</span>
+        </button>
     </div>
   </nav>
 </header>
@@ -615,6 +765,14 @@
   <button type="button" onclick="showCategory('hd interno')">HDs Internos</button>
   <button type="button" onclick="showCategory('fonte')">Fontes</button>
 </footer>
+
+<!-- Botão Flutuante WhatsApp -->
+<a href="https://wa.me/556133406740" target="_blank" class="whatsapp-float" title="Fale conosco no WhatsApp">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.149-.67.149-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.123-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.029 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/>
+  </svg>
+  <span class="whatsapp-tooltip">(61) 3340-6740</span>
+</a>
 
 <script src="js/script.js"></script>
 </body>
