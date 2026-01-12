@@ -506,33 +506,34 @@
   .search-container {
     flex: 1;
     max-width: none;
-    margin: 0 12px;
+    margin: 0 16px;
+    padding: 0 8px;
     order: 2;
   }
   
   .search-input-wrapper {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 24px;
+    border-radius: 20px;
+    margin-right: 8px;
   }
   
   .search-input {
-    height: 44px;
-    padding: 0 48px 0 16px;
+    height: 40px;
+    padding: 0 40px 0 12px;
     font-size: 15px;
-    border-radius: 24px;
+    border-radius: 20px;
   }
   
   .search-btn {
     right: 8px;
-    padding: 8px;
+    padding: 6px;
     width: 36px;
     height: 36px;
   }
   
   .search-results {
-    max-height: 300px;
-    top: calc(100% + 8px);
-    border-radius: 16px;
+    max-height: 280px;
+    border-radius: 12px;
     margin-top: 4px;
   }
 }
