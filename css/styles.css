@@ -1051,32 +1051,83 @@
 }
 
 @media (max-width: 480px) {
-  .brand-info h1 {
-    font-size: 20px;
+  .header-top .header-container {
+    flex-direction: row;
+    gap: 6px;
+    padding: 6px 8px;
+    align-items: center;
   }
   
-  .brand-tagline {
-    font-size: 11px;
+  .header-brand {
+    flex-shrink: 0;
+    min-width: auto;
   }
   
-  .brand-logo {
-    width: 40px;
-    height: 40px;
+  .header-actions {
+    flex: 1;
+    max-width: none;
+    gap: 6px;
+    align-items: center;
+  }
+  
+  .search-container {
+    flex: 1;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    order: 1;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  .search-input-wrapper {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 18px;
+    margin: 0;
+    flex: 1;
   }
   
   .search-input {
-    height: 44px;
-    font-size: 14px;
+    height: 36px;
+    padding: 0 36px 0 10px;
+    font-size: 13px;
+    border-radius: 18px;
+    flex: 1;
   }
   
-  .nav-tab {
-    padding: 10px 12px;
-    font-size: 12px;
+  .search-btn {
+    right: 4px;
+    padding: 4px;
+    width: 28px;
+    height: 28px;
+    top: 50%;
   }
   
-  .nav-tab svg {
-    width: 14px;
-    height: 14px;
+  .search-results {
+    max-height: 250px;
+    border-radius: 10px;
+    margin-top: 2px;
+    top: calc(100% + 2px);
+  }
+  
+  .action-buttons {
+    order: 2;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  
+  .brand-info h1 {
+    font-size: 18px;
+  }
+  
+  .brand-tagline {
+    font-size: 10px;
+  }
+  
+  .brand-logo {
+    width: 36px;
+    height: 36px;
   }
 }
 
