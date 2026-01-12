@@ -4960,6 +4960,7 @@ main {
   color: #475569;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
+  min-width: fit-content;
 }
 
 .filters-toggle:hover {
@@ -4973,6 +4974,8 @@ main {
   top: calc(100% + 8px);
   right: 0;
   width: 320px;
+  min-width: 320px;
+  max-width: 400px;
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 12px;
@@ -4985,6 +4988,7 @@ main {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   max-height: 80vh;
   overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .filters-panel.active {
@@ -4997,38 +5001,31 @@ main {
   margin-bottom: 20px;
 }
 
+.filter-group:last-child {
+  margin-bottom: 0;
+}
+
 .filter-group label {
   display: block;
-  font-weight: 600;
+  margin-bottom: 12px;
+  font-weight: 500;
   color: #374151;
-  margin-bottom: 8px;
   font-size: 14px;
 }
 
 .price-range {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 8px;
 }
 
 .price-range input {
-  flex: 1;
+  width: 100%;
   padding: 8px 12px;
   border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 6px;
   font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-.price-range input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.price-range span {
-  color: #6b7280;
-  font-weight: 500;
+  box-sizing: border-box;
 }
 
 .category-filters,
@@ -5036,6 +5033,9 @@ main {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 8px;
 }
 
 .checkbox-label {
@@ -5048,6 +5048,9 @@ main {
   transition: all 0.2s ease;
   font-size: 14px;
   color: #4b5563;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 36px;
 }
 
 .checkbox-label:hover {
@@ -5059,11 +5062,19 @@ main {
   height: 16px;
   accent-color: #3b82f6;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .checkbox-label input[type="checkbox"]:checked + span {
   color: #3b82f6;
   font-weight: 500;
+}
+
+.checkbox-label span {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .filter-actions {
@@ -5082,6 +5093,25 @@ main {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
+  border: none;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.filter-actions button:first-child {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+}
+
+.filter-actions button:last-child {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  color: #475569;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.filter-actions button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Responsive para Filtros */
