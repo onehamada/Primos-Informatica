@@ -129,10 +129,10 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 2003;PLACA MAE ASUS PRIME H310M-E HDMI DDR4;placa mãe;610,00;4;Placa Mãe ASUS Prime H310M-E HDMI DDR4;ASUS;nao;h310meprime.webp
 2004;PLACA MAE ASUS H310M-C / H310M-H;placa mãe;548,00;3;Placa Mãe ASUS H310M-C / H310M-H;ASUS;nao;h310mh.webp
 2005;PLACA MAE ASUS H610M-CS D4 PRIME;placa mãe;702,00;2;Placa Mãe ASUS H610M-CS D4 PRIME;ASUS;sim;h610mcsprime.webp
-2006;PLACA MAE ASUS PRIME H610M-K;placa mãe;707,00;3;Placa Mãe ASUS Prime H610M-K;ASUS;nao;h610mk.webp
+2006;PLACA MAE ASUS PRIME H610M-K D4 PRIME 12ª GER;placa mãe;702,00;3;Placa Mãe ASUS Prime H610M-K D4 Prime 12ª geração;ASUS;sim;h610mk.webp
 2008;PLACA MAE PCWARE IPM B360;placa mãe;299,00;1;Placa Mãe PCWARE IPM B360;PCWARE;nao;ipmb360.webp
-2009;PLACA MAE PCWARE 1151 8ª/9ª IPMH310G DDR4;placa mãe;259,00;3;Placa Mãe PCWARE 1151 8ª/9ª IPMH310G DDR4;PCWARE;sim;ipmh310g.webp
-2010;PLACA MAE PCWARE 1151 8ª/9ª IPMH310G DDR4 PRO;placa mãe;279,00;2;Placa Mãe PCWARE 1151 8ª/9ª IPMH310G DDR4 PRO;PCWARE;nao;ipmh310gpro.webp
+2009;PLACA MAE PCWARE 1151 8ª/9ª IPMH310G DDR4;placa mãe;530,00;3;Placa Mãe PCWARE 1151 8ª/9ª IPMH310G DDR4;PCWARE;sim;ipmh310g.webp
+2010;PLACA MAE PCWARE 1151 8ª/9ª IPMH310G DDR4 PRO;placa mãe;470,00;2;Placa Mãe PCWARE 1151 8ª/9ª IPMH310G DDR4 PRO;PCWARE;nao;ipmh310gpro.webp
 2011;PLACA MAE HAYOM H155 H61M EL DDR3 PLM2300;placa mãe;199,00;4;Placa Mãe Hayom H155 H61M EL DDR3;Hayom;nao;plm2300.webp
 2012;PLACA MAE HAYOM H155 B75M S/V/R DDR3 PLM2301;placa mãe;209,00;3;Placa Mãe Hayom H155 B75M S/V/R DDR3;Hayom;sim;plm2301.webp
 1828;PLACA DE VÍDEO NVIDIA INNO3D RTX3060 12GB DDR6;placa de vídeo;2185,50;1;RTX 3060 12GB DDR6 PCIe 4.0;NVIDIA;nao;rtx3060.webp
@@ -163,8 +163,15 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1883;FONTE REAL 500W ATX AEROCOOL VX 500;fonte;305,00;3;Fonte Real 500W ATX Aerocool VX 500;Aerocool;nao;aerocool_fonte400w.webp
 1884;FONTE REAL 500W ATX AEROCOOL VX 500;fonte;350,00;3;Fonte Real 500W ATX Aerocool VX 500;Aerocool;nao;aerocool_fonte500w.webp
 1885;FONTE AEROCOOL VX PLUS 700W 80 PLUS BRONZE;fonte;398,00;3;Fonte Aerocool VX Plus 700W 80 Plus Bronze;Aerocool;nao;aerocool_fonte700w.webp
-1886;FONTE REAL 1000W ATX AEROCOOL KCAS PLUS S/CABO;fonte;945,00;4;Fonte Real 1000W ATX Aerocool KCAS Plus S/Cabo;Aerocool;nao;aerocool_fonte1000w.webp
+1886;FONTE REAL 700W ATX AEROCOOL KCAS PFC ATIVO;fonte;397,00;4;Fonte Real 700W ATX Aerocool KCAS PFC Ativo;Aerocool;nao;aerocool_fonte1000w.webp
 1887;FONTE REAL 500W CORSAIR VS500 80 PLUS CP9020223BR;fonte;492,00;3;Fonte Real 500W Corsair VS500 80 Plus CP9020223BR;Corsair;nao;corsair_fonte500w.webp
 1888;FONTE HAYOM HX-200W 80 PLUS;fonte;129,00;6;Fonte Hayom HX-200W 80 Plus;Hayom;nao;hayom_fonte200w.webp
 1889;FONTE REAL 500WR ATX MGS;fonte;148,00;4;Fonte Real 500WR ATX MGS;MGS;nao;mgs_fonte500w.webp
 1892;FONTE REAL 750 W 80 PLUS MGS;fonte;390,00;3;Fonte Real 750W 80 Plus MGS;MGS;nao;mgs_fonte750w.webp
+2011;PLACA MAE BRAZIL PC 1155 DDR3 BPC-H61-ITX-M.2;placa mãe;168,00;3;Placa Mãe Brazil PC 1155 DDR3 BPC-H61-ITX-M.2;Brazil PC;nao;bpc-h61-itx-m2.webp
+2012;PLACA MAE GIGABYTE 1151 8ª/9ªG H310M-H DDR4;placa mãe;548,00;3;Placa Mãe Gigabyte 1151 8ª/9ªG H310M-H DDR4;Gigabyte;nao;gigabyte-h310mh.webp
+2013;PLACA MAE GIGABYTE-H610M.K 1700 HDMI ATX;placa mãe;700,00;3;Placa Mãe Gigabyte H610M.K 1700 HDMI ATX;Gigabyte;nao;gigabyte-h610mk.webp
+2014;PLACA MAE HAYOM 1155 B75M S/V/R DDR3 PLM2301;placa mãe;185,00;3;Placa Mãe Hayom 1155 B75M S/V/R DDR3 PLM2301;Hayom;sim;hayom-1155-b75m.webp
+2015;PLACA MAE HAYOM 1155 H61M EL DDR3 PLM2300;placa mãe;160,00;3;Placa Mãe Hayom 1155 H61M EL DDR3 PLM2300;Hayom;nao;hayom-1155-h61m.webp
+2016;PLACA MAE PCWARE 1151 8ª IPMB360 PRO-GAMING DDR4;placa mãe;828,00;3;Placa Mãe PCWARE 1151 8ª IPMB360 PRO-GAMING DDR4;PCWARE;nao;pcware-1151-ipmb360.webp
+2017;PLACA MAE PCWARE 1151 8ª/9ªG IPMH310G DDR4;placa mãe;530,00;3;Placa Mãe PCWARE 1151 8ª/9ªG IPMH310G DDR4;PCWARE;sim;ipmh310g.webp
