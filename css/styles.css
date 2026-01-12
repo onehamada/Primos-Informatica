@@ -504,50 +504,68 @@
 /* === Responsive para Barra de Pesquisa === */
 @media (max-width: 768px) {
   .search-container {
-    max-width: 300px;
-    margin: 0 8px;
+    flex: 1;
+    max-width: none;
+    margin: 0 12px;
+    order: 2;
   }
   
   .search-input-wrapper {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 24px;
   }
   
   .search-input {
-    height: 40px;
-    padding: 0 45px 0 15px;
-    font-size: 14px;
+    height: 44px;
+    padding: 0 48px 0 16px;
+    font-size: 15px;
+    border-radius: 24px;
   }
   
   .search-btn {
-    right: 6px;
-    padding: 6px;
+    right: 8px;
+    padding: 8px;
+    width: 36px;
+    height: 36px;
   }
   
   .search-results {
     max-height: 300px;
-    top: calc(100% + 6px);
+    top: calc(100% + 8px);
+    border-radius: 16px;
+    margin-top: 4px;
   }
 }
 
 @media (max-width: 480px) {
   .search-container {
-    max-width: 100%;
-    margin: 0 4px;
+    flex: 1;
+    max-width: none;
+    margin: 0 8px;
+    order: 2;
   }
   
   .search-input-wrapper {
-    border-radius: 20px;
+    border-radius: 22px;
   }
   
   .search-input {
-    height: 36px;
-    padding: 0 40px 0 12px;
-    font-size: 13px;
+    height: 40px;
+    padding: 0 44px 0 14px;
+    font-size: 14px;
+    border-radius: 22px;
   }
   
   .search-btn {
-    right: 4px;
-    padding: 4px;
+    right: 6px;
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+  }
+  
+  .search-results {
+    border-radius: 12px;
+    margin-top: 2px;
   }
   
   .search-btn svg {
@@ -911,30 +929,37 @@
 @media (max-width: 768px) {
   .header-top .header-container {
     flex-direction: column;
-    gap: 16px;
-    padding: 12px 16px;
+    gap: 12px;
+    padding: 8px 12px;
   }
   
   .header-brand {
     order: 1;
     width: 100%;
     justify-content: center;
+    margin-bottom: 4px;
   }
   
   .header-actions {
     order: 2;
     width: 100%;
     max-width: none;
-    justify-content: center;
-    gap: 12px;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: nowrap;
   }
   
   .search-container {
-    max-width: 100%;
+    flex: 1;
+    max-width: none;
+    margin: 0 8px;
+    order: 1;
   }
   
   .action-buttons {
-    gap: 8px;
+    order: 2;
+    gap: 6px;
+    flex-shrink: 0;
   }
   
   .action-btn span {

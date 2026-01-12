@@ -65,6 +65,9 @@ function showCategory(category) {
   const activeBtn = document.querySelector('.nav-tab[data-target="' + category + '"]');
   if (activeBtn) activeBtn.classList.add('active');
   
+  // Fechar menu mobile automaticamente ao selecionar uma opção
+  closeMobileMenu();
+  
   // Atualizar URL
   history.pushState(null, null, '#' + category);
 }
@@ -113,6 +116,9 @@ function showPromocoes() {
   
   console.log('Seção de promoções exibida com', promocoesProducts.length, 'produtos');
   
+  // Fechar menu mobile automaticamente ao selecionar promoções
+  closeMobileMenu();
+  
   // Lazy loading para promoções
   setTimeout(function() {
     loadImagesOnScroll(promocoesSection);
@@ -136,8 +142,8 @@ function loadImagesOnScroll(container) {
       if (loaded.indexOf(img) !== -1) continue;
       
       // Verificar se tem data-src válido E se ainda não foi carregada
-      if (!img.dataset || !img.dataset.src || img.classList.contains('loaded')) {
-        console.log('⚠️ Imagem sem data-src válido ou já carregada, pulando:', img);
+      if (!img.dataset || !img.dataset.src || img.classList.contains('loaded') || img.classList.contains('loading')) {
+        console.log('⚠️ Imagem sem data-src válido ou já carregada/em processo, pulando:', img);
         loaded.push(img);
         continue;
       }
@@ -151,6 +157,9 @@ function loadImagesOnScroll(container) {
       
       if (isInViewport) {
         console.log('🎯 Carregando imagem:', img.dataset.src);
+        
+        // Marcar como em carregamento IMEDIATAMENTE para evitar duplicação
+        img.classList.add('loading');
         
         // Encontrar o placeholder dentro do mesmo container
         const placeholder = img.parentElement.querySelector('.image-placeholder');
@@ -211,8 +220,6 @@ function loadImagesOnScroll(container) {
         };
         
         // Iniciar carregamento
-        img.classList.add('loading');
-        
         // Pequeno delay para garantir que a animação seja aplicada
         setTimeout(() => {
           img.src = img.dataset.src;
@@ -615,6 +622,25 @@ function toggleMobileMenu() {
   }
 }
 
+function closeMobileMenu() {
+  const navTabs = document.querySelector('.nav-tabs');
+  const mobileMenuBtn = document.querySelector('.mobile-menu-toggle');
+  
+  if (!navTabs || !mobileMenuBtn) return;
+  
+  // Fechar menu
+  navTabs.classList.remove('mobile-open');
+  
+  // Voltar ícone de hambúrguer
+  mobileMenuBtn.innerHTML = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  `;
+}
+
 function addToCart(productCode) {
   const cartBtn = document.querySelector('.cart-btn');
   const clickedButton = event.target;
@@ -856,6 +882,9 @@ function applyFilters() {
   
   // Fecha o painel de filtros
   toggleFilters();
+  
+  // Fechar menu mobile automaticamente ao aplicar filtros
+  closeMobileMenu();
 }
 
 function clearFilters() {
@@ -1013,6 +1042,7 @@ window.toggleCart = toggleCart;
 window.removeFromCart = removeFromCart;
 window.clearCart = clearCart;
 window.toggleMobileMenu = toggleMobileMenu;
+window.closeMobileMenu = closeMobileMenu;
 window.toggleFilters = toggleFilters;
 window.applyFilters = applyFilters;
 window.clearFilters = clearFilters;
