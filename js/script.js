@@ -441,6 +441,333 @@ function populateHomeHighlights() {
   console.log('Produtos em destaque da home preenchidos:', finalHighlights.length);
 }
 
+// === FUNÇÕES DE AVALIAÇÕES ===
+
+// Função para obter avaliações de um produto
+function getProductReviews(productId) {
+  const reviews = JSON.parse(localStorage.getItem('primos_reviews') || '[]');
+  return reviews.filter(review => review.productId === productId);
+}
+
+// Função para calcular média de avaliações
+function calculateAverageRating(reviews) {
+  if (reviews.length === 0) return 0;
+  const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+  return sum / reviews.length;
+}
+
+// Função para gerar estrelas
+function generateStars(rating) {
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 >= 0.5;
+  let stars = '';
+  
+  for (let i = 0; i < fullStars; i++) {
+    stars += '<span class="star filled">★</span>';
+  }
+  
+  if (hasHalfStar && fullStars < 5) {
+    stars += '<span class="star half-filled">★</span>';
+  }
+  
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+  for (let i = 0; i < emptyStars; i++) {
+    stars += '<span class="star">☆</span>';
+  }
+  
+  return stars;
+}
+
+// Função para gerar HTML das avaliações
+function generateReviewsHTML(reviews) {
+  if (reviews.length === 0) {
+    return '<p style="text-align: center; color: #64748b; padding: 20px;">Nenhuma avaliação ainda. Seja o primeiro a avaliar!</p>';
+  }
+  
+  let html = '';
+  reviews.forEach(review => {
+    const date = new Date(review.date).toLocaleDateString('pt-BR');
+    const stars = generateStars(review.rating);
+    
+    let photosHtml = '';
+    if (review.photos && review.photos.length > 0) {
+      photosHtml = '<div class="review-photos">';
+      review.photos.forEach(photo => {
+        photosHtml += `<img src="${photo.url}" alt="Foto do produto" class="review-photo" onclick="viewPhoto('${photo.url}')">`;
+      });
+      photosHtml += '</div>';
+    }
+    
+    html += `
+      <div class="review-card">
+        <div class="review-header">
+          <div class="review-user">
+            <div class="user-avatar">${review.userName.charAt(0).toUpperCase()}</div>
+            <div class="user-info">
+              <div class="user-name">${review.userName}</div>
+              <div class="review-date">${date}</div>
+            </div>
+          </div>
+          <div class="review-rating">
+            <div class="stars">${stars}</div>
+            <span class="rating-number">${review.rating}.0</span>
+          </div>
+        </div>
+        
+        <div class="review-content">
+          <h4>${review.title}</h4>
+          <p class="review-text">${review.text}</p>
+          ${photosHtml}
+        </div>
+        
+        <div class="review-actions">
+          <button class="helpful-btn" onclick="markHelpful('${review.id}')">
+            👍 Útil (${review.helpful || 0})
+          </button>
+        </div>
+      </div>
+    `;
+  });
+  
+  return html;
+}
+
+// Função para alternar visibilidade das avaliações
+function toggleReviews(productId) {
+  const reviewsSection = document.getElementById('reviews-' + productId);
+  const toggleBtn = event.target;
+  
+  if (reviewsSection.style.display === 'none') {
+    reviewsSection.style.display = 'block';
+    toggleBtn.textContent = 'Ocultar avaliações';
+  } else {
+    reviewsSection.style.display = 'none';
+    toggleBtn.textContent = 'Ver avaliações';
+  }
+}
+
+// Função para marcar avaliação como útil
+function markHelpful(reviewId) {
+  const reviews = JSON.parse(localStorage.getItem('primos_reviews') || '[]');
+  const review = reviews.find(r => r.id === reviewId);
+  
+  if (review) {
+    review.helpful = (review.helpful || 0) + 1;
+    localStorage.setItem('primos_reviews', JSON.stringify(reviews));
+    
+    // Atualizar botão
+    if (event.target) {
+      event.target.classList.add('helpful');
+      event.target.innerHTML = `👍 Útil (${review.helpful})`;
+    }
+  }
+}
+
+// Função para visualizar foto em tamanho maior
+function viewPhoto(photoUrl) {
+  window.open(photoUrl, '_blank');
+}
+
+// Função para abrir modal de avaliação
+function openReviewModal(productId) {
+  // Verificar se usuário está logado
+  const currentUser = getCurrentUser();
+  if (!currentUser) {
+    alert('Você precisa estar logado para avaliar um produto. Faça login ou crie uma conta!');
+    return;
+  }
+  
+  currentProductId = productId;
+  const modal = document.getElementById('reviewModal');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+// Função para fechar modal de avaliação
+function closeReviewModal() {
+  const modal = document.getElementById('reviewModal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+    resetReviewForm();
+  }
+}
+
+// Função para definir avaliação em estrelas
+function setRating(rating) {
+  currentRating = rating;
+  const stars = document.querySelectorAll('.star-rating .star');
+  stars.forEach((star, index) => {
+    if (index < rating) {
+      star.textContent = '★';
+      star.classList.add('filled');
+    } else {
+      star.textContent = '☆';
+      star.classList.remove('filled');
+    }
+  });
+}
+
+// Função para handle upload de fotos
+function handlePhotoUpload(event) {
+  const files = Array.from(event.target.files);
+  
+  if (uploadedPhotos.length + files.length > 3) {
+    alert('Você pode enviar no máximo 3 fotos');
+    return;
+  }
+  
+  files.forEach(file => {
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+      alert('Cada foto deve ter no máximo 5MB');
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      uploadedPhotos.push({
+        name: file.name,
+        url: e.target.result,
+        size: file.size
+      });
+      updatePhotosPreview();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// Função para atualizar preview das fotos
+function updatePhotosPreview() {
+  const preview = document.getElementById('photosPreview');
+  if (preview) {
+    preview.innerHTML = '';
+    
+    uploadedPhotos.forEach((photo, index) => {
+      const photoDiv = document.createElement('div');
+      photoDiv.className = 'photo-preview';
+      photoDiv.innerHTML = `
+        <img src="${photo.url}" alt="Foto ${index + 1}">
+        <button type="button" class="remove-photo" onclick="removePhoto(${index})">&times;</button>
+      `;
+      preview.appendChild(photoDiv);
+    });
+  }
+}
+
+// Função para remover foto
+function removePhoto(index) {
+  uploadedPhotos.splice(index, 1);
+  updatePhotosPreview();
+}
+
+// Função para resetar formulário
+function resetReviewForm() {
+  currentRating = 0;
+  uploadedPhotos = [];
+  currentProductId = null;
+  
+  const form = document.getElementById('reviewForm');
+  if (form) {
+    form.reset();
+    setRating(0);
+    updatePhotosPreview();
+  }
+  
+  const photoInput = document.getElementById('photoInput');
+  if (photoInput) {
+    photoInput.value = '';
+  }
+}
+
+// Função para enviar avaliação
+function submitReview(event) {
+  event.preventDefault();
+  
+  if (currentRating === 0) {
+    alert('Por favor, selecione uma avaliação em estrelas');
+    return;
+  }
+  
+  const formData = new FormData(event.target);
+  const reviewData = {
+    id: Date.now().toString(),
+    productId: currentProductId,
+    rating: currentRating,
+    title: formData.get('title'),
+    text: formData.get('text'),
+    photos: uploadedPhotos,
+    userName: getCurrentUser().nome,
+    userEmail: getCurrentUser().email,
+    date: new Date().toISOString(),
+    helpful: 0,
+    verified: true // Usuário logado
+  };
+  
+  // Salvar avaliação
+  saveReview(reviewData);
+  
+  // Fechar modal
+  closeReviewModal();
+  
+  // Mostrar mensagem de sucesso
+  showSuccessMessage('Avaliação enviada com sucesso! Obrigado por seu feedback.');
+  
+  // Atualizar interface
+  setTimeout(() => {
+    location.reload(); // Recarregar página para mostrar nova avaliação
+  }, 1500);
+}
+
+// Função para salvar avaliação no localStorage
+function saveReview(reviewData) {
+  const reviews = JSON.parse(localStorage.getItem('primos_reviews') || '[]');
+  reviews.push(reviewData);
+  localStorage.setItem('primos_reviews', JSON.stringify(reviews));
+}
+
+// Função para mostrar mensagem de sucesso
+function showSuccessMessage(message) {
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'success-message';
+  messageDiv.textContent = message;
+  messageDiv.style.position = 'fixed';
+  messageDiv.style.top = '20px';
+  messageDiv.style.left = '50%';
+  messageDiv.style.transform = 'translateX(-50%)';
+  messageDiv.style.zIndex = '10000';
+  messageDiv.style.padding = '16px 24px';
+  messageDiv.style.borderRadius = '8px';
+  messageDiv.style.fontSize = '16px';
+  messageDiv.style.fontWeight = '600';
+  
+  document.body.appendChild(messageDiv);
+  
+  setTimeout(() => {
+    if (messageDiv.parentNode) {
+      messageDiv.parentNode.removeChild(messageDiv);
+    }
+  }, 3000);
+}
+
+// Adicionar funções ao escopo global
+window.getProductReviews = getProductReviews;
+window.calculateAverageRating = calculateAverageRating;
+window.generateStars = generateStars;
+window.generateReviewsHTML = generateReviewsHTML;
+window.toggleReviews = toggleReviews;
+window.markHelpful = markHelpful;
+window.viewPhoto = viewPhoto;
+window.openReviewModal = openReviewModal;
+window.closeReviewModal = closeReviewModal;
+window.setRating = setRating;
+window.handlePhotoUpload = handlePhotoUpload;
+window.removePhoto = removePhoto;
+window.submitReview = submitReview;
+window.saveReview = saveReview;
+window.showSuccessMessage = showSuccessMessage;
+
 // === CARD DE PRODUTO ===
 function createProductCard(product) {
   const imageName = product.imagem || product.codigo + '.webp';
@@ -451,6 +778,11 @@ function createProductCard(product) {
   const price = parseFloat(priceString);
   const formattedPrice = 'R$ ' + price.toFixed(2).replace('.', ',');
   
+  // Carregar avaliações do produto
+  const reviews = getProductReviews(product.codigo);
+  const averageRating = calculateAverageRating(reviews);
+  const reviewCount = reviews.length;
+  
   return '<div class="product-card" data-product-code="' + product.codigo + '">' +
     '<div class="product-image">' +
     '<div class="image-placeholder">📦</div>' +
@@ -458,8 +790,22 @@ function createProductCard(product) {
     '</div>' +
     '<div class="product-info">' +
     '<h3>' + product.nome + '</h3>' +
+    '<div class="product-rating-summary">' +
+    '<div class="stars">' + generateStars(averageRating) + '</div>' +
+    '<span class="rating-text">' + averageRating.toFixed(1) + ' (' + reviewCount + ')</span>' +
+    '<button class="review-btn" onclick="openReviewModal(\'' + product.codigo + '\')">Avaliar</button>' +
+    '</div>' +
     '<p class="price">' + formattedPrice + '</p>' +
     '<button class="btn-primary" onclick="addToCart(\'' + product.codigo + '\')">Adicionar</button>' +
+    '</div>' +
+    '<div class="product-reviews" id="reviews-' + product.codigo + '" style="display: none;">' +
+    '<div class="reviews-header">' +
+    '<h4>Avaliações dos Clientes</h4>' +
+    '<button class="toggle-reviews" onclick="toggleReviews(\'' + product.codigo + '\')">Ver avaliações (' + reviewCount + ')</button>' +
+    '</div>' +
+    '<div class="reviews-list" id="reviews-list-' + product.codigo + '">' +
+    generateReviewsHTML(reviews) +
+    '</div>' +
     '</div>' +
     '</div>';
 }
@@ -1106,6 +1452,11 @@ document.addEventListener('DOMContentLoaded', function() {
   if (backToTopButton) {
     backToTopButton.classList.remove('visible');
   }
+  
+  // Inicializar sistema de autenticação
+  if (typeof userAuth !== 'undefined') {
+    userAuth.updateUserInterface();
+  }
 });
 
 // === SISTEMA DE CADASTRO E LOGIN ===
@@ -1132,6 +1483,11 @@ class UserAuth {
 
   // Adicionar botão de cadastro no header
   addAuthButtonToHeader() {
+    // Verificar se usuário já está logado
+    if (this.isLoggedIn()) {
+      return; // Não adicionar botão se usuário já estiver logado
+    }
+    
     // No desktop, adicionar botão no header
     if (window.innerWidth > 800) {
       const actionButtons = document.querySelector('.action-buttons');
@@ -1150,6 +1506,11 @@ class UserAuth {
 
   // Adicionar opção de cadastro no menu mobile
   addAuthToMobileMenu() {
+    // Verificar se usuário já está logado
+    if (this.isLoggedIn()) {
+      return; // Não adicionar link se usuário já estiver logado
+    }
+    
     const mobileMenu = document.querySelector('.nav-tabs');
     if (mobileMenu && !mobileMenu.querySelector('.mobile-auth-link')) {
       const authLink = document.createElement('a');
@@ -1466,12 +1827,18 @@ class UserAuth {
   // Atualizar interface
   updateUserInterface() {
     const authButton = document.querySelector('.auth-btn-header');
+    const mobileAuthLink = document.querySelector('.mobile-auth-link');
     const userArea = document.getElementById('userArea');
 
     if (this.isLoggedIn()) {
-      // Esconder botão de cadastro
+      // Esconder botão de cadastro desktop
       if (authButton) {
         authButton.style.display = 'none';
+      }
+
+      // Esconder link de cadastro mobile
+      if (mobileAuthLink) {
+        mobileAuthLink.style.display = 'none';
       }
 
       // Mostrar área do usuário
@@ -1488,9 +1855,14 @@ class UserAuth {
         if (userInitial) userInitial.textContent = this.currentUser.nome.charAt(0).toUpperCase();
       }
     } else {
-      // Mostrar botão de cadastro
+      // Mostrar botão de cadastro desktop
       if (authButton) {
         authButton.style.display = 'block';
+      }
+
+      // Mostrar link de cadastro mobile
+      if (mobileAuthLink) {
+        mobileAuthLink.style.display = 'block';
       }
 
       // Esconder área do usuário

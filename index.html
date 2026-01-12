@@ -1129,6 +1129,55 @@
   </svg>
 </button>
 
+<!-- Modal de Avaliação -->
+<div class="review-modal" id="reviewModal">
+  <div class="review-modal-content">
+    <div class="review-modal-header">
+      <h3>Avaliar Produto</h3>
+      <button class="close-modal-btn" onclick="closeReviewModal()">&times;</button>
+    </div>
+    
+    <form class="review-form" id="reviewForm" onsubmit="submitReview(event)">
+      <div class="form-group">
+        <label>Sua Avaliação</label>
+        <div class="star-rating" id="starRating">
+          <span class="star" data-rating="1" onclick="setRating(1)">☆</span>
+          <span class="star" data-rating="2" onclick="setRating(2)">☆</span>
+          <span class="star" data-rating="3" onclick="setRating(3)">☆</span>
+          <span class="star" data-rating="4" onclick="setRating(4)">☆</span>
+          <span class="star" data-rating="5" onclick="setRating(5)">☆</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="reviewTitle">Título da Avaliação</label>
+        <input type="text" id="reviewTitle" name="title" placeholder="Resuma sua experiência" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="reviewText">Seu Comentário</label>
+        <textarea id="reviewText" name="text" placeholder="Conte detalhes sobre sua experiência com o produto..." required></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label>Fotos do Produto (opcional)</label>
+        <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+          <div class="photo-upload-icon">📷</div>
+          <div class="photo-upload-text">Clique para adicionar fotos</div>
+          <div class="photo-upload-hint">Até 3 fotos, máximo 5MB cada</div>
+          <input type="file" id="photoInput" accept="image/*" multiple style="display: none;" onchange="handlePhotoUpload(event)">
+        </div>
+        <div class="photos-preview" id="photosPreview"></div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="cancel-review-btn" onclick="closeReviewModal()">Cancelar</button>
+        <button type="submit" class="submit-review-btn">Enviar Avaliação</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script src="js/script.js"></script>
 </body>
 </html>
