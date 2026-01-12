@@ -1135,8 +1135,8 @@
 @media (max-width: 800px) {
   .header-top .header-container {
     flex-direction: column;
-    gap: 6px;
-    padding: 6px;
+    gap: 8px;
+    padding: 8px;
     align-items: stretch;
     min-height: auto;
   }
@@ -1147,14 +1147,15 @@
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     order: 1;
+    gap: 8px;
   }
   
   .header-brand .brand-info {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     flex: 1;
     min-width: 0;
   }
@@ -1182,14 +1183,14 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
     order: 2;
   }
   
   .action-buttons {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     width: auto;
     flex-shrink: 0;
     justify-content: flex-end;
@@ -1205,8 +1206,8 @@
   
   .search-container {
     width: 100%;
-    margin: 0 0 0 -40px;
-    padding: 0 40px 0 0;
+    margin: 0;
+    padding: 0;
     display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
