@@ -16,7 +16,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1562;UBIQUITI AP UNIFI AC U6-PRO 4X4 S/FONTE;redes;1775,00;1;Access Point UniFi AC U6-Pro 4x4;Ubiquiti;nao;ap-ubiquiti-u6pro.webp
 1072;UBIQUITI AP UNIFI UAP-AC-LITE-BR;redes;890,00;1;Access Point UniFi UAP-AC-Lite;Ubiquiti;nao;ap-ubiquiti-uapaclite.webp
 1559;REPETIDOR WIRELESS TPLINK DUAL BAND AC750 RE200;redes;189,00;1;Repetidor Dual Band AC750 RE200;TP-Link;nao;repetidor-tplink-re200.webp
-1291;ADAPTADOR USB REDE RJ45 2.0 EMPREE;redes;26,00;1;Adaptador USB RJ45 2.0;Empree;nao;adaptador-usb-rj45-empree.webp
+1291;ADAPTADOR USB REDE RJ45 2.0 EMPREE;redes;96,00;1;Adaptador USB RJ45 2.0;Empree;nao;adaptador-usb-rj45-empree.webp
 1532;ADAPTADOR USB WIRELESS 600MBPS 5G;redes;105,00;1;Adaptador USB Wireless 600Mbps 5G;Generico;nao;adaptador-usb-600mbps-5g.webp
 1296;ADAPTADOR USB WIRELESS AC1300 TENDA U12;redes;150,00;1;Adaptador USB Wireless AC1300 U12;Tenda;nao;adaptador-tenda-u12.webp
 1558;ADAPTADOR USB WIRELESS AC1300 TP-LINK ARCHER T3U;redes;165,00;1;Adaptador USB Wireless AC1300 T3U;TP-Link;nao;adaptador-tplink-t3u.webp
@@ -51,7 +51,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1351;SWITCH TP-LINK 24 PORTAS GIGABIT SG1024D;redes;850,00;1;Switch Gigabit 24 portas TP-Link;TP-Link;nao;switch-tplink-sg1024d.webp
 1353;SWITCH TP-LINK 8 PORTAS GIGABIT LS1008G;redes;183,00;1;Switch Gigabit 8 portas TP-Link;TP-Link;nao;switch-tplink-ls1008g.webp
 1204;SWITCH TP-LINK 5 PORTAS GIGABIT LS1005G;redes;115,00;1;Switch Gigabit 5 portas TP-Link;TP-Link;nao;switch-tplink-ls1005g.webp
-1058;SWITCH MERCUSYS 8 PORTAS GIGABIT MS108G;redes;105,00;1;Switch Gigabit 8 portas Mercusys;Mercusys;nao;switch-mercusys-ms108g.webp
+1058;SWITCH MERCUSYS 8 PORTAS GIGABIT MS108G;redes;115,00;1;Switch Gigabit 8 portas Mercusys;Mercusys;nao;switch-mercusys-ms108g.webp
 1059;SWITCH MERCUSYS 5 PORTAS GIGABIT MS105G;redes;84,30;1;Switch Gigabit 5 portas Mercusys;Mercusys;nao;switch-mercusys-ms105g.webp
 400548;KVM D-LINK 16 PORTAS USB PS2 KVM-450;redes;1655,00;1;Switch KVM 16 portas USB e PS/2;D-Link;nao;kvm-dlink-kvm450.webp
 1823;CABO CONSOLE USB RJ45;cabos;70,00;1;Cabo console USB para RJ45;Generico;nao;cabo-console-usb-rj45.webp
@@ -107,22 +107,22 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1634;MONITOR 27 DX 165HZ SPEAKER ALTO-FALANTE IPS BOX;monitor;1050,00;1;Monitor 27 IPS 165Hz alto-falante;DX;nao;monitor-dx-27-ips-165hz-speaker.webp
 401115;MONITOR 18.5 AOC LED E970SWNHL HDMI;monitor;563,00;1;Monitor 18.5 E970SWNHL HDMI;AOC;nao;monitor-aoc-185-led-e970swnhl.webp
 400759;MONITOR 21.5 LED SAMSUNG LS22F350FHLMZD;monitor;1168,00;1;Monitor 21.5 LS22F350FHLMZD;Samsung;nao;monitor-samsung-215-led-ls22f350fhlmzd.webp
-1888;PROCESSADOR INTEL CELERON 1151 LGA1200 G5905 4MB;processador;214,99;23;Intel Celeron G5905 LGA1200 4MB;Intel;nao;g5905.webp
-1889;PROCESSADOR INTEL CELERON 1151 LGA1200 G5925 3.6GHZ;processador;214,99;16;Intel Celeron G5925 3.6GHz LGA1200;Intel;nao;g5925.webp
-1039;PROCESSADOR INTEL I3 LGA1150 4150/4160 3.4GHZ 3MB OEM;processador;75,90;5;Intel Core i3 4150/4160 3.4GHz 3MB OEM;Intel;nao;i34150.webp
-1721;PROCESSADOR INTEL I3 LGA1151 9100F 3.6GHZ 3MB 9GER;processador;429,90;5;Intel Core i3 9100F 3.6GHz 9ª geração;Intel;nao;i39100f.webp
-1891;PROCESSADOR INTEL I3 LGA1200 10100F 3.6GHZ 6MB 10ªG;processador;499,90;28;Intel Core i3 10100F 3.6GHz 6MB 10ª geração;Intel;sim;i310100f.webp
-401960;PROCESSADOR INTEL I3 LGA1200 CORE 10105 3.70GHZ 6MB;processador;920,00;5;Intel Core i3 10105 3.7GHz 6MB;Intel;nao;i310105.webp
-1830;PROCESSADOR INTEL I5 LGA1150 4570 4ªG;processador;199,90;10;Intel Core i5 4570 4ª geração;Intel;nao;i54570.webp
-1831;PROCESSADOR INTEL I5 LGA1151 8400 OEM;processador;672,00;1;Intel Core i5 8400 OEM;Intel;nao;i58400.webp
-1722;PROCESSADOR INTEL I5 LGA1151 9400F OEM;processador;590,00;5;Intel Core i5 9400F OEM;Intel;nao;i59400f.webp
-1719;PROCESSADOR INTEL I5 LGA1155 3570 3.8GHZ 6MB OEM;processador;175,90;21;Intel Core i5 3570 3.8GHz 6MB OEM;Intel;sim;i53570.webp
-1638;PROCESSADOR INTEL I5 LGA1155 3470 3.2GHZ OEM;processador;179,90;1;Intel Core i5 3470 3.2GHz OEM;Intel;nao;i53470.webp
-402467;PROCESSADOR INTEL I5 LGA1200 11400F 2.6 GHZ 12MB 11ª;processador;1040,00;1;Intel Core i5 11400F 2.6GHz 12MB 11ª geração;Intel;nao;i511400f.webp
-1774;PROCESSADOR INTEL I5 LGA1700 12400F 4.4 GHZ 12MB;processador;905,00;3;Intel Core i5 12400F LGA1700 12ª geração;Intel;sim;i512400f.webp
-1042;PROCESSADOR INTEL I5 13400 LGA1700;processador;1634,00;2;Intel Core i5 13400 2.5GHz 20MB 13ª geração;Intel;nao;i513400.webp
-1890;PROCESSADOR INTEL I5 14400 LGA1700;processador;1699,00;3;Intel Core i5 14400 14ª geração;Intel;nao;i514400.webp
-402614;PROCESSADOR INTEL I7 3770 LGA1155;processador;432,45;1;Intel Core i7 3770 3.9GHz;Intel;nao;i73770.webp
+1888;PROCESSADOR INTEL CELERON 1151 LGA1200 G5905 4MB;processador;225,00;23;Intel Celeron G5905 LGA1200 4MB;Intel;nao;g5905.webp
+1889;PROCESSADOR INTEL CELERON 1151 LGA1200 G5925 3.6GHZ;processador;225,00;6;Intel Celeron G5925 3.6GHz LGA1200;Intel;nao;g5925.webp
+1039;PROCESSADOR INTEL I3 LGA1150 4150/4160 3.4GHZ 3MB OEM;processador;76,50;5;Intel Core i3 4150/4160 3.4GHz 3MB OEM;Intel;nao;i34150.webp
+1721;PROCESSADOR INTEL I3 LGA1151 9100F 3.6GHZ 3MB 9GER;processador;460,00;29;Intel Core i3 9100F 3.6GHz 9ª geração;Intel;nao;i39100f.webp
+1891;PROCESSADOR INTEL I3 LGA1200 10100F 3.6GHZ 6MB 10ªG;processador;529,00;11;Intel Core i3 10100F 3.6GHz 6MB 10ª geração;Intel;sim;i310100f.webp
+401960;PROCESSADOR INTEL I3 LGA1200 CORE 10105 3.70GHZ 6MB;processador;900,00;10;Intel Core i3 10105 3.7GHz 6MB;Intel;nao;i310105.webp
+1830;PROCESSADOR INTEL I5 LGA1150 4570 4ªG;processador;210,00;1;Intel Core i5 4570 4ª geração;Intel;nao;i54570.webp
+1831;PROCESSADOR INTEL I5 LGA1151 8400 OEM;processador;721,00;5;Intel Core i5 8400 OEM;Intel;nao;i58400.webp
+1722;PROCESSADOR INTEL I5 LGA1151 9400F OEM;processador;635,88;21;Intel Core i5 9400F OEM;Intel;nao;i59400f.webp
+1719;PROCESSADOR INTEL I5 LGA1155 3570 3.8GHZ 6MB OEM;processador;190,00;1;Intel Core i5 3570 3.8GHz 6MB OEM;Intel;sim;i53570.webp
+1638;PROCESSADOR INTEL I5 LGA1155 3470 3.2GHZ OEM;processador;188,00;1;Intel Core i5 3470 3.2GHz OEM;Intel;nao;i53470.webp
+402467;PROCESSADOR INTEL I5 LGA1200 11400F 2.6 GHZ 12MB 11ª;processador;1040,00;3;Intel Core i5 11400F 2.6GHz 12MB 11ª geração;Intel;nao;i511400f.webp
+1774;PROCESSADOR INTEL I5 LGA1700 12400F 4.4 GHZ 12MB;processador;905,00;2;Intel Core i5 12400F LGA1700 12ª geração;Intel;sim;i512400f.webp
+1042;PROCESSADOR INTEL I5 13400 LGA1700;processador;1634,01;3;Intel Core i5 13400 2.5GHz 20MB 13ª geração;Intel;nao;i513400.webp
+1890;PROCESSADOR INTEL I5 14400 LGA1700;processador;1700,00;1;Intel Core i5 14400 14ª geração;Intel;nao;i514400.webp
+402614;PROCESSADOR INTEL I7 3770 LGA1155;processador;465,00;4;Intel Core i7 3770 3.9GHz;Intel;nao;i73770.webp
 1890;PROCESSADOR INTEL PENTIUM G5400T;processador;399,00;4;Intel Pentium G5400T 3.1GHz;Intel;nao;g5400t.webp
 2001;PLACA MAE BRAZIL PC H61 ITX M.2;placa mãe;189,00;3;Placa Mãe Brazil PC H61 ITX M.2;Brazil PC;nao;bpc-h61-itx.webp
 2002;PLACA MAE BRASIL PC B1150 H81 BPCH81M;placa mãe;219,00;2;Placa Mãe Brasil PC B1150 H81;Brasil PC;sim;bpch81m.webp
@@ -137,13 +137,13 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 2011;PLACA MAE HAYOM H155 H61M EL DDR3 PLM2300;placa mãe;199,00;4;Placa Mãe Hayom H155 H61M EL DDR3;Hayom;nao;plm2300.webp
 2012;PLACA MAE HAYOM H155 B75M S/V/R DDR3 PLM2301;placa mãe;209,00;3;Placa Mãe Hayom H155 B75M S/V/R DDR3;Hayom;sim;plm2301.webp
 1828;PLACA DE VÍDEO NVIDIA INNO3D RTX3060 12GB DDR6;placa de vídeo;2185,50;1;RTX 3060 12GB DDR6 PCIe 4.0;NVIDIA;nao;rtx3060.webp
-402487;PLACA DE VÍDEO NVIDIA GTX 550 1GB DDR5 128 BITS;placa de vídeo;303,18;1;GTX 550 1GB DDR5 128 bits;NVIDIA;sim;gtx550.webp
-1572;PLACA DE VÍDEO NVIDIA GT740 2GB DDR3 BLUECASE;placa de vídeo;337,59;1;GT740 2GB DDR3 128 bits BlueCase;NVIDIA;sim;gt740.webp
-1571;PLACA DE VÍDEO NVIDIA GT710 2GB DDR3 HOOPSON;placa de vídeo;404,55;6;GT710 2GB DDR3 64 bits Hoopson;NVIDIA;sim;gt710.webp
-401640;PLACA DE VÍDEO AMD R5 230 2GB DDR3 PCYES;placa de vídeo;223,20;2;Radeon R5 230 2GB DDR3 64 bits PCYes;AMD;sim;r5230.webp
-1046;PLACA DE VÍDEO AMD RX570 8GB DDR5 PCYES;placa de vídeo;804,08;2;RX570 8GB DDR5 256 bits PCYes;AMD;sim;rx570.webp
-1899;PLACA DE VÍDEO NVIDIA GTX1050 4GB DDR5 GALAX;placa de vídeo;1013,70;2;GTX 1050 4GB DDR5 128 bits Galax;NVIDIA;nao;gtx1050.webp
-402270;PLACA DE VÍDEO NVIDIA GTX1050 TI 4GB DDR5 ASUS;placa de vídeo;1329,90;1;GTX 1050 Ti 4GB DDR5 128 bits ASUS;NVIDIA;nao;gtx1050ti.webp
+402487;PLACA DE VÍDEO NVIDIA GTX 550 1GB DDR5 128 BITS;placa de vídeo;326,00;1;GTX 550 1GB DDR5 128 bits;NVIDIA;sim;gtx550.webp
+1572;PLACA DE VÍDEO NVIDIA GT740 2GB DDR3 BLUECASE;placa de vídeo;363,00;1;GT740 2GB DDR3 128 bits BlueCase;NVIDIA;sim;gt740.webp
+1571;PLACA DE VÍDEO NVIDIA GT710 2GB DDR3 HOOPSON;placa de vídeo;435,00;1;GT710 2GB DDR3 64 bits Hoopson;NVIDIA;sim;gt710.webp
+401640;PLACA DE VÍDEO AMD R5 230 2GB DDR3 PCYES;placa de vídeo;240,00;2;Radeon R5 230 2GB DDR3 64 bits PCYes;AMD;sim;r5230.webp
+1046;PLACA DE VÍDEO AMD RX570 8GB DDR5 PCYES;placa de vídeo;964,60;2;RX570 8GB DDR5 256 bits PCYes;AMD;sim;rx570.webp
+1899;PLACA DE VÍDEO NVIDIA GTX1050 4GB DDR5 GALAX;placa de vídeo;1190,00;2;GTX 1050 4GB DDR5 128 bits Galax;NVIDIA;nao;gtx1050.webp
+402270;PLACA DE VÍDEO NVIDIA GTX1050 TI 4GB DDR5 ASUS;placa de vídeo;1530,00;2;GTX 1050 Ti 4GB DDR5 128 bits ASUS;NVIDIA;nao;gtx1050ti.webp
 401807;PLACA DE VÍDEO NVIDIA GTX1660 6GB DDR5 GALAX;placa de vídeo;1534,50;1;GTX 1660 6GB DDR5 192 bits Galax;NVIDIA;sim;gtx1660.webp
 1933;HD SSD 120GB 2.5 GET;ssd;190,00;1;SSD 120GB 2.5 polegadas GET;GET;nao;ssd120get.webp
 1548;HD SSD 240GB 2.5 SANDISK 530MB/S G26;ssd;425,00;1;SSD 240GB 2.5 SANDISK 530MB/s G26;SANDISK;nao;ssd240sandisk.webp
