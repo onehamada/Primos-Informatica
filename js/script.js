@@ -1024,6 +1024,21 @@ function addToCart(productCode) {
         }, 1500);
       }, 600);
       
+      setTimeout(() => {
+        const productElement = document.querySelector(`[data-product-code="${productCode}"]`);
+        if (productElement) {
+          productElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          productElement.classList.add('search-highlight');
+          
+          // Remover destaque após 3 segundos
+          setTimeout(() => {
+            if (productElement) {
+              productElement.classList.remove('search-highlight');
+            }
+          }, 3000);
+        }
+      }, 100);
+      
       // Animação de shake no botão do carrinho
       cartBtn.classList.remove('animate', 'shake');
       void cartBtn.offsetWidth; // Força reflow
