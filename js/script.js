@@ -9,7 +9,7 @@ function showCategory(category) {
   }
   
   // Esconder todas as seções
-  const sections = document.querySelectorAll('.products-section, .category');
+  const sections = document.querySelectorAll('.products-section, .category, #promo, #inicio');
   console.log('🔍 Seções encontradas para esconder:', sections.length);
   for (let i = 0; i < sections.length; i++) {
     sections[i].style.display = 'none';
@@ -42,15 +42,51 @@ function showCategory(category) {
       }, 200);
     }
   } else {
-    const targetSection = document.getElementById(category);
+    // Tentar encontrar seção por ID ou por categoria
+    let targetSection = document.getElementById(category);
+    
+    // Se não encontrar por ID, procurar por categoria nos produtos
+    if (!targetSection) {
+      // Criar seção dinamicamente para a categoria
+      targetSection = document.createElement('section');
+      targetSection.id = category;
+      targetSection.className = 'category';
+      targetSection.style.display = 'none';
+      
+      const main = document.querySelector('main');
+      if (main) {
+        main.appendChild(targetSection);
+        console.log('📝 Seção criada dinamicamente:', category);
+      }
+    }
+    
     console.log('📍 Seção alvo encontrada:', !!targetSection, 'para categoria:', category);
     if (targetSection) {
       targetSection.style.display = 'block';
       
-      // Lazy loading simplificado
-      setTimeout(function() {
-        loadImagesOnScroll(targetSection);
-      }, 200);
+      // Preencher com produtos da categoria
+      const categoryProducts = allProducts.filter(p => 
+        p.categoria && p.categoria.toLowerCase() === category.toLowerCase()
+      );
+      
+      if (categoryProducts.length > 0) {
+        let productsHTML = '<h2>' + category.charAt(0).toUpperCase() + category.slice(1) + '</h2>';
+        productsHTML += '<div class="products-grid">';
+        
+        for (let j = 0; j < categoryProducts.length; j++) {
+          productsHTML += createProductCard(categoryProducts[j]);
+        }
+        
+        productsHTML += '</div>';
+        targetSection.innerHTML = productsHTML;
+        
+        // Lazy loading para imagens
+        setTimeout(function() {
+          loadImagesOnScroll(targetSection);
+        }, 200);
+      } else {
+        targetSection.innerHTML = '<h2>' + category.charAt(0).toUpperCase() + category.slice(1) + '</h2><p style="text-align: center; padding: 40px; color: #666;">Nenhum produto encontrado nesta categoria.</p>';
+      }
     } else {
       console.error('❌ Seção não encontrada:', category);
     }
@@ -442,6 +478,16 @@ function populateHomeHighlights() {
 }
 
 // === FUNÇÕES DE AVALIAÇÕES ===
+
+// Variáveis globais para avaliações
+let currentRating = 0;
+let currentProductId = null;
+let uploadedPhotos = [];
+
+// Função para obter usuário atual
+function getCurrentUser() {
+  return JSON.parse(localStorage.getItem('primos_currentUser')) || null;
+}
 
 // Função para obter avaliações de um produto
 function getProductReviews(productId) {
@@ -1182,6 +1228,11 @@ function selectSearchProduct(productCode) {
   if (product) {
     // Mostrar categoria do produto
     showCategory(product.categoria);
+  }
+}
+
+// Event listener para fechar busca ao clicar fora
+document.addEventListener('click', function(event) {
   const searchContainer = document.querySelector('.search-container');
   const searchResults = document.getElementById('searchResults');
   
