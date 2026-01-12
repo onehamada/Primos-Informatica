@@ -5518,7 +5518,7 @@ main {
     gap: 16px;
     padding: 10px 20px;
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    border-radius: 50px;
+    border-radius: 8px; /* Mais retangular */
     position: relative;
     z-index: 1004;
     min-height: 44px;
