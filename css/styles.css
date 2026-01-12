@@ -933,25 +933,22 @@
 
 @media (max-width: 768px) {
   .header-top .header-container {
-    flex-direction: column;
-    gap: 12px;
+    flex-direction: row;
+    gap: 8px;
     padding: 8px 12px;
+    align-items: center;
   }
   
   .header-brand {
-    order: 1;
-    width: 100%;
-    justify-content: center;
-    margin-bottom: 4px;
+    flex-shrink: 0;
+    min-width: auto;
   }
   
   .header-actions {
-    order: 2;
-    width: 100%;
+    flex: 1;
     max-width: none;
-    justify-content: space-between;
     gap: 8px;
-    flex-wrap: nowrap;
+    align-items: center;
   }
   
   .search-container {
