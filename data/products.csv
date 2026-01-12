@@ -123,14 +123,13 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1042;PROCESSADOR INTEL I5 13400 LGA1700;processador;1634,01;3;Intel Core i5 13400 2.5GHz 20MB 13ª geração;Intel;nao;i513400.webp
 1890;PROCESSADOR INTEL I5 14400 LGA1700;processador;1700,00;1;Intel Core i5 14400 14ª geração;Intel;nao;i514400.webp
 402614;PROCESSADOR INTEL I7 3770 LGA1155;processador;465,00;4;Intel Core i7 3770 3.9GHz;Intel;nao;i73770.webp
-1890;PROCESSADOR INTEL PENTIUM G5400T;processador;399,00;4;Intel Pentium G5400T 3.1GHz;Intel;nao;g5400t.webp
+1891;PROCESSADOR INTEL PENTIUM G5400T;processador;399,00;4;Intel Pentium G5400T 3.1GHz;Intel;nao;g5400t.webp
 2001;PLACA MAE BRAZIL PC H61 ITX M.2;placa mãe;189,00;3;Placa Mãe Brazil PC H61 ITX M.2;Brazil PC;nao;bpc-h61-itx.webp
 2002;PLACA MAE BRASIL PC B1150 H81 BPCH81M;placa mãe;219,00;2;Placa Mãe Brasil PC B1150 H81;Brasil PC;sim;bpch81m.webp
 2003;PLACA MAE ASUS PRIME H310M-E HDMI DDR4;placa mãe;610,00;4;Placa Mãe ASUS Prime H310M-E HDMI DDR4;ASUS;nao;h310meprime.webp
-2004;PLACA MAE ASUS H310M-C / H310M-H;placa mãe;269,00;3;Placa Mãe ASUS H310M-C / H310M-H;ASUS;nao;h310mh.webp
+2004;PLACA MAE ASUS H310M-C / H310M-H;placa mãe;548,00;3;Placa Mãe ASUS H310M-C / H310M-H;ASUS;nao;h310mh.webp
 2005;PLACA MAE ASUS H610M-CS D4 PRIME;placa mãe;702,00;2;Placa Mãe ASUS H610M-CS D4 PRIME;ASUS;sim;h610mcsprime.webp
-2006;PLACA MAE ASUS PRIME H610M-K;placa mãe;329,00;3;Placa Mãe ASUS Prime H610M-K;ASUS;nao;h610mk.webp
-2007;PLACA MAE ASUS PRIME H610M-K 1200 DDR4;placa mãe;339,00;2;Placa Mãe ASUS Prime H610M-K 1200 DDR4;ASUS;nao;h610mkprime.webp
+2006;PLACA MAE ASUS PRIME H610M-K;placa mãe;707,00;3;Placa Mãe ASUS Prime H610M-K;ASUS;nao;h610mk.webp
 2008;PLACA MAE PCWARE IPM B360;placa mãe;299,00;1;Placa Mãe PCWARE IPM B360;PCWARE;nao;ipmb360.webp
 2009;PLACA MAE PCWARE 1151 8ª/9ª IPMH310G DDR4;placa mãe;259,00;3;Placa Mãe PCWARE 1151 8ª/9ª IPMH310G DDR4;PCWARE;sim;ipmh310g.webp
 2010;PLACA MAE PCWARE 1151 8ª/9ª IPMH310G DDR4 PRO;placa mãe;279,00;2;Placa Mãe PCWARE 1151 8ª/9ª IPMH310G DDR4 PRO;PCWARE;nao;ipmh310gpro.webp
@@ -168,4 +167,4 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1887;FONTE CORSAIR CV550 550W 80 PLUS BRONZE;fonte;329,00;3;Fonte Corsair CV550 550W 80 Plus Bronze;Corsair;nao;corsair_fonte500w.webp
 1888;FONTE HAYOM HX-200W 80 PLUS;fonte;129,00;6;Fonte Hayom HX-200W 80 Plus;Hayom;nao;hayom_fonte200w.webp
 1889;FONTE REAL 500WR ATX MGS;fonte;148,00;4;Fonte Real 500WR ATX MGS;MGS;nao;mgs_fonte500w.webp
-1890;FONTE MGS VP-750 750W 80 PLUS BRONZE;fonte;249,00;3;Fonte MGS VP-750 750W 80 Plus Bronze;MGS;nao;mgs_fonte750w.webp
+1892;FONTE MGS VP-750 750W 80 PLUS BRONZE;fonte;249,00;3;Fonte MGS VP-750 750W 80 Plus Bronze;MGS;nao;mgs_fonte750w.webp
