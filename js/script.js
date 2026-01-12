@@ -1067,14 +1067,46 @@ window.showCategory = showCategory;
 window.addToCart = addToCart;
 window.toggleCart = toggleCart;
 window.removeFromCart = removeFromCart;
-window.clearCart = clearCart;
 window.toggleMobileMenu = toggleMobileMenu;
 window.closeMobileMenu = closeMobileMenu;
 window.toggleFilters = toggleFilters;
 window.applyFilters = applyFilters;
 window.clearFilters = clearFilters;
 window.showCheckoutOptions = showCheckoutOptions;
+window.scrollToTop = scrollToTop; // Adicionar função global
 window.finalizeViaWhatsApp = finalizeViaWhatsApp;
+
+// === BOTÃO VOLTAR AO TOPO ===
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
+
+// Controlar visibilidade do botão voltar ao topo
+window.addEventListener('scroll', function() {
+  const backToTopButton = document.getElementById('backToTop');
+  
+  if (backToTopButton) {
+    // Mostrar botão quando rolar 300px para baixo
+    if (window.pageYOffset > 300) {
+      backToTopButton.classList.add('visible');
+    } else {
+      backToTopButton.classList.remove('visible');
+    }
+  }
+});
+
+// Inicializar quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+  const backToTopButton = document.getElementById('backToTop');
+  
+  // Esconder botão inicialmente
+  if (backToTopButton) {
+    backToTopButton.classList.remove('visible');
+  }
+});
 
 // === SISTEMA DE CADASTRO E LOGIN ===
 

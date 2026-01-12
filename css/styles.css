@@ -5721,3 +5721,64 @@ main {
     height: 140px !important;
   }
 }
+
+/* === BOTÃO VOLTAR AO TOPO === */
+.back-to-top {
+  position: fixed;
+  bottom: 80px; /* Aumentado para ficar acima do WhatsApp */
+  left: 20px; /* Movido para o lado esquerdo */
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 999; /* Abaixo do WhatsApp (1000+) */
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.back-to-top:active {
+  transform: translateY(0);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .back-to-top {
+    bottom: 75px; /* Ajustado para mobile */
+    left: 15px; /* Movido para o lado esquerdo */
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .back-to-top {
+    bottom: 70px; /* Ajustado para small mobile */
+    left: 12px; /* Movido para o lado esquerdo */
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+}
