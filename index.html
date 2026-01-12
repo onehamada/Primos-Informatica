@@ -377,6 +377,13 @@
             <span class="cart-count" id="cartCount" style="display: inline !important; visibility: visible !important; opacity: 1 !important;">0</span>
           </button>
           
+          <!-- Filtros -->
+          <button class="action-btn filters-toggle" id="filtersToggle" onclick="toggleFilters()" title="Filtros">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+          </button>
+          
           <!-- Menu Mobile -->
           <button class="action-btn mobile-menu-toggle" onclick="toggleMobileMenu()" title="Menu">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -385,17 +392,8 @@
               <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
           </button>
-        </div>
-        
-        <!-- Filtros Avançados -->
-        <div class="filters-container" id="filtersContainer">
-          <button class="filters-toggle" id="filtersToggle" onclick="toggleFilters()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-            </svg>
-            Filtros
-          </button>
           
+          <!-- Painel de Filtros -->
           <div class="filters-panel" id="filtersPanel">
             <div class="filter-group">
               <label>Faixa de Preço</label>
@@ -410,54 +408,164 @@
               <label>Categorias</label>
               <div class="category-filters">
                 <label class="checkbox-label">
-                  <input type="checkbox" value="processador" onchange="applyFilters()">
+                  <input type="checkbox" name="category" value="processadores">
                   <span>Processadores</span>
                 </label>
                 <label class="checkbox-label">
-                  <input type="checkbox" value="placa de vídeo" onchange="applyFilters()">
+                  <input type="checkbox" name="category" value="placas-de-video">
                   <span>Placas de Vídeo</span>
                 </label>
                 <label class="checkbox-label">
-                  <input type="checkbox" value="placa mãe" onchange="applyFilters()">
+                  <input type="checkbox" name="category" value="placas-mae">
                   <span>Placas Mãe</span>
                 </label>
                 <label class="checkbox-label">
-                  <input type="checkbox" value="monitor" onchange="applyFilters()">
-                  <span>Monitores</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" value="ssd" onchange="applyFilters()">
+                  <input type="checkbox" name="category" value="ssds">
                   <span>SSDs</span>
                 </label>
                 <label class="checkbox-label">
-                  <input type="checkbox" value="hd externo" onchange="applyFilters()">
+                  <input type="checkbox" name="category" value="hds-externos">
                   <span>HDs Externos</span>
                 </label>
                 <label class="checkbox-label">
-                  <input type="checkbox" value="fonte" onchange="applyFilters()">
+                  <input type="checkbox" name="category" value="monitores">
+                  <span>Monitores</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="category" value="fontes">
                   <span>Fontes</span>
                 </label>
                 <label class="checkbox-label">
-                  <input type="checkbox" value="teclado" onchange="applyFilters()">
-                  <span>Teclados</span>
+                  <input type="checkbox" name="category" value="memorias-ram">
+                  <span>Memórias RAM</span>
                 </label>
                 <label class="checkbox-label">
-                  <input type="checkbox" value="mouse" onchange="applyFilters()">
-                  <span>Mouses</span>
+                  <input type="checkbox" name="category" value="gabinetes">
+                  <span>Gabinetes</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="category" value="coolers">
+                  <span>Coolers</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="filter-group">
+              <label>Marcas</label>
+              <div class="brand-filters">
+                <label class="checkbox-label">
+                  <input type="checkbox" name="brand" value="Intel">
+                  <span>Intel</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="brand" value="AMD">
+                  <span>AMD</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="brand" value="NVIDIA">
+                  <span>NVIDIA</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="brand" value="ASUS">
+                  <span>ASUS</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="brand" value="Gigabyte">
+                  <span>Gigabyte</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="brand" value="MSI">
+                  <span>MSI</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="brand" value="Corsair">
+                  <span>Corsair</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="brand" value="Kingston">
+                  <span>Kingston</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="brand" value="Samsung">
+                  <span>Samsung</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="brand" value="LG">
+                  <span>LG</span>
                 </label>
               </div>
             </div>
             
             <div class="filter-actions">
-              <button class="btn-primary" onclick="applyFilters()">Aplicar Filtros</button>
-              <button class="btn-outline" onclick="clearFilters()">Limpar</button>
+              <button class="apply-filters-btn" onclick="applyFilters()">Aplicar Filtros</button>
+              <button class="clear-filters-btn" onclick="clearFilters()">Limpar</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Área do Usuário Logado -->
+        <div class="user-area" id="userArea" style="display: none;">
+          <div class="user-info">
+            <div class="user-avatar">
+              <span id="userInitial">U</span>
+            </div>
+            <div class="user-details">
+              <span id="userName">Usuário</span>
+              <span id="userEmail">email@email.com</span>
+            </div>
+          </div>
+          
+          <div class="user-menu">
+            <button class="user-menu-btn" onclick="toggleUserMenu()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </button>
+            
+            <div class="user-dropdown" id="userDropdown">
+              <a href="#" onclick="showMeusPedidos()">📦 Meus Pedidos</a>
+              <a href="#" onclick="showMeusFavoritos()">❤️ Favoritos</a>
+              <a href="#" onclick="showMeusDados()">👤 Meus Dados</a>
+              <a href="#" onclick="showEnderecos()">📍 Endereços</a>
+              <hr>
+              <a href="#" onclick="logout()" class="logout-link">🚪 Sair</a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Área do Usuário Logado -->
+        <div class="user-area" id="userArea" style="display: none;">
+          <div class="user-info">
+            <div class="user-avatar">
+              <span id="userInitial">U</span>
+            </div>
+            <div class="user-details">
+              <span id="userName">Usuário</span>
+              <span id="userEmail">email@email.com</span>
+            </div>
+          </div>
+          
+          <div class="user-menu">
+            <button class="user-menu-btn" onclick="toggleUserMenu()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </button>
+            
+            <div class="user-dropdown" id="userDropdown">
+              <a href="#" onclick="showMeusPedidos()">📦 Meus Pedidos</a>
+              <a href="#" onclick="showMeusFavoritos()">❤️ Favoritos</a>
+              <a href="#" onclick="showMeusDados()">👤 Meus Dados</a>
+              <a href="#" onclick="showEnderecos()">📍 Endereços</a>
+              <hr>
+              <a href="#" onclick="logout()" class="logout-link">🚪 Sair</a>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  
+  </header>
+
   <!-- Navegação Principal -->
   <nav class="header-nav">
     <div class="header-container">
@@ -953,6 +1061,95 @@
   </svg>
   <span class="whatsapp-tooltip">(61) 3340-6740</span>
 </a>
+
+<!-- Modal de Cadastro/Login -->
+<div class="auth-modal" id="authModal">
+  <div class="auth-container">
+    <div class="auth-header">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('cadastro')">Criar Conta</button>
+        <button class="auth-tab" onclick="switchTab('login')">Fazer Login</button>
+      </div>
+      <button class="close-btn" onclick="closeAuth()">×</button>
+    </div>
+    
+    <!-- Formulário de Cadastro -->
+    <form class="auth-form" id="cadastroForm" style="display: block;">
+      <div class="form-group">
+        <label for="cadastro-nome">Nome Completo</label>
+        <input type="text" id="cadastro-nome" name="nome" required placeholder="Seu nome completo">
+        <span class="form-error"></span>
+      </div>
+      
+      <div class="form-group">
+        <label for="cadastro-email">E-mail</label>
+        <input type="email" id="cadastro-email" name="email" required placeholder="seu@email.com">
+        <span class="form-error"></span>
+      </div>
+      
+      <div class="form-group">
+        <label for="cadastro-telefone">Telefone</label>
+        <input type="tel" id="cadastro-telefone" name="telefone" required placeholder="(61) 99999-9999">
+        <span class="form-error"></span>
+      </div>
+      
+      <div class="form-group">
+        <label for="cadastro-senha">Senha</label>
+        <input type="password" id="cadastro-senha" name="senha" required placeholder="Mínimo 6 caracteres">
+        <span class="form-error"></span>
+      </div>
+      
+      <div class="form-group">
+        <label for="cadastro-confirmar">Confirmar Senha</label>
+        <input type="password" id="cadastro-confirmar" name="confirmar" required placeholder="Repita sua senha">
+        <span class="form-error"></span>
+      </div>
+      
+      <button type="submit" class="auth-btn">Cadastrar</button>
+    </form>
+    
+    <!-- Formulário de Login -->
+    <form class="auth-form" id="loginForm" style="display: none;">
+      <div class="form-group">
+        <label for="login-email">E-mail</label>
+        <input type="email" id="login-email" name="email" required placeholder="seu@email.com">
+        <span class="form-error"></span>
+      </div>
+      
+      <div class="form-group">
+        <label for="login-senha">Senha</label>
+        <input type="password" id="login-senha" name="senha" required placeholder="Sua senha">
+        <span class="form-error"></span>
+      </div>
+      
+      <div class="form-options">
+        <label class="checkbox-label">
+          <input type="checkbox" id="lembrar-me">
+          <span>Lembrar-me</span>
+        </label>
+        <a href="#" onclick="showRecuperarSenha()">Esqueci minha senha</a>
+      </div>
+      
+      <button type="submit" class="auth-btn">Fazer Login</button>
+    </form>
+    
+    <!-- Formulário de Recuperação de Senha -->
+    <form class="auth-form" id="recuperarForm" style="display: none;">
+      <div class="form-group">
+        <label for="recuperar-email">E-mail para Recuperação</label>
+        <input type="email" id="recuperar-email" name="email" required placeholder="seu@email.com">
+        <span class="form-error"></span>
+      </div>
+      
+      <button type="submit" class="auth-btn">Enviar E-mail de Recuperação</button>
+      <a href="#" onclick="backToLogin()" class="back-link">← Voltar para Login</a>
+    </form>
+    
+    <div class="auth-footer">
+      <p id="auth-footer-text">Já tem conta? <a href="#" onclick="switchTab('login')">Faça login</a></p>
+    </div>
+  </div>
+</div>
 
 <script src="js/script.js"></script>
 </body>

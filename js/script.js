@@ -858,20 +858,29 @@ let currentFilters = {
 };
 
 function toggleFilters() {
+  console.log('🔧 toggleFilters chamado');
+  
   const filtersPanel = document.getElementById('filtersPanel');
   const filtersToggle = document.getElementById('filtersToggle');
   
+  console.log('🔍 filtersPanel encontrado:', !!filtersPanel);
+  console.log('🔍 filtersToggle encontrado:', !!filtersToggle);
+  
   if (!filtersPanel || !filtersToggle) {
-    console.error('Elementos de filtro não encontrados');
+    console.error('❌ Elementos de filtro não encontrados');
     return;
   }
+  
+  console.log('🔍 Estado atual do painel:', filtersPanel.classList.contains('active'));
   
   if (filtersPanel.classList.contains('active')) {
     filtersPanel.classList.remove('active');
     filtersToggle.classList.remove('active');
+    console.log('✅ Painel de filtros fechado');
   } else {
     filtersPanel.classList.add('active');
     filtersToggle.classList.add('active');
+    console.log('✅ Painel de filtros aberto');
   }
 }
 
@@ -1042,11 +1051,12 @@ function displayFilteredProducts(filteredProducts) {
 
 // Event listener para fechar filtros ao clicar fora
 document.addEventListener('click', function(e) {
-  const filtersContainer = document.getElementById('filtersContainer');
+  const filtersToggle = document.getElementById('filtersToggle');
   const filtersPanel = document.getElementById('filtersPanel');
   
-  if (filtersContainer && filtersPanel && 
-      !filtersContainer.contains(e.target) && 
+  if (filtersToggle && filtersPanel && 
+      !filtersToggle.contains(e.target) && 
+      !filtersPanel.contains(e.target) &&
       filtersPanel.classList.contains('active')) {
     toggleFilters();
   }
@@ -1065,3 +1075,528 @@ window.applyFilters = applyFilters;
 window.clearFilters = clearFilters;
 window.showCheckoutOptions = showCheckoutOptions;
 window.finalizeViaWhatsApp = finalizeViaWhatsApp;
+
+// === SISTEMA DE CADASTRO E LOGIN ===
+
+class UserAuth {
+  constructor() {
+    this.users = JSON.parse(localStorage.getItem('primos_users')) || [];
+    this.currentUser = JSON.parse(localStorage.getItem('primos_currentUser')) || null;
+    this.init();
+  }
+
+  init() {
+    // Verificar se usuário já está logado
+    if (this.currentUser) {
+      this.updateUserInterface();
+    }
+
+    // Adicionar botão de cadastro no header
+    this.addAuthButtonToHeader();
+
+    // Configurar event listeners
+    this.setupEventListeners();
+  }
+
+  // Adicionar botão de cadastro no header
+  addAuthButtonToHeader() {
+    // No desktop, adicionar botão no header
+    if (window.innerWidth > 800) {
+      const actionButtons = document.querySelector('.action-buttons');
+      if (actionButtons && !document.querySelector('.auth-btn-header')) {
+        const authButton = document.createElement('button');
+        authButton.className = 'auth-btn-header';
+        authButton.textContent = 'Criar Conta';
+        authButton.onclick = () => this.showAuth('cadastro');
+        actionButtons.appendChild(authButton);
+      }
+    } else {
+      // No mobile, adicionar opção no menu mobile
+      this.addAuthToMobileMenu();
+    }
+  }
+
+  // Adicionar opção de cadastro no menu mobile
+  addAuthToMobileMenu() {
+    const mobileMenu = document.querySelector('.nav-tabs');
+    if (mobileMenu && !mobileMenu.querySelector('.mobile-auth-link')) {
+      const authLink = document.createElement('a');
+      authLink.className = 'nav-tab mobile-auth-link';
+      authLink.href = '#';
+      authLink.textContent = 'Criar Conta / Login';
+      authLink.onclick = (e) => {
+        e.preventDefault();
+        this.showAuth('cadastro');
+      };
+      mobileMenu.appendChild(authLink);
+    }
+  }
+
+  // Configurar event listeners
+  setupEventListeners() {
+    // Formulário de cadastro
+    const cadastroForm = document.getElementById('cadastroForm');
+    if (cadastroForm) {
+      cadastroForm.addEventListener('submit', (e) => this.handleCadastro(e));
+    }
+
+    // Formulário de login
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+      loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+    }
+
+    // Formulário de recuperação
+    const recuperarForm = document.getElementById('recuperarForm');
+    if (recuperarForm) {
+      recuperarForm.addEventListener('submit', (e) => this.handleRecuperar(e));
+    }
+
+    // Fechar modal ao clicar fora
+    const authModal = document.getElementById('authModal');
+    if (authModal) {
+      authModal.addEventListener('click', (e) => {
+        if (e.target === authModal) {
+          this.closeAuth();
+        }
+      });
+    }
+
+    // Fechar dropdown ao clicar fora
+    document.addEventListener('click', (e) => {
+      const userDropdown = document.getElementById('userDropdown');
+      const userMenuBtn = document.querySelector('.user-menu-btn');
+      
+      if (userDropdown && userMenuBtn && 
+          !userDropdown.contains(e.target) && 
+          !userMenuBtn.contains(e.target)) {
+        userDropdown.classList.remove('active');
+      }
+    });
+  }
+
+  // Validar formulário de cadastro
+  validateCadastro(formData) {
+    const errors = [];
+
+    // Nome
+    if (!formData.nome || formData.nome.trim().length < 3) {
+      errors.push('Nome deve ter pelo menos 3 caracteres');
+    }
+
+    // E-mail
+    if (!this.validateEmail(formData.email)) {
+      errors.push('E-mail inválido');
+    }
+
+    // Telefone
+    if (!formData.telefone || formData.telefone.length < 10) {
+      errors.push('Telefone inválido');
+    }
+
+    // Senha
+    if (!formData.senha || formData.senha.length < 6) {
+      errors.push('Senha deve ter pelo menos 6 caracteres');
+    }
+
+    // Confirmar senha
+    if (formData.senha !== formData.confirmar) {
+      errors.push('Senhas não conferem');
+    }
+
+    // E-mail já cadastrado
+    if (this.users.find(user => user.email === formData.email)) {
+      errors.push('E-mail já cadastrado');
+    }
+
+    return errors;
+  }
+
+  // Validar e-mail
+  validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  // Validar telefone
+  validateTelefone(telefone) {
+    const cleaned = telefone.replace(/\D/g, '');
+    return cleaned.length >= 10 && cleaned.length <= 11;
+  }
+
+  // Hash simples de senha
+  hashPassword(password) {
+    return btoa(password + 'primos2026');
+  }
+
+  // Verificar senha
+  verifyPassword(password, hash) {
+    return this.hashPassword(password) === hash;
+  }
+
+  // Cadastrar usuário
+  async handleCadastro(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+    
+    // Limpar erros anteriores
+    this.clearErrors(e.target);
+
+    // Validar
+    const errors = this.validateCadastro(data);
+    
+    if (errors.length > 0) {
+      this.showErrors(e.target, errors);
+      return;
+    }
+
+    // Desabilitar botão
+    const submitBtn = e.target.querySelector('.auth-btn');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Cadastrando...';
+
+    try {
+      // Criar novo usuário
+      const newUser = {
+        id: Date.now(),
+        nome: data.nome.trim(),
+        email: data.email.toLowerCase().trim(),
+        telefone: data.telefone.replace(/\D/g, ''),
+        senha: this.hashPassword(data.senha),
+        dataCadastro: new Date().toISOString(),
+        pedidos: [],
+        favoritos: [],
+        enderecos: []
+      };
+
+      // Salvar usuário
+      this.users.push(newUser);
+      this.saveUsers();
+
+      // Auto-login após cadastro
+      this.currentUser = newUser;
+      this.saveCurrentUser();
+
+      // Mostrar sucesso
+      this.showSuccess(e.target, 'Cadastro realizado com sucesso!');
+
+      // Fechar modal após 1.5s
+      setTimeout(() => {
+        this.closeAuth();
+        this.updateUserInterface();
+      }, 1500);
+
+    } catch (error) {
+      this.showError(e.target, 'Erro ao cadastrar. Tente novamente.');
+    } finally {
+      // Reabilitar botão
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+    }
+  }
+
+  // Login
+  async handleLogin(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+    
+    // Limpar erros anteriores
+    this.clearErrors(e.target);
+
+    // Validar
+    if (!this.validateEmail(data.email)) {
+      this.showErrors(e.target, ['E-mail inválido']);
+      return;
+    }
+
+    if (!data.senha || data.senha.length < 6) {
+      this.showErrors(e.target, ['Senha inválida']);
+      return;
+    }
+
+    // Desabilitar botão
+    const submitBtn = e.target.querySelector('.auth-btn');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Entrando...';
+
+    try {
+      // Buscar usuário
+      const user = this.users.find(u => u.email === data.email.toLowerCase().trim());
+      
+      if (!user) {
+        this.showErrors(e.target, ['E-mail não encontrado']);
+        return;
+      }
+
+      // Verificar senha
+      if (!this.verifyPassword(data.senha, user.senha)) {
+        this.showErrors(e.target, ['Senha incorreta']);
+        return;
+      }
+
+      // Login bem-sucedido
+      this.currentUser = user;
+      this.saveCurrentUser();
+
+      // Salvar preferência "lembrar-me"
+      if (document.getElementById('lembrar-me').checked) {
+        localStorage.setItem('primos_remember', 'true');
+      }
+
+      // Mostrar sucesso
+      this.showSuccess(e.target, 'Login realizado com sucesso!');
+
+      // Fechar modal após 1s
+      setTimeout(() => {
+        this.closeAuth();
+        this.updateUserInterface();
+      }, 1000);
+
+    } catch (error) {
+      this.showError(e.target, 'Erro ao fazer login. Tente novamente.');
+    } finally {
+      // Reabilitar botão
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+    }
+  }
+
+  // Recuperação de senha
+  async handleRecuperar(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+    
+    // Limpar erros anteriores
+    this.clearErrors(e.target);
+
+    // Validar e-mail
+    if (!this.validateEmail(data.email)) {
+      this.showErrors(e.target, ['E-mail inválido']);
+      return;
+    }
+
+    // Verificar se e-mail existe
+    const user = this.users.find(u => u.email === data.email.toLowerCase().trim());
+    
+    if (!user) {
+      this.showErrors(e.target, ['E-mail não encontrado']);
+      return;
+    }
+
+    // Simular envio de e-mail
+    const submitBtn = e.target.querySelector('.auth-btn');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+
+    setTimeout(() => {
+      this.showSuccess(e.target, 'E-mail de recuperação enviado! Verifique sua caixa de entrada.');
+      
+      setTimeout(() => {
+        this.backToLogin();
+      }, 2000);
+      
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+    }, 1500);
+  }
+
+  // Salvar usuários
+  saveUsers() {
+    localStorage.setItem('primos_users', JSON.stringify(this.users));
+  }
+
+  // Salvar usuário atual
+  saveCurrentUser() {
+    localStorage.setItem('primos_currentUser', JSON.stringify(this.currentUser));
+  }
+
+  // Verificar se está logado
+  isLoggedIn() {
+    return this.currentUser !== null;
+  }
+
+  // Logout
+  logout() {
+    this.currentUser = null;
+    localStorage.removeItem('primos_currentUser');
+    localStorage.removeItem('primos_remember');
+    this.updateUserInterface();
+  }
+
+  // Atualizar interface
+  updateUserInterface() {
+    const authButton = document.querySelector('.auth-btn-header');
+    const userArea = document.getElementById('userArea');
+
+    if (this.isLoggedIn()) {
+      // Esconder botão de cadastro
+      if (authButton) {
+        authButton.style.display = 'none';
+      }
+
+      // Mostrar área do usuário
+      if (userArea) {
+        userArea.style.display = 'flex';
+        
+        // Atualizar informações
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const userInitial = document.getElementById('userInitial');
+        
+        if (userName) userName.textContent = this.currentUser.nome.split(' ')[0];
+        if (userEmail) userEmail.textContent = this.currentUser.email;
+        if (userInitial) userInitial.textContent = this.currentUser.nome.charAt(0).toUpperCase();
+      }
+    } else {
+      // Mostrar botão de cadastro
+      if (authButton) {
+        authButton.style.display = 'block';
+      }
+
+      // Esconder área do usuário
+      if (userArea) {
+        userArea.style.display = 'none';
+      }
+    }
+  }
+
+  // Mostrar modal de autenticação
+  showAuth(tab = 'cadastro') {
+    const modal = document.getElementById('authModal');
+    if (modal) {
+      modal.classList.add('active');
+      this.switchTab(tab);
+    }
+  }
+
+  // Fechar modal
+  closeAuth() {
+    const modal = document.getElementById('authModal');
+    if (modal) {
+      modal.classList.remove('active');
+      this.clearAllErrors();
+    }
+  }
+
+  // Alternar abas
+  switchTab(tab) {
+    // Atualizar botões das abas
+    document.querySelectorAll('.auth-tab').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
+    // Mostrar formulário correspondente
+    document.querySelectorAll('.auth-form').forEach(form => {
+      form.style.display = 'none';
+    });
+
+    if (tab === 'cadastro') {
+      document.getElementById('cadastroForm').style.display = 'flex';
+      document.getElementById('auth-footer-text').innerHTML = 'Já tem conta? <a href="#" onclick="auth.switchTab(\'login\')">Faça login</a>';
+    } else if (tab === 'login') {
+      document.getElementById('loginForm').style.display = 'flex';
+      document.getElementById('auth-footer-text').innerHTML = 'Não tem conta? <a href="#" onclick="auth.switchTab(\'cadastro\')">Criar conta</a>';
+    }
+  }
+
+  // Mostrar recuperação de senha
+  showRecuperarSenha() {
+    document.querySelectorAll('.auth-form').forEach(form => {
+      form.style.display = 'none';
+    });
+    document.getElementById('recuperarForm').style.display = 'flex';
+    document.getElementById('auth-footer-text').style.display = 'none';
+  }
+
+  // Voltar para login
+  backToLogin() {
+    this.switchTab('login');
+  }
+
+  // Toggle dropdown do usuário
+  toggleUserMenu() {
+    const dropdown = document.getElementById('userDropdown');
+    if (dropdown) {
+      dropdown.classList.toggle('active');
+    }
+  }
+
+  // Mostrar erros
+  showErrors(form, errors) {
+    errors.forEach(error => {
+      const errorElement = document.createElement('div');
+      errorElement.className = 'error-message';
+      errorElement.textContent = error;
+      form.insertBefore(errorElement, form.firstChild);
+    });
+  }
+
+  // Mostrar sucesso
+  showSuccess(form, message) {
+    const successElement = document.createElement('div');
+    successElement.className = 'success-message';
+    successElement.textContent = message;
+    form.insertBefore(successElement, form.firstChild);
+  }
+
+  // Limpar erros
+  clearErrors(form) {
+    const errors = form.querySelectorAll('.error-message, .success-message');
+    errors.forEach(error => error.remove());
+    
+    const inputs = form.querySelectorAll('input.error');
+    inputs.forEach(input => input.classList.remove('error'));
+    
+    const errorSpans = form.querySelectorAll('.form-error.show');
+    errorSpans.forEach(span => span.classList.remove('show'));
+  }
+
+  // Limpar todos os erros
+  clearAllErrors() {
+    document.querySelectorAll('.error-message, .success-message').forEach(error => error.remove());
+    document.querySelectorAll('input.error').forEach(input => input.classList.remove('error'));
+    document.querySelectorAll('.form-error.show').forEach(span => span.classList.remove('show'));
+  }
+
+  // Funções da área do usuário
+  showMeusPedidos() {
+    alert('Meus Pedidos - Em desenvolvimento');
+  }
+
+  showMeusFavoritos() {
+    alert('Meus Favoritos - Em desenvolvimento');
+  }
+
+  showMeusDados() {
+    alert('Meus Dados - Em desenvolvimento');
+  }
+
+  showEnderecos() {
+    alert('Endereços - Em desenvolvimento');
+  }
+}
+
+// Instância global
+const auth = new UserAuth();
+
+// Funções globais para o HTML
+window.showAuth = (tab) => auth.showAuth(tab);
+window.closeAuth = () => auth.closeAuth();
+window.switchTab = (tab) => auth.switchTab(tab);
+window.showRecuperarSenha = () => auth.showRecuperarSenha();
+window.backToLogin = () => auth.backToLogin();
+window.toggleUserMenu = () => auth.toggleUserMenu();
+window.logout = () => auth.logout();
+window.showMeusPedidos = () => auth.showMeusPedidos();
+window.showMeusFavoritos = () => auth.showMeusFavoritos();
+window.showMeusDados = () => auth.showMeusDados();
+window.showEnderecos = () => auth.showEnderecos();
