@@ -445,7 +445,10 @@ function populateHomeHighlights() {
 function createProductCard(product) {
   const imageName = product.imagem || product.codigo + '.webp';
   const imagePath = 'images/products/thumbnail/' + imageName;
-  const price = parseFloat(product.preco || '0');
+  
+  // Corrigir tratamento de preço para preservar centavos
+  const priceString = (product.preco || '0').toString().replace(',', '.');
+  const price = parseFloat(priceString);
   const formattedPrice = 'R$ ' + price.toFixed(2).replace('.', ',');
   
   return '<div class="product-card" data-product-code="' + product.codigo + '">' +
@@ -511,7 +514,10 @@ function updateCartDisplay() {
   } else {
     for (let i = 0; i < cart.length; i++) {
       const item = cart[i];
-      total += parseFloat(item.preco.replace(',', '.'));
+      // Corrigir tratamento de preço para preservar centavos
+      const priceString = (item.preco || '0').toString().replace(',', '.');
+      const price = parseFloat(priceString);
+      total += price;
       itemCount++;
       
       const itemElement = document.createElement('div');
@@ -568,7 +574,9 @@ function finalizeViaWhatsApp() {
   
   // Adicionar itens do carrinho
   cart.forEach((item, index) => {
-    const price = parseFloat(item.preco.replace(',', '.'));
+    // Corrigir tratamento de preço para preservar centavos
+    const priceString = (item.preco || '0').toString().replace(',', '.');
+    const price = parseFloat(priceString);
     message += `${index + 1}. ${item.nome}\n`;
     message += `   💰 R$ ${price.toFixed(2).replace('.', ',')}\n`;
     message += `   🏷️ ${item.marca || ''}\n\n`;
@@ -576,7 +584,10 @@ function finalizeViaWhatsApp() {
   
   // Calcular total
   const total = cart.reduce((sum, item) => {
-    return sum + parseFloat(item.preco.replace(',', '.'));
+    // Corrigir tratamento de preço para preservar centavos
+    const priceString = (item.preco || '0').toString().replace(',', '.');
+    const price = parseFloat(priceString);
+    return sum + price;
   }, 0);
   
   message += `*Total: R$ ${total.toFixed(2).replace('.', ',')}*\n\n`;
@@ -780,7 +791,9 @@ function displaySearchResults(results, searchTerm) {
     const limitedResults = results.slice(0, 8);
     
     searchResultsContainer.innerHTML = limitedResults.map(product => {
-      const price = parseFloat(product.preco || '0');
+      // Corrigir tratamento de preço para preservar centavos
+      const priceString = (product.preco || '0').toString().replace(',', '.');
+      const price = parseFloat(priceString);
       const formattedPrice = 'R$ ' + price.toFixed(2).replace('.', ',');
       const imageName = product.imagem || product.codigo + '.webp';
       const imagePath = 'images/products/thumbnail/' + imageName;
@@ -928,7 +941,9 @@ function filterProducts() {
     
     // Filtro de preço mínimo
     if (currentFilters.minPrice !== null) {
-      const productPrice = parseFloat(product.preco || '0');
+      // Corrigir tratamento de preço para preservar centavos
+      const priceString = (product.preco || '0').toString().replace(',', '.');
+      const productPrice = parseFloat(priceString);
       if (productPrice < currentFilters.minPrice) {
         return false;
       }
@@ -936,7 +951,9 @@ function filterProducts() {
     
     // Filtro de preço máximo
     if (currentFilters.maxPrice !== null) {
-      const productPrice = parseFloat(product.preco || '0');
+      // Corrigir tratamento de preço para preservar centavos
+      const priceString = (product.preco || '0').toString().replace(',', '.');
+      const productPrice = parseFloat(priceString);
       if (productPrice > currentFilters.maxPrice) {
         return false;
       }
