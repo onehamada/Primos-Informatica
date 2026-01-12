@@ -29,6 +29,82 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   
+  <!-- Structured Data (JSON-LD) para SEO Avançado -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://onehamada.github.io/Primos-Informatica/#organization",
+        "name": "Primos Informática",
+        "alternateName": "Primos Info",
+        "description": "Loja especializada em informática em Brasília. Hardware, processadores, placas, SSDs e mais.",
+        "url": "https://onehamada.github.io/Primos-Informatica/",
+        "logo": "https://onehamada.github.io/Primos-Informatica/images/logo.png",
+        "telephone": "+55-61-0000-0000",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Brasília, DF",
+          "addressLocality": "Brasília",
+          "addressRegion": "DF",
+          "addressCountry": "BR",
+          "postalCode": "70000-000"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "-15.8267",
+          "longitude": "-47.9218"
+        },
+        "sameAs": [
+          "https://onehamada.github.io/Primos-Informatica/"
+        ],
+        "openingHours": "Mo-Sa 09:00-18:00",
+        "priceRange": "R$100-R$5000"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://onehamada.github.io/Primos-Informatica/#website",
+        "name": "Primos Informática",
+        "url": "https://onehamada.github.io/Primos-Informatica/",
+        "description": "Loja de informática em Brasília com hardware, processadores, placas mãe, placas de vídeo, SSDs, HDs e fontes.",
+        "inLanguage": "pt-BR",
+        "isAccessibleForFree": true,
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://onehamada.github.io/Primos-Informatica/?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "Store",
+        "@id": "https://onehamada.github.io/Primos-Informatica/#store",
+        "name": "Primos Informática",
+        "description": "Loja física e online de informática em Brasília",
+        "url": "https://onehamada.github.io/Primos-Informatica/",
+        "telephone": "+55-61-0000-0000",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Brasília, DF",
+          "addressLocality": "Brasília",
+          "addressRegion": "DF",
+          "addressCountry": "BR",
+          "postalCode": "70000-000"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "-15.8267",
+          "longitude": "-47.9218"
+        },
+        "openingHours": "Mo-Sa 09:00-18:00",
+        "priceRange": "R$100-R$5000",
+        "paymentAccepted": ["Cash", "Credit Card", "Debit Card"],
+        "currenciesAccepted": "BRL"
+      }
+    ]
+  }
+  </script>
+  
   <!-- Critical CSS Inline -->
   <style>
     body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6}

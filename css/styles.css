@@ -1364,6 +1364,43 @@ header img {
   display: none !important; /* ESCONDER PLACEHOLDER */
 }
 
+/* === FALLBACK PARA IMAGENS QUEBRADAS === */
+img {
+  opacity: 1 !important;
+  display: block !important;
+  visibility: visible !important;
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+}
+
+/* Fallback automático para imagens quebradas */
+img:not([src]), 
+img[src=""], 
+img[src="#"], 
+img[src$=".undefined"],
+img[error] {
+  content: "" !important;
+  background: #f8f9fa !important;
+  border: 2px dashed #dee2e6 !important;
+  position: relative !important;
+}
+
+img:not([src]):after, 
+img[src=""]:after, 
+img[src="#"]:after, 
+img[src$=".undefined"]:after,
+img[error]:after {
+  content: "🖼️" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  font-size: 2rem !important;
+  color: #adb5bd !important;
+  z-index: 10 !important;
+}
+
 /* Efeito hover nas imagens */
 .product-card:hover .product-image img {
   transform: scale(1.05);

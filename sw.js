@@ -1,6 +1,6 @@
-const CACHE_NAME = 'primos-informatica-v1.0.0';
-const STATIC_CACHE = 'primos-static-v1.0.0';
-const DYNAMIC_CACHE = 'primos-dynamic-v1.0.0';
+const CACHE_NAME = 'primos-informatica-v1.1.0';
+const STATIC_CACHE = 'primos-static-v1.1.0';
+const DYNAMIC_CACHE = 'primos-dynamic-v1.1.0';
 
 // Arquivos essenciais para cache imediato
 const STATIC_ASSETS = [
