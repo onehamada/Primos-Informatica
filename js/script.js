@@ -1167,25 +1167,6 @@ function selectSearchProduct(productCode) {
   if (product) {
     // Mostrar categoria do produto
     showCategory(product.categoria);
-    
-    // Destacar o produto após um pequeno delay
-    setTimeout(() => {
-      const productElement = document.querySelector(`[data-product-code="${productCode}"]`);
-      if (productElement) {
-        productElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        productElement.classList.add('search-highlight');
-        
-        // Remover destaque após 3 segundos
-        setTimeout(() => {
-          productElement.classList.remove('search-highlight');
-        }, 3000);
-      }
-    }, 500);
-  }
-}
-
-// Fechar busca ao clicar fora
-document.addEventListener('click', function(event) {
   const searchContainer = document.querySelector('.search-container');
   const searchResults = document.getElementById('searchResults');
   
