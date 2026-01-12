@@ -105,6 +105,103 @@
   }
   </script>
   
+  <!-- Google Web Vitals Monitoring -->
+  <script>
+    // Web Vitals Performance Monitoring
+    (function() {
+      'use strict';
+      
+      // Função para enviar métricas para console
+      function logMetric(name, value, rating) {
+        console.log(`📊 Web Vitals - ${name}: ${value} (${rating})`);
+        
+        // Enviar para Google Analytics se disponível
+        if (typeof gtag !== 'undefined') {
+          gtag('event', name, {
+            value: Math.round(value),
+            custom_parameter_1: rating
+          });
+        }
+      }
+      
+      // Largest Contentful Paint (LCP)
+      function observeLCP() {
+        new PerformanceObserver((entryList) => {
+          const entries = entryList.getEntries();
+          const lastEntry = entries[entries.length - 1];
+          const lcp = lastEntry.startTime;
+          
+          let rating = 'good';
+          if (lcp > 2500) rating = 'poor';
+          else if (lcp > 1200) rating = 'needs-improvement';
+          
+          logMetric('LCP', Math.round(lcp), rating);
+        }).observe({entryTypes: ['largest-contentful-paint']});
+      }
+      
+      // First Input Delay (FID)
+      function observeFID() {
+        new PerformanceObserver((entryList) => {
+          const entries = entryList.getEntries();
+          entries.forEach(entry => {
+            const fid = entry.processingStart - entry.startTime;
+            
+            let rating = 'good';
+            if (fid > 300) rating = 'poor';
+            else if (fid > 100) rating = 'needs-improvement';
+            
+            logMetric('FID', Math.round(fid), rating);
+          });
+        }).observe({entryTypes: ['first-input']});
+      }
+      
+      // Cumulative Layout Shift (CLS)
+      function observeCLS() {
+        let clsValue = 0;
+        new PerformanceObserver((entryList) => {
+          const entries = entryList.getEntries();
+          entries.forEach(entry => {
+            if (!entry.hadRecentInput) {
+              clsValue += entry.value;
+            }
+          });
+          
+          let rating = 'good';
+          if (clsValue > 0.25) rating = 'poor';
+          else if (clsValue > 0.1) rating = 'needs-improvement';
+          
+          logMetric('CLS', Math.round(clsValue * 1000) / 1000, rating);
+        }).observe({entryTypes: ['layout-shift']});
+      }
+      
+      // First Contentful Paint (FCP)
+      function observeFCP() {
+        new PerformanceObserver((entryList) => {
+          const entries = entryList.getEntries();
+          const fcp = entries[0].startTime;
+          
+          let rating = 'good';
+          if (fcp > 3000) rating = 'poor';
+          else if (fcp > 1800) rating = 'needs-improvement';
+          
+          logMetric('FCP', Math.round(fcp), rating);
+        }).observe({entryTypes: ['paint']});
+      }
+      
+      // Iniciar observadores quando a página carregar
+      if ('PerformanceObserver' in window) {
+        observeLCP();
+        observeFID();
+        observeCLS();
+        observeFCP();
+        
+        console.log('🚀 Web Vitals Monitoring Ativado');
+      } else {
+        console.log('⚠️ Web Vitals não suportado neste navegador');
+      }
+    })();
+  </script>
+  
   <!-- Critical CSS Inline -->
   <style>
     body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6}
