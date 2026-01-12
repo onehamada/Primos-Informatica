@@ -1,0 +1,315 @@
+<!-- Modal de Avaliação -->
+<div class="review-modal" id="reviewModal">
+  <div class="review-modal-content">
+    <div class="review-modal-header">
+      <h3>Avaliar Produto</h3>
+      <button class="close-modal-btn" onclick="closeReviewModal()">&times;</button>
+    </div>
+    
+    <form class="review-form" id="reviewForm" onsubmit="submitReview(event)">
+      <div class="form-group">
+        <label>Sua Avaliação</label>
+        <div class="star-rating" id="starRating">
+          <span class="star" data-rating="1" onclick="setRating(1)">☆</span>
+          <span class="star" data-rating="2" onclick="setRating(2)">☆</span>
+          <span class="star" data-rating="3" onclick="setRating(3)">☆</span>
+          <span class="star" data-rating="4" onclick="setRating(4)">☆</span>
+          <span class="star" data-rating="5" onclick="setRating(5)">☆</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="reviewTitle">Título da Avaliação</label>
+        <input type="text" id="reviewTitle" name="title" placeholder="Resuma sua experiência" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="reviewText">Seu Comentário</label>
+        <textarea id="reviewText" name="text" placeholder="Conte detalhes sobre sua experiência com o produto..." required></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label>Fotos do Produto (opcional)</label>
+        <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+          <div class="photo-upload-icon">📷</div>
+          <div class="photo-upload-text">Clique para adicionar fotos</div>
+          <div class="photo-upload-hint">Até 3 fotos, máximo 5MB cada</div>
+          <input type="file" id="photoInput" accept="image/*" multiple style="display: none;" onchange="handlePhotoUpload(event)">
+        </div>
+        <div class="photos-preview" id="photosPreview"></div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="cancel-review-btn" onclick="closeReviewModal()">Cancelar</button>
+        <button type="submit" class="submit-review-btn">Enviar Avaliação</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// Variáveis globais para avaliações
+let currentRating = 0;
+let uploadedPhotos = [];
+let currentProductId = null;
+
+// Função para abrir modal de avaliação
+function openReviewModal(productId) {
+  currentProductId = productId;
+  const modal = document.getElementById('reviewModal');
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+// Função para fechar modal de avaliação
+function closeReviewModal() {
+  const modal = document.getElementById('reviewModal');
+  modal.classList.remove('active');
+  document.body.style.overflow = 'auto';
+  resetReviewForm();
+}
+
+// Função para definir avaliação em estrelas
+function setRating(rating) {
+  currentRating = rating;
+  const stars = document.querySelectorAll('.star-rating .star');
+  stars.forEach((star, index) => {
+    if (index < rating) {
+      star.textContent = '★';
+      star.classList.add('filled');
+    } else {
+      star.textContent = '☆';
+      star.classList.remove('filled');
+    }
+  });
+}
+
+// Função para handle upload de fotos
+function handlePhotoUpload(event) {
+  const files = Array.from(event.target.files);
+  
+  if (uploadedPhotos.length + files.length > 3) {
+    alert('Você pode enviar no máximo 3 fotos');
+    return;
+  }
+  
+  files.forEach(file => {
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+      alert('Cada foto deve ter no máximo 5MB');
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      uploadedPhotos.push({
+        name: file.name,
+        url: e.target.result,
+        size: file.size
+      });
+      updatePhotosPreview();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// Função para atualizar preview das fotos
+function updatePhotosPreview() {
+  const preview = document.getElementById('photosPreview');
+  preview.innerHTML = '';
+  
+  uploadedPhotos.forEach((photo, index) => {
+    const photoDiv = document.createElement('div');
+    photoDiv.className = 'photo-preview';
+    photoDiv.innerHTML = `
+      <img src="${photo.url}" alt="Foto ${index + 1}">
+      <button type="button" class="remove-photo" onclick="removePhoto(${index})">&times;</button>
+    `;
+    preview.appendChild(photoDiv);
+  });
+}
+
+// Função para remover foto
+function removePhoto(index) {
+  uploadedPhotos.splice(index, 1);
+  updatePhotosPreview();
+}
+
+// Função para resetar formulário
+function resetReviewForm() {
+  currentRating = 0;
+  uploadedPhotos = [];
+  currentProductId = null;
+  
+  document.getElementById('reviewForm').reset();
+  setRating(0);
+  updatePhotosPreview();
+  document.getElementById('photoInput').value = '';
+}
+
+// Função para enviar avaliação
+function submitReview(event) {
+  event.preventDefault();
+  
+  if (currentRating === 0) {
+    alert('Por favor, selecione uma avaliação em estrelas');
+    return;
+  }
+  
+  const formData = new FormData(event.target);
+  const reviewData = {
+    productId: currentProductId,
+    rating: currentRating,
+    title: formData.get('title'),
+    text: formData.get('text'),
+    photos: uploadedPhotos,
+    userName: getCurrentUser().nome,
+    userEmail: getCurrentUser().email,
+    date: new Date().toISOString(),
+    helpful: 0,
+    verified: true // Usuário logado
+  };
+  
+  // Salvar avaliação
+  saveReview(reviewData);
+  
+  // Fechar modal
+  closeReviewModal();
+  
+  // Mostrar mensagem de sucesso
+  showSuccessMessage('Avaliação enviada com sucesso! Obrigado por seu feedback.');
+  
+  // Atualizar lista de avaliações
+  if (currentProductId) {
+    loadProductReviews(currentProductId);
+  }
+}
+
+// Função para salvar avaliação no localStorage
+function saveReview(reviewData) {
+  const reviews = JSON.parse(localStorage.getItem('primos_reviews') || '[]');
+  reviews.push(reviewData);
+  localStorage.setItem('primos_reviews', JSON.stringify(reviews));
+}
+
+// Função para carregar avaliações de um produto
+function loadProductReviews(productId) {
+  const reviews = JSON.parse(localStorage.getItem('primos_reviews') || '[]');
+  const productReviews = reviews.filter(review => review.productId === productId);
+  displayProductReviews(productReviews);
+}
+
+// Função para exibir avaliações de um produto
+function displayProductReviews(reviews) {
+  const reviewsContainer = document.getElementById('productReviews');
+  if (!reviewsContainer) return;
+  
+  if (reviews.length === 0) {
+    reviewsContainer.innerHTML = '<p style="text-align: center; color: #64748b;">Nenhuma avaliação ainda. Seja o primeiro a avaliar!</p>';
+    return;
+  }
+  
+  let html = '';
+  reviews.forEach(review => {
+    html += createReviewCard(review);
+  });
+  
+  reviewsContainer.innerHTML = html;
+}
+
+// Função para criar card de avaliação
+function createReviewCard(review) {
+  const date = new Date(review.date).toLocaleDateString('pt-BR');
+  const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+  
+  let photosHtml = '';
+  if (review.photos && review.photos.length > 0) {
+    photosHtml = '<div class="review-photos">';
+    review.photos.forEach(photo => {
+      photosHtml += `<img src="${photo.url}" alt="Foto do produto" class="review-photo" onclick="viewPhoto('${photo.url}')">`;
+    });
+    photosHtml += '</div>';
+  }
+  
+  return `
+    <div class="review-card">
+      <div class="review-header">
+        <div class="review-user">
+          <div class="user-avatar">${review.userName.charAt(0).toUpperCase()}</div>
+          <div class="user-info">
+            <div class="user-name">${review.userName}</div>
+            <div class="review-date">${date}</div>
+          </div>
+        </div>
+        <div class="review-rating">
+          <div class="stars">${stars}</div>
+          <span class="rating-number">${review.rating}.0</span>
+        </div>
+      </div>
+      
+      <div class="review-content">
+        <h4>${review.title}</h4>
+        <p class="review-text">${review.text}</p>
+        ${photosHtml}
+      </div>
+      
+      <div class="review-actions">
+        <button class="helpful-btn ${review.helpful > 0 ? 'helpful' : ''}" onclick="markHelpful('${review.id}')">
+          👍 Útil (${review.helpful})
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// Função para marcar avaliação como útil
+function markHelpful(reviewId) {
+  const reviews = JSON.parse(localStorage.getItem('primos_reviews') || '[]');
+  const review = reviews.find(r => r.id === reviewId);
+  
+  if (review) {
+    review.helpful = (review.helpful || 0) + 1;
+    localStorage.setItem('primos_reviews', JSON.stringify(reviews));
+    
+    // Atualizar botão
+    event.target.classList.add('helpful');
+    event.target.innerHTML = `👍 Útil (${review.helpful})`;
+  }
+}
+
+// Função para visualizar foto em tamanho maior
+function viewPhoto(photoUrl) {
+  window.open(photoUrl, '_blank');
+}
+
+// Função para mostrar mensagem de sucesso
+function showSuccessMessage(message) {
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'success-message';
+  messageDiv.textContent = message;
+  messageDiv.style.position = 'fixed';
+  messageDiv.style.top = '20px';
+  messageDiv.style.left = '50%';
+  messageDiv.style.transform = 'translateX(-50%)';
+  messageDiv.style.zIndex = '10000';
+  messageDiv.style.padding = '16px 24px';
+  messageDiv.style.borderRadius = '8px';
+  messageDiv.style.fontSize = '16px';
+  messageDiv.style.fontWeight = '600';
+  
+  document.body.appendChild(messageDiv);
+  
+  setTimeout(() => {
+    messageDiv.remove();
+  }, 3000);
+}
+
+// Adicionar ao escopo global
+window.openReviewModal = openReviewModal;
+window.closeReviewModal = closeReviewModal;
+window.setRating = setRating;
+window.handlePhotoUpload = handlePhotoUpload;
+window.removePhoto = removePhoto;
+window.submitReview = submitReview;
+window.markHelpful = markHelpful;
+window.viewPhoto = viewPhoto;
+</script>
