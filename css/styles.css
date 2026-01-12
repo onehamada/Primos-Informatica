@@ -5516,12 +5516,12 @@ main {
     display: flex;
     align-items: center;
     gap: 16px;
-    padding: 10px 20px;
+    padding: 8px 16px;
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    border-radius: 8px; /* Mais retangular */
+    border-radius: 4px; /* Bem mais retangular */
     position: relative;
     z-index: 1004;
-    min-height: 44px;
+    min-height: 40px;
     width: auto;
     flex-shrink: 0;
   }
