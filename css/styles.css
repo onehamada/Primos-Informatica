@@ -5515,12 +5515,15 @@ main {
   .user-area {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 8px 12px;
+    gap: 16px;
+    padding: 10px 20px;
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    border-radius: 12px;
-    position: relative; /* Container para o dropdown */
-    z-index: 1004; /* Garantir que fique acima da barra de pesquisa */
+    border-radius: 50px;
+    position: relative;
+    z-index: 1004;
+    min-height: 44px;
+    width: auto;
+    flex-shrink: 0;
   }
   
   .user-area .user-info {
@@ -5530,8 +5533,8 @@ main {
   }
   
   .user-area .user-avatar {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     display: flex;
@@ -5539,11 +5542,40 @@ main {
     justify-content: center;
     color: white;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  
+  .user-area .user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    white-space: nowrap; /* Não quebrar linha */
+    max-width: 150px; /* Largura máxima para não esticar muito */
+    overflow: hidden;
+    text-overflow: ellipsis; /* "..." se passar do limite */
   }
   
   .user-area .user-menu {
     position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-area .user-menu-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .user-area .user-menu-btn:hover {
+    background: rgba(59, 130, 246, 0.1);
   }
   
   .user-dropdown {
