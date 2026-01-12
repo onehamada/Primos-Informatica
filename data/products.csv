@@ -95,8 +95,8 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 400936;MOUSE MULTILASER SEM FIO PRETO MO307;mouse;45,00;2;Mouse Multilaser sem fio MO307 preto;Multilaser;nao;mouse-multilaser-mo307-v2.webp
 1938;MOUSE MULTILASER SEM FIO RECARREGAVEL 2.4 GHZ MO277;mouse;75,00;1;Mouse Multilaser recarregável MO277 2.4GHz;Multilaser;nao;mouse-multilaser-mo277-v2.webp
 1938;MOUSE MULTILASER S/FIO BLUETOOTH M5750 MO403;mouse;90,00;1;Mouse Multilaser Bluetooth M5750 MO403;Multilaser;nao;mouse-multilaser-mo403-v2.webp
-1562;UBIQUITI AP UNIFI AC U6-PRO 4X4 S/FONTE;access-point;1775,00;1;Access Point UniFi AC U6-Pro 4x4 sem fonte;Ubiquiti;nao;ap-ubiquiti-u6pro.webp
-1072;UBIQUITI AP UNIFI UAP-AC-LITE-BR;access-point;890,00;1;Access Point UniFi UAP-AC-Lite;Ubiquiti;nao;ap-ubiquiti-uap-ac-lite.webp
+1562;UBIQUITI AP UNIFI AC U6-PRO 4X4 S/FONTE;-point;1775,00;1;Access Point UniFi AC U6-Pro 4x4 sem fonte;Ubiquiti;nao;ap-ubiquiti-u6pro.webp
+1072;UBIQUITI AP UNIFI UAP-AC-LITE-BR;access-point;890,00;1;accessAccess Point UniFi UAP-AC-Lite;Ubiquiti;nao;ap-ubiquiti-uap-ac-lite.webp
 1559;REPETIDOR WIRELES TP LINK DUAL BAND AC750 RE200;repetidor;189,00;1;Repetidor Dual Band AC750 RE200;TP-Link;nao;repetidor-tplink-re200.webp
 1291;ADAPTADOR USB REDE RJ45 2.0 EMPIRE;adaptador;89,00;1;Adaptador USB para rede RJ45 2.0;Empree;nao;adaptador-usb-rj45-empree-v2.webp
 1557;ADAPTADOR USB WIRELESS TX20U PLUS TP-LINK WI-FI 6;adaptador;225,00;1;Adaptador USB TX20U Plus WiFi 6;TP-Link;nao;adaptador-tplink-tx20u-plus.webp
@@ -165,7 +165,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1885;FONTE AEROCOOL VX PLUS 700W 80 PLUS BRONZE;fonte;398,00;3;Fonte Aerocool VX Plus 700W 80 Plus Bronze;Aerocool;nao;aerocool_fonte700w.webp
 1886;FONTE REAL 700W ATX AEROCOOL KCAS PFC ATIVO;fonte;397,00;4;Fonte Real 700W ATX Aerocool KCAS PFC Ativo;Aerocool;nao;aerocool_fonte1000w.webp
 1887;FONTE REAL 500W CORSAIR VS500 80 PLUS CP9020223BR;fonte;492,00;3;Fonte Real 500W Corsair VS500 80 Plus CP9020223BR;Corsair;nao;corsair_fonte500w.webp
-1888;FONTE HAYOM HX-200W;fonte;129,00;6;Fonte Hayom HX-200W;Hayom;nao;hayom_fonte200w.webp
+1888;FONTE HAYOM HX-200W;fonte;60,00;6;Fonte Hayom HX-200W;Hayom;nao;hayom_fonte200w.webp
 1889;FONTE REAL 500WR ATX MGS;fonte;148,00;4;Fonte Real 500WR ATX MGS;MGS;nao;mgs_fonte500w.webp
 1892;FONTE REAL 750 W 80 PLUS MGS;fonte;390,00;3;Fonte Real 750W 80 Plus MGS;MGS;nao;mgs_fonte750w.webp
 2011;PLACA MAE BRAZIL PC 1155 DDR3 BPC-H61-ITX-M.2;placa mãe;168,00;3;Placa Mãe Brazil PC 1155 DDR3 BPC-H61-ITX-M.2;Brazil PC;nao;bpc-h61-itx-m2.webp
