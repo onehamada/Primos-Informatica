@@ -1131,6 +1131,48 @@
   }
 }
 
+/* === FORÇAR BARRA DE PESQUISA VISÍVEL NO MOBILE === */
+@media (max-width: 768px) {
+  .search-container {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 1001 !important;
+    flex: 1 !important;
+    max-width: none !important;
+    min-width: 150px !important;
+    height: auto !important;
+  }
+  
+  .search-input-wrapper {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex: 1 !important;
+    position: relative !important;
+  }
+  
+  .search-input {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    height: 40px !important;
+    font-size: 14px !important;
+  }
+  
+  .search-btn {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: absolute !important;
+    right: 8px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+}
+
 /* === RESET GERAL DE IMAGENS - FORÇADO === */
 img {
   opacity: 1 !important;
