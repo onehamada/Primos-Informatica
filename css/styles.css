@@ -1131,6 +1131,121 @@
   }
 }
 
+/* === HEADER MOBILE PEQUENO (< 800px) === */
+@media (max-width: 800px) {
+  .header-top .header-container {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 4px;
+    padding: 4px 8px;
+    align-items: center;
+    min-height: 50px;
+    overflow: hidden;
+  }
+  
+  .header-brand {
+    flex-shrink: 0;
+    min-width: auto;
+    width: auto;
+    max-width: 120px;
+  }
+  
+  .header-brand .brand-info h1 {
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .header-brand .brand-tagline {
+    display: none;
+  }
+  
+  .header-brand .brand-logo {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .header-actions {
+    flex: 1;
+    max-width: none;
+    gap: 4px;
+    align-items: center;
+    min-width: 0;
+    overflow: hidden;
+  }
+  
+  .search-container {
+    flex: 1;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    order: 1;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 1001 !important;
+    min-width: 100px !important;
+    height: auto !important;
+  }
+  
+  .search-input-wrapper {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex: 1 !important;
+    position: relative !important;
+    min-width: 0;
+  }
+  
+  .search-input {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    height: 36px !important;
+    font-size: 13px !important;
+    min-width: 0;
+  }
+  
+  .search-btn {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: absolute !important;
+    right: 6px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 24px !important;
+    height: 24px !important;
+  }
+  
+  .action-buttons {
+    order: 2;
+    gap: 2px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .action-btn {
+    padding: 6px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+  
+  .cart-btn span {
+    display: none;
+  }
+  
+  .cart-count {
+    display: inline !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
 /* === FORÇAR BARRA DE PESQUISA VISÍVEL NO MOBILE === */
 @media (max-width: 768px) {
   .search-container {
