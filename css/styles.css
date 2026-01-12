@@ -507,7 +507,7 @@
     flex: 1;
     max-width: none;
     margin: 0 16px;
-    padding: 0 8px;
+    padding: 0 12px;
     order: 2;
   }
   
@@ -515,26 +515,30 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
     margin-right: 8px;
+    flex: 1;
   }
   
   .search-input {
-    height: 40px;
+    height: 44px;
     padding: 0 40px 0 12px;
     font-size: 15px;
     border-radius: 20px;
+    flex: 1;
   }
   
   .search-btn {
     right: 8px;
-    padding: 6px;
+    padding: 8px;
     width: 36px;
     height: 36px;
+    top: 50%;
   }
   
   .search-results {
     max-height: 280px;
     border-radius: 12px;
-    margin-top: 4px;
+    margin-top: 8px;
+    top: calc(100% + 60px);
   }
 }
 
