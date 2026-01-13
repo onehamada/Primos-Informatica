@@ -1014,6 +1014,10 @@
     display: none;
   }
   
+  .auth-btn .auth-text {
+    display: none;
+  }
+  
   /* Garante que o span do carrinho continue visível */
   .cart-btn span {
     display: inline !important;

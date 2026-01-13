@@ -165,7 +165,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     nome: usuario.nome, 
                     email: usuario.email 
                 });
-                mostrarSucesso(`Bem-vindo(a), ${usuario.nome}!`);
+                mostrarSucesso(`Bem-vindo(a), ${usuario.nome}! Redirecionando...`);
+                
+                // Redirecionar para a página inicial após 1.5 segundos
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
                 
             } else {
                 mostrarErro(password, 'E-mail ou senha incorretos');
@@ -241,10 +246,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 email: novoUsuario.email 
             });
             
-            mostrarSucesso('Cadastro realizado com sucesso! Faça login para continuar.');
+            mostrarSucesso('Cadastro realizado com sucesso! Redirecionando para login...');
             
             // Limpar formulário
             cadastroForm.reset();
+            
+            // Redirecionar para a página de login após 2 segundos
+            setTimeout(() => {
+                showLogin();
+            }, 2000);
             
             // Mudar para login após 2 segundos
             setTimeout(() => {
