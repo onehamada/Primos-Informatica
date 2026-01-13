@@ -959,11 +959,26 @@ function submitReview(event) {
     console.log('❌ Formulário inválido, mostrando erros');
     showValidationErrors(errors, 'review-errors');
     return;
-    } else {
-      console.log('🔄 Atualizando interface local...');
-      updateProductCard(currentProductId);
-    }
-  }, 1500);
+  } else {
+    console.log('✅ Formulário válido, enviando avaliação...');
+    const reviewData = {
+      id: Date.now(),
+      productId: currentProductId,
+      userEmail: userEmail,
+      rating: sanitizedData.rating,
+      title: sanitizedData.title,
+      text: sanitizedData.text,
+      photos: uploadedPhotos
+    };
+    
+    saveReview(reviewData);
+    closeReviewModal();
+    showSuccessMessage('Avaliação enviada com sucesso! Obrigado por seu feedback.');
+    
+    // Atualizar interface dinamicamente sem reload
+    console.log('🔄 Atualizando interface dinamicamente...');
+    forceUpdateReviewsDisplay(currentProductId);
+  }
 }
 
 // Função para salvar avaliação no localStorage
