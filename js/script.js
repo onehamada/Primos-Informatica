@@ -1,7 +1,5 @@
 // === FUNÇÃO PRINCIPAL - CATEGORIAS ===
 function showCategory(category) {
-  console.log('📂 showCategory chamada com:', category);
-  
   // Limpar observer anterior
   if (window.currentObserver) {
     window.currentObserver.disconnect();
@@ -10,32 +8,26 @@ function showCategory(category) {
   
   // Esconder todas as seções
   const sections = document.querySelectorAll('.products-section, .category, #promo, #inicio');
-  console.log('🔍 Seções encontradas para esconder:', sections.length);
   for (let i = 0; i < sections.length; i++) {
     sections[i].style.display = 'none';
   }
   
   // Mostrar seção alvo
   if (category === 'promo' || category === 'promoções') {
-    console.log('🎯 Exibindo promoções...');
     showPromocoes();
   } else if (category === 'inicio') {
-    console.log('🏠 Exibindo página inicial...');
     const homeSection = document.getElementById('inicio');
-    console.log('📍 Seção início encontrada:', !!homeSection);
     if (homeSection) {
       homeSection.style.display = 'block';
       
       // Garantir que a home seja preenchida
       if (allProducts.length > 0) {
-        console.log('📦 Preenchendo home com', allProducts.length, 'produtos...');
         populateHome();
       }
       
       // Lazy loading para imagens da home
       setTimeout(function() {
         const homeGrids = homeSection.querySelectorAll('.categories-grid, .products-grid');
-        console.log('🖼️ Grids encontrados para lazy loading:', homeGrids.length);
         for (let i = 0; i < homeGrids.length; i++) {
           loadImagesOnScroll(homeGrids[i]);
         }
@@ -56,11 +48,9 @@ function showCategory(category) {
       const main = document.querySelector('main');
       if (main) {
         main.appendChild(targetSection);
-        console.log('📝 Seção criada dinamicamente:', category);
       }
     }
     
-    console.log('📍 Seção alvo encontrada:', !!targetSection, 'para categoria:', category);
     if (targetSection) {
       targetSection.style.display = 'block';
       
@@ -87,8 +77,6 @@ function showCategory(category) {
       } else {
         targetSection.innerHTML = '<h2>' + category.charAt(0).toUpperCase() + category.slice(1) + '</h2><p style="text-align: center; padding: 40px; color: #666;">Nenhum produto encontrado nesta categoria.</p>';
       }
-    } else {
-      console.error('❌ Seção não encontrada:', category);
     }
   }
   
@@ -110,13 +98,10 @@ function showCategory(category) {
 
 // === MOSTRAR PROMOÇÕES ===
 function showPromocoes() {
-  console.log('showPromocoes() chamada');
-  
   // Usar a seção existente no HTML
   let promocoesSection = document.getElementById('promo');
   
   if (!promocoesSection) {
-    console.error('Seção #promo não encontrada no HTML');
     return;
   }
   
@@ -125,16 +110,12 @@ function showPromocoes() {
   
   // Filtrar produtos em promoção
   const promocoesProducts = [];
-  console.log('Total de produtos:', allProducts.length);
   
   for (let i = 0; i < allProducts.length; i++) {
     if (allProducts[i].promocao === 'sim') {
       promocoesProducts.push(allProducts[i]);
-      console.log('Produto em promoção:', allProducts[i].nome);
     }
   }
-  
-  console.log('Produtos em promoção encontrados:', promocoesProducts.length);
   
   // Criar HTML
   let productsHTML = '<h2>PRODUTOS EM PROMOÇÃO</h2>';
@@ -150,8 +131,6 @@ function showPromocoes() {
   
   promocoesSection.innerHTML = productsHTML;
   
-  console.log('Seção de promoções exibida com', promocoesProducts.length, 'produtos');
-  
   // Fechar menu mobile automaticamente ao selecionar promoções
   closeMobileMenu();
   
@@ -166,9 +145,6 @@ function loadImagesOnScroll(container) {
   const images = container.querySelectorAll('img[data-src]');
   const loaded = [];
   
-  console.log('🔍 Procurando imagens com data-src em:', container);
-  console.log('📊 Imagens encontradas:', images.length);
-  
   function checkImages() {
     const windowHeight = window.innerHeight;
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -179,7 +155,6 @@ function loadImagesOnScroll(container) {
       
       // Verificar se tem data-src válido E se ainda não foi carregada
       if (!img.dataset || !img.dataset.src || img.classList.contains('loaded') || img.classList.contains('loading')) {
-        console.log('⚠️ Imagem sem data-src válido ou já carregada/em processo, pulando:', img);
         loaded.push(img);
         continue;
       }
@@ -192,8 +167,6 @@ function loadImagesOnScroll(container) {
                           elemBottom > scrollTop - 200;
       
       if (isInViewport) {
-        console.log('🎯 Carregando imagem:', img.dataset.src);
-        
         // Marcar como em carregamento IMEDIATAMENTE para evitar duplicação
         img.classList.add('loading');
         
@@ -218,8 +191,6 @@ function loadImagesOnScroll(container) {
           
           // Remover data-src para evitar processamento futuro
           img.removeAttribute('data-src');
-          
-          console.log('✅ Imagem carregada e animação aplicada:', img.src);
         };
         
         img.onerror = function() {
@@ -227,17 +198,14 @@ function loadImagesOnScroll(container) {
           if (img.dataset && img.dataset.src) {
             const fallbackSrc = img.dataset.src.replace(/\.webp$/i, '.jpg');
             if (fallbackSrc !== img.dataset.src) {
-              console.log('Tentando fallback para:', fallbackSrc);
               img.src = fallbackSrc;
             } else {
               // Tentar fallback para placeholder genérico
               const genericFallback = 'images/products/thumbnail/placeholder.webp';
               if (genericFallback !== img.dataset.src) {
-                console.log('Tentando placeholder genérico:', genericFallback);
                 img.src = genericFallback;
               } else {
                 // Manter placeholder se todas as tentativas falharem
-                console.log('Falha ao carregar imagem:', img.dataset.src);
                 if (placeholder) {
                   placeholder.textContent = '❌';
                   placeholder.style.opacity = '0.3';
@@ -245,7 +213,6 @@ function loadImagesOnScroll(container) {
               }
             }
           } else {
-            console.log('Erro: dataset.src não disponível');
             if (placeholder) {
               placeholder.textContent = '❌';
               placeholder.style.opacity = '0.3';
