@@ -630,7 +630,7 @@ function generateReviewsHTML(reviews) {
             <div class="user-avatar">${review.userName.charAt(0).toUpperCase()}</div>
             <div class="user-info">
               <div class="user-name">${review.userName}</div>
-              <div class="review-date">${date}</div>
+              <div class="review-date">${date}${review.edited ? ' (editado)' : ''}</div>
             </div>
           </div>
           <div class="review-rating">
@@ -640,7 +640,7 @@ function generateReviewsHTML(reviews) {
         </div>
         
         <div class="review-content">
-          <h4>${review.title}</h4>
+          <h4>${review.title}${review.edited ? ' <span style="color: #f59e0b; font-size: 12px;">(editado)</span>' : ''}</h4>
           <p class="review-text">${review.text}</p>
           ${photosHtml}
         </div>
@@ -698,13 +698,70 @@ function openReviewModal(productId) {
   // Verificar se usuário está logado
   const currentUser = getCurrentUser();
   if (!currentUser) {
-    alert('Você precisa estar logado para avaliar um produto. Faça login ou crie uma conta!');
+    showValidationErrors(['Você precisa estar logado para avaliar produtos.'], 'review-errors');
+    showAuth('login');
     return;
   }
   
   currentProductId = productId;
   const modal = document.getElementById('reviewModal');
   if (modal) {
+    // Verificar se usuário já avaliou este produto
+    const existingReview = getUserReview(productId, currentUser.email);
+    
+    if (existingReview) {
+      // Carregar dados da avaliação existente para edição
+      document.getElementById('reviewTitle').value = existingReview.title || '';
+      document.getElementById('reviewText').value = existingReview.text || '';
+      
+      // Configurar estrelas com a avaliação existente
+      setRating(existingReview.rating);
+      
+      // Carregar fotos existentes
+      uploadedPhotos = existingReview.photos || [];
+      updatePhotosPreview();
+      
+      // Mudar texto do botão e título
+      const submitBtn = modal.querySelector('.submit-review-btn');
+      const modalTitle = modal.querySelector('h3');
+      if (submitBtn) submitBtn.textContent = 'Atualizar Avaliação';
+      if (modalTitle) modalTitle.textContent = 'Editar Avaliação';
+      
+      // Mostrar indicador de edição
+      const editIndicator = document.createElement('div');
+      editIndicator.className = 'edit-indicator';
+      editIndicator.innerHTML = '📝 Editando sua avaliação existente';
+      editIndicator.style.cssText = `
+        background: #fef3c7;
+        border: 1px solid #f59e0b;
+        color: #d97706;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 14px;
+        margin-bottom: 16px;
+        text-align: center;
+      `;
+      
+      const form = modal.querySelector('.review-form');
+      if (form) {
+        // Remover indicador anterior se existir
+        const oldIndicator = form.querySelector('.edit-indicator');
+        if (oldIndicator) oldIndicator.remove();
+        
+        // Inserir novo indicador no início do formulário
+        form.insertBefore(editIndicator, form.firstChild);
+      }
+    } else {
+      // Nova avaliação - resetar formulário
+      resetReviewForm();
+      
+      // Mudar texto do botão e título para nova avaliação
+      const submitBtn = modal.querySelector('.submit-review-btn');
+      const modalTitle = modal.querySelector('h3');
+      if (submitBtn) submitBtn.textContent = 'Enviar Avaliação';
+      if (modalTitle) modalTitle.textContent = 'Avaliar Produto';
+    }
+    
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
@@ -829,6 +886,14 @@ function validateReviewForm(data) {
   return errors;
 }
 
+// Função para verificar se usuário já avaliou o produto
+function getUserReview(productId, userEmail) {
+  const reviews = JSON.parse(localStorage.getItem('primos_reviews') || '[]');
+  return reviews.find(review => 
+    review.productId === productId && review.userEmail === userEmail
+  );
+}
+
 // Função para enviar avaliação
 function submitReview(event) {
   event.preventDefault();
@@ -850,6 +915,40 @@ function submitReview(event) {
     return;
   }
   
+  const currentUser = getCurrentUser();
+  const existingReview = getUserReview(currentProductId, currentUser.email);
+  
+  if (existingReview) {
+    // Editar avaliação existente
+    const reviews = JSON.parse(localStorage.getItem('primos_reviews') || '[]');
+    const reviewIndex = reviews.findIndex(r => 
+      r.productId === currentProductId && r.userEmail === currentUser.email
+    );
+    
+    if (reviewIndex !== -1) {
+      reviews[reviewIndex] = {
+        ...existingReview,
+        rating: sanitizedData.rating,
+        title: sanitizedData.title,
+        text: sanitizedData.text,
+        photos: uploadedPhotos,
+        date: new Date().toISOString(), // Atualiza data da edição
+        edited: true // Marca como editado
+      };
+      
+      localStorage.setItem('primos_reviews', JSON.stringify(reviews));
+      
+      closeReviewModal();
+      showSuccessMessage('Avaliação atualizada com sucesso!');
+      
+      setTimeout(() => {
+        location.reload();
+      }, 1500);
+    }
+    return;
+  }
+  
+  // Nova avaliação
   const reviewData = {
     id: Date.now().toString(),
     productId: currentProductId,
@@ -857,11 +956,12 @@ function submitReview(event) {
     title: sanitizedData.title,
     text: sanitizedData.text,
     photos: uploadedPhotos,
-    userName: getCurrentUser().nome,
-    userEmail: getCurrentUser().email,
+    userName: currentUser.nome,
+    userEmail: currentUser.email,
     date: new Date().toISOString(),
     helpful: 0,
-    verified: true // Usuário logado
+    verified: true, // Usuário logado
+    edited: false // Marca como não editado
   };
   
   // Salvar avaliação
