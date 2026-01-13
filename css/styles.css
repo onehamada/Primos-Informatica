@@ -6410,6 +6410,36 @@ main {
   font-size: 14px;
 }
 
+.product-rating-summary .stars .star {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #d1d5db;
+}
+
+.product-rating-summary .stars .star:hover {
+  color: #fbbf24;
+  transform: scale(1.1);
+}
+
+.product-rating-summary .stars .star.filled {
+  color: #fbbf24;
+}
+
+.product-rating-summary .stars .star.half-filled {
+  color: #fbbf24;
+  position: relative;
+}
+
+.product-rating-summary .stars .star.half-filled::after {
+  content: '★';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  overflow: hidden;
+  color: #fbbf24;
+}
+
 .product-rating-summary .rating-text {
   font-size: 12px;
   color: #64748b;

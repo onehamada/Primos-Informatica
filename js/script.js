@@ -582,22 +582,22 @@ function calculateAverageRating(reviews) {
 }
 
 // Função para gerar estrelas
-function generateStars(rating) {
+function generateStars(rating, productCode) {
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating % 1 >= 0.5;
   let stars = '';
   
   for (let i = 0; i < fullStars; i++) {
-    stars += '<span class="star filled">★</span>';
+    stars += `<span class="star filled" onclick="openReviewModal('${productCode}')" title="Clique para avaliar">★</span>`;
   }
   
   if (hasHalfStar && fullStars < 5) {
-    stars += '<span class="star half-filled">★</span>';
+    stars += `<span class="star half-filled" onclick="openReviewModal('${productCode}')" title="Clique para avaliar">★</span>`;
   }
   
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
   for (let i = 0; i < emptyStars; i++) {
-    stars += '<span class="star">☆</span>';
+    stars += `<span class="star" onclick="openReviewModal('${productCode}')" title="Clique para avaliar">☆</span>`;
   }
   
   return stars;
@@ -612,7 +612,7 @@ function generateReviewsHTML(reviews) {
   let html = '';
   reviews.forEach(review => {
     const date = new Date(review.date).toLocaleDateString('pt-BR');
-    const stars = generateStars(review.rating);
+    const stars = generateStars(review.rating, review.productId);
     
     let photosHtml = '';
     if (review.photos && review.photos.length > 0) {
@@ -950,7 +950,7 @@ function createProductCard(product) {
     '<div class="product-info">' +
     '<h3>' + product.nome + '</h3>' +
     '<div class="product-rating-summary">' +
-    '<div class="stars">' + generateStars(averageRating) + '</div>' +
+    '<div class="stars">' + generateStars(averageRating, product.codigo) + '</div>' +
     '<span class="rating-text">' + averageRating.toFixed(1) + ' (' + reviewCount + ')</span>' +
     '<button class="review-btn" onclick="openReviewModal(\'' + product.codigo + '\')">Avaliar</button>' +
     '</div>' +
