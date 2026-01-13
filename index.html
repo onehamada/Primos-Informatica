@@ -175,14 +175,7 @@
             </svg>
           </button>
           
-          <!-- Login/Cadastro -->
-          <button class="action-btn auth-btn-header" onclick="showAuth('cadastro')" title="Criar Conta / Login">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-          </button>
-          
+                    
           <!-- Menu Mobile -->
           <button class="action-btn mobile-menu-toggle" onclick="toggleMobileMenu()" title="Menu">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -302,36 +295,7 @@
           </div>
         </div>
         
-        <!-- Área do Usuário Logado -->
-        <div class="user-area" id="userArea" style="display: none;">
-          <div class="user-info">
-            <div class="user-avatar">
-              <span id="userInitial">U</span>
-            </div>
-            <div class="user-details">
-              <span id="userName">Usuário</span>
-              <span id="userEmail">email@email.com</span>
-            </div>
-          </div>
-          
-          <div class="user-menu">
-            <button class="user-menu-btn" onclick="toggleUserMenu()">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 5v14M5 12h14"/>
-              </svg>
-            </button>
-            
-            <div class="user-dropdown" id="userDropdown">
-              <a href="#" onclick="showMeusPedidos()">📦 Meus Pedidos</a>
-              <a href="#" onclick="showMeusFavoritos()">❤️ Favoritos</a>
-              <a href="#" onclick="showMeusDados()">👤 Meus Dados</a>
-              <a href="#" onclick="showEnderecos()">📍 Endereços</a>
-              <hr>
-              <a href="#" onclick="logout()" class="logout-link">🚪 Sair</a>
-            </div>
-          </div>
-        </div>
-        
+                
         </div>
     </div>
   </header>
@@ -831,95 +795,6 @@
   </svg>
   <span class="whatsapp-tooltip">(61) 3340-6740</span>
 </a>
-
-<!-- Modal de Cadastro/Login -->
-<div class="auth-modal" id="authModal">
-  <div class="auth-container">
-    <div class="auth-header">
-      <div class="auth-tabs">
-        <button class="auth-tab active" onclick="switchTab('cadastro')">Criar Conta</button>
-        <button class="auth-tab" onclick="switchTab('login')">Fazer Login</button>
-      </div>
-      <button class="close-btn" onclick="closeAuth()">×</button>
-    </div>
-    
-    <!-- Formulário de Cadastro -->
-    <form class="auth-form" id="cadastroForm" style="display: block;">
-      <div class="form-group">
-        <label for="cadastro-nome">Nome Completo</label>
-        <input type="text" id="cadastro-nome" name="nome" required placeholder="Seu nome completo">
-        <span class="form-error"></span>
-      </div>
-      
-      <div class="form-group">
-        <label for="cadastro-email">E-mail</label>
-        <input type="email" id="cadastro-email" name="email" required placeholder="seu@email.com">
-        <span class="form-error"></span>
-      </div>
-      
-      <div class="form-group">
-        <label for="cadastro-telefone">Telefone</label>
-        <input type="tel" id="cadastro-telefone" name="telefone" required placeholder="(61) 99999-9999">
-        <span class="form-error"></span>
-      </div>
-      
-      <div class="form-group">
-        <label for="cadastro-senha">Senha</label>
-        <input type="password" id="cadastro-senha" name="senha" required placeholder="Mínimo 6 caracteres">
-        <span class="form-error"></span>
-      </div>
-      
-      <div class="form-group">
-        <label for="cadastro-confirmar">Confirmar Senha</label>
-        <input type="password" id="cadastro-confirmar" name="confirmar" required placeholder="Repita sua senha">
-        <span class="form-error"></span>
-      </div>
-      
-      <button type="submit" class="auth-btn">Cadastrar</button>
-    </form>
-    
-    <!-- Formulário de Login -->
-    <form class="auth-form" id="loginForm" style="display: none;">
-      <div class="form-group">
-        <label for="login-email">E-mail</label>
-        <input type="email" id="login-email" name="email" required placeholder="seu@email.com">
-        <span class="form-error"></span>
-      </div>
-      
-      <div class="form-group">
-        <label for="login-senha">Senha</label>
-        <input type="password" id="login-senha" name="senha" required placeholder="Sua senha">
-        <span class="form-error"></span>
-      </div>
-      
-      <div class="form-options">
-        <label class="checkbox-label">
-          <input type="checkbox" id="lembrar-me">
-          <span>Lembrar-me</span>
-        </label>
-        <a href="#" onclick="showRecuperarSenha()">Esqueci minha senha</a>
-      </div>
-      
-      <button type="submit" class="auth-btn">Fazer Login</button>
-    </form>
-    
-    <!-- Formulário de Recuperação de Senha -->
-    <form class="auth-form" id="recuperarForm" style="display: none;">
-      <div class="form-group">
-        <label for="recuperar-email">E-mail para Recuperação</label>
-        <input type="email" id="recuperar-email" name="email" required placeholder="seu@email.com">
-        <span class="form-error"></span>
-      </div>
-      
-      <button type="submit" class="auth-btn">Enviar E-mail de Recuperação</button>
-      <a href="#" onclick="backToLogin()" class="back-link">← Voltar para Login</a>
-    </form>
-    
-    <div class="auth-footer">
-      <p id="auth-footer-text">Já tem conta? <a href="#" onclick="switchTab('login')">Faça login</a></p>
-    </div>
-  </div>
-</div>
 
 <!-- Botão Voltar ao Topo -->
 <button class="back-to-top" id="backToTop" onclick="scrollToTop()" title="Voltar ao topo">
