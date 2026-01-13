@@ -931,9 +931,16 @@ function getUserReview(productId, userEmail) {
 
 // Função para enviar avaliação
 function submitReview(event) {
+  console.log('🚀 submitReview chamada!');
+  console.log('📋 Evento:', event);
+  console.log('📋 currentProductId:', currentProductId);
+  console.log('📋 currentRating:', currentRating);
+  
   event.preventDefault();
+  console.log('✅ preventDefault executado');
   
   const formData = new FormData(event.target);
+  console.log('📋 FormData:', Object.fromEntries(formData));
   
   // Sanitizar inputs
   const sanitizedData = {
@@ -942,81 +949,16 @@ function submitReview(event) {
     text: sanitizeInput(formData.get('text') || '')
   };
   
+  console.log('🧹 Dados sanitizados:', sanitizedData);
+  
   // Validar formulário
   const errors = validateReviewForm(sanitizedData);
+  console.log('🔍 Erros de validação:', errors);
   
   if (errors.length > 0) {
+    console.log('❌ Formulário inválido, mostrando erros');
     showValidationErrors(errors, 'review-errors');
     return;
-  }
-  
-  const currentUser = getCurrentUser();
-  const existingReview = getUserReview(currentProductId, currentUser.email);
-  
-  if (existingReview) {
-    // Editar avaliação existente
-    const reviews = JSON.parse(localStorage.getItem('primos_reviews') || '[]');
-    const reviewIndex = reviews.findIndex(r => 
-      r.productId === currentProductId && r.userEmail === currentUser.email
-    );
-    
-    if (reviewIndex !== -1) {
-      reviews[reviewIndex] = {
-        ...existingReview,
-        rating: sanitizedData.rating,
-        title: sanitizedData.title,
-        text: sanitizedData.text,
-        photos: uploadedPhotos,
-        date: new Date().toISOString(), // Atualiza data da edição
-        edited: true // Marca como editado
-      };
-      
-      localStorage.setItem('primos_reviews', JSON.stringify(reviews));
-      
-      closeReviewModal();
-      showSuccessMessage('Avaliação atualizada com sucesso!');
-      
-      setTimeout(() => {
-        location.reload();
-      }, 1500);
-    }
-    return;
-  }
-  
-  // Nova avaliação
-  const reviewData = {
-    id: Date.now().toString(),
-    productId: currentProductId,
-    rating: sanitizedData.rating,
-    title: sanitizedData.title,
-    text: sanitizedData.text,
-    photos: uploadedPhotos,
-    userName: currentUser.nome,
-    userEmail: currentUser.email,
-    date: new Date().toISOString(),
-    helpful: 0,
-    verified: true, // Usuário logado
-    edited: false // Marca como não editado
-  };
-  
-  // Salvar avaliação
-  saveReview(reviewData);
-  
-  // Fechar modal
-  closeReviewModal();
-  
-  // Mostrar mensagem de sucesso
-  showSuccessMessage('Avaliação enviada com sucesso! Obrigado por seu feedback.');
-  
-  // Atualizar interface
-  setTimeout(() => {
-    // Forçar atualização da interface
-    forceUpdateReviewsDisplay(currentProductId);
-    
-    // Recarregar apenas se não estiver no localhost
-    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-      console.log('🔄 Forçando atualização para GitHub Pages...');
-      location.reload();
     } else {
       console.log('🔄 Atualizando interface local...');
       updateProductCard(currentProductId);
