@@ -1,3 +1,117 @@
+// === FUNÇÕES DE VALIDAÇÃO E SANITIZAÇÃO ===
+
+// Sanitização de input contra XSS
+function sanitizeInput(input) {
+  if (typeof input !== 'string') return input;
+  
+  return input
+    .replace(/[<>]/g, '') // Remove tags HTML
+    .replace(/javascript:/gi, '') // Remove protocolos javascript
+    .replace(/on\w+\s*=/gi, '') // Remove event handlers
+    .trim();
+}
+
+// Validação de email
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+// Validação de senha (mínimo 6 caracteres, pelo menos 1 letra e 1 número)
+function validatePassword(password) {
+  if (password.length < 6) return false;
+  const hasLetter = /[a-zA-Z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  return hasLetter && hasNumber;
+}
+
+// Validação de nome (mínimo 2 caracteres, apenas letras e espaços)
+function validateName(name) {
+  if (name.length < 2) return false;
+  const nameRegex = /^[a-zA-ZÀ-ÿ\s]+$/;
+  return nameRegex.test(name);
+}
+
+// Validação de telefone (formato brasileiro)
+function validatePhone(phone) {
+  const phoneRegex = /^\(?\d{2}\)?[\s-]?\d{4,5}[-]?\d{4}$/;
+  return phoneRegex.test(phone);
+}
+
+// Validação de formulário de cadastro
+function validateRegistrationForm(data) {
+  const errors = [];
+  
+  if (!validateName(data.name)) {
+    errors.push('Nome deve ter pelo menos 2 caracteres e conter apenas letras');
+  }
+  
+  if (!validateEmail(data.email)) {
+    errors.push('Email inválido');
+  }
+  
+  if (!validatePassword(data.password)) {
+    errors.push('Senha deve ter pelo menos 6 caracteres, incluindo letras e números');
+  }
+  
+  if (data.password !== data.confirmPassword) {
+    errors.push('Senhas não conferem');
+  }
+  
+  if (data.phone && !validatePhone(data.phone)) {
+    errors.push('Telefone inválido');
+  }
+  
+  return errors;
+}
+
+// Validação de formulário de login
+function validateLoginForm(data) {
+  const errors = [];
+  
+  if (!data.email || !validateEmail(data.email)) {
+    errors.push('Email inválido');
+  }
+  
+  if (!data.password || data.password.length < 1) {
+    errors.push('Senha é obrigatória');
+  }
+  
+  return errors;
+}
+
+// Exibir mensagens de erro de validação
+function showValidationErrors(errors, containerId = 'auth-errors') {
+  let errorContainer = document.getElementById(containerId);
+  
+  if (!errorContainer) {
+    errorContainer = document.createElement('div');
+    errorContainer.id = containerId;
+    errorContainer.className = 'validation-errors';
+    
+    const form = document.querySelector('.auth-form');
+    if (form) {
+      form.insertBefore(errorContainer, form.firstChild);
+    }
+  }
+  
+  errorContainer.innerHTML = '';
+  
+  if (errors.length > 0) {
+    errorContainer.innerHTML = `
+      <div class="error-message">
+        <strong>Erros encontrados:</strong>
+        <ul>
+          ${errors.map(error => `<li>${error}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+    errorContainer.style.display = 'block';
+  } else {
+    errorContainer.style.display = 'none';
+  }
+}
+
 // === FUNÇÃO PRINCIPAL - CATEGORIAS ===
 function showCategory(category) {
   // Limpar observer anterior
@@ -346,7 +460,6 @@ function populateHome() {
 function populateHomeCategories() {
   const categoriesGrid = document.getElementById('home-categories-grid');
   if (!categoriesGrid) {
-    console.error('Elemento #home-categories-grid não encontrado');
     return;
   }
   
@@ -403,7 +516,6 @@ function populateHomeCategories() {
 function populateHomeHighlights() {
   const highlightsGrid = document.getElementById('home-highlights-grid');
   if (!highlightsGrid) {
-    console.error('Elemento #home-highlights-grid não encontrado');
     return;
   }
   
@@ -694,22 +806,56 @@ function resetReviewForm() {
   }
 }
 
+// Validação de formulário de avaliação
+function validateReviewForm(data) {
+  const errors = [];
+  
+  if (!data.rating || data.rating < 1 || data.rating > 5) {
+    errors.push('Por favor, selecione uma avaliação de 1 a 5 estrelas');
+  }
+  
+  if (!data.title || data.title.trim().length < 3) {
+    errors.push('Título deve ter pelo menos 3 caracteres');
+  }
+  
+  if (!data.text || data.text.trim().length < 10) {
+    errors.push('Comentário deve ter pelo menos 10 caracteres');
+  }
+  
+  if (data.text && data.text.length > 1000) {
+    errors.push('Comentário deve ter no máximo 1000 caracteres');
+  }
+  
+  return errors;
+}
+
 // Função para enviar avaliação
 function submitReview(event) {
   event.preventDefault();
   
-  if (currentRating === 0) {
-    alert('Por favor, selecione uma avaliação em estrelas');
+  const formData = new FormData(event.target);
+  
+  // Sanitizar inputs
+  const sanitizedData = {
+    rating: currentRating,
+    title: sanitizeInput(formData.get('title') || ''),
+    text: sanitizeInput(formData.get('text') || '')
+  };
+  
+  // Validar formulário
+  const errors = validateReviewForm(sanitizedData);
+  
+  if (errors.length > 0) {
+    showValidationErrors(errors, 'review-errors');
     return;
   }
   
-  const formData = new FormData(event.target);
   const reviewData = {
     id: Date.now().toString(),
     productId: currentProductId,
-    rating: currentRating,
-    title: formData.get('title'),
-    text: formData.get('text'),
+    rating: sanitizedData.rating,
+    title: sanitizedData.title,
+    text: sanitizedData.text,
     photos: uploadedPhotos,
     userName: getCurrentUser().nome,
     userEmail: getCurrentUser().email,
@@ -1076,7 +1222,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('🏠 Exibindo página inicial...');
     showCategory('inicio');
   }).catch(function(error) {
-    console.error('❌ Erro ao carregar produtos:', error);
+    // Erro silencioso - log removido para produção
   });
   
   window.addEventListener('hashchange', function() {
@@ -1087,8 +1233,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // === FUNÇÕES DE BUSCA MELHORADAS ===
+function sanitizeInput(input) {
+  return input.trim().replace(/[^a-zA-Z0-9\s]/g, '');
+}
+
 function handleSearchInput(event) {
-  const searchTerm = event.target.value.trim();
+  const searchTerm = sanitizeInput(event.target.value);
   
   // Se tiver menos de 2 caracteres, não buscar
   if (searchTerm.length < 2) {
@@ -1227,7 +1377,6 @@ function toggleFilters() {
   console.log('🔍 filtersToggle encontrado:', !!filtersToggle);
   
   if (!filtersPanel || !filtersToggle) {
-    console.error('❌ Elementos de filtro não encontrados');
     return;
   }
   
@@ -1647,14 +1796,20 @@ class UserAuth {
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData);
     
-    // Limpar erros anteriores
-    this.clearErrors(e.target);
-
-    // Validar
-    const errors = this.validateCadastro(data);
+    // Sanitizar inputs
+    const sanitizedData = {
+      name: sanitizeInput(data.nome || ''),
+      email: sanitizeInput(data.email || ''),
+      phone: sanitizeInput(data.telefone || ''),
+      password: data.senha || '',
+      confirmPassword: data.confirmSenha || ''
+    };
+    
+    // Validar formulário
+    const errors = validateRegistrationForm(sanitizedData);
     
     if (errors.length > 0) {
-      this.showErrors(e.target, errors);
+      showValidationErrors(errors);
       return;
     }
 
@@ -1665,13 +1820,21 @@ class UserAuth {
     submitBtn.textContent = 'Cadastrando...';
 
     try {
+      // Verificar se email já existe
+      if (this.users.some(user => user.email === sanitizedData.email.toLowerCase())) {
+        showValidationErrors(['Este email já está cadastrado']);
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+        return;
+      }
+
       // Criar novo usuário
       const newUser = {
         id: Date.now(),
-        nome: data.nome.trim(),
-        email: data.email.toLowerCase().trim(),
-        telefone: data.telefone.replace(/\D/g, ''),
-        senha: this.hashPassword(data.senha),
+        nome: sanitizedData.name,
+        email: sanitizedData.email.toLowerCase(),
+        telefone: sanitizedData.phone.replace(/\D/g, ''),
+        senha: this.hashPassword(sanitizedData.password),
         dataCadastro: new Date().toISOString(),
         pedidos: [],
         favoritos: [],
@@ -1711,17 +1874,17 @@ class UserAuth {
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData);
     
-    // Limpar erros anteriores
-    this.clearErrors(e.target);
-
-    // Validar
-    if (!this.validateEmail(data.email)) {
-      this.showErrors(e.target, ['E-mail inválido']);
-      return;
-    }
-
-    if (!data.senha || data.senha.length < 6) {
-      this.showErrors(e.target, ['Senha inválida']);
+    // Sanitizar inputs
+    const sanitizedData = {
+      email: sanitizeInput(data.email || ''),
+      password: data.senha || ''
+    };
+    
+    // Validar formulário
+    const errors = validateLoginForm(sanitizedData);
+    
+    if (errors.length > 0) {
+      showValidationErrors(errors);
       return;
     }
 
@@ -1733,16 +1896,20 @@ class UserAuth {
 
     try {
       // Buscar usuário
-      const user = this.users.find(u => u.email === data.email.toLowerCase().trim());
+      const user = this.users.find(u => u.email === sanitizedData.email.toLowerCase());
       
       if (!user) {
-        this.showErrors(e.target, ['E-mail não encontrado']);
+        showValidationErrors(['E-mail não encontrado']);
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
         return;
       }
 
       // Verificar senha
-      if (!this.verifyPassword(data.senha, user.senha)) {
-        this.showErrors(e.target, ['Senha incorreta']);
+      if (!this.verifyPassword(sanitizedData.password, user.senha)) {
+        showValidationErrors(['Senha incorreta']);
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
         return;
       }
 
@@ -1751,7 +1918,7 @@ class UserAuth {
       this.saveCurrentUser();
 
       // Salvar preferência "lembrar-me"
-      if (document.getElementById('lembrar-me').checked) {
+      if (document.getElementById('lembrar-me') && document.getElementById('lembrar-me').checked) {
         localStorage.setItem('primos_remember', 'true');
       }
 
