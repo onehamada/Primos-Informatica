@@ -1034,18 +1034,39 @@ function saveReview(reviewData) {
 
 // Função para forçar atualização das avaliações sem reload
 function forceUpdateReviewsDisplay(productId) {
+  console.log(`🔄 forceUpdateReviewsDisplay chamada para produto ${productId}`);
+  
   try {
     // Atualizar seção de avaliações do produto
     const reviewsSection = document.getElementById(`reviews-${productId}`);
+    console.log(`📋 reviewsSection encontrado:`, !!reviewsSection);
+    
     if (reviewsSection) {
       const reviews = getProductReviews(productId);
+      console.log(`📋 reviews carregadas:`, reviews.length, reviews);
+      
       const reviewsHTML = generateReviewsHTML(reviews);
+      console.log(`📋 reviewsHTML gerado:`, reviewsHTML.length, 'caracteres');
+      
+      // Encontrar o elemento correto para atualizar
       const reviewsList = reviewsSection.querySelector('.reviews-list');
+      console.log(`📋 reviewsList encontrado:`, !!reviewsList);
       
       if (reviewsList) {
         reviewsList.innerHTML = reviewsHTML;
-        console.log(`🔄 Avaliações do produto ${productId} atualizadas: ${reviews.length} avaliações`);
+        console.log(`✅ Avaliações do produto ${productId} atualizadas: ${reviews.length} avaliações`);
+        
+        // Verificar se o HTML foi realmente inserido
+        setTimeout(() => {
+          const finalHTML = reviewsList.innerHTML;
+          console.log(`📋 HTML final no reviewsList:`, finalHTML.length, 'caracteres');
+          console.log(`📋 Conteúdo final:`, finalHTML);
+        }, 100);
+      } else {
+        console.log(`❌ reviewsList não encontrado para produto ${productId}`);
       }
+    } else {
+      console.log(`❌ reviewsSection não encontrado para produto ${productId}`);
     }
     
     // Atualizar card do produto com nova média
@@ -1053,7 +1074,10 @@ function forceUpdateReviewsDisplay(productId) {
     
   } catch (error) {
     console.error('❌ Erro ao atualizar avaliações:', error);
+    console.error('Stack:', error.stack);
+    
     // Fallback: reload completo
+    console.log('🔄 Fallback: recarregando página...');
     location.reload();
   }
 }
