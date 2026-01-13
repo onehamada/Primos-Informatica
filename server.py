@@ -28,9 +28,9 @@ class UTF8HTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 # Criar o servidor
 handler = UTF8HTTPRequestHandler
-httpd = socketserver.TCPServer(('127.0.0.1', 8080), handler)
+httpd = socketserver.TCPServer(('127.0.0.1', 8081), handler)
 
-print('Servidor rodando em http://localhost:8080')
+print('Servidor rodando em http://localhost:8081')
 print('Diretório atual:', os.getcwd())
 print('Arquivos no diretório:')
 for file in os.listdir('.'):

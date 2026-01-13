@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Cadastro - Primos Informática</title>
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-wrapper">
+            <!-- Logo e Título -->
+            <div class="auth-header">
+                <img src="images/logo.png" alt="Primos Informática" class="auth-logo">
+                <h1 class="auth-title">Primos Informática</h1>
+                <p class="auth-subtitle">Bem-vindo! Faça login ou cadastre-se</p>
+            </div>
+
+            <!-- Área de Login -->
+            <div class="auth-section" id="login-section">
+                <h2 class="section-title">Entrar</h2>
+                <form class="auth-form" id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">E-mail</label>
+                        <input type="email" id="login-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Senha</label>
+                        <input type="password" id="login-password" name="password" required>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember-me">
+                            <span>Lembrar-me</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="auth-btn primary">Entrar</button>
+                    <button type="button" class="auth-btn secondary" id="show-cadastro-btn">Criar Conta</button>
+                </form>
+                <p class="auth-switch">
+                    Não tem conta? <a href="#" id="show-cadastro">Cadastre-se</a>
+                </p>
+            </div>
+
+            <!-- Área de Cadastro -->
+            <div class="auth-section hidden" id="cadastro-section">
+                <h2 class="section-title">Criar Conta</h2>
+                <form class="auth-form" id="cadastro-form">
+                    <div class="form-group">
+                        <label for="cadastro-nome">Nome</label>
+                        <input type="text" id="cadastro-nome" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cadastro-email">E-mail</label>
+                        <input type="email" id="cadastro-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cadastro-senha">Senha</label>
+                        <input type="password" id="cadastro-senha" name="senha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cadastro-confirmar-senha">Confirmar Senha</label>
+                        <input type="password" id="cadastro-confirmar-senha" name="confirmar-senha" required>
+                    </div>
+                    <button type="submit" class="auth-btn primary">Cadastrar</button>
+                </form>
+                <p class="auth-switch">
+                    Já tem conta? <a href="#" id="show-login">Faça login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+</html>

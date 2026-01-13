@@ -13,7 +13,6 @@
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.95);
 }
 
 .loading.active {
@@ -151,16 +150,6 @@
   animation-fill-mode: both;
 }
 
-/* Stagger animation para cards */
-.product-card:nth-child(1) { animation-delay: 0.0s; }
-.product-card:nth-child(2) { animation-delay: 0.1s; }
-.product-card:nth-child(3) { animation-delay: 0.2s; }
-.product-card:nth-child(4) { animation-delay: 0.3s; }
-.product-card:nth-child(5) { animation-delay: 0.4s; }
-.product-card:nth-child(6) { animation-delay: 0.5s; }
-.product-card:nth-child(7) { animation-delay: 0.6s; }
-.product-card:nth-child(8) { animation-delay: 0.7s; }
-
 /* Animação para categorias */
 @keyframes categoryCardEntrance {
   0% {
@@ -243,7 +232,6 @@
   visibility: visible;
 }
 
-/* === Animações de Imagem === */
 .product-image img.loading {
   animation: imageFadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   will-change: transform, opacity, filter;
@@ -821,11 +809,7 @@
   gap: 6px;
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
-  padding: 12px 0;
-  white-space: nowrap;
-  flex-wrap: nowrap;
+  padding: 8px 0;
   position: relative;
   z-index: 100 !important;
 }
@@ -887,10 +871,72 @@
   flex-shrink: 0;
 }
 
-/* === Contact Button === */
-/* REMOVIDO - Agora o WhatsApp está dentro das nav-tabs */
+/* Botão Entrar Flutuante */
+.floating-login-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
 
-/* Botão WhatsApp dentro das nav-tabs */
+.floating-login-btn:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+}
+
+.floating-login-btn svg {
+  flex-shrink: 0;
+}
+
+.floating-login-btn span {
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .floating-login-btn {
+    top: 15px;
+    right: 15px;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  
+  .floating-login-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-login-btn {
+    top: 10px;
+    right: 10px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  
+  .floating-login-btn span {
+    display: none;
+  }
+  
+  .floating-login-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+}
 .nav-tabs .whatsapp-btn,
 .nav-tabs .contact-btn.whatsapp-btn {
   display: flex !important;
@@ -1282,7 +1328,6 @@
   }
 }
 
-/* === RESET GERAL DE IMAGENS - FORÇADO === */
 img {
   opacity: 1 !important;
   display: block !important;
