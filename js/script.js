@@ -883,19 +883,37 @@ function removePhoto(index) {
 function resetReviewForm() {
   currentRating = 0;
   uploadedPhotos = [];
-  currentProductId = null;
+  // currentProductId = null; // Não resetar para manter contexto
   
   const form = document.getElementById('reviewForm');
   if (form) {
     form.reset();
-    setRating(0);
-    updatePhotosPreview();
   }
   
-  const photoInput = document.getElementById('photoInput');
-  if (photoInput) {
-    photoInput.value = '';
+  // Resetar estrelas
+  const stars = document.querySelectorAll('.star-rating .star');
+  stars.forEach(star => {
+    star.textContent = '☆';
+    star.classList.remove('filled');
+  });
+  
+  // Limpar preview de fotos
+  const photosPreview = document.getElementById('photosPreview');
+  if (photosPreview) {
+    photosPreview.innerHTML = '';
   }
+  
+  // Remover indicador de edição
+  const editIndicator = form?.querySelector('.edit-indicator');
+  if (editIndicator) {
+    editIndicator.remove();
+  }
+  
+  // Resetar botão e título
+  const submitBtn = form?.querySelector('.submit-review-btn');
+  const modalTitle = document.querySelector('#reviewModal h3');
+  if (submitBtn) submitBtn.textContent = 'Enviar Avaliação';
+  if (modalTitle) modalTitle.textContent = 'Avaliar Produto';
 }
 
 // Validação de formulário de avaliação
@@ -961,14 +979,26 @@ function submitReview(event) {
     return;
   } else {
     console.log('✅ Formulário válido, enviando avaliação...');
+    
+    // Obter usuário atual
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+      showValidationErrors(['Você precisa estar logado para avaliar produtos.'], 'review-errors');
+      return;
+    }
+    
     const reviewData = {
       id: Date.now(),
       productId: currentProductId,
-      userEmail: userEmail,
+      userEmail: currentUser.email,
+      userName: currentUser.nome,
       rating: sanitizedData.rating,
       title: sanitizedData.title,
       text: sanitizedData.text,
-      photos: uploadedPhotos
+      photos: uploadedPhotos,
+      date: new Date().toISOString(),
+      helpful: 0,
+      edited: false
     };
     
     saveReview(reviewData);
@@ -997,8 +1027,26 @@ function saveReview(reviewData) {
       }
     }
     
-    // Adicionar nova avaliação
-    reviews.push(reviewData);
+    // Verificar se usuário já avaliou este produto (edição)
+    const existingIndex = reviews.findIndex(review => 
+      review.productId === reviewData.productId && review.userEmail === reviewData.userEmail
+    );
+    
+    if (existingIndex !== -1) {
+      // Atualizar avaliação existente
+      reviews[existingIndex] = {
+        ...reviews[existingIndex],
+        ...reviewData,
+        id: reviews[existingIndex].id, // Manter ID original
+        edited: true,
+        date: new Date().toISOString()
+      };
+      console.log('📝 Avaliação atualizada:', reviewData.productId);
+    } else {
+      // Adicionar nova avaliação
+      reviews.push(reviewData);
+      console.log('✅ Nova avaliação adicionada:', reviewData.productId);
+    }
     
     // Salvar no localStorage
     localStorage.setItem('primos_reviews', JSON.stringify(reviews));
@@ -1037,48 +1085,58 @@ function forceUpdateReviewsDisplay(productId) {
   console.log(`🔄 forceUpdateReviewsDisplay chamada para produto ${productId}`);
   
   try {
-    // Atualizar seção de avaliações do produto
-    const reviewsSection = document.getElementById(`reviews-${productId}`);
-    console.log(`📋 reviewsSection encontrado:`, !!reviewsSection);
-    
-    if (reviewsSection) {
-      const reviews = getProductReviews(productId);
-      console.log(`📋 reviews carregadas:`, reviews.length, reviews);
+    // Pequeno delay para garantir que os dados foram salvos
+    setTimeout(() => {
+      // Atualizar seção de avaliações do produto
+      const reviewsSection = document.getElementById(`reviews-${productId}`);
+      console.log(`📋 reviewsSection encontrado:`, !!reviewsSection);
       
-      const reviewsHTML = generateReviewsHTML(reviews);
-      console.log(`📋 reviewsHTML gerado:`, reviewsHTML.length, 'caracteres');
-      
-      // Encontrar o elemento correto para atualizar
-      const reviewsList = reviewsSection.querySelector('.reviews-list');
-      console.log(`📋 reviewsList encontrado:`, !!reviewsList);
-      
-      if (reviewsList) {
-        reviewsList.innerHTML = reviewsHTML;
-        console.log(`✅ Avaliações do produto ${productId} atualizadas: ${reviews.length} avaliações`);
+      if (reviewsSection) {
+        const reviews = getProductReviews(productId);
+        console.log(`📋 reviews carregadas:`, reviews.length, reviews);
         
-        // Verificar se o HTML foi realmente inserido
-        setTimeout(() => {
-          const finalHTML = reviewsList.innerHTML;
-          console.log(`📋 HTML final no reviewsList:`, finalHTML.length, 'caracteres');
-          console.log(`📋 Conteúdo final:`, finalHTML);
-        }, 100);
+        const reviewsHTML = generateReviewsHTML(reviews);
+        console.log(`📋 reviewsHTML gerado:`, reviewsHTML.length, 'caracteres');
+        
+        // Encontrar o elemento correto para atualizar
+        const reviewsList = document.getElementById(`reviews-list-${productId}`);
+        console.log(`📋 reviewsList encontrado:`, !!reviewsList);
+        
+        if (reviewsList) {
+          reviewsList.innerHTML = reviewsHTML;
+          console.log(`✅ Avaliações do produto ${productId} atualizadas: ${reviews.length} avaliações`);
+          
+          // Verificar se o HTML foi realmente inserido
+          setTimeout(() => {
+            const finalHTML = reviewsList.innerHTML;
+            console.log(`📋 HTML final no reviewsList:`, finalHTML.length, 'caracteres');
+            console.log(`📋 Conteúdo final:`, finalHTML);
+          }, 100);
+        } else {
+          console.log(`❌ reviewsList não encontrado para produto ${productId}`);
+        }
       } else {
-        console.log(`❌ reviewsList não encontrado para produto ${productId}`);
+        console.log(`❌ reviewsSection não encontrado para produto ${productId}`);
       }
-    } else {
-      console.log(`❌ reviewsSection não encontrado para produto ${productId}`);
-    }
-    
-    // Atualizar card do produto com nova média
-    updateProductCard(productId);
+      
+      // Atualizar card do produto com nova média
+      updateProductCard(productId);
+      
+      // Se estiver na página de detalhes do produto, atualizar também
+      if (typeof updateProductDetails === 'function') {
+        updateProductDetails(productId);
+      }
+    }, 100); // Delay de 100ms
     
   } catch (error) {
     console.error('❌ Erro ao atualizar avaliações:', error);
     console.error('Stack:', error.stack);
     
     // Fallback: reload completo
-    console.log('🔄 Fallback: recarregando página...');
-    location.reload();
+    console.log('🔄 Usando fallback: reload completo');
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   }
 }
 
