@@ -1217,6 +1217,16 @@ function addToCart(productCode) {
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 DOM Carregado - Iniciando aplicação...');
   
+  // Adicionar evento listener para estrelas de avaliação
+  document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('star')) {
+      const rating = parseInt(event.target.dataset.rating);
+      if (rating && rating >= 1 && rating <= 5) {
+        setRating(rating);
+      }
+    }
+  });
+  
   loadProducts().then(function() {
     console.log('📦 Produtos carregados:', allProducts.length);
     console.log('🏠 Exibindo página inicial...');
@@ -2177,6 +2187,14 @@ const auth = new UserAuth();
 window.showAuth = (tab) => auth.showAuth(tab);
 window.closeAuth = () => auth.closeAuth();
 window.switchTab = (tab) => auth.switchTab(tab);
+
+// Funções de avaliação
+window.openReviewModal = openReviewModal;
+window.closeReviewModal = closeReviewModal;
+window.setRating = setRating;
+window.handlePhotoUpload = handlePhotoUpload;
+window.removePhoto = removePhoto;
+window.submitReview = submitReview;
 window.showRecuperarSenha = () => auth.showRecuperarSenha();
 window.backToLogin = () => auth.backToLogin();
 window.toggleUserMenu = () => auth.toggleUserMenu();
