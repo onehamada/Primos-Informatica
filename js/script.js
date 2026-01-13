@@ -570,8 +570,43 @@ function getCurrentUser() {
 
 // Função para obter avaliações de um produto
 function getProductReviews(productId) {
-  const reviews = JSON.parse(localStorage.getItem('primos_reviews') || '[]');
-  return reviews.filter(review => review.productId === productId);
+  try {
+    // Tentar localStorage primeiro
+    let reviews = [];
+    const stored = localStorage.getItem('primos_reviews');
+    
+    if (stored) {
+      try {
+        reviews = JSON.parse(stored);
+      } catch (e) {
+        console.warn('Erro ao parsear avaliações do localStorage:', e);
+        reviews = [];
+      }
+    }
+    
+    // Filtrar por produto
+    const productReviews = reviews.filter(review => review.productId === productId);
+    
+    // Debug no console
+    console.log(`📊 Avaliações para produto ${productId}:`, productReviews.length, productReviews);
+    
+    return productReviews;
+  } catch (error) {
+    console.error('❌ Erro ao carregar avaliações:', error);
+    
+    // Tentar sessionStorage como fallback
+    try {
+      const sessionStored = sessionStorage.getItem('primos_reviews');
+      if (sessionStored) {
+        const sessionReviews = JSON.parse(sessionStored);
+        return sessionReviews.filter(review => review.productId === productId);
+      }
+    } catch (e) {
+      console.error('❌ Erro no fallback sessionStorage:', e);
+    }
+    
+    return [];
+  }
 }
 
 // Função para calcular média de avaliações
@@ -975,15 +1010,125 @@ function submitReview(event) {
   
   // Atualizar interface
   setTimeout(() => {
-    location.reload(); // Recarregar página para mostrar nova avaliação
+    // Forçar atualização da interface
+    forceUpdateReviewsDisplay(currentProductId);
+    
+    // Recarregar apenas se não estiver no localhost
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      console.log('🔄 Forçando atualização para GitHub Pages...');
+      location.reload();
+    } else {
+      console.log('🔄 Atualizando interface local...');
+      updateProductCard(currentProductId);
+    }
   }, 1500);
 }
 
 // Função para salvar avaliação no localStorage
 function saveReview(reviewData) {
-  const reviews = JSON.parse(localStorage.getItem('primos_reviews') || '[]');
-  reviews.push(reviewData);
-  localStorage.setItem('primos_reviews', JSON.stringify(reviews));
+  try {
+    let reviews = [];
+    
+    // Tentar carregar avaliações existentes
+    const stored = localStorage.getItem('primos_reviews');
+    if (stored) {
+      try {
+        reviews = JSON.parse(stored);
+      } catch (e) {
+        console.warn('Erro ao carregar avaliações existentes:', e);
+        reviews = [];
+      }
+    }
+    
+    // Adicionar nova avaliação
+    reviews.push(reviewData);
+    
+    // Salvar no localStorage
+    localStorage.setItem('primos_reviews', JSON.stringify(reviews));
+    
+    // Verificar se salvou corretamente
+    const verify = localStorage.getItem('primos_reviews');
+    if (verify) {
+      const verifyReviews = JSON.parse(verify);
+      const found = verifyReviews.find(r => r.id === reviewData.id);
+      if (found) {
+        console.log('✅ Avaliação salva com sucesso:', reviewData.id);
+        return true;
+      } else {
+        console.error('❌ Falha ao salvar avaliação');
+        return false;
+      }
+    } else {
+      console.error('❌ Falha ao acessar localStorage');
+      return false;
+    }
+  } catch (error) {
+    console.error('❌ Erro ao salvar avaliação:', error);
+    // Fallback para sessionStorage
+    try {
+      sessionStorage.setItem('temp_review', JSON.stringify(reviewData));
+      console.log('💾 Avaliação salva em sessionStorage como fallback');
+    } catch (e) {
+      console.error('❌ Erro crítico - não foi possível salvar avaliação');
+    }
+    return false;
+  }
+}
+
+// Função para forçar atualização das avaliações sem reload
+function forceUpdateReviewsDisplay(productId) {
+  try {
+    // Atualizar seção de avaliações do produto
+    const reviewsSection = document.getElementById(`reviews-${productId}`);
+    if (reviewsSection) {
+      const reviews = getProductReviews(productId);
+      const reviewsHTML = generateReviewsHTML(reviews);
+      const reviewsList = reviewsSection.querySelector('.reviews-list');
+      
+      if (reviewsList) {
+        reviewsList.innerHTML = reviewsHTML;
+        console.log(`🔄 Avaliações do produto ${productId} atualizadas: ${reviews.length} avaliações`);
+      }
+    }
+    
+    // Atualizar card do produto com nova média
+    updateProductCard(productId);
+    
+  } catch (error) {
+    console.error('❌ Erro ao atualizar avaliações:', error);
+    // Fallback: reload completo
+    location.reload();
+  }
+}
+
+// Função para atualizar card específico do produto
+function updateProductCard(productId) {
+  try {
+    // Encontrar todos os cards do produto
+    const productCards = document.querySelectorAll(`[data-product-code="${productId}"]`);
+    
+    if (productCards.length > 0) {
+      const reviews = getProductReviews(productId);
+      const averageRating = calculateAverageRating(reviews);
+      const reviewCount = reviews.length;
+      
+      // Atualizar cada card encontrado (geralmente só 1)
+      productCards.forEach(card => {
+        const ratingSummary = card.querySelector('.product-rating-summary');
+        if (ratingSummary) {
+          ratingSummary.innerHTML = `
+            <div class="stars">${generateStars(averageRating, productId)}</div>
+            <span class="rating-text">${averageRating.toFixed(1)} (${reviewCount})</span>
+            <button class="review-btn" onclick="openReviewModal('${productId}')">Avaliar</button>
+          `;
+        }
+      });
+      
+      console.log(`🔄 Card do produto ${productId} atualizado: média ${averageRating.toFixed(1)}, ${reviewCount} avaliações`);
+    }
+  } catch (error) {
+    console.error('❌ Erro ao atualizar card do produto:', error);
+  }
 }
 
 // Função para mostrar mensagem de sucesso
