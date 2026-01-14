@@ -36,6 +36,343 @@
   100% { transform: rotate(360deg); }
 }
 
+/* === Menu do Usuário === */
+.user-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  min-width: 280px;
+  z-index: 1000;
+  overflow: visible;
+  animation: userMenuSlideIn 0.2s ease-out;
+  max-height: 80vh;
+  overflow-y: auto;
+  transform-origin: top right;
+  display: block;
+  visibility: visible;
+  opacity: 1;
+  width: auto;
+  height: auto;
+}
+
+/* Forçar visibilidade em todos os contextos */
+.user-menu * {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Header específico para garantir posicionamento */
+.modern-header .action-buttons .user-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  min-width: 280px;
+  z-index: 1000;
+  overflow: visible;
+  animation: userMenuSlideIn 0.2s ease-out;
+  max-height: 80vh;
+  overflow-y: auto;
+  transform-origin: top right;
+}
+
+@keyframes userMenuSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-menu-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f8fafc;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-email {
+  color: #64748b;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-menu-actions {
+  padding: 8px;
+}
+
+.user-menu-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  color: #374151;
+  text-align: left;
+}
+
+.user-menu-btn:hover {
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+.user-menu-btn.logout {
+  color: #dc2626;
+  margin-top: 4px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 16px;
+}
+
+.user-menu-btn.logout:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.user-menu-btn svg {
+  flex-shrink: 0;
+}
+
+/* === Responsive para Menu do Usuário no Mobile === */
+@media (max-width: 768px) {
+  .user-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    left: auto;
+    min-width: 280px;
+    max-width: calc(100vw - 40px);
+    width: auto;
+    z-index: 1000;
+    max-height: 60vh;
+    overflow-y: auto;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    transform-origin: top right;
+  }
+  
+  /* Ajustar o container do botão de perfil para posicionamento correto */
+  .action-buttons {
+    position: relative;
+    z-index: 100;
+  }
+  
+  /* Botão de perfil quando logado no mobile */
+  .auth-btn.logged-in {
+    padding: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border: 2px solid white;
+    border-radius: 50%;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    width: 44px;
+    height: 44px;
+    line-height: 1;
+    box-shadow: 0 2px 12px rgba(59, 130, 246, 0.4);
+    transition: all 0.2s ease;
+    z-index: 100;
+    flex-shrink: 0;
+  }
+  
+  .auth-btn.logged-in:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.5);
+  }
+  
+  .auth-btn.logged-in:active {
+    transform: scale(0.98);
+  }
+  
+  /* Estilo para inicial do usuário */
+  .user-initial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-weight: 600;
+    font-size: 16px;
+    color: white;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    transition: all 0.2s ease;
+    line-height: 1;
+  }
+  
+  /* Esconder texto do botão no mobile quando logado */
+  .auth-btn.logged-in .auth-text {
+    display: none;
+  }
+  
+  /* Avatar do usuário no mobile */
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+  
+  /* Ajustar animação para mobile */
+  @keyframes userMenuSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}
+
+/* === Responsive para Menu do Usuário em Tablets === */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .user-menu {
+    z-index: 1000;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  
+  /* Botão de perfil em tablets */
+  .auth-btn.logged-in {
+    padding: 8px 12px;
+    min-width: 44px;
+    min-height: 44px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border: 2px solid white;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.2;
+    box-shadow: 0 2px 12px rgba(59, 130, 246, 0.4);
+    transition: all 0.2s ease;
+    z-index: 100;
+    flex-shrink: 0;
+  }
+  
+  .auth-btn.logged-in:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.5);
+  }
+  
+  .auth-btn.logged-in:active {
+    transform: translateY(0) scale(0.98);
+  }
+  
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+}
+
+/* === Responsive para Menu do Usuário em Mobile Pequeno === */
+@media (max-width: 480px) {
+  .user-menu {
+    min-width: 260px;
+    max-width: calc(100vw - 32px);
+    right: -8px;
+    border-radius: 8px;
+  }
+  
+  .user-menu-header {
+    padding: 12px;
+  }
+  
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+  
+  .user-name {
+    font-size: 13px;
+  }
+  
+  .user-email {
+    font-size: 11px;
+  }
+  
+  .user-menu-actions {
+    padding: 6px;
+  }
+  
+  .user-menu-btn {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  
+  .user-menu-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .auth-btn.logged-in {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    font-size: 14px;
+    line-height: 1;
+  }
+}
+
 /* === Animações de Carregamento de Imagem === */
 @keyframes imageFadeIn {
   0% {
@@ -187,7 +524,7 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-  z-index: 1000;
+  z-index: 999; /* Reduzido para não conflitar com header */
   transition: all 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
   text-decoration: none;
 }
@@ -457,7 +794,7 @@
 .modern-header {
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 1000; /* Base do header - abaixo de modais e carrinho */
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   border-bottom: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -486,6 +823,72 @@
   50% {
     transform: scale(1.05);
     box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+  }
+}
+
+/* === OTIMIZAÇÃO DE ALTURA DO HEADER NO MOBILE === */
+@media (max-width: 768px) {
+  /* Reduzir padding principal do header */
+  .header-top {
+    padding: 8px 0; /* Reduzido de 16px para 8px */
+  }
+  
+  /* Reduzir espaçamento entre elementos principais */
+  .header-top .header-container {
+    gap: 16px; /* Reduzido de 32px para 16px */
+    align-items: center; /* Garantir alinhamento vertical */
+  }
+  
+  /* Compactar action buttons mantendo alinhamento */
+  .header-actions {
+    gap: 12px; /* Reduzido de 24px para 12px */
+    align-items: center; /* Manter alinhamento vertical */
+  }
+  
+  /* Reduzir margens da barra de pesquisa */
+  .search-container {
+    margin: 0 8px; /* Reduzido de 0 16px para 0 8px */
+  }
+  
+  /* Compactar brand info mantendo alinhamento */
+  .brand-info {
+    gap: 1px; /* Reduzido de 2px para 1px */
+    align-items: center; /* Garantir alinhamento central */
+  }
+  
+  /* Garantir alinhamento do brand */
+  .header-brand {
+    align-items: center; /* Manter alinhamento vertical */
+  }
+}
+
+/* === OTIMIZAÇÃO DE ALTURA DO HEADER NO MOBILE PEQUENO === */
+@media (max-width: 480px) {
+  /* Reduzir ainda mais o padding */
+  .header-top {
+    padding: 6px 0; /* Reduzido de 8px para 6px */
+  }
+  
+  /* Reduzir espaçamento entre elementos */
+  .header-top .header-container {
+    gap: 12px; /* Reduzido de 16px para 12px */
+    align-items: center; /* Garantir alinhamento vertical */
+  }
+  
+  /* Compactar ainda mais os action buttons */
+  .header-actions {
+    gap: 8px; /* Reduzido de 12px para 8px */
+    align-items: center; /* Manter alinhamento vertical */
+  }
+  
+  /* Reduzir margens da barra de pesquisa */
+  .search-container {
+    margin: 0 6px; /* Reduzido de 0 8px para 0 6px */
+  }
+  
+  /* Garantir alinhamento do brand em telas pequenas */
+  .header-brand {
+    align-items: center; /* Manter alinhamento vertical */
   }
 }
 
@@ -618,10 +1021,9 @@
 }
 
 .brand-logo {
-  width: 40px;
-  height: 40px;
+  width: 50px !important;
+  height: 50px !important;
   object-fit: contain;
-  border-radius: 8px;
   background: white;
   padding: 4px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
@@ -713,6 +1115,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  position: relative; /* Necessário para posicionamento do menu dropdown */
 }
 
 .action-btn {
@@ -729,6 +1132,83 @@
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
+  line-height: 1.2;
+  min-height: 40px;
+}
+
+.action-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+/* === Estilos do Botão de Autenticação (Estado Neutro) === */
+.auth-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 2px solid #e2e8f0;
+  background: white;
+  border-radius: 8px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  line-height: 1.2;
+  min-height: 40px;
+  text-decoration: none;
+}
+
+.auth-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.auth-btn:active {
+  transform: translateY(0);
+}
+
+/* === Estilos Específicos para Usuário Logado === */
+.auth-btn.logged-in {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-color: #3b82f6;
+  color: white;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.auth-btn.logged-in:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+/* === Estilos para Inicial do Usuário === */
+.user-initial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-weight: 600;
+  font-size: 12px;
+  color: white;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  line-height: 1;
+}
+
+.auth-text {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 .action-btn:hover {
@@ -755,6 +1235,7 @@
   align-items: center;
   gap: 8px;
   box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+  line-height: 1;
 }
 
 .cart-btn:hover {
@@ -888,7 +1369,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  z-index: 1000;
+  z-index: 998; /* Reduzido para hierarquia correta */
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
@@ -1176,8 +1657,8 @@
   }
   
   .brand-logo {
-    width: 36px;
-    height: 36px;
+    width: 50px !important;
+    height: 50px !important;
   }
 }
 
@@ -1218,8 +1699,8 @@
   }
   
   .header-brand .brand-logo {
-    width: 32px;
-    height: 32px;
+    width: 50px !important;
+    height: 50px !important;
     flex-shrink: 0;
   }
   
@@ -1486,7 +1967,7 @@ img[error]:after {
   visibility: hidden;
   transform: translateY(100px);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 1000;
+  z-index: 997; /* Hierarquia correta */
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
@@ -2010,8 +2491,8 @@ header .header-brand h1 {
 }
 
 header .brand-logo {
-  width: 48px;
-  height: 48px;
+  width: 50px !important;
+  height: 50px !important;
   object-fit: contain;
   flex: 0 0 auto;
   transition: transform 0.3s ease;
@@ -2536,7 +3017,7 @@ header .brand-logo:hover {
   height: 100vh;
   background: white;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 1001;
+  z-index: 1002; /* Acima do header mas abaixo de modais */
   transition: transform 0.3s ease;
   display: flex;
   flex-direction: column;
@@ -4450,8 +4931,8 @@ main {
     flex-wrap: wrap;
   }
   header .brand-logo {
-    width: 28px;
-    height: 28px;
+    width: 50px !important;
+    height: 50px !important;
   }
   header .brand-title {
     font-size: 16px;
@@ -4894,8 +5375,8 @@ main {
   }
   
   .brand-logo {
-    width: 32px;
-    height: 32px;
+    width: 50px !important;
+    height: 50px !important;
   }
   
   .header-actions {

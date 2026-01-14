@@ -1,3 +1,65 @@
+// === CONTROLE DE SCROLL RESTORATION ===
+// Impedir restauração automática de scroll do navegador
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+
+// === FORÇAR SCROLL NO TOPO AO CARREGAR ===
+function forceScrollToTop() {
+  // Forçar scroll imediato no topo (compatível com todos os navegadores)
+  window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+  
+  // Garantir que não há scroll residual
+  if (window.pageYOffset > 0 || document.documentElement.scrollTop > 0) {
+    window.scrollTo(0, 0);
+  }
+  
+  // Verificar se header sticky está causando deslocamento
+  const header = document.querySelector('.modern-header');
+  if (header && window.getComputedStyle(header).position === 'sticky') {
+    // Garantir que o conteúdo não seja empurrado pelo header
+    const mainContent = document.querySelector('main') || document.querySelector('.container') || document.body;
+    if (mainContent && mainContent !== document.body) {
+      const currentPadding = window.getComputedStyle(mainContent).paddingTop;
+      if (parseInt(currentPadding) < 80) { // Se não há padding compensatório
+        // Não adicionamos padding para evitar quebras de layout
+        // Apenas garantimos o scroll no topo
+      }
+    }
+  }
+  
+  // Verificação específica para mobile
+  if (window.innerWidth <= 768) {
+    // Mobile: garantir que não há scroll residual
+    setTimeout(() => {
+      if (window.pageYOffset > 0) {
+        window.scrollTo(0, 0);
+      }
+    }, 50);
+  }
+  
+  // Verificação específica para desktop
+  if (window.innerWidth > 768) {
+    // Desktop: scroll imediato e definitivo
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+    });
+  }
+}
+
+// Executar quando o DOM estiver pronto
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', forceScrollToTop);
+} else {
+  // DOM já está carregado
+  forceScrollToTop();
+}
+
+// Também executar no window.onload para garantir
+window.addEventListener('load', forceScrollToTop);
+
 // === FUNÇÃO PRINCIPAL - CATEGORIAS ===
 function showCategory(category) {
   // Limpar observer anterior
@@ -1296,6 +1358,9 @@ function addToCart(productCode) {
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 DOM Carregado - Iniciando aplicação...');
   
+  // Verificar se usuário está logado e atualizar UI
+  checkAuthStatus();
+  
   // Adicionar evento listener para estrelas de avaliação
   document.addEventListener('click', function(event) {
     if (event.target.classList.contains('star')) {
@@ -1319,7 +1384,751 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('🔗 Hash change:', hash);
     showCategory(hash);
   });
+  
+  // Atualizar exibição do usuário ao redimensionar a tela
+  let resizeTimeout;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(function() {
+      console.log('📱 Tela redimensionada, atualizando exibição do usuário...');
+      checkAuthStatus();
+    }, 250);
+  });
 });
+
+// === FUNÇÕES DE AUTENTICAÇÃO ===
+
+// Função para verificar status de autenticação
+function checkAuthStatus() {
+  console.log('🔍 Verificando status de autenticação...');
+  
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  const authBtn = document.querySelector('.auth-btn');
+  const authText = document.querySelector('.auth-text');
+  
+  console.log('📊 Dados encontrados:', {
+    usuarioLogado: !!usuarioLogado,
+    authBtn: !!authBtn,
+    authText: !!authText,
+    authBtnElement: authBtn,
+    authBtnClasses: authBtn ? authBtn.className : 'not found'
+  });
+  
+  if (usuarioLogado && authBtn) {
+    let usuario;
+    try {
+      // Verificar se o dado parece ser JSON
+      if (usuarioLogado.trim().startsWith('{') || usuarioLogado.trim().startsWith('[')) {
+        usuario = JSON.parse(usuarioLogado);
+        console.log('👤 Usuário está logado (formato JSON):', usuario);
+      } else {
+        // Formato antigo (apenas email ou string simples)
+        usuario = { 
+          email: usuarioLogado, 
+          nome: usuarioLogado.includes('@') ? usuarioLogado.split('@')[0] : usuarioLogado 
+        };
+        console.log('👤 Usuário está logado (formato antigo):', usuario);
+      }
+    } catch (e) {
+      console.error('❌ Erro ao processar usuário logado:', e);
+      console.log('📝 Dado bruto:', usuarioLogado);
+      
+      // Fallback seguro - criar usuário básico
+      const emailMatch = usuarioLogado.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
+      if (emailMatch) {
+        usuario = { 
+          email: emailMatch[1], 
+          nome: emailMatch[1].split('@')[0] 
+        };
+      } else {
+        // Último recurso - usar o dado como nome
+        usuario = { 
+          email: 'usuario@exemplo.com', 
+          nome: usuarioLogado.substring(0, 20) || 'Usuário' 
+        };
+      }
+      console.log('🔄 Usuário reconstruído com fallback:', usuario);
+    }
+    
+    // Verificar se é mobile ou desktop
+    const isMobile = window.innerWidth <= 768;
+    
+    // Adicionar classe para estilização quando logado
+    authBtn.classList.add('logged-in');
+    
+    if (isMobile) {
+      // Mobile: mostrar apenas inicial
+      authBtn.innerHTML = `<span class="user-initial">${usuario.nome.charAt(0).toUpperCase()}</span>`;
+      authBtn.title = `${usuario.nome} (${usuario.email})`;
+    } else {
+      // Desktop: mostrar nome completo ou inicial + nome
+      if (usuario.nome.length > 15) {
+        // Nome muito longo: mostrar inicial + sobrenome
+        const nameParts = usuario.nome.split(' ');
+        if (nameParts.length > 1) {
+          authBtn.innerHTML = `
+            <span class="user-initial">${nameParts[0].charAt(0).toUpperCase()}</span>
+            <span class="auth-text">${nameParts[0]} ${nameParts[nameParts.length - 1]}</span>
+          `;
+        } else {
+          authBtn.innerHTML = `
+            <span class="user-initial">${usuario.nome.charAt(0).toUpperCase()}</span>
+            <span class="auth-text">${usuario.nome.substring(0, 12)}...</span>
+          `;
+        }
+      } else {
+        // Nome normal: mostrar inicial + nome completo
+        authBtn.innerHTML = `
+          <span class="user-initial">${usuario.nome.charAt(0).toUpperCase()}</span>
+          <span class="auth-text">${usuario.nome}</span>
+        `;
+      }
+    }
+    
+    // Esconder texto original se existir e for mobile
+    if (authText && isMobile) {
+      authText.style.display = 'none';
+    } else if (authText && !isMobile) {
+      authText.style.display = 'inline';
+    }
+    
+    // Remover todos os event listeners anteriores
+    authBtn.replaceWith(authBtn.cloneNode(true));
+    const newAuthBtn = document.querySelector('.auth-btn');
+    
+    // Adicionar event listener robusto
+    newAuthBtn.addEventListener('click', function(e) {
+      console.log('🖱️ Botão de perfil clicado (usuário logado)');
+      e.preventDefault();
+      e.stopPropagation();
+      showUserMenu(usuario);
+    });
+    
+    // Também adicionar onclick como fallback
+    newAuthBtn.onclick = function(e) {
+      console.log('🖱️ Botão de perfil clicado via onclick (usuário logado)');
+      e.preventDefault();
+      e.stopPropagation();
+      showUserMenu(usuario);
+    };
+    
+    console.log('✅ Botão de perfil configurado para usuário logado');
+  } else if (authBtn) {
+    console.log('🔓 Usuário não está logado, configurando botão de login');
+    
+    // Remover classe se não estiver logado
+    authBtn.classList.remove('logged-in');
+    
+    // Restaurar botão original
+    authBtn.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      <span class="auth-text">Entrar / Cadastrar</span>
+    `;
+    
+    // Remover todos os event listeners anteriores
+    authBtn.replaceWith(authBtn.cloneNode(true));
+    const newAuthBtn = document.querySelector('.auth-btn');
+    
+    // Adicionar event listener robusto
+    newAuthBtn.addEventListener('click', function(e) {
+      console.log('🖱️ Botão de login clicado via addEventListener');
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('🔗 Redirecionando para auth.html...');
+      window.location.href = 'auth.html';
+    });
+    
+    // Também adicionar onclick como fallback
+    newAuthBtn.onclick = function(e) {
+      console.log('🖱️ Botão de login clicado via onclick');
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('🔗 Redirecionando para auth.html...');
+      window.location.href = 'auth.html';
+    };
+    
+    // Mostrar texto se existir
+    if (authText) {
+      authText.style.display = 'inline';
+    }
+    
+    console.log('✅ Botão de login configurado para usuário não logado');
+  } else {
+    console.error('❌ Botão de autenticação não encontrado na página!');
+  }
+}
+
+// Função de teste para verificar se o botão está funcionando
+function testAuthButton() {
+  const authBtn = document.querySelector('.auth-btn');
+  if (authBtn) {
+    console.log('🧪 Testando botão de autenticação...');
+    console.log('📍 Posição:', authBtn.getBoundingClientRect());
+    console.log('🎨 Estilos:', window.getComputedStyle(authBtn));
+    console.log('👆 Visível:', authBtn.offsetParent !== null);
+    
+    // Simular clique
+    authBtn.click();
+  } else {
+    console.error('❌ Botão não encontrado para teste!');
+  }
+}
+
+// Função para mostrar menu do usuário
+function showUserMenu(usuario) {
+  console.log('🚀 showUserMenu chamada com usuário:', usuario);
+  
+  // Remover menus existentes para evitar duplicação
+  const existingMenus = document.querySelectorAll('.user-menu');
+  existingMenus.forEach(menu => menu.remove());
+  
+  // Verificar se o botão de autenticação existe
+  const authBtn = document.querySelector('.auth-btn');
+  if (!authBtn) {
+    console.error('❌ Botão de autenticação não encontrado');
+    return;
+  }
+  
+  // Criar menu do usuário
+  const userMenu = document.createElement('div');
+  userMenu.className = 'user-menu';
+  
+  // Estrutura do menu
+  userMenu.innerHTML = `
+    <div class="user-menu-header">
+      <div class="user-avatar">${usuario.nome.charAt(0).toUpperCase()}</div>
+      <div class="user-info">
+        <div class="user-name">${usuario.nome}</div>
+        <div class="user-email">${usuario.email}</div>
+      </div>
+    </div>
+    <div class="user-menu-actions">
+      <button class="user-menu-btn" onclick="viewProfile()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        Meu Perfil
+      </button>
+      <button class="user-menu-btn" onclick="viewMyProducts()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+        Meus Produtos
+      </button>
+      <button class="user-menu-btn" onclick="viewMyReviews()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"></polygon>
+        </svg>
+        Minhas Avaliações
+      </button>
+      <button class="user-menu-btn" onclick="viewOrders()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14,2 14,8 20,8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10,9 9,9 8,9"></polyline>
+        </svg>
+        Meus Pedidos
+      </button>
+      <button class="user-menu-btn" onclick="viewSettings()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 9.96l4.24 4.24M20.46 14.04l-4.24 4.24M7.78 7.78L3.54 3.54"></path>
+        </svg>
+        Configurações
+      </button>
+      <button class="user-menu-btn logout" onclick="logout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16,17 21,12 16,7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        Sair
+      </button>
+    </div>
+  `;
+  
+  // Garantir posicionamento correto
+  const parent = authBtn.parentNode;
+  const parentStyle = window.getComputedStyle(parent);
+  if (parentStyle.position === 'static') {
+    parent.style.position = 'relative';
+  }
+  
+  // Adicionar menu ao DOM
+  parent.appendChild(userMenu);
+  
+  // Configurar fechamento automático
+  setTimeout(() => {
+    // Fechar menu ao clicar fora
+    document.addEventListener('click', closeUserMenuHandler);
+    
+    // Fechar menu ao pressionar ESC
+    document.addEventListener('keydown', closeUserMenuKeyHandler);
+  }, 100);
+  
+  console.log('✅ Menu do usuário exibido com sucesso');
+}
+
+// Funções auxiliares para o menu do usuário
+function closeUserMenuHandler(e) {
+  const authBtn = document.querySelector('.auth-btn');
+  const userMenu = document.querySelector('.user-menu');
+  
+  if (!authBtn || !userMenu) return;
+  
+  const clickedOnBtn = authBtn.contains(e.target);
+  const clickedOnMenu = userMenu.contains(e.target);
+  
+  if (!clickedOnBtn && !clickedOnMenu) {
+    userMenu.remove();
+    document.removeEventListener('click', closeUserMenuHandler);
+    document.removeEventListener('keydown', closeUserMenuKeyHandler);
+  }
+}
+
+function closeUserMenuKeyHandler(e) {
+  if (e.key === 'Escape') {
+    const userMenu = document.querySelector('.user-menu');
+    if (userMenu) {
+      userMenu.remove();
+      document.removeEventListener('click', closeUserMenuHandler);
+      document.removeEventListener('keydown', closeUserMenuKeyHandler);
+    }
+  }
+}
+
+// Função de logout
+function logout() {
+  localStorage.removeItem('usuarioLogado');
+  window.location.reload();
+}
+
+// === FUNÇÕES DE TESTE PARA AUTENTICAÇÃO ===
+
+// Função para testar estado atual de autenticação
+window.testAuthStatus = function() {
+  console.log('🧪 Testando status de autenticação na página inicial...');
+  
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  const authBtn = document.querySelector('.auth-btn');
+  
+  console.log('📊 Estado atual:', {
+    usuarioLogado: !!usuarioLogado,
+    usuarioData: usuarioLogado ? JSON.parse(usuarioLogado) : null,
+    authBtnExists: !!authBtn,
+    authBtnClasses: authBtn ? authBtn.className : 'not found',
+    authBtnContent: authBtn ? authBtn.innerHTML : 'not found',
+    isMobile: window.innerWidth <= 768
+  });
+  
+  if (usuarioLogado) {
+    console.log('✅ Usuário está logado - botão deve mostrar nome/inicial');
+  } else {
+    console.log('✅ Usuário não está logado - botão deve mostrar "Entrar / Cadastrar"');
+  }
+};
+
+// Função para simular login na página inicial
+window.simulateLoginOnIndex = function(nome = 'João Silva', email = 'joao@teste.com') {
+  console.log('🧪 Simulando login na página inicial...');
+  
+  const usuario = {
+    nome: nome,
+    email: email,
+    dataCadastro: new Date().toISOString()
+  };
+  
+  localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+  console.log('✅ Usuário salvo no localStorage:', usuario);
+  
+  // Atualizar a UI
+  checkAuthStatus();
+  console.log('✅ UI atualizada - botão deve mostrar nome do usuário');
+};
+
+// Função para simular logout na página inicial
+window.simulateLogoutOnIndex = function() {
+  console.log('🧪 Simulando logout na página inicial...');
+  
+  localStorage.removeItem('usuarioLogado');
+  console.log('✅ Usuário removido do localStorage');
+  
+  // Atualizar a UI
+  checkAuthStatus();
+  console.log('✅ UI atualizada - botão deve mostrar "Entrar / Cadastrar"');
+};
+
+// Função para testar responsividade do botão
+window.testAuthButtonResponsiveness = function() {
+  console.log('🧪 Testando responsividade do botão de autenticação...');
+  
+  const originalWidth = window.innerWidth;
+  
+  // Simular diferentes tamanhos de tela
+  const testSizes = [320, 480, 768, 1024, 1200];
+  
+  testSizes.forEach(width => {
+    console.log(`📱 Testando tela de ${width}px...`);
+    
+    // Simular mudança de tamanho (apenas para teste)
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      configurable: true,
+      value: width
+    });
+    
+    // Atualizar exibição
+    checkAuthStatus();
+    
+    // Verificar resultado
+    const authBtn = document.querySelector('.auth-btn');
+    const isMobile = width <= 768;
+    
+    console.log(`  ${width}px: ${isMobile ? 'Mobile' : 'Desktop'} - ${authBtn ? authBtn.innerHTML : 'Botão não encontrado'}`);
+  });
+  
+  // Restaurar tamanho original
+  Object.defineProperty(window, 'innerWidth', {
+    writable: true,
+    configurable: true,
+    value: originalWidth
+  });
+  
+  checkAuthStatus();
+  console.log('✅ Teste de responsividade concluído');
+};
+
+// Função para testar o menu do usuário
+window.testUserMenu = function() {
+  console.log('🧪 Testando menu do usuário...');
+  
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) {
+    console.log('❌ Usuário não está logado. Use simulateLoginOnIndex() primeiro.');
+    return;
+  }
+  
+  const usuario = JSON.parse(usuarioLogado);
+  const authBtn = document.querySelector('.auth-btn');
+  
+  if (!authBtn) {
+    console.log('❌ Botão de autenticação não encontrado');
+    return;
+  }
+  
+  console.log('👤 Usuário logado:', usuario);
+  console.log('🖱️ Simulando clique no botão de perfil...');
+  
+  // Simular clique
+  authBtn.click();
+  
+  // Verificar se menu apareceu
+  setTimeout(() => {
+    const userMenu = document.querySelector('.user-menu');
+    if (userMenu) {
+      console.log('✅ Menu apareceu com sucesso');
+      console.log('📋 Opções disponíveis:');
+      
+      const buttons = userMenu.querySelectorAll('.user-menu-btn');
+      buttons.forEach((btn, index) => {
+        console.log(`  ${index + 1}. ${btn.textContent.trim()}`);
+      });
+      
+      // Testar fechamento do menu
+      setTimeout(() => {
+        console.log('🖱️ Simulando clique fora para fechar...');
+        document.body.click();
+        
+        setTimeout(() => {
+          const menuStillExists = document.querySelector('.user-menu');
+          if (!menuStillExists) {
+            console.log('✅ Menu fechado com sucesso');
+          } else {
+            console.log('❌ Menu não fechou');
+          }
+        }, 100);
+      }, 2000);
+    } else {
+      console.log('❌ Menu não apareceu');
+    }
+  }, 100);
+};
+
+// Função de teste extremamente simples para isolar o problema
+window.forceShowMenu = function() {
+  console.log('🔧 FORÇAR MENU - TESTE ISOLADO');
+  
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) {
+    console.log('❌ Usuário não está logado');
+    return;
+  }
+  
+  const usuario = JSON.parse(usuarioLogado);
+  console.log('👤 Usuário:', usuario);
+  
+  const authBtn = document.querySelector('.auth-btn');
+  if (!authBtn) {
+    console.log('❌ Botão não encontrado');
+    return;
+  }
+  
+  console.log('✅ Botão encontrado:', authBtn);
+  
+  // Remover qualquer menu existente
+  const existingMenu = document.querySelector('.user-menu');
+  if (existingMenu) {
+    console.log('🔄 Removendo menu existente...');
+    existingMenu.remove();
+  }
+  
+  // Criar menu com estilos inline forçados
+  const userMenu = document.createElement('div');
+  userMenu.innerHTML = `
+    <div style="background: white !important; border: 2px solid red !important; padding: 20px !important; border-radius: 8px !important; position: absolute !important; top: 100% !important; right: 0 !important; z-index: 999999 !important; min-width: 250px !important; box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;">
+      <h3 style="margin: 0 0 10px 0 !important; color: #333 !important;">${usuario.nome}</h3>
+      <p style="margin: 0 0 5px 0 !important; color: #666 !important;">${usuario.email}</p>
+      <hr style="margin: 10px 0 !important; border: 1px solid #eee !important;">
+      <button onclick="alert('Meu Perfil')" style="display: block !important; width: 100% !important; padding: 10px !important; margin: 5px 0 !important; background: #f5f5f5 !important; border: 1px solid #ddd !important; cursor: pointer !important;">Meu Perfil</button>
+      <button onclick="alert('Meus Pedidos')" style="display: block !important; width: 100% !important; padding: 10px !important; margin: 5px 0 !important; background: #f5f5f5 !important; border: 1px solid #ddd !important; cursor: pointer !important;">Meus Pedidos</button>
+      <button onclick="alert('Sair')" style="display: block !important; width: 100% !important; padding: 10px !important; margin: 15px 0 0 !important; background: #ff4444 !important; border: 1px solid #cc0000 !important; color: white !important; cursor: pointer !important;">Sair</button>
+    </div>
+  `;
+  
+  // Adicionar diretamente ao body para evitar problemas de posicionamento
+  document.body.appendChild(userMenu);
+  
+  console.log('✅ Menu forçado adicionado ao body');
+  console.log('🔧 Menu deve estar visível com borda vermelha');
+  
+  // Adicionar botão para fechar
+  setTimeout(() => {
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = 'FECHAR MENU';
+    closeBtn.style.cssText = 'position: fixed !important; top: 10px !important; right: 10px !important; z-index: 999999 !important; background: red !important; color: white !important; padding: 10px !important; border: none !important; cursor: pointer !important;';
+    closeBtn.onclick = function() {
+      userMenu.remove();
+      closeBtn.remove();
+    };
+    document.body.appendChild(closeBtn);
+    console.log('✅ Botão de fechar adicionado');
+  }, 100);
+};
+
+// Função de diagnóstico completo para o menu
+window.diagnoseUserMenu = function() {
+  console.log('🔍 Iniciando diagnóstico completo do menu do usuário...');
+  
+  // 1. Verificar se usuário está logado
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  console.log('👤 Usuário logado:', !!usuarioLogado);
+  
+  if (!usuarioLogado) {
+    console.log('❌ Usuário não está logado. Execute simulateLoginOnIndex() primeiro.');
+    return;
+  }
+  
+  // 2. Verificar botão de autenticação
+  const authBtn = document.querySelector('.auth-btn');
+  console.log('🔘 Botão de autenticação:', !!authBtn);
+  
+  if (!authBtn) {
+    console.log('❌ Botão de autenticação não encontrado');
+    return;
+  }
+  
+  // 3. Verificar estado do botão
+  console.log('📊 Estado do botão:');
+  console.log('  Classes:', authBtn.className);
+  console.log('  HTML:', authBtn.innerHTML);
+  console.log('  Estilos:', window.getComputedStyle(authBtn));
+  
+  // 4. Verificar elemento pai
+  const parent = authBtn.parentNode;
+  console.log('👨‍👩‍👧‍👦 Elemento pai:', parent);
+  console.log('  Classes do pai:', parent.className);
+  console.log('  Position do pai:', window.getComputedStyle(parent).position);
+  
+  // 5. Verificar menu existente
+  const existingMenu = document.querySelector('.user-menu');
+  console.log('📋 Menu existente:', !!existingMenu);
+  
+  if (existingMenu) {
+    console.log('  Removendo menu existente...');
+    existingMenu.remove();
+  }
+  
+  // 6. Criar e adicionar menu manualmente
+  console.log('� Criando menu manualmente...');
+  const usuario = JSON.parse(usuarioLogado);
+  
+  const userMenu = document.createElement('div');
+  userMenu.className = 'user-menu';
+  userMenu.style.cssText = `
+    position: absolute !important;
+    top: 100% !important;
+    right: 0 !important;
+    background: white !important;
+    border: 1px solid #ccc !important;
+    border-radius: 8px !important;
+    padding: 10px !important;
+    min-width: 200px !important;
+    z-index: 99999 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+  `;
+  
+  userMenu.innerHTML = `
+    <div style="padding: 5px; border-bottom: 1px solid #eee; margin-bottom: 5px;">
+      <strong>${usuario.nome}</strong><br>
+      <small style="color: #666;">${usuario.email}</small>
+    </div>
+    <button onclick="alert('Teste - Meu Perfil')" style="display: block; width: 100%; padding: 8px; border: none; background: #f5f5f5; cursor: pointer; text-align: left; margin-bottom: 2px;">
+      Meu Perfil
+    </button>
+    <button onclick="alert('Teste - Sair')" style="display: block; width: 100%; padding: 8px; border: none; background: #f5f5f5; cursor: pointer; text-align: left; color: red;">
+      Sair
+    </button>
+  `;
+  
+  // Garantir que o pai tenha position relative
+  if (window.getComputedStyle(parent).position === 'static') {
+    parent.style.position = 'relative';
+    console.log('✅ Ajustado position do pai para relative');
+  }
+  
+  // Adicionar menu
+  parent.appendChild(userMenu);
+  console.log('✅ Menu adicionado manualmente');
+  
+  // 7. Verificar se menu está visível
+  setTimeout(() => {
+    const rect = userMenu.getBoundingClientRect();
+    console.log('📏 Posição do menu:');
+    console.log('  Top:', rect.top);
+    console.log('  Left:', rect.left);
+    console.log('  Width:', rect.width);
+    console.log('  Height:', rect.height);
+    console.log('  Visible:', rect.width > 0 && rect.height > 0);
+    console.log('  Na viewport:', rect.top >= 0 && rect.left >= 0);
+    
+    // 8. Testar clique no menu
+    const buttons = userMenu.querySelectorAll('button');
+    console.log('🔘 Botões no menu:', buttons.length);
+    
+    buttons.forEach((btn, index) => {
+      console.log(`  Botão ${index + 1}:`, btn.textContent.trim());
+    });
+    
+    console.log('✅ Diagnóstico concluído. Menu deve estar visível.');
+  }, 100);
+};
+
+// Função para limpar dados corrompidos do localStorage
+window.clearCorruptedAuthData = function() {
+  console.log('🧹 Limpando dados de autenticação corrompidos...');
+  
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  console.log('📝 Dado atual:', usuarioLogado);
+  
+  if (usuarioLogado) {
+    try {
+      // Tentar parsear para verificar se está válido
+      JSON.parse(usuarioLogado);
+      console.log('✅ Dado está válido, não precisa limpar');
+    } catch (e) {
+      console.log('❌ Dado corrompido detectado, limpando...');
+      localStorage.removeItem('usuarioLogado');
+      console.log('✅ Dado removido. Faça login novamente.');
+    }
+  } else {
+    console.log('ℹ️ Nenhum dado de autenticação encontrado');
+  }
+};
+
+// Função para reparar dados do usuário
+window.repairUserData = function() {
+  console.log('🔧 Tentando reparar dados do usuário...');
+  
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) {
+    console.log('❌ Nenhum dado encontrado para reparar');
+    return;
+  }
+  
+  try {
+    // Tentar parsear
+    const usuario = JSON.parse(usuarioLogado);
+    
+    // Verificar se tem campos essenciais
+    if (!usuario.nome || !usuario.email) {
+      throw new Error('Campos essenciais ausentes');
+    }
+    
+    console.log('✅ Dado válido:', usuario);
+    
+    // Salvar versão limpa
+    localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+    console.log('✅ Dado reparado e salvo');
+    
+  } catch (e) {
+    console.log('❌ Erro ao reparar:', e);
+    
+    // Tentar extrair informações válidas
+    const emailMatch = usuarioLogado.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
+    let email, nome;
+    
+    if (emailMatch) {
+      email = emailMatch[1];
+      nome = email.split('@')[0];
+    } else {
+      // Usar o que for possível
+      nome = usuarioLogado.replace(/[^a-zA-Z0-9\s]/g, '').substring(0, 20) || 'Usuário';
+      email = `${nome.toLowerCase().replace(/\s/g, '.')}@exemplo.com`;
+    }
+    
+    const usuarioReparado = { nome, email };
+    console.log('🔄 Usuário reparado:', usuarioReparado);
+    
+    // Salvar versão reparada
+    localStorage.setItem('usuarioLogado', JSON.stringify(usuarioReparado));
+    console.log('✅ Dado reparado salvo no localStorage');
+  }
+  
+  // Recarregar a UI
+  checkAuthStatus();
+};
+
+// Funções placeholder para o menu
+function viewProfile() {
+  alert('Perfil do usuário - Em desenvolvimento');
+}
+
+function viewOrders() {
+  alert('Meus Pedidos - Em desenvolvimento');
+}
+
+function viewMyProducts() {
+  alert('Meus Produtos - Em desenvolvimento');
+}
+
+function viewMyReviews() {
+  alert('Minhas Avaliações - Em desenvolvimento');
+}
+
+function viewSettings() {
+  alert('Configurações - Em desenvolvimento');
+}
 
 // === FUNÇÕES DE BUSCA MELHORADAS ===
 function sanitizeInput(input) {
@@ -1674,6 +2483,14 @@ window.showCheckoutOptions = showCheckoutOptions;
 window.scrollToTop = scrollToTop; // Adicionar função global
 window.finalizeViaWhatsApp = finalizeViaWhatsApp;
 
+// Funções de autenticação
+window.checkAuthStatus = checkAuthStatus;
+window.showUserMenu = showUserMenu;
+window.logout = logout;
+window.viewProfile = viewProfile;
+window.viewOrders = viewOrders;
+window.testAuthButton = testAuthButton;
+
 // === BOTÃO VOLTAR AO TOPO ===
 function scrollToTop() {
   window.scrollTo({
@@ -1683,6 +2500,15 @@ function scrollToTop() {
 }
 
 // Controlar visibilidade do botão voltar ao topo
+document.addEventListener('DOMContentLoaded', function() {
+  const backToTopButton = document.getElementById('backToTop');
+  
+  // Esconder botão inicialmente
+  if (backToTopButton) {
+    backToTopButton.classList.remove('visible');
+  }
+});
+
 window.addEventListener('scroll', function() {
   const backToTopButton = document.getElementById('backToTop');
   
@@ -1693,16 +2519,6 @@ window.addEventListener('scroll', function() {
     } else {
       backToTopButton.classList.remove('visible');
     }
-  }
-});
-
-// Inicializar quando a página carregar
-document.addEventListener('DOMContentLoaded', function() {
-  const backToTopButton = document.getElementById('backToTop');
-  
-  // Esconder botão inicialmente
-  if (backToTopButton) {
-    backToTopButton.classList.remove('visible');
   }
 });
 
