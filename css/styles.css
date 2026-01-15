@@ -40,23 +40,20 @@
 .user-menu {
   position: absolute;
   top: calc(100% + 8px);
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  /* Z-index acima da barra de pesquisa */
+  z-index: 1002;
   background: white;
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(0, 0, 0, 0.08);
   min-width: 280px;
-  z-index: 1000;
   overflow: visible;
   animation: userMenuSlideIn 0.2s ease-out;
   max-height: 80vh;
   overflow-y: auto;
-  transform-origin: top right;
-  display: block;
-  visibility: visible;
-  opacity: 1;
-  width: auto;
-  height: auto;
+  transform-origin: top center;
 }
 
 /* Forçar visibilidade em todos os contextos */
@@ -70,28 +67,31 @@
 .modern-header .action-buttons .user-menu {
   position: absolute;
   top: calc(100% + 8px);
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  /* Z-index acima da barra de pesquisa */
+  z-index: 1001;
   background: white;
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(0, 0, 0, 0.08);
   min-width: 280px;
-  z-index: 1000;
+  z-index: 1002;
   overflow: visible;
   animation: userMenuSlideIn 0.2s ease-out;
   max-height: 80vh;
   overflow-y: auto;
-  transform-origin: top right;
+  transform-origin: top center;
 }
 
 @keyframes userMenuSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateX(-50%) translateY(-10px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
   }
 }
 
@@ -180,28 +180,37 @@
   flex-shrink: 0;
 }
 
-/* === Responsive para Menu do Usuário no Mobile === */
 @media (max-width: 768px) {
+  header.header-nav {
+    display: none;
+  }
+}
+
+/* === Responsive para Menu do Usuário === */
+@media (max-width: 768px) {
+  .search-container {
+    flex: 1;
+    max-width: none;
+    margin: 0 16px;
+    padding: 0 12px;
+    order: 2;
+    z-index: 998;
+  }
+  
   .user-menu {
-    position: absolute;
     top: calc(100% + 10px);
-    right: 0;
-    left: auto;
-    min-width: 280px;
+    left: 50%;
+    transform: translateX(-50%);
     max-width: calc(100vw - 40px);
-    width: auto;
-    z-index: 1000;
     max-height: 60vh;
-    overflow-y: auto;
     border-radius: 12px;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-    transform-origin: top right;
+    transform-origin: top center;
   }
   
   /* Ajustar o container do botão de perfil para posicionamento correto */
   .action-buttons {
     position: relative;
-    z-index: 100;
   }
   
   /* Botão de perfil quando logado no mobile */
@@ -327,7 +336,6 @@
   .user-menu {
     min-width: 260px;
     max-width: calc(100vw - 32px);
-    right: -8px;
     border-radius: 8px;
   }
   
@@ -900,6 +908,7 @@
     margin: 0 16px;
     padding: 0 12px;
     order: 2;
+    z-index: 998;
   }
   
   .search-input-wrapper {
@@ -1520,11 +1529,86 @@
 @media (max-width: 768px) {
   .mobile-menu-toggle {
     display: flex;
+    /* Garantir área clicável mínima de 44px */
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+    /* Aumentar área de toque */
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 8px;
+    /* Melhor posicionamento */
+    margin-right: 8px;
   }
   
-  .nav-tabs {
-    display: none !important;
+  /* Botão de autenticação (não logado) */
+  .auth-btn:not(.logged-in) {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px 12px;
+    /* Aumentar área clicável */
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 8px;
+    /* Garantir espaçamento */
+    margin: 0 4px;
   }
+  
+  /* Botão de carrinho */
+  .cart-btn {
+    display: flex !important;
+    padding: 12px 16px;
+    font-size: 14px;
+    /* Garantir área clicável mínima */
+    min-width: 44px;
+    min-height: 44px;
+    /* Melhor visual */
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border-radius: 8px;
+    /* Espaçamento seguro */
+    margin: 0 4px;
+  }
+  
+  /* Botão de busca */
+  .search-btn {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    /* Área clicável adequada para toque */
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+    /* Melhor posicionamento */
+    right: 8px;
+    /* Visual melhorado */
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 6px;
+  }
+  
+  /* Botões dos cards de produto em mobile */
+  .product-card .btn-primary {
+    /* Área clicável mínima para toque */
+    min-height: 44px;
+    padding: 12px 16px;
+    font-size: 14px;
+    /* Espaçamento seguro entre botões */
+    margin-bottom: 8px;
+    /* Garantir largura total */
+    width: 100%;
+  }
+  
+  .product-card .review-btn {
+    /* Área clicável adequada para toque */
+    min-height: 36px;
+    min-width: 80px;
+    padding: 8px 12px;
+    font-size: 12px;
+    /* Espaçamento do botão principal */
+    margin-top: 8px;
+    /* Melhor posicionamento */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
   
   .nav-tabs.mobile-open {
     display: flex !important;
@@ -1538,6 +1622,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     z-index: 999;
     border-radius: 0 0 12px 12px;
+    border-bottom: 1px solid #e5e7eb;
   }
   
   /* Garante que o carrinho sempre esteja visível no mobile */
@@ -1578,6 +1663,33 @@
     padding: 12px 16px;
     font-size: 13px;
     border-bottom: 1px solid #e5e7eb;
+  }
+}
+
+/* Restaurar nav-tabs no desktop */
+@media (min-width: 769px) {
+  .nav-tabs {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+    background: white;
+    border-radius: 12px;
+    padding: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    position: relative;
+    z-index: 100 !important;
+  }
+  
+  .nav-tabs.mobile-open {
+    /* Resetar estilos mobile no desktop */
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    background: white;
+    border-bottom: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 4px;
   }
 }
 
@@ -1772,44 +1884,34 @@
 }
 
 /* === FORÇAR BARRA DE PESQUISA VISÍVEL NO MOBILE === */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .search-container {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative !important;
-    z-index: 1001 !important;
-    flex: 1 !important;
-    max-width: none !important;
-    min-width: 150px !important;
-    height: auto !important;
+    flex: 1;
+    max-width: none;
+    margin: 0 8px;
+    order: 2;
   }
   
   .search-input-wrapper {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    flex: 1 !important;
-    position: relative !important;
+    border-radius: 22px;
   }
   
   .search-input {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    width: 100% !important;
-    height: 40px !important;
-    font-size: 14px !important;
+    height: 40px;
+    padding: 0 44px 0 14px;
+    font-size: 14px;
+    border-radius: 22px;
   }
   
   .search-btn {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: absolute !important;
-    right: 8px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
+    right: 6px;
+    width: 32px;
+    height: 32px;
+  }
+  
+  .search-btn svg {
+    width: 16px;
+    height: 16px;
   }
 }
 
@@ -2251,6 +2353,7 @@ img {
   flex: 1;
   max-width: 500px;
   margin: 0 10px;
+  z-index: 101;
 }
 
 .search-input-wrapper {
@@ -2716,11 +2819,10 @@ header .brand-logo:hover {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
   color: #64748b !important;
   cursor: pointer !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   white-space: nowrap !important;
   border-bottom: 3px solid transparent !important;
   position: relative !important;
-  overflow: hidden !important;
   border-radius: 25px !important;
 }
 
@@ -5638,9 +5740,54 @@ main {
     margin-left: 8px;
   }
   
+  /* Botões de filtro e ações secundárias em mobile */
   .filters-toggle {
-    padding: 6px 12px;
-    font-size: 12px;
+    /* Área clicável mínima para toque */
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px 16px;
+    font-size: 14px;
+    /* Melhor espaçamento */
+    margin: 0 4px;
+  }
+  
+  /* Botões dentro do painel de filtros */
+  .apply-filters-btn,
+  .clear-filters-btn {
+    /* Área clicável adequada para toque */
+    min-height: 44px;
+    min-width: 120px;
+    padding: 12px 16px;
+    font-size: 14px;
+    /* Espaçamento seguro entre botões */
+    margin: 8px 4px;
+    /* Visual melhorado */
+    border-radius: 8px;
+  }
+  
+  /* Botões de fechar painéis e modais */
+  .filters-close,
+  .cart-close,
+  .checkout-close {
+    /* Área clicável mínima para toque */
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+    font-size: 18px;
+    /* Fundo sutil para melhor identificação */
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    /* Melhor posicionamento visual */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Botões de fechar hover */
+  .filters-close:hover,
+  .cart-close:hover,
+  .checkout-close:hover {
+    background: rgba(0, 0, 0, 0.1);
   }
   
   .filters-panel {
@@ -6883,4 +7030,22 @@ main {
   .review-user {
     width: 100%;
   }
+}
+
+/* === SOLUÇÃO FINAL FORÇADA - SCROLL NO CONTAINER PAI === */
+.header-nav .header-container {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  white-space: nowrap !important;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.header-nav .header-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.header-nav .header-container::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+  border-radius: 4px;
 }
