@@ -1373,27 +1373,33 @@ function showCheckoutOptions() {
 }
 
 function finalizeViaWhatsApp() {
+  if (cart.length === 0) {
+    alert('Seu carrinho está vazio! Adicione produtos para continuar.');
+    return;
+  }
+
+  // Gerar pedido automaticamente
+  const pedido = generateOrder();
+  
   let message = '🛒 *Pedido Primos Informática*\n\n';
+  
+  // Adicionar informações do pedido
+  message += `*Pedido #${pedido.id}*\n`;
+  message += `*Data:* ${new Date(pedido.data).toLocaleDateString('pt-BR')}\n`;
+  message += `*Status:* ${getOrderStatusText(pedido.status)}\n\n`;
   
   // Adicionar itens do carrinho
   cart.forEach((item, index) => {
     // Corrigir tratamento de preço para preservar centavos
     const priceString = (item.preco || '0').toString().replace(',', '.');
     const price = parseFloat(priceString);
-    message += `${index + 1}. ${item.nome}\n`;
-    message += `   💰 R$ ${price.toFixed(2).replace('.', ',')}\n`;
-    message += `   🏷️ ${item.marca || ''}\n\n`;
-  });
-  
-  // Calcular total
-  const total = cart.reduce((sum, item) => {
-    // Corrigir tratamento de preço para preservar centavos
-    const priceString = (item.preco || '0').toString().replace(',', '.');
-    const price = parseFloat(priceString);
-    return sum + price;
+    
+    message += `*${index + 1}. ${item.nome}*\n`;
+    message += `   Quantidade: ${item.quantidade}\n`;
+    message += `   Preço: R$ ${price.toFixed(2).replace('.', ',')}\n`;
   }, 0);
   
-  message += `*Total: R$ ${total.toFixed(2).replace('.', ',')}*\n\n`;
+  message += `\n*Total: R$ ${pedido.total.toFixed(2).replace('.', ',')}*\n\n`;
   message += 'Gostaria de finalizar este pedido! 🛍️';
   
   // Abrir WhatsApp com a mensagem
@@ -1401,7 +1407,122 @@ function finalizeViaWhatsApp() {
   window.open(whatsappUrl, '_blank');
   
   // Fechar carrinho após enviar
+  clearCart();
   toggleCart();
+}
+
+function generateOrder() {
+  // Verificar se usuário está logado
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) {
+    // Se não está logado, gera pedido como visitante
+    var pedido = {
+      id: Date.now(),
+      email: 'visitante@loja.com',
+      nome: 'Visitante',
+      data: new Date().toISOString(),
+      status: 'pendente',
+      total: calculateCartTotal(),
+      itens: cart.map(item => ({
+        codigo: item.codigo,
+        nome: item.nome,
+        quantidade: item.quantidade,
+        preco: parseFloat((item.preco || '0').toString().replace(',', '.')),
+        imagem: item.imagem || 'images/placeholder.png'
+      }))
+    };
+  } else {
+    // Se está logado, gera pedido com dados do usuário
+    const usuario = JSON.parse(usuarioLogado);
+    var pedido = {
+      id: Date.now(),
+      email: usuario.email,
+      nome: usuario.nome,
+      data: new Date().toISOString(),
+      status: 'pendente',
+      total: calculateCartTotal(),
+      itens: cart.map(item => ({
+        codigo: item.codigo,
+        nome: item.nome,
+        quantidade: item.quantidade,
+        preco: parseFloat((item.preco || '0').toString().replace(',', '.')),
+        imagem: item.imagem || 'images/placeholder.png'
+      }))
+    };
+  }
+  
+  // Salvar pedido no localStorage
+  let pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+  pedidos.push(pedido);
+  localStorage.setItem('pedidos', JSON.stringify(pedidos));
+  
+  console.log('📋 Pedido gerado:', pedido);
+  console.log('📋 Total de pedidos:', pedidos.length);
+  
+  // Mostrar notificação de sucesso
+  showNotification('Pedido gerado com sucesso! Você pode acompanhar em "Meus Pedidos".', 'success');
+  
+  return pedido;
+}
+
+function calculateCartTotal() {
+  let total = 0;
+  cart.forEach(item => {
+    const priceString = (item.preco || '0').toString().replace(',', '.');
+    const price = parseFloat(priceString);
+    total += price * (item.quantidade || 1);
+  });
+  return total;
+}
+
+function getOrderStatusText(status) {
+  const statusMap = {
+    'pendente': 'Pendente',
+    'confirmado': 'Confirmado',
+    'preparando': 'Preparando',
+    'enviado': 'Enviado',
+    'entregue': 'Entregue',
+    'cancelado': 'Cancelado'
+  };
+  return statusMap[status] || 'Pendente';
+}
+
+function showNotification(message, type = 'info') {
+  // Remover notificações existentes
+  const existingNotification = document.querySelector('.notification');
+  if (existingNotification) {
+    existingNotification.remove();
+  }
+
+  // Criar notificação
+  const notification = document.createElement('div');
+  notification.className = `notification notification-${type}`;
+  notification.innerHTML = `
+    <div class="notification-content">
+      <span class="notification-icon">
+        ${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}
+      </span>
+      <span class="notification-text">${message}</span>
+    </div>
+  `;
+
+  // Adicionar ao body
+  document.body.appendChild(notification);
+
+  // Animar entrada
+  requestAnimationFrame(() => {
+    notification.classList.add('show');
+  });
+
+  // Remover automaticamente após 4 segundos
+  setTimeout(() => {
+    notification.classList.add('hide');
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.remove();
+      }
+    }, 300);
+  }, 4000);
 }
 
 function toggleMobileMenu() {
@@ -1624,38 +1745,15 @@ function checkAuthStatus() {
     // Adicionar classe logged-in
     newAuthBtn.classList.add('logged-in');
     
-    // Adicionar event listener robusto
-    newAuthBtn.addEventListener('click', function(e) {
-      console.log('🖱️ Botão de perfil clicado (usuário logado)');
-      e.preventDefault();
-      e.stopPropagation();
-      
-      // Usar o novo ProfileMenuManager se disponível
-      if (typeof profileMenuManager !== 'undefined') {
-        profileMenuManager.toggleMenu();
-        return;
-      }
-      
-      // Código antigo comentado - mantido como backup
-      /*
-      // Verificar se o menu já está aberto para fazer toggle
-      const existingMenu = document.querySelector('.user-menu');
-      if (existingMenu) {
-        // Menu existe → fechar
-        console.log('🔄 Fechando menu existente (toggle)');
-        existingMenu.remove();
-        // Remover event listeners de fechamento
-        document.removeEventListener('click', closeUserMenuHandler);
-        document.removeEventListener('keydown', closeUserMenuKeyHandler);
-      } else {
-        // Menu não existe → abrir
-        console.log('🔄 Abrindo menu (toggle)');
-        showUserMenu(usuario);
-      }
-      */
-    });
+    // NÃO adicionar event listener aqui - deixar para o ProfileMenuManager
+    console.log('✅ Botão configurado com dados do usuário, ProfileMenuManager vai gerenciar os eventos');
     
-    console.log('✅ Botão de perfil configurado para usuário logado');
+    // Mostrar texto se existir
+    if (authText) {
+      authText.style.display = 'none';
+    }
+    
+    console.log('✅ Botão configurado com dados do usuário, ProfileMenuManager vai gerenciar os eventos');
   } else if (authBtn) {
     console.log('🔓 Usuário não está logado, configurando botão de login');
     
