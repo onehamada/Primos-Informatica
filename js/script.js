@@ -1630,6 +1630,14 @@ function checkAuthStatus() {
       e.preventDefault();
       e.stopPropagation();
       
+      // Usar o novo ProfileMenuManager se disponível
+      if (typeof profileMenuManager !== 'undefined') {
+        profileMenuManager.toggleMenu();
+        return;
+      }
+      
+      // Código antigo comentado - mantido como backup
+      /*
       // Verificar se o menu já está aberto para fazer toggle
       const existingMenu = document.querySelector('.user-menu');
       if (existingMenu) {
@@ -1644,6 +1652,7 @@ function checkAuthStatus() {
         console.log('🔄 Abrindo menu (toggle)');
         showUserMenu(usuario);
       }
+      */
     });
     
     console.log('✅ Botão de perfil configurado para usuário logado');
@@ -1711,7 +1720,8 @@ function testAuthButton() {
   }
 }
 
-// Função para mostrar menu do usuário
+/*
+// Função para mostrar menu do usuário (ANTIGA - COMENTADA)
 function showUserMenu(usuario) {
   console.log('🚀 showUserMenu chamada com usuário:', usuario);
   
@@ -1813,7 +1823,11 @@ function showUserMenu(usuario) {
   
   console.log('✅ Menu do usuário exibido com sucesso');
 }
+*/
 
+// === FUNÇÕES ANTIGAS DO MENU (COMENTADAS - USANDO ProfileMenuManager) ===
+
+/*
 // Funções auxiliares para o menu do usuário
 function closeUserMenuHandler(e) {
   const authBtn = document.querySelector('.auth-btn');
@@ -1841,8 +1855,9 @@ function closeUserMenuKeyHandler(e) {
     }
   }
 }
+*/
 
-// Função de logout
+// Função de logout (mantida - usada pelo ProfileMenuManager)
 function logout() {
   localStorage.removeItem('usuarioLogado');
   window.location.reload();
