@@ -209,17 +209,19 @@ class ProfileMenuManager {
     const buttonRect = this.authButton.getBoundingClientRect();
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
+    // Aplicar posicionamento básico sem sobrescrever o CSS original
     this.menuElement.style.cssText = `
       position: absolute !important;
       top: ${buttonRect.bottom + scrollTop + 5}px !important;
       right: ${window.innerWidth - buttonRect.right}px !important;
       z-index: 9999 !important;
       min-width: 250px !important;
-      background: white !important;
-      border: 1px solid #e5e7eb !important;
-      border-radius: 8px !important;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
     `;
+    
+    // Adicionar classe active no próximo frame para animação suave
+    requestAnimationFrame(() => {
+      this.menuElement.classList.add('active');
+    });
   }
 
   /**
