@@ -16,17 +16,67 @@ class ProfileMenuManager {
    */
   init() {
     console.log('🚀 ProfileMenuManager inicializado');
-    this.authButton = document.querySelector('.auth-btn');
+    this.setupAuthButton();
     this.setupEventListeners();
+    
+    // Observar mudanças no botão (quando usuário faz login/logout)
+    this.observeAuthButton();
+  }
+
+  /**
+   * Configura o botão de autenticação
+   */
+  setupAuthButton() {
+    this.authButton = document.querySelector('.auth-btn');
+    if (this.authButton) {
+      console.log('✅ Botão de autenticação encontrado:', this.authButton.className);
+    } else {
+      console.log('❌ Botão de autenticação não encontrado');
+    }
+  }
+
+  /**
+   * Observa mudanças no botão de autenticação
+   */
+  observeAuthButton() {
+    // Criar um observer para detectar quando o botão muda
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          console.log('🔄 Botão de autenticação mudou, reconfigurando...');
+          this.setupAuthButton();
+          this.setupEventListeners();
+        }
+      });
+    });
+
+    // Observar o botão
+    if (this.authButton) {
+      observer.observe(this.authButton, {
+        attributes: true,
+        attributeFilter: ['class']
+      });
+    }
   }
 
   /**
    * Configura os event listeners
    */
   setupEventListeners() {
-    if (!this.authButton) return;
+    if (!this.authButton) {
+      console.log('❌ Botão não encontrado para configurar listeners');
+      return;
+    }
 
+    // Remover listeners antigos (clonando o botão)
+    const newButton = this.authButton.cloneNode(true);
+    this.authButton.parentNode.replaceChild(newButton, this.authButton);
+    this.authButton = newButton;
+
+    console.log('🖱️ Configurando listener no botão:', this.authButton.className);
+    
     this.authButton.addEventListener('click', (e) => {
+      console.log('🖱️ Botão de perfil clicado via ProfileMenuManager');
       e.preventDefault();
       e.stopPropagation();
       this.toggleMenu();
