@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   
   <!-- SEO Meta Tags -->
   <title>Login / Cadastro - Primos Informática</title>
@@ -42,6 +42,372 @@
     @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
     html{scroll-behavior:smooth}
     body{overflow-x:hidden;background:linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);min-height:100vh}
+    
+    /* Estilos inline para garantir que o menu mobile funcione */
+    .mobile-menu-overlay {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      background: rgba(0, 0, 0, 0.5) !important;
+      z-index: 9999 !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transition: all 0.3s ease !important;
+    }
+    
+    .mobile-menu-overlay.active {
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    
+    .mobile-menu-sidebar {
+      position: fixed !important;
+      top: 0 !important;
+      right: 0 !important;
+      width: 320px !important;
+      height: 100vh !important;
+      background: white !important;
+      box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1) !important;
+      transform: translateX(100%) !important;
+      transition: transform 0.3s ease !important;
+      overflow-y: auto !important;
+      z-index: 10000 !important;
+    }
+    
+    .mobile-menu-overlay.active .mobile-menu-sidebar {
+      transform: translateX(0) !important;
+    }
+    
+    .mobile-menu-header {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      padding: 16px 20px !important;
+      border-bottom: 1px solid #e5e7eb !important;
+      background: #f8fafc !important;
+    }
+    
+    .mobile-menu-header h3 {
+      margin: 0 !important;
+      font-size: 18px !important;
+      font-weight: 600 !important;
+      color: #1f2937 !important;
+    }
+    
+    .mobile-menu-close {
+      background: none !important;
+      border: none !important;
+      font-size: 24px !important;
+      cursor: pointer !important;
+      color: #6b7280 !important;
+      padding: 4px !important;
+      border-radius: 4px !important;
+      transition: all 0.2s ease !important;
+    }
+    
+    .mobile-menu-close:hover {
+      background: #e5e7eb !important;
+      color: #1f2937 !important;
+    }
+    
+    .mobile-menu-content {
+      padding: 16px 0 !important;
+    }
+    
+    .mobile-nav-tabs {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0 !important;
+    }
+    
+    .mobile-nav-tab {
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      width: 100% !important;
+      padding: 16px 20px !important;
+      border: none !important;
+      background: transparent !important;
+      text-align: left !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      color: #374151 !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      text-decoration: none !important;
+    }
+    
+    .mobile-nav-tab:hover {
+      background: #f3f4f6 !important;
+      color: #1f2937 !important;
+    }
+    
+    .mobile-nav-tab svg {
+      flex-shrink: 0 !important;
+      width: 16px !important;
+      height: 16px !important;
+    }
+    
+    .mobile-nav-tab span {
+      color: inherit !important;
+    }
+    
+    /* Botão hamburguer escondido em desktop */
+    .action-buttons .mobile-menu-btn {
+      display: none !important;
+    }
+    
+    /* Garantir que botão de filtros apareça em mobile */
+    .action-buttons .filters-toggle {
+      display: flex !important;
+    }
+    
+    /* Estilos para a caixa de faixa de preço */
+    .price-range-container {
+      padding: 20px;
+      background: #f8fafc;
+      border-top: 1px solid #e5e7eb;
+    }
+    
+    .price-range-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .price-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .price-input-group label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 4px;
+    }
+    
+    .price-input-group input {
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+    
+    .price-input-group input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .price-range-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    
+    .apply-price-btn {
+      flex: 1;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .apply-price-btn:hover {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    
+    .cancel-price-btn {
+      flex: 1;
+      padding: 12px 16px;
+      background: white;
+      color: #6b7280;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .cancel-price-btn:hover {
+      background: #f8fafc;
+      color: #374151;
+      border-color: #d1d5db;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Esconder carrinho lateral por padrão */
+    .cart-sidebar {
+      position: fixed !important;
+      top: 0 !important;
+      right: -400px !important;
+      width: 400px !important;
+      height: 100vh !important;
+      background: white !important;
+      box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1) !important;
+      transition: right 0.3s ease !important;
+      z-index: 1003 !important;
+      transform: none !important;
+    }
+    
+    .cart-sidebar.active {
+      right: 0 !important;
+    }
+    
+    /* Esconder overlay do carrinho por padrão */
+    .cart-overlay {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      background: rgba(0, 0, 0, 0.5) !important;
+      z-index: 1002 !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transition: all 0.3s ease !important;
+    }
+    
+    .cart-overlay.active {
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    
+    /* Responsividade simples e garantida */
+    @media (max-width: 768px) {
+      .action-buttons .mobile-menu-btn {
+        display: flex !important;
+      }
+      
+      .mobile-menu-sidebar {
+        width: 280px !important;
+      }
+      
+      .cart-sidebar {
+        width: 100vw !important;
+        right: -100vw !important;
+      }
+      
+      .cart-overlay {
+        z-index: 1001 !important;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .mobile-menu-sidebar {
+        width: 100vw !important;
+        max-width: 100vw !important;
+      }
+      
+      .mobile-nav-tab {
+        padding: 20px !important;
+        font-size: 16px !important;
+      }
+      
+      .mobile-nav-tab svg {
+        width: 20px !important;
+        height: 20px !important;
+      }
+    }
+    
+    @media (max-width: 360px) {
+      .mobile-nav-tab {
+        padding: 24px !important;
+        font-size: 18px !important;
+      }
+      
+      .mobile-nav-tab svg {
+        width: 24px !important;
+        height: 24px !important;
+      }
+    }
+    
+    /* iPhone 11 e iOS específicos */
+    @media only screen 
+      and (device-width: 414px) 
+      and (device-height: 896px) 
+      and (-webkit-device-pixel-ratio: 2) {
+      
+      .mobile-menu-sidebar {
+        width: 100vw !important;
+        height: 100vh !important;
+        top: 0 !important;
+        right: 0 !important;
+        position: fixed !important;
+      }
+      
+      .mobile-menu-overlay.active .mobile-menu-sidebar {
+        transform: translateX(0) !important;
+        -webkit-transform: translateX(0) !important;
+      }
+      
+      .mobile-nav-tab {
+        padding: 22px !important;
+        font-size: 17px !important;
+        -webkit-tap-highlight-color: transparent !important;
+      }
+      
+      .mobile-nav-tab svg {
+        width: 22px !important;
+        height: 22px !important;
+      }
+    }
+    
+    /* iPhones em geral (landscape e portrait) */
+    @media only screen 
+      and (max-device-width: 428px) 
+      and (-webkit-min-device-pixel-ratio: 2) {
+      
+      .mobile-menu-sidebar {
+        width: 100vw !important;
+        height: 100vh !important;
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        -webkit-transform: translateX(100%) !important;
+        transform: translateX(100%) !important;
+      }
+      
+      .mobile-menu-overlay.active .mobile-menu-sidebar {
+        -webkit-transform: translateX(0) !important;
+        transform: translateX(0) !important;
+      }
+      
+      .mobile-nav-tab {
+        padding: 20px !important;
+        font-size: 16px !important;
+        -webkit-tap-highlight-color: transparent !important;
+        touch-action: manipulation !important;
+      }
+    }
+    
+    /* iOS Safari específico */
+    @supports (-webkit-touch-callout: none) {
+      .mobile-menu-sidebar {
+        -webkit-overflow-scrolling: touch !important;
+      }
+      
+      .mobile-nav-tab {
+        -webkit-tap-highlight-color: transparent !important;
+        touch-action: manipulation !important;
+        -webkit-user-select: none !important;
+        user-select: none !important;
+      }
+    }
   </style>
   
   <!-- Desativar Service Worker -->
@@ -85,12 +451,6 @@
               onfocus="showSearchResults()"
               onblur="hideSearchResults()"
             >
-            <button class="search-btn" onclick="searchProducts(document.getElementById('searchInput').value)" title="Buscar">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-              </svg>
-            </button>
           </div>
           <div class="search-results" id="searchResults"></div>
         </div>
@@ -108,27 +468,26 @@
           </button>
           
           <!-- Filtros -->
-          <button class="action-btn filters-toggle" id="filtersToggle" onclick="toggleFilters()" title="Filtros">
+          <button class="action-btn filters-toggle" id="filtersToggle" onclick="toggleFiltersMenu()" title="Filtros">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
           </button>
           
-          <!-- Voltar para Home -->
-          <button class="action-btn auth-btn" onclick="window.location.href='index.html'" title="Voltar para Home">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            <span class="auth-text">Voltar</span>
-          </button>
-          
           <!-- Menu Mobile -->
-          <button class="action-btn mobile-menu-toggle" onclick="toggleMobileMenu()" title="Menu">
+          <button class="action-btn mobile-menu-btn" onclick="toggleMobileMenu()" title="Menu">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="3" y1="6" x2="21" y2="6"></line>
               <line x1="3" y1="12" x2="21" y2="12"></line>
               <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          
+          <!-- Voltar para Loja -->
+          <button class="action-btn back-to-store-btn" onclick="window.location.href='index.html'" title="Voltar para Loja">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m15 18-6-6 6-6"></path>
+              <path d="M9 12h14"></path>
             </svg>
           </button>
           
@@ -137,9 +496,9 @@
             <div class="filter-group">
               <label>Faixa de Preço</label>
               <div class="price-range">
-                <input type="number" id="minPrice" placeholder="Min" placeholder="R$ 0">
+                <input type="number" id="minPrice" placeholder="R$ 0">
                 <span>-</span>
-                <input type="number" id="maxPrice" placeholder="Max" placeholder="R$ 5000">
+                <input type="number" id="maxPrice" placeholder="R$ 5000">
               </div>
             </div>
             
@@ -293,6 +652,152 @@
   </nav>
 </header>
 
+<!-- Menu Mobile Overlay -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="toggleMobileMenu()">
+  <div class="mobile-menu-sidebar" onclick="event.stopPropagation()">
+    <div class="mobile-menu-header">
+      <h3>Categorias</h3>
+      <button class="mobile-menu-close" onclick="toggleMobileMenu()">×</button>
+    </div>
+    <div class="mobile-menu-content">
+      <div class="mobile-nav-tabs">
+        <!-- Será preenchido dinamicamente pelo JavaScript -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Menu Mobile Filtros Overlay -->
+<div class="mobile-menu-overlay" id="filtersMenuOverlay" onclick="toggleFiltersMenu()">
+  <div class="mobile-menu-sidebar" onclick="event.stopPropagation()">
+    <div class="mobile-menu-header">
+      <h3>Filtros</h3>
+      <button class="mobile-menu-close" onclick="toggleFiltersMenu()">×</button>
+    </div>
+    <div class="mobile-menu-content">
+      <div class="mobile-nav-tabs">
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=price-low'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          <span>Menor Preço</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=price-high'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          <span>Maior Preço</span>
+        </button>
+        
+        <div class="price-range-container" id="priceRangeContainer" style="display: none;" onclick="event.stopPropagation()">
+          <div class="price-range-inputs">
+            <div class="price-input-group">
+              <label for="minPriceFilter">De:</label>
+              <input type="number" id="minPriceFilter" placeholder="R$ 0" min="0">
+            </div>
+            <div class="price-input-group">
+              <label for="maxPriceFilter">Até:</label>
+              <input type="number" id="maxPriceFilter" placeholder="R$ 5000" min="0">
+            </div>
+          </div>
+          <div class="price-range-actions">
+            <button class="apply-price-btn" onclick="applyPriceRange()">Aplicar</button>
+            <button class="cancel-price-btn" onclick="toggleFiltersMenu()">Cancelar</button>
+          </div>
+        </div>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=new'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+          </svg>
+          <span>Lançamentos</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=bestseller'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9 17 14 14 17 22 9 15.09 8.26 12 2 8.91 8.26 2 9 7 14 10 17 2 9 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span>Mais Vendidos</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=stock'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22" x2="12" y2="2"></line>
+          </svg>
+          <span>Em Estoque</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=gaming'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+            <path d="M12 12h.01M12 6h.01M12 18h.01"></path>
+          </svg>
+          <span>Para Gamers</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=office'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span>Para Escritório</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=discount'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          <span>Com Desconto</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=brand-intel'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+            <rect x="9" y="9" width="6" height="6"></rect>
+            <line x1="9" y1="1" x2="9" y2="4"></line>
+            <line x1="15" y1="1" x2="15" y2="4"></line>
+            <line x1="9" y1="20" x2="9" y2="23"></line>
+            <line x1="15" y1="20" x2="15" y2="23"></line>
+            <line x1="20" y1="9" x2="23" y2="9"></line>
+            <line x1="20" y1="14" x2="23" y2="14"></line>
+            <line x1="1" y1="9" x2="4" y2="9"></line>
+            <line x1="1" y1="14" x2="4" y2="14"></line>
+          </svg>
+          <span>Intel</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=brand-amd'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+            <rect x="9" y="9" width="6" height="6"></rect>
+            <line x1="9" y1="1" x2="9" y2="4"></line>
+            <line x1="15" y1="1" x2="15" y2="4"></line>
+            <line x1="9" y1="20" x2="9" y2="23"></line>
+            <line x1="15" y1="20" x2="15" y2="23"></line>
+            <line x1="20" y1="9" x2="23" y2="9"></line>
+            <line x1="20" y1="14" x2="23" y2="14"></line>
+            <line x1="1" y1="9" x2="4" y2="9"></line>
+            <line x1="1" y1="14" x2="4" y2="14"></line>
+          </svg>
+          <span>AMD</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=brand-nvidia'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          <span>NVIDIA</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Carrinho Flutuante -->
 <div class="cart-sidebar" id="cartSidebar">
   <div class="cart-header">
@@ -437,6 +942,281 @@
 <!-- Scripts -->
 <script src="js/script.js"></script>
 <script src="auth.js"></script>
+
+<!-- Script específico para inicializar menu mobile na auth.html -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('🍔 Inicializando menu mobile na página auth...');
+  
+  // Esperar um pouco para garantir que o DOM esteja pronto
+  setTimeout(function() {
+    console.log('🍔 Timeout executado, procurando elementos...');
+    
+    // Preencher menu mobile com opções básicas
+    const mobileNavTabs = document.querySelector('.mobile-nav-tabs');
+    console.log('🍔 .mobile-nav-tabs encontrado:', !!mobileNavTabs);
+    
+    // Verificar se o overlay existe
+    const overlay = document.getElementById('mobileMenuOverlay');
+    console.log('🍔 mobileMenuOverlay encontrado:', !!overlay);
+    
+    if (overlay) {
+      console.log('🍔 Estrutura do overlay:', overlay.innerHTML.substring(0, 300) + '...');
+    }
+    
+    if (mobileNavTabs) {
+      console.log('🍔 Preenchendo menu mobile...');
+      const menuContent = `
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html'; toggleMobileMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span>Início</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html#promo'; toggleMobileMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+          </svg>
+          <span>Promoções</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html#processador'; toggleMobileMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+            <rect x="9" y="9" width="6" height="6"></rect>
+            <line x1="9" y1="1" x2="9" y2="4"></line>
+            <line x1="15" y1="1" x2="15" y2="4"></line>
+            <line x1="9" y1="20" x2="9" y2="23"></line>
+            <line x1="15" y1="20" x2="15" y2="23"></line>
+            <line x1="20" y1="9" x2="23" y2="9"></line>
+            <line x1="20" y1="14" x2="23" y2="14"></line>
+            <line x1="1" y1="9" x2="4" y2="9"></line>
+            <line x1="1" y1="14" x2="4" y2="14"></line>
+          </svg>
+          <span>Processadores</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html#placa de vídeo'; toggleMobileMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          <span>Placas de Vídeo</span>
+        </button>
+      `;
+      
+      mobileNavTabs.innerHTML = menuContent;
+      console.log('🍔 Menu mobile preenchido com opções básicas');
+      console.log('🍔 Número de botões no menu:', mobileNavTabs.children.length);
+      console.log('🍔 Conteúdo do menu:', mobileNavTabs.innerHTML);
+      
+      // Forçar visibilidade dos botões
+      const buttons = mobileNavTabs.querySelectorAll('.mobile-nav-tab');
+      buttons.forEach((btn, index) => {
+        console.log(`🍔 Botão ${index}:`, btn.textContent.trim());
+        btn.style.display = 'flex !important';
+        btn.style.visibility = 'visible !important';
+        btn.style.opacity = '1 !important';
+      });
+      
+    } else {
+      console.log('⚠️ Elemento .mobile-nav-tabs não encontrado');
+      
+      // Tentar encontrar o menu overlay e verificar sua estrutura
+      const overlay = document.getElementById('mobileMenuOverlay');
+      if (overlay) {
+        console.log('🍔 Overlay encontrado, verificando estrutura...');
+        console.log('🍔 Conteúdo do overlay:', overlay.innerHTML.substring(0, 200) + '...');
+      }
+    }
+  }, 100);
+  
+  // Sobrescrever toggleFilters para funcionar com filtersPanel
+  window.toggleFilters = function() {
+    const filtersPanel = document.getElementById('filtersPanel');
+    const filtersToggle = document.getElementById('filtersToggle');
+    
+    if (!filtersPanel || !filtersToggle) return;
+    
+    if (filtersPanel.classList.contains('active')) {
+      filtersPanel.classList.remove('active');
+      filtersToggle.classList.remove('active');
+    } else {
+      filtersPanel.classList.add('active');
+      filtersToggle.classList.add('active');
+    }
+  };
+  
+  // Função para o menu mobile de filtros - IGUAL AO HAMBURGUER
+  window.toggleFiltersMenu = function() {
+    const filtersMenuOverlay = document.getElementById('filtersMenuOverlay');
+    if (!filtersMenuOverlay) return;
+    
+    const isActive = filtersMenuOverlay.classList.contains('active');
+    
+    if (isActive) {
+      filtersMenuOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    } else {
+      filtersMenuOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      // Abrir automaticamente a caixa de preço
+      const priceRangeContainer = document.getElementById('priceRangeContainer');
+      if (priceRangeContainer) {
+        priceRangeContainer.style.display = 'block';
+      }
+    }
+  };
+  
+  // Função para mostrar/esconder a faixa de preço
+  window.togglePriceRange = function() {
+    const priceRangeContainer = document.getElementById('priceRangeContainer');
+    if (!priceRangeContainer) return;
+    
+    const isVisible = priceRangeContainer.style.display !== 'none';
+    
+    if (isVisible) {
+      priceRangeContainer.style.display = 'none';
+    } else {
+      priceRangeContainer.style.display = 'block';
+    }
+  };
+  
+  // Função para aplicar a faixa de preço
+  window.applyPriceRange = function() {
+    const minPrice = document.getElementById('minPriceFilter').value;
+    const maxPrice = document.getElementById('maxPrice').value;
+    
+    // Construir URL com os parâmetros de preço
+    let url = 'index.html?filter=price-range';
+    if (minPrice) {
+      url += '&min=' + minPrice;
+    }
+    if (maxPrice) {
+      url += '&max=' + maxPrice;
+    }
+    
+    // Redirecionar para a página com os filtros aplicados
+    window.location.href = url;
+  };
+  
+  // Adicionar eventos de toque para iOS no botão de filtros - IGUAL AO HAMBURGUER
+  setTimeout(function() {
+    const filtersToggle = document.querySelector('.filters-toggle');
+    if (filtersToggle) {
+      // Remover eventos anteriores
+      filtersToggle.replaceWith(filtersToggle.cloneNode(true));
+      const newBtn = document.querySelector('.filters-toggle');
+      
+      // Adicionar eventos para iOS
+      newBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.toggleFiltersMenu();
+      });
+      
+      newBtn.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.toggleFiltersMenu();
+      }, { passive: false });
+    }
+  }, 100);
+  
+  // Sobrescrever toggleMobileMenu com versão simples e garantida
+  let isMenuAnimating = false;
+  
+  window.toggleMobileMenu = function() {
+    if (isMenuAnimating) return;
+    
+    const overlay = document.getElementById('mobileMenuOverlay');
+    if (!overlay) return;
+    
+    isMenuAnimating = true;
+    
+    const isActive = overlay.classList.contains('active');
+    
+    if (isActive) {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    } else {
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    // Resetar flag após animação
+    setTimeout(() => {
+      isMenuAnimating = false;
+    }, 300);
+  };
+  
+  // Forçar que o botão hamburguer use nossa função
+  setTimeout(function() {
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    if (mobileMenuBtn) {
+      // Remover todos os eventos anteriores
+      mobileMenuBtn.replaceWith(mobileMenuBtn.cloneNode(true));
+      const newBtn = document.querySelector('.mobile-menu-btn');
+      
+      // Adicionar evento único com prevenção de múltiplos cliques
+      newBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.toggleMobileMenu();
+      });
+      
+      // Adicionar suporte para touch events (iOS) - mas apenas um
+      newBtn.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.toggleMobileMenu();
+      }, { passive: false, once: false });
+    }
+    
+    // Adicionar eventos de toque para os botões do menu (iOS)
+    const menuTabs = document.querySelectorAll('.mobile-nav-tab');
+    menuTabs.forEach(tab => {
+      tab.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        const href = tab.getAttribute('onclick');
+        if (href && href.includes('window.location.href')) {
+          // Extrair URL do onclick
+          const urlMatch = href.match(/window\.location\.href='([^']+)'/);
+          if (urlMatch && urlMatch[1]) {
+            window.location.href = urlMatch[1];
+          }
+        }
+      }, { passive: false });
+    });
+    
+    // Adicionar evento de toque para fechar o menu (iOS)
+    const overlay = document.getElementById('mobileMenuOverlay');
+    if (overlay) {
+      overlay.addEventListener('touchend', function(e) {
+        if (e.target === overlay) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.toggleMobileMenu();
+        }
+      }, { passive: false });
+    }
+    
+    // Adicionar evento de toque para o botão fechar (iOS)
+    const closeBtn = document.querySelector('.mobile-menu-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.toggleMobileMenu();
+      }, { passive: false });
+    }
+  }, 100);
+});
+</script>
 
 </body>
 </html>

@@ -319,29 +319,74 @@ function loadImagesOnScroll(container) {
 let allProducts = [];
 
 function loadProducts() {
+  console.log('🔍 loadProducts chamada');
   return fetch('data/products.csv')
     .then(function(response) {
+      console.log('🔍 Response recebido do CSV');
       return response.text();
     })
     .then(function(csvText) {
-      const lines = csvText.split('\n');
-      const headers = lines[0].split(';');
+      console.log('🔍 CSV recebido, tamanho:', csvText.length);
+      console.log('🔍 Primeiros 200 caracteres do CSV:', csvText.substring(0, 200));
       
-      allProducts = [];
+      const lines = csvText.split('\n');
+      const headers = lines[0].split(';').map(h => h.trim());
+      console.log('🔍 Headers do CSV:', headers);
+      
+      const products = [];
+      const productMap = {}; // Usar mapa para evitar duplicatas por código
+      
       for (let i = 1; i < lines.length; i++) {
-        if (lines[i].trim() === '') continue;
+        const values = lines[i].split(';').map(v => v.trim());
         
-        const values = lines[i].split(';');
-        const product = {};
-        
-        for (let j = 0; j < headers.length; j++) {
-          product[headers[j].trim()] = values[j] ? values[j].trim() : '';
+        if (values.length >= headers.length) {
+          const product = {};
+          headers.forEach((header, index) => {
+            product[header] = values[index] || '';
+          });
+          
+          // Garantir que todos os campos obrigatórios existam
+          product.codigo = product.codigo || product.Código || '';
+          product.nome = product.nome || product.Nome || '';
+          product.preco = product.preco || product.Preço || '';
+          product.categoria = product.categoria || product.Categoria || '';
+          product.marca = product.marca || product.Marca || '';
+          product.descricao = product.descricao || product.Descrição || '';
+          product.imagem = product.imagem || product.Imagem || '';
+          
+          // Garantir que o código não seja vazio
+          if (!product.codigo) {
+            console.warn('⚠️ Produto sem código na linha', i + ':', product);
+            continue; // Pular produtos sem código
+          }
+          
+          // Verificar se já existe produto com este código
+          if (productMap[product.codigo]) {
+            console.warn('⚠️ Código duplicado encontrado:', product.codigo, '- Produto existente:', productMap[product.codigo].nome, '- Novo produto:', product.nome);
+            // Adicionar sufixo ao código para evitar duplicatas
+            const originalCode = product.codigo;
+            let suffix = 1;
+            while (productMap[product.codigo + '_' + suffix]) {
+              suffix++;
+            }
+            product.codigo = product.codigo + '_' + suffix;
+            console.log('🔧 Código ajustado para:', product.codigo);
+          }
+          
+          productMap[product.codigo] = product;
+          products.push(product);
         }
-        
-        allProducts.push(product);
       }
       
-      displayProducts(allProducts);
+      console.log('🔍 Produtos parseados do CSV:', products.length);
+      console.log('🔍 Primeiros 3 produtos parseados:', products.slice(0, 3));
+      
+      allProducts = products;
+      return products;
+    })
+    .catch(function(error) {
+      console.error('❌ Erro ao carregar produtos:', error);
+      allProducts = [];
     });
 }
 
@@ -460,6 +505,122 @@ function populateHomeCategories() {
   console.log('Categorias da home preenchidas:', categoryNames.length);
 }
 
+// === PREENCHER MENUS DE NAVEGAÇÃO DINAMICAMENTE ===
+function populateNavigationMenus() {
+  if (allProducts.length === 0) return;
+  
+  // Obter categorias únicas dos produtos
+  const categories = {};
+  for (let i = 0; i < allProducts.length; i++) {
+    const category = allProducts[i].categoria;
+    if (!categories[category]) {
+      categories[category] = {
+        name: category,
+        count: 0,
+        sample: allProducts[i]
+      };
+    }
+    categories[category].count++;
+  }
+  
+  const categoryNames = Object.keys(categories).sort();
+  
+  // Gerar HTML para as categorias (exceto as especiais)
+  function generateCategoryButtons(closeMenu = false) {
+    let html = '';
+    for (let i = 0; i < categoryNames.length; i++) {
+      const category = categoryNames[i];
+      const displayName = category.charAt(0).toUpperCase() + category.slice(1);
+      const closeMenuAction = closeMenu ? '; toggleMobileMenu()' : '';
+      
+      // Mapear categorias para ícones apropriados
+      const iconMap = {
+        'monitor': '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line>',
+        'mouse': '<path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M19.07 13.93a7 7 0 0 1-6.14 0"></path><line x1="12" y1="8" x2="12.01" y2="8"></line>',
+        'teclado': '<rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"></path>',
+        'redes': '<path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M19.07 13.93a7 7 0 0 1-6.14 0"></path><line x1="12" y1="8" x2="12.01" y2="8"></line>',
+        'processador': '<rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line>',
+        'placa de vídeo': '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line>',
+        'placa mãe': '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line>',
+        'ssd': '<rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="12" y1="6" x2="12.01" y2="6"></line>',
+        'hd externo': '<ellipse cx="12" cy="12" rx="10" ry="3"></ellipse><path d="M2 12v6c0 1.66 4.48 3 10 3s10-1.34 10-3v-6"></path>',
+        'hd interno': '<ellipse cx="12" cy="12" rx="10" ry="3"></ellipse><path d="M2 12v6c0 1.66 4.48 3 10 3s10-1.34 10-3v-6"></path>',
+        'kit-teclado-mouse': '<rect x="2" y="4" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="6" rx="2" ry="2"></rect>',
+        'access-point': '<path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M19.07 13.93a7 7 0 0 1-6.14 0"></path><line x1="12" y1="8" x2="12.01" y2="8"></line>',
+        'repetidor': '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle>',
+        'adaptador': '<rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect><path d="M8 12h.01M12 12h.01M16 12h.01"></path>',
+        'audio': '<path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>',
+        'acessorios': '<circle cx="12" cy="12" r="3"></circle><path d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 1.54l4.24 4.24M20.46 20.46l-4.24-4.24M1.54 20.46l4.24-4.24"></path>',
+        'cabos': '<path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line>',
+        'webcam': '<path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>',
+        'fonte': '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>'
+      };
+      
+      const icon = iconMap[category] || '<rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>';
+      
+      html += `
+        <button type="button" class="mobile-nav-tab" data-target="${category}" onclick="showCategory('${category}')${closeMenuAction}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            ${icon}
+          </svg>
+          <span>${displayName}</span>
+        </button>
+      `;
+    }
+    return html;
+  }
+  
+  // Atualizar menu desktop (header-nav)
+  const navTabs = document.querySelector('.nav-tabs');
+  if (navTabs) {
+    // Manter apenas Início e Promoções
+    const staticHTML = `
+      <button type="button" class="nav-tab active" data-target="inicio" onclick="showCategory('inicio')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Início</span>
+      </button>
+      
+      <button type="button" class="nav-tab" data-target="promo" onclick="showCategory('promo')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+        </svg>
+        <span>Promoções</span>
+      </button>
+    `;
+    
+    navTabs.innerHTML = staticHTML + generateCategoryButtons(false);
+  }
+  
+  // Atualizar menu mobile (mobile-nav-tabs)
+  const mobileNavTabs = document.querySelector('.mobile-nav-tabs');
+  if (mobileNavTabs) {
+    // Manter apenas Início e Promoções
+    const staticHTML = `
+      <button type="button" class="mobile-nav-tab" data-target="inicio" onclick="showCategory('inicio'); toggleMobileMenu()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Início</span>
+      </button>
+      
+      <button type="button" class="mobile-nav-tab" data-target="promo" onclick="showCategory('promo'); toggleMobileMenu()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+        </svg>
+        <span>Promoções</span>
+      </button>
+    `;
+    
+    mobileNavTabs.innerHTML = staticHTML + generateCategoryButtons(true);
+  }
+  
+  console.log('🧭 Menus de navegação atualizados com', categoryNames.length, 'categorias do CSV');
+}
+
 // === PREENCHER PRODUTOS EM DESTAQUE DA HOME ===
 function populateHomeHighlights() {
   const highlightsGrid = document.getElementById('home-highlights-grid');
@@ -513,29 +674,25 @@ let uploadedPhotos = [];
 
 // Função para obter avaliações de um produto
 function getProductReviews(productId) {
+  console.log('🔍 getProductReviews chamada para produto:', productId);
+  
   try {
     // Tentar localStorage primeiro
-    let reviews = [];
-    const stored = localStorage.getItem('primos_reviews');
+    console.log('🔍 Tentando localStorage...');
+    let reviews = JSON.parse(localStorage.getItem('primos_reviews') || '[]');
+    console.log('🔍 Reviews do localStorage:', reviews.length, reviews);
     
-    if (stored) {
-      try {
-        reviews = JSON.parse(stored);
-      } catch (e) {
-        console.warn('Erro ao parsear avaliações do localStorage:', e);
-        reviews = [];
-      }
+    if (reviews.length === 0) {
+      console.log('🔍 Nenhuma avaliação encontrada no localStorage');
     }
     
-    // Filtrar por produto
     const productReviews = reviews.filter(review => review.productId === productId);
-    
-    // Debug no console
-    console.log(`📊 Avaliações para produto ${productId}:`, productReviews.length, productReviews);
+    console.log('🔍 Reviews filtradas para produto:', productReviews.length, productReviews);
     
     return productReviews;
-  } catch (error) {
-    console.error('❌ Erro ao carregar avaliações:', error);
+  } catch (e) {
+    console.warn('🔍 Erro ao parsear avaliações do localStorage:', e);
+    reviews = [];
     
     // Tentar sessionStorage como fallback
     try {
@@ -1248,54 +1405,27 @@ function finalizeViaWhatsApp() {
 }
 
 function toggleMobileMenu() {
-  const navTabs = document.querySelector('.nav-tabs');
-  const mobileMenuBtn = document.querySelector('.mobile-menu-toggle');
+  const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
   
-  if (!navTabs || !mobileMenuBtn) return;
+  if (!mobileMenuOverlay) return;
   
-  if (navTabs.classList.contains('mobile-open')) {
-    // Fechar menu
-    navTabs.classList.remove('mobile-open');
-    
-    // Voltar ícone de hambúrguer
-    mobileMenuBtn.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="12" x2="21" y2="12"></line>
-        <line x1="3" y1="18" x2="21" y2="18"></line>
-      </svg>
-    `;
+  mobileMenuOverlay.classList.toggle('active');
+  
+  // Prevenir scroll no body quando menu está aberto
+  if (mobileMenuOverlay.classList.contains('active')) {
+    document.body.style.overflow = 'hidden';
   } else {
-    // Abrir menu
-    navTabs.classList.add('mobile-open');
-    
-    // Transformar o ícone em X
-    mobileMenuBtn.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
-      </svg>
-    `;
+    document.body.style.overflow = '';
   }
 }
 
 function closeMobileMenu() {
-  const navTabs = document.querySelector('.nav-tabs');
-  const mobileMenuBtn = document.querySelector('.mobile-menu-toggle');
+  const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
   
-  if (!navTabs || !mobileMenuBtn) return;
+  if (!mobileMenuOverlay) return;
   
-  // Fechar menu
-  navTabs.classList.remove('mobile-open');
-  
-  // Voltar ícone de hambúrguer
-  mobileMenuBtn.innerHTML = `
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <line x1="3" y1="6" x2="21" y2="6"></line>
-      <line x1="3" y1="12" x2="21" y2="12"></line>
-      <line x1="3" y1="18" x2="21" y2="18"></line>
-    </svg>
-  `;
+  mobileMenuOverlay.classList.remove('active');
+  document.body.style.overflow = '';
 }
 
 function addToCart(productCode) {
@@ -1374,6 +1504,13 @@ document.addEventListener('DOMContentLoaded', function() {
   loadProducts().then(function() {
     console.log('📦 Produtos carregados:', allProducts.length);
     console.log('🏠 Exibindo página inicial...');
+    
+    // Preencher menus de navegação dinamicamente
+    populateNavigationMenus();
+    
+    // Preencher home
+    populateHome();
+    
     showCategory('inicio');
   }).catch(function(error) {
     // Erro silencioso - log removido para produção
@@ -1450,67 +1587,64 @@ function checkAuthStatus() {
       console.log('🔄 Usuário reconstruído com fallback:', usuario);
     }
     
-    // Verificar se é mobile ou desktop
-    const isMobile = window.innerWidth <= 768;
-    
-    // Adicionar classe para estilização quando logado
-    authBtn.classList.add('logged-in');
-    
-    if (isMobile) {
-      // Mobile: mostrar apenas inicial
-      authBtn.innerHTML = `<span class="user-initial">${usuario.nome.charAt(0).toUpperCase()}</span>`;
-      authBtn.title = `${usuario.nome} (${usuario.email})`;
-    } else {
-      // Desktop: mostrar nome completo ou inicial + nome
-      if (usuario.nome.length > 15) {
-        // Nome muito longo: mostrar inicial + sobrenome
-        const nameParts = usuario.nome.split(' ');
-        if (nameParts.length > 1) {
-          authBtn.innerHTML = `
-            <span class="user-initial">${nameParts[0].charAt(0).toUpperCase()}</span>
-            <span class="auth-text">${nameParts[0]} ${nameParts[nameParts.length - 1]}</span>
-          `;
-        } else {
-          authBtn.innerHTML = `
-            <span class="user-initial">${usuario.nome.charAt(0).toUpperCase()}</span>
-            <span class="auth-text">${usuario.nome.substring(0, 12)}...</span>
-          `;
-        }
-      } else {
-        // Nome normal: mostrar inicial + nome completo
-        authBtn.innerHTML = `
-          <span class="user-initial">${usuario.nome.charAt(0).toUpperCase()}</span>
-          <span class="auth-text">${usuario.nome}</span>
-        `;
-      }
-    }
-    
-    // Esconder texto original se existir e for mobile
-    if (authText && isMobile) {
+    // Esconder texto em todos os dispositivos
+    if (authText) {
       authText.style.display = 'none';
-    } else if (authText && !isMobile) {
-      authText.style.display = 'inline';
     }
     
     // Remover todos os event listeners anteriores
     authBtn.replaceWith(authBtn.cloneNode(true));
     const newAuthBtn = document.querySelector('.auth-btn');
     
+    // Adicionar conteúdo após o clone
+    const userInitial = usuario.nome.charAt(0).toUpperCase();
+    
+    // Estilos inline para garantir funcionamento no mobile
+    const inlineStyles = `
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 18px !important;
+      height: 18px !important;
+      font-weight: 700 !important;
+      font-size: 10px !important;
+      color: white !important;
+      text-transform: uppercase !important;
+      background: rgba(255, 255, 255, 0.4) !important;
+      border-radius: 50% !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      margin: 0 auto !important;
+      position: relative !important;
+    `;
+    
+    newAuthBtn.innerHTML = `<span class="user-initial" style="${inlineStyles}">${userInitial}</span>`;
+    newAuthBtn.title = `${usuario.nome} (${usuario.email})`;
+    
+    // Adicionar classe logged-in
+    newAuthBtn.classList.add('logged-in');
+    
     // Adicionar event listener robusto
     newAuthBtn.addEventListener('click', function(e) {
       console.log('🖱️ Botão de perfil clicado (usuário logado)');
       e.preventDefault();
       e.stopPropagation();
-      showUserMenu(usuario);
+      
+      // Verificar se o menu já está aberto para fazer toggle
+      const existingMenu = document.querySelector('.user-menu');
+      if (existingMenu) {
+        // Menu existe → fechar
+        console.log('🔄 Fechando menu existente (toggle)');
+        existingMenu.remove();
+        // Remover event listeners de fechamento
+        document.removeEventListener('click', closeUserMenuHandler);
+        document.removeEventListener('keydown', closeUserMenuKeyHandler);
+      } else {
+        // Menu não existe → abrir
+        console.log('🔄 Abrindo menu (toggle)');
+        showUserMenu(usuario);
+      }
     });
-    
-    // Também adicionar onclick como fallback
-    newAuthBtn.onclick = function(e) {
-      console.log('🖱️ Botão de perfil clicado via onclick (usuário logado)');
-      e.preventDefault();
-      e.stopPropagation();
-      showUserMenu(usuario);
-    };
     
     console.log('✅ Botão de perfil configurado para usuário logado');
   } else if (authBtn) {
@@ -1665,14 +1799,17 @@ function showUserMenu(usuario) {
   // Adicionar menu ao DOM
   parent.appendChild(userMenu);
   
-  // Configurar fechamento automático
-  setTimeout(() => {
-    // Fechar menu ao clicar fora
-    document.addEventListener('click', closeUserMenuHandler);
-    
-    // Fechar menu ao pressionar ESC
-    document.addEventListener('keydown', closeUserMenuKeyHandler);
-  }, 100);
+  // Adicionar classe active para animação suave (no próximo frame)
+  requestAnimationFrame(() => {
+    userMenu.classList.add('active');
+  });
+  
+  // Configurar fechamento automático imediatamente
+  // Fechar menu ao clicar fora
+  document.addEventListener('click', closeUserMenuHandler);
+  
+  // Fechar menu ao pressionar ESC
+  document.addEventListener('keydown', closeUserMenuKeyHandler);
   
   console.log('✅ Menu do usuário exibido com sucesso');
 }
@@ -2157,8 +2294,17 @@ function handleSearchInput(event) {
 
 function showSearchResults() {
   const searchResults = document.getElementById('searchResults');
+  
   if (searchResults) {
     searchResults.classList.add('active');
+    console.log('🔍 Classe active adicionada ao searchResults');
+    console.log('🔍 Classes atuais:', searchResults.className);
+    console.log('🔍 Estilo computado position:', getComputedStyle(searchResults).position);
+    console.log('🔍 Estilo computado display:', getComputedStyle(searchResults).display);
+    console.log('🔍 Estilo computado visibility:', getComputedStyle(searchResults).visibility);
+    console.log('🔍 Estilo computado opacity:', getComputedStyle(searchResults).opacity);
+  } else {
+    console.error('❌ Elemento searchResults não encontrado!');
   }
 }
 
@@ -2166,12 +2312,17 @@ function hideSearchResults() {
   const searchResults = document.getElementById('searchResults');
   if (searchResults) {
     searchResults.classList.remove('active');
+    // Limpar o conteúdo dos resultados
+    searchResults.innerHTML = '';
+    // Limpar estilos inline para evitar conflitos
+    searchResults.style.position = '';
+    searchResults.style.top = '';
+    searchResults.style.left = '';
+    searchResults.style.width = '';
   }
 }
 
 function searchProducts(searchTerm) {
-  console.log('🔍 Buscando produtos:', searchTerm);
-  
   if (!searchTerm || searchTerm.length < 2) {
     hideSearchResults();
     return;
@@ -2199,7 +2350,9 @@ function searchProducts(searchTerm) {
 function displaySearchResults(results, searchTerm) {
   const searchResultsContainer = document.getElementById('searchResults');
   
-  if (!searchResultsContainer) return;
+  if (!searchResultsContainer) {
+    return;
+  }
   
   if (results.length === 0) {
     searchResultsContainer.innerHTML = `
@@ -2216,12 +2369,17 @@ function displaySearchResults(results, searchTerm) {
       // Corrigir tratamento de preço para preservar centavos
       const priceString = (product.preco || '0').toString().replace(',', '.');
       const price = parseFloat(priceString);
-      const formattedPrice = 'R$ ' + price.toFixed(2).replace('.', ',');
-      const imageName = product.imagem || product.codigo + '.webp';
+      const formattedPrice = price.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      });
+      
+      // Gerar nome da imagem
+      const imageName = (product.codigo || 'product') + '.jpg';
       const imagePath = 'images/products/thumbnail/' + imageName;
       
-      return `
-        <div class="search-result-item" onclick="selectSearchProduct('${product.codigo}')">
+      const productHTML = `
+        <div class="search-result-item" data-product-code="${product.codigo}">
           <div class="search-result-info">
             <div class="search-result-name">${product.nome}</div>
             <div class="search-result-category">${product.categoria || 'Sem categoria'}</div>
@@ -2229,10 +2387,40 @@ function displaySearchResults(results, searchTerm) {
           </div>
         </div>
       `;
+      
+      return productHTML;
     }).join('');
   }
   
   showSearchResults();
+  
+  // Adicionar event listeners aos itens de resultado (depois do HTML estar no DOM)
+  setTimeout(() => {
+    const searchResultsContainer = document.getElementById('searchResults');
+    if (!searchResultsContainer) return;
+    
+    const searchItems = searchResultsContainer.querySelectorAll('.search-result-item');
+    
+    searchItems.forEach((item, index) => {
+      // Adicionar evento de clique
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const productCode = this.getAttribute('data-product-code');
+        selectSearchProduct(productCode);
+      });
+      
+      // Adicionar evento hover para feedback visual
+      item.addEventListener('mouseenter', function() {
+        this.style.backgroundColor = '#f8fafc';
+      });
+      
+      item.addEventListener('mouseleave', function() {
+        this.style.backgroundColor = '';
+      });
+    });
+    
+  }, 200); // Delay para garantir que o HTML está no DOM
 }
 
 function selectSearchProduct(productCode) {
@@ -2240,9 +2428,51 @@ function selectSearchProduct(productCode) {
   
   // Encontrar o produto e mostrar na categoria correta
   const product = allProducts.find(p => p.codigo === productCode);
+  
   if (product) {
     // Mostrar categoria do produto
     showCategory(product.categoria);
+    
+    // Esperar um pouco para a categoria carregar e depois rolar até o produto
+    setTimeout(() => {
+      // Procurar pelo elemento do produto usando o código
+      const productElement = document.querySelector(`[data-product-code="${productCode}"]`);
+      
+      if (productElement) {
+        // Adicionar classe de destaque
+        productElement.classList.add('search-highlight');
+        
+        // Rolar suavemente até o produto
+        productElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+        
+        // Remover a classe de destaque após 3 segundos
+        setTimeout(() => {
+          productElement.classList.remove('search-highlight');
+        }, 3000);
+      } else {
+        // Fallback: procurar por texto do nome do produto
+        const productElements = document.querySelectorAll('.product-name, .product h3, .product-info h3');
+        for (let element of productElements) {
+          if (element.textContent && element.textContent.includes(product.nome)) {
+            const productCard = element.closest('.product, .product-card');
+            productCard.classList.add('search-highlight');
+            productCard.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+            
+            // Remover destaque após 3 segundos
+            setTimeout(() => {
+              productCard.classList.remove('search-highlight');
+            }, 3000);
+            break;
+          }
+        }
+      }
+    }, 500); // Esperar 500ms para a categoria carregar
   }
 }
 
@@ -2265,31 +2495,7 @@ let currentFilters = {
   searchQuery: ''
 };
 
-function toggleFilters() {
-  console.log('🔧 toggleFilters chamado');
-  
-  const filtersPanel = document.getElementById('filtersPanel');
-  const filtersToggle = document.getElementById('filtersToggle');
-  
-  console.log('🔍 filtersPanel encontrado:', !!filtersPanel);
-  console.log('🔍 filtersToggle encontrado:', !!filtersToggle);
-  
-  if (!filtersPanel || !filtersToggle) {
-    return;
-  }
-  
-  console.log('🔍 Estado atual do painel:', filtersPanel.classList.contains('active'));
-  
-  if (filtersPanel.classList.contains('active')) {
-    filtersPanel.classList.remove('active');
-    filtersToggle.classList.remove('active');
-    console.log('✅ Painel de filtros fechado');
-  } else {
-    filtersPanel.classList.add('active');
-    filtersToggle.classList.add('active');
-    console.log('✅ Painel de filtros aberto');
-  }
-}
+
 
 function applyFilters() {
   console.log('Aplicando filtros...');
@@ -2529,3 +2735,10 @@ window.setRating = setRating;
 window.handlePhotoUpload = handlePhotoUpload;
 window.removePhoto = removePhoto;
 window.submitReview = submitReview;
+
+// Funções de busca
+window.handleSearchInput = handleSearchInput;
+window.searchProducts = searchProducts;
+window.showSearchResults = showSearchResults;
+window.hideSearchResults = hideSearchResults;
+window.selectSearchProduct = selectSearchProduct;

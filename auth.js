@@ -7,21 +7,33 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Auth.html DOM carregado, iniciando sistema...');
     
+    // Verificar se já está na página principal para evitar loop
+    const isIndexPage = window.location.pathname.endsWith('index.html') || 
+                       window.location.pathname.endsWith('/') ||
+                       !window.location.pathname.includes('.html');
+    
     // Verificar status de login
     const usuarioLogado = localStorage.getItem('usuarioLogado');
-    if (usuarioLogado) {
+    if (usuarioLogado && !isIndexPage) {
         try {
             const usuario = JSON.parse(usuarioLogado);
             console.log('👤 Usuário já está logado:', usuario.nome, 'redirecionando para página principal...');
         } catch (e) {
             console.log('👤 Usuário já está logado (formato antigo), redirecionando para página principal...');
         }
-        // Se já estiver logado, redirecionar para a página principal
+        // Se já estiver logado e NÃO estiver na página principal, redirecionar
         window.location.href = 'index.html';
-    } else {
+    } else if (!isIndexPage) {
         console.log('🔓 Usuário não está logado, inicializando auth...');
-        // Se não estiver logado, inicializar sistema de autenticação
+        // Se não estiver logado e não estiver na página principal, inicializar sistema de autenticação
         initializeAuth();
+    } else {
+        console.log('🏠 Página principal detectada, verificando status de autenticação...');
+        // Na página principal, apenas verificar se há funções de autenticação disponíveis
+        // e chamar checkAuthStatus se existir
+        if (typeof checkAuthStatus === 'function') {
+            setTimeout(checkAuthStatus, 100);
+        }
     }
 });
 
@@ -29,6 +41,20 @@ function initializeAuth() {
     // Referências aos elementos dentro do auth-container
     const authContainer = document.querySelector('.auth-container');
     if (!authContainer) return;
+
+    // Criar usuário de teste se não existir nenhum usuário
+    const usuarios = getUsuarios();
+    if (usuarios.length === 0) {
+        const usuarioTeste = {
+            nome: 'Usuário Teste',
+            email: 'teste@primos.com',
+            senha: encodeSenha('123456'),
+            dataCadastro: new Date().toISOString()
+        };
+        usuarios.push(usuarioTeste);
+        salvarUsuarios(usuarios);
+        console.log('👤 Usuário de teste criado:', usuarioTeste.email, '/ senha: 123456');
+    }
 
     const loginSection = document.getElementById('login-section');
     const cadastroSection = document.getElementById('cadastro-section');
@@ -368,6 +394,51 @@ function initializeAuth() {
     if (loginForm) {
         console.log('📝 Adicionando event listener ao formulário de login');
         loginForm.addEventListener('submit', validarLogin);
+        
+        // CORREÇÃO MOBILE: Adicionar suporte para touch events
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+        
+        if (isMobile) {
+            console.log('📱 Dispositivo mobile detectado, adicionando suporte touch...');
+            
+            // Garantir que o botão funcione com touch
+            const loginBtn = document.querySelector('#login-form button[type="submit"]');
+            if (loginBtn) {
+                // Adicionar evento touchend como fallback para mobile
+                loginBtn.addEventListener('touchend', function(e) {
+                    console.log('📱 Touch end detectado no botão de login');
+                    e.preventDefault();
+                    
+                    // Verificar se o formulário está válido
+                    const email = document.getElementById('login-email');
+                    const password = document.getElementById('login-password');
+                    
+                    if (email && password && email.value && password.value) {
+                        console.log('📱 Formulário válido, disparando submit...');
+                        // Criar e disparar evento submit
+                        const submitEvent = new Event('submit', { 
+                            cancelable: true,
+                            bubbles: true 
+                        });
+                        loginForm.dispatchEvent(submitEvent);
+                    } else {
+                        console.log('📱 Formulário inválido, mostrando validação...');
+                        // Disparar submit para mostrar validação
+                        const submitEvent = new Event('submit', { 
+                            cancelable: true,
+                            bubbles: true 
+                        });
+                        loginForm.dispatchEvent(submitEvent);
+                    }
+                }, { passive: false });
+                
+                // Também adicionar click como backup
+                loginBtn.addEventListener('click', function(e) {
+                    console.log('🖱️ Click detectado no botão (mobile backup)');
+                    // Não previne o comportamento padrão para permitir o submit normal
+                });
+            }
+        }
     }
 
     if (cadastroForm) {

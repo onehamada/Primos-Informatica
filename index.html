@@ -64,17 +64,266 @@
     .products-section{display:block}
     .category:not([id="inicio"]){display:block}
     
-    /* BARRA DE PESQUISA MOBILE FORÇADA */
-    @media (max-width:768px){
-      .search-container{display:flex!important;visibility:visible!important;opacity:1!important;flex:1!important;min-width:150px!important;height:auto!important;position:relative!important;z-index:1001!important}
-      .search-input-wrapper{display:flex!important;visibility:visible!important;opacity:1!important;flex:1!important;position:relative!important}
-      .search-input{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;height:40px!important;font-size:14px!important}
-      .search-btn{display:flex!important;visibility:visible!important;opacity:1!important;position:absolute!important;right:8px!important;top:50%!important;transform:translateY(-50%)!important}
-    }
-    
     /* SCROLL SUAVE */
     html{scroll-behavior:smooth}
     body{overflow-x:hidden}
+    
+    /* CARRINHO LATERAL - IGUAL AO AUTH.HTML */
+    .cart-sidebar {
+      position: fixed !important;
+      top: 0 !important;
+      right: -400px !important;
+      width: 400px !important;
+      height: 100vh !important;
+      background: white !important;
+      box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1) !important;
+      transition: right 0.3s ease !important;
+      z-index: 1003 !important;
+      transform: none !important;
+    }
+    
+    .cart-sidebar.active {
+      right: 0 !important;
+    }
+    
+    .cart-overlay {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      background: rgba(0, 0, 0, 0.5) !important;
+      z-index: 1002 !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transition: all 0.3s ease !important;
+    }
+    
+    .cart-overlay.active {
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    
+    @media (max-width: 768px) {
+      .cart-sidebar {
+        width: 100vw !important;
+        right: -100vw !important;
+      }
+      
+      .cart-overlay {
+        z-index: 1001 !important;
+      }
+      
+      /* Botão hamburguer visível apenas em mobile */
+      .action-buttons .mobile-menu-btn {
+        display: flex !important;
+      }
+      
+      /* Garantir que botão de filtros apareça em mobile */
+      .action-buttons .filters-toggle {
+        display: flex !important;
+      }
+    }
+    
+    /* iPhone 11 e iOS específicos para filtros */
+    @media only screen 
+      and (device-width: 414px) 
+      and (device-height: 896px) 
+      and (-webkit-device-pixel-ratio: 2) {
+      
+      .filters-modal {
+        width: 100vw !important;
+        height: 100vh !important;
+        top: 0 !important;
+        right: -100vw !important;
+        position: fixed !important;
+      }
+      
+      .filters-modal.active {
+        right: 0 !important;
+        -webkit-transform: translateX(0) !important;
+        transform: translateX(0) !important;
+      }
+    }
+    
+    /* iPhones em geral para filtros */
+    @media only screen 
+      and (max-device-width: 428px) 
+      and (-webkit-min-device-pixel-ratio: 2) {
+      
+      .filters-modal {
+        width: 100vw !important;
+        height: 100vh !important;
+        position: fixed !important;
+        top: 0 !important;
+        right: -100vw !important;
+        -webkit-transform: translateX(-100%) !important;
+        transform: translateX(-100%) !important;
+      }
+      
+      .filters-modal.active {
+        -webkit-transform: translateX(0) !important;
+        transform: translateX(0) !important;
+      }
+    }
+    
+    /* iOS Safari específico para filtros */
+    @supports (-webkit-touch-callout: none) {
+      .filters-modal {
+        -webkit-overflow-scrolling: touch !important;
+      }
+      
+      .filters-modal button {
+        -webkit-tap-highlight-color: transparent !important;
+        touch-action: manipulation !important;
+      }
+    }
+    
+    /* Botão hamburguer escondido em desktop */
+    .action-buttons .mobile-menu-btn {
+      display: none !important;
+    }
+    
+    /* Garantir que botão de filtros apareça em mobile */
+    .action-buttons .filters-toggle {
+      display: flex !important;
+    }
+    
+    /* Estilos para a caixa de faixa de preço */
+    .price-range-container {
+      padding: 20px;
+      background: #f8fafc;
+      border-top: 1px solid #e5e7eb;
+    }
+    
+    .price-range-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .price-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .price-input-group label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 4px;
+    }
+    
+    .price-input-group input {
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+    
+    .price-input-group input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .price-range-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    
+    .apply-price-btn {
+      flex: 1;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .apply-price-btn:hover {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    
+    .cancel-price-btn {
+      flex: 1;
+      padding: 12px 16px;
+      background: white;
+      color: #6b7280;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .cancel-price-btn:hover {
+      background: #f8fafc;
+      color: #374151;
+      border-color: #d1d5db;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* MENU MOBILE - IGUAL AO AUTH.HTML */
+    .mobile-menu-overlay {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      background: rgba(0, 0, 0, 0.5) !important;
+      z-index: 9999 !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transition: all 0.3s ease !important;
+    }
+    
+    .mobile-menu-overlay.active {
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    
+    .mobile-menu-sidebar {
+      position: fixed !important;
+      top: 0 !important;
+      right: 0 !important;
+      width: 320px !important;
+      height: 100vh !important;
+      background: white !important;
+      box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1) !important;
+      transform: translateX(100%) !important;
+      transition: transform 0.3s ease !important;
+      overflow-y: auto !important;
+      z-index: 10000 !important;
+    }
+    
+    .mobile-menu-overlay.active .mobile-menu-sidebar {
+      transform: translateX(0) !important;
+    }
+    
+    @media (max-width: 768px) {
+      .mobile-menu-sidebar {
+        width: 280px !important;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .mobile-menu-sidebar {
+        width: 100vw !important;
+        max-width: 100vw !important;
+      }
+    }
   </style>
   
   <!-- Open Graph -->
@@ -122,7 +371,7 @@
     <div class="header-container">
       <!-- Logo e Nome -->
       <div class="header-brand">
-        <img class="brand-logo" src="images/logo.png" alt="Primos Informática" onclick="showCategory('inicio')" />
+        <img src="images/logo.png" alt="Primos Informática" onclick="showCategory('inicio')" />
         <div class="brand-info">
           <h1 onclick="showCategory('inicio')">Primos Informática</h1>
           <span class="brand-tagline">Hardware em Brasília</span>
@@ -132,8 +381,8 @@
       <!-- Ações do Header -->
       <div class="header-actions">
         <!-- Barra de Pesquisa Responsiva -->
-        <div class="search-container" style="display: flex !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 1001 !important; flex: 1 !important; min-width: 150px !important;">
-          <div class="search-input-wrapper" style="display: flex !important; visibility: visible !important; opacity: 1 !important; flex: 1 !important; position: relative !important;">
+        <div class="search-container">
+          <div class="search-input-wrapper">
             <input 
               type="text" 
               class="search-input" 
@@ -142,162 +391,50 @@
               autocomplete="off"
               oninput="handleSearchInput(event)"
               onfocus="showSearchResults()"
-              onblur="hideSearchResults()"
-              style="display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; height: 40px !important; font-size: 14px !important;"
+              onkeypress="if(event.key === 'Enter') searchProducts(this.value)"
             >
-            <button class="search-btn" onclick="searchProducts(document.getElementById('searchInput').value)" title="Buscar" style="display: flex !important; visibility: visible !important; opacity: 1 !important; position: absolute !important; right: 8px !important; top: 50% !important; transform: translateY(-50%) !important;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-              </svg>
-            </button>
+            <div class="search-results" id="searchResults"></div>
           </div>
-          <div class="search-results" id="searchResults"></div>
         </div>
         
         <!-- Botões de Ação -->
         <div class="action-buttons">
-                    
           <!-- Carrinho -->
-          <button class="action-btn cart-btn" onclick="toggleCart()" title="Carrinho" style="display: flex !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 1003 !important;">
+          <button class="action-btn cart-btn" onclick="toggleCart()" title="Carrinho">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="9" cy="21" r="1"></circle>
               <circle cx="20" cy="21" r="1"></circle>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
-            <span class="cart-count" id="cartCount" style="display: inline !important; visibility: visible !important; opacity: 1 !important;">0</span>
+            <span class="cart-count" id="cartCount">0</span>
+          </button>
+          
+          <!-- Menu Mobile -->
+          <button class="action-btn mobile-menu-btn" onclick="toggleMobileMenu()" title="Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
           </button>
           
           <!-- Filtros -->
-          <button class="action-btn filters-toggle" id="filtersToggle" onclick="toggleFilters()" title="Filtros">
+          <button class="action-btn filters-btn" onclick="toggleFiltersMenu()" title="Filtros">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
           </button>
           
           <!-- Entrar / Cadastrar -->
-          <button class="action-btn auth-btn" title="Entrar / Cadastrar" style="display: flex !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 1003 !important;">
-          
-                    
-          <!-- Menu Mobile -->
-          <button class="action-btn mobile-menu-toggle" onclick="toggleMobileMenu()" title="Menu">
+          <button class="action-btn auth-btn" title="Entrar / Cadastrar">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
             </svg>
           </button>
           
-          <!-- Painel de Filtros -->
-          <div class="filters-panel" id="filtersPanel">
-            <div class="filter-group">
-              <label>Faixa de Preço</label>
-              <div class="price-range">
-                <input type="number" id="minPrice" placeholder="Min" placeholder="R$ 0">
-                <span>-</span>
-                <input type="number" id="maxPrice" placeholder="Max" placeholder="R$ 5000">
-              </div>
-            </div>
-            
-            <div class="filter-group">
-              <label>Categorias</label>
-              <div class="category-filters">
-                <label class="checkbox-label">
-                  <input type="checkbox" name="category" value="processadores">
-                  <span>Processadores</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="category" value="placas-de-video">
-                  <span>Placas de Vídeo</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="category" value="placas-mae">
-                  <span>Placas Mãe</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="category" value="ssds">
-                  <span>SSDs</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="category" value="hds-externos">
-                  <span>HDs Externos</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="category" value="monitores">
-                  <span>Monitores</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="category" value="fontes">
-                  <span>Fontes</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="category" value="memorias-ram">
-                  <span>Memórias RAM</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="category" value="gabinetes">
-                  <span>Gabinetes</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="category" value="coolers">
-                  <span>Coolers</span>
-                </label>
-              </div>
-            </div>
-            
-            <div class="filter-group">
-              <label>Marcas</label>
-              <div class="brand-filters">
-                <label class="checkbox-label">
-                  <input type="checkbox" name="brand" value="Intel">
-                  <span>Intel</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="brand" value="AMD">
-                  <span>AMD</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="brand" value="NVIDIA">
-                  <span>NVIDIA</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="brand" value="ASUS">
-                  <span>ASUS</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="brand" value="Gigabyte">
-                  <span>Gigabyte</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="brand" value="MSI">
-                  <span>MSI</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="brand" value="Corsair">
-                  <span>Corsair</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="brand" value="Kingston">
-                  <span>Kingston</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="brand" value="Samsung">
-                  <span>Samsung</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" name="brand" value="LG">
-                  <span>LG</span>
-                </label>
-              </div>
-            </div>
-            
-            <div class="filter-actions">
-              <button class="apply-filters-btn" onclick="applyFilters()">Aplicar Filtros</button>
-              <button class="clear-filters-btn" onclick="clearFilters()">Limpar</button>
-            </div>
-          </div>
         </div>
-        
+      </div>
                 
         </div>
     </div>
@@ -307,22 +444,115 @@
   <nav class="header-nav">
     <div class="header-container">
       <div class="nav-tabs">
-        <button type="button" class="nav-tab active" data-target="inicio" onclick="showCategory('inicio')">
+        <!-- Será preenchido dinamicamente pelo JavaScript -->
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Menu Mobile Overlay -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="toggleMobileMenu()">
+  <div class="mobile-menu-sidebar" onclick="event.stopPropagation()">
+    <div class="mobile-menu-header">
+      <h3>Categorias</h3>
+      <button class="mobile-menu-close" onclick="toggleMobileMenu()">×</button>
+    </div>
+    <div class="mobile-menu-content">
+      <div class="mobile-nav-tabs">
+        <!-- Será preenchido dinamicamente pelo JavaScript -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Menu Mobile Filtros Overlay -->
+<div class="mobile-menu-overlay" id="filtersMenuOverlay" onclick="toggleFiltersMenu()">
+  <div class="mobile-menu-sidebar" onclick="event.stopPropagation()">
+    <div class="mobile-menu-header">
+      <h3>Filtros</h3>
+      <button class="mobile-menu-close" onclick="toggleFiltersMenu()">×</button>
+    </div>
+    <div class="mobile-menu-content">
+      <div class="mobile-nav-tabs">
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=price-low'; toggleFiltersMenu()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
           </svg>
-          <span>Início</span>
+          <span>Menor Preço</span>
         </button>
         
-        <button type="button" class="nav-tab" data-target="promo" onclick="showCategory('promo')">
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=price-high'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          <span>Maior Preço</span>
+        </button>
+        
+        <div class="price-range-container" id="priceRangeContainer" style="display: none;" onclick="event.stopPropagation()">
+          <div class="price-range-inputs">
+            <div class="price-input-group">
+              <label for="minPriceFilter">De:</label>
+              <input type="number" id="minPriceFilter" placeholder="R$ 0" min="0">
+            </div>
+            <div class="price-input-group">
+              <label for="maxPriceFilter">Até:</label>
+              <input type="number" id="maxPriceFilter" placeholder="R$ 5000" min="0">
+            </div>
+          </div>
+          </div>
+          <div class="price-range-actions">
+            <button class="apply-price-btn" onclick="applyPriceRange()">Aplicar</button>
+            <button class="cancel-price-btn" onclick="toggleFiltersMenu()">Cancelar</button>
+          </div>
+        </div>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=new'; toggleFiltersMenu()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
           </svg>
-          <span>Promoções</span>
+          <span>Lançamentos</span>
         </button>
         
-        <button type="button" class="nav-tab" data-target="processador" onclick="showCategory('processador')">
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=bestseller'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9 17 14 14 17 22 9 15.09 8.26 12 2 8.91 8.26 2 9 7 14 10 17 2 9 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span>Mais Vendidos</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=stock'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22" x2="12" y2="2"></line>
+          </svg>
+          <span>Em Estoque</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=gaming'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+            <path d="M12 12h.01M12 6h.01M12 18h.01"></path>
+          </svg>
+          <span>Para Gamers</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=office'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span>Para Escritório</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=discount'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          <span>Com Desconto</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=brand-intel'; toggleFiltersMenu()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
             <rect x="9" y="9" width="6" height="6"></rect>
@@ -335,178 +565,55 @@
             <line x1="1" y1="9" x2="4" y2="9"></line>
             <line x1="1" y1="14" x2="4" y2="14"></line>
           </svg>
-          <span>Processadores</span>
+          <span>Intel</span>
         </button>
         
-        <button type="button" class="nav-tab" data-target="placa de vídeo" onclick="showCategory('placa de vídeo')">
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=brand-amd'; toggleFiltersMenu()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+            <rect x="9" y="9" width="6" height="6"></rect>
+            <line x1="9" y1="1" x2="9" y2="4"></line>
+            <line x1="15" y1="1" x2="15" y2="4"></line>
+            <line x1="9" y1="20" x2="9" y2="23"></line>
+            <line x1="15" y1="20" x2="15" y2="23"></line>
+            <line x1="20" y1="9" x2="23" y2="9"></line>
+            <line x1="20" y1="14" x2="23" y2="14"></line>
+            <line x1="1" y1="9" x2="4" y2="9"></line>
+            <line x1="1" y1="14" x2="4" y2="14"></line>
+          </svg>
+          <span>AMD</span>
+        </button>
+        
+        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=brand-nvidia'; toggleFiltersMenu()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
             <line x1="8" y1="21" x2="16" y2="21"></line>
             <line x1="12" y1="17" x2="12" y2="21"></line>
           </svg>
-          <span>Placas de Vídeo</span>
+          <span>NVIDIA</span>
         </button>
-        
-        <button type="button" class="nav-tab" data-target="placa mãe" onclick="showCategory('placa mãe')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-            <line x1="8" y1="21" x2="16" y2="21"></line>
-            <line x1="12" y1="17" x2="12" y2="21"></line>
-          </svg>
-          <span>Placas Mãe</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="monitor" onclick="showCategory('monitor')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-            <line x1="8" y1="21" x2="16" y2="21"></line>
-            <line x1="12" y1="17" x2="12" y2="21"></line>
-          </svg>
-          <span>Monitores</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="ssd" onclick="showCategory('ssd')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
-            <line x1="12" y1="6" x2="12.01" y2="6"></line>
-          </svg>
-          <span>SSDs</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="hd externo" onclick="showCategory('hd externo')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <ellipse cx="12" cy="12" rx="10" ry="3"></ellipse>
-            <path d="M2 12v6c0 1.66 4.48 3 10 3s10-1.34 10-3v-6"></path>
-          </svg>
-          <span>HDs Externos</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="fonte" onclick="showCategory('fonte')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
-          </svg>
-          <span>Fontes</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="hd interno" onclick="showCategory('hd interno')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <ellipse cx="12" cy="12" rx="10" ry="3"></ellipse>
-            <path d="M2 12v6c0 1.66 4.48 3 10 3s10-1.34 10-3v-6"></path>
-          </svg>
-          <span>HDs Internos</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="mouse" onclick="showCategory('mouse')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
-            <path d="M19.07 13.93a7 7 0 0 1-6.14 0"></path>
-            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-          </svg>
-          <span>Mouses</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="teclado" onclick="showCategory('teclado')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
-            <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"></path>
-          </svg>
-          <span>Teclados</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="kit-teclado-mouse" onclick="showCategory('kit-teclado-mouse')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="4" width="20" height="8" rx="2" ry="2"></rect>
-            <rect x="2" y="14" width="20" height="6" rx="2" ry="2"></rect>
-          </svg>
-          <span>Kits Teclado/Mouse</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="redes" onclick="showCategory('redes')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
-            <path d="M19.07 13.93a7 7 0 0 1-6.14 0"></path>
-            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-          </svg>
-          <span>Redes</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="access-point" onclick="showCategory('access-point')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
-            <path d="M19.07 13.93a7 7 0 0 1-6.14 0"></path>
-            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-          </svg>
-          <span>Access Points</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="repetidor" onclick="showCategory('repetidor')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-          </svg>
-          <span>Repetidores</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="adaptador" onclick="showCategory('adaptador')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect>
-            <path d="M8 12h.01M12 12h.01M16 12h.01"></path>
-          </svg>
-          <span>Adaptadores</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="audio" onclick="showCategory('audio')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
-          <span>Áudio</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="acessorios" onclick="showCategory('acessorios')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 1.54l4.24 4.24M20.46 20.46l-4.24-4.24M1.54 20.46l4.24-4.24"></path>
-          </svg>
-          <span>Acessórios</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="cabos" onclick="showCategory('cabos')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path>
-            <line x1="8" y1="12" x2="16" y2="12"></line>
-          </svg>
-          <span>Cabos</span>
-        </button>
-        
-        <button type="button" class="nav-tab" data-target="webcam" onclick="showCategory('webcam')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M23 7l-7 5 7 5V7z"></path>
-            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-          </svg>
-          <span>Webcams</span>
-        </button>
+      </div>
     </div>
-  </nav>
-</header>
-
-
-<!-- Carrinho Flutuante -->
-<div class="cart-sidebar" id="cartSidebar">
-  <div class="cart-header">
-    <h3>Meu Carrinho</h3>
-    <button class="cart-close" onclick="toggleCart()">×</button>
   </div>
-  <div class="cart-items" id="cartItems">
-    <!-- Items do carrinho -->
-  </div>
-  <div class="cart-footer">
-    <div class="cart-total">
-      <span>Total: <strong id="cartTotal">R$ 0,00</strong></span>
+</div>
+
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()">
+  <!-- Carrinho Flutuante -->
+  <div class="cart-sidebar" id="cartSidebar" onclick="event.stopPropagation()">
+    <div class="cart-header">
+      <h3>Meu Carrinho</h3>
+      <button class="cart-close" onclick="toggleCart()">×</button>
     </div>
-    <button class="btn-primary" onclick="showCheckoutOptions()">Finalizar Pedido</button>
-    <button class="btn-outline" onclick="clearCart()">Esvaziar Carrinho</button>
+    <div class="cart-items" id="cartItems">
+      <!-- Items do carrinho -->
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total: <strong id="cartTotal">R$ 0,00</strong></span>
+      </div>
+      <button class="btn-primary" onclick="showCheckoutOptions()">Finalizar Pedido</button>
+      <button class="btn-outline" onclick="clearCart()">Esvaziar Carrinho</button>
+    </div>
   </div>
 </div>
 
@@ -594,8 +701,6 @@
     </div>
   </div>
 </div>
-
-<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
 
 <main>
   <div id="inicio" class="category">
@@ -856,6 +961,90 @@
   </div>
 </div>
 
+<!-- Scripts -->
 <script src="js/script.js"></script>
+
+<!-- Script específico para menu de filtros mobile -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Função para o menu mobile de filtros - IGUAL AO HAMBURGUER
+  window.toggleFiltersMenu = function() {
+    const filtersMenuOverlay = document.getElementById('filtersMenuOverlay');
+    if (!filtersMenuOverlay) return;
+    
+    const isActive = filtersMenuOverlay.classList.contains('active');
+    
+    if (isActive) {
+      filtersMenuOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    } else {
+      filtersMenuOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      // Abrir automaticamente a caixa de preço
+      const priceRangeContainer = document.getElementById('priceRangeContainer');
+      if (priceRangeContainer) {
+        priceRangeContainer.style.display = 'block';
+      }
+    }
+  };
+  
+  // Função para mostrar/esconder a faixa de preço
+  window.togglePriceRange = function() {
+    const priceRangeContainer = document.getElementById('priceRangeContainer');
+    if (!priceRangeContainer) return;
+    
+    const isVisible = priceRangeContainer.style.display !== 'none';
+    
+    if (isVisible) {
+      priceRangeContainer.style.display = 'none';
+    } else {
+      priceRangeContainer.style.display = 'block';
+    }
+  };
+  
+  // Função para aplicar a faixa de preço
+  window.applyPriceRange = function() {
+    const minPrice = document.getElementById('minPriceFilter').value;
+    const maxPrice = document.getElementById('maxPrice').value;
+    
+    // Construir URL com os parâmetros de preço
+    let url = 'index.html?filter=price-range';
+    if (minPrice) {
+      url += '&min=' + minPrice;
+    }
+    if (maxPrice) {
+      url += '&max=' + maxPrice;
+    }
+    
+    // Redirecionar para a página com os filtros aplicados
+    window.location.href = url;
+  };
+  
+  // Adicionar eventos de toque para iOS no botão de filtros - IGUAL AO HAMBURGUER
+  setTimeout(function() {
+    const filtersToggle = document.querySelector('.filters-btn');
+    if (filtersToggle) {
+      // Remover eventos anteriores
+      filtersToggle.replaceWith(filtersToggle.cloneNode(true));
+      const newBtn = document.querySelector('.filters-btn');
+      
+      // Adicionar eventos para iOS
+      newBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.toggleFiltersMenu();
+      });
+      
+      newBtn.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.toggleFiltersMenu();
+      }, { passive: false });
+    }
+  }, 100);
+});
+</script>
+<script src="auth.js"></script>
 </body>
 </html>
