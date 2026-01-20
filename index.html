@@ -419,18 +419,27 @@
           </button>
           
           <!-- Filtros -->
-          <button class="action-btn filters-btn" onclick="toggleFiltersMenu()" title="Filtros">
+          <button class="action-btn filters-btn" id="filtersToggle" title="Filtros">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
+            <span>Filtros</span>
           </button>
           
           <!-- Entrar / Cadastrar -->
-          <button class="action-btn auth-btn" title="Entrar / Cadastrar">
+          <button class="action-btn auth-btn" title="Faça Login / Cadastre-se">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
+            <span class="auth-text">Faça Login/Cadastre</span>
+          </button>
+          
+          <!-- Botão de Perfil (aparece apenas quando logado) -->
+          <button class="action-btn profile-btn" id="profileBtn" style="display: none;" title="Meu Perfil" aria-label="Meu Perfil" aria-haspopup="true" aria-expanded="false">
+            <div class="profile-avatar" id="profileAvatar">
+              <span class="profile-initial">U</span>
+            </div>
           </button>
           
         </div>
@@ -439,6 +448,288 @@
         </div>
     </div>
   </header>
+
+<!-- Menu de Perfil Dropdown -->
+<div class="profile-dropdown" id="profileDropdown" style="display: none;">
+  <div class="profile-dropdown-header">
+    <div class="profile-user-info">
+      <div class="profile-avatar-large">
+        <span class="profile-initial-large" id="profileInitialLarge">U</span>
+      </div>
+      <div class="profile-details">
+        <div class="profile-name" id="profileName">Usuário</div>
+        <div class="profile-email" id="profileEmail">usuario@exemplo.com</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="profile-dropdown-content">
+    <button class="profile-menu-item" id="viewProfileBtn" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      <span>Meu Perfil</span>
+    </button>
+    
+    <button class="profile-menu-item" id="myOrdersBtn" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 11H3v10h6V11z"></path>
+        <path d="M15 3H9v18h6V3z"></path>
+        <path d="M21 7h-6v14h6V7z"></path>
+      </svg>
+      <span>Meus Pedidos</span>
+    </button>
+    
+    <button class="profile-menu-item" id="settingsBtn" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 1.54l4.24 4.24M20.46 20.46l-4.24-4.24M1.54 20.46l4.24-4.24"></path>
+      </svg>
+      <span>Configurações</span>
+    </button>
+    
+    <div class="profile-divider"></div>
+    
+    <button class="profile-menu-item profile-logout" id="logoutBtn" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+        <polyline points="16 17 21 12 16 7"></polyline>
+        <line x1="21" y1="12" x2="9" y2="12"></line>
+      </svg>
+      <span>Sair</span>
+    </button>
+  </div>
+</div>
+
+<!-- REMOVIDO: Overlay não será mais usado no dropdown tradicional -->
+
+<!-- Modal de Perfil do Usuário -->
+<div class="profile-modal-overlay" id="profileModalOverlay" onclick="closeProfileModal()">
+  <div class="profile-modal" onclick="event.stopPropagation()">
+    <div class="profile-modal-header">
+      <h3>Meu Perfil</h3>
+      <button class="profile-modal-close" onclick="closeProfileModal()" aria-label="Fechar perfil">×</button>
+    </div>
+    <div class="profile-modal-content">
+      <div class="profile-avatar-section">
+        <div class="profile-avatar-large-modal">
+          <span class="profile-initial-large-modal" id="profileInitialLargeModal">U</span>
+        </div>
+        <div class="profile-info-modal">
+          <h3 id="profileNameModal">Usuário</h3>
+          <p id="profileEmailModal">usuario@exemplo.com</p>
+          <p class="profile-member-since">Membro desde: <span id="profileMemberSince">--</span></p>
+        </div>
+      </div>
+      
+      <div class="profile-stats">
+        <div class="stat-item">
+          <div class="stat-number" id="totalOrders">0</div>
+          <div class="stat-label">Pedidos</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="totalSpent">R$ 0</div>
+          <div class="stat-label">Gasto Total</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="lastOrder">--</div>
+          <div class="stat-label">Último Pedido</div>
+        </div>
+      </div>
+      
+      <div class="profile-actions">
+        <button class="profile-action-btn" onclick="editProfile()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          Editar Perfil
+        </button>
+        
+        <button class="profile-action-btn" onclick="viewOrders()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 11H3v10h6V11z"></path>
+            <path d="M15 3H9v18h6V3z"></path>
+            <path d="M21 7h-6v14h6V7z"></path>
+          </svg>
+          Meus Pedidos
+        </button>
+        
+        <button class="profile-action-btn" id="profileMyProductsBtn" onclick="viewMyProducts()" style="display: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 7h-9"></path>
+            <path d="M14 17H5"></path>
+            <circle cx="17" cy="17" r="3"></circle>
+            <circle cx="7" cy="7" r="3"></circle>
+          </svg>
+          Meus Produtos
+        </button>
+        
+        <button class="profile-action-btn" onclick="viewMyReviews()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          Minhas Avaliações
+        </button>
+        
+        <button class="profile-action-btn" onclick="viewSettings()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 1.54l4.24 4.24M20.46 20.46l-4.24-4.24M1.54 20.46l4.24-4.24"></path>
+          </svg>
+          Configurações
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Meus Produtos -->
+<div class="products-modal-overlay" id="productsModalOverlay" onclick="closeProductsModal()">
+  <div class="products-modal" onclick="event.stopPropagation()">
+    <div class="products-modal-header">
+      <h3>Meus Produtos</h3>
+      <button class="products-modal-close" onclick="closeProductsModal()" aria-label="Fechar produtos">×</button>
+    </div>
+    <div class="products-modal-content">
+      <div class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 7h-9"></path>
+          <path d="M14 17H5"></path>
+          <circle cx="17" cy="17" r="3"></circle>
+          <circle cx="7" cy="7" r="3"></circle>
+        </svg>
+        <h4>Nenhum produto cadastrado</h4>
+        <p>Você ainda não cadastrou nenhum produto para venda.</p>
+        <button class="btn-primary">Cadastrar Primeiro Produto</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Minhas Avaliações -->
+<div class="reviews-modal-overlay" id="reviewsModalOverlay" onclick="closeReviewsModal()">
+  <div class="reviews-modal" onclick="event.stopPropagation()">
+    <div class="reviews-modal-header">
+      <h3>Minhas Avaliações</h3>
+      <button class="reviews-modal-close" onclick="closeReviewsModal()" aria-label="Fechar avaliações">×</button>
+    </div>
+    <div class="reviews-modal-content">
+      <div class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        <h4>Nenhuma avaliação encontrada</h4>
+        <p>Você ainda não avaliou nenhum produto.</p>
+        <button class="btn-primary">Ver Produtos para Avaliar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Meus Pedidos -->
+<div class="orders-modal-overlay" id="ordersModalOverlay" onclick="closeOrdersModal()">
+  <div class="orders-modal" onclick="event.stopPropagation()">
+    <div class="orders-modal-header">
+      <h3>Meus Pedidos</h3>
+      <button class="orders-modal-close" onclick="closeOrdersModal()" aria-label="Fechar pedidos">×</button>
+    </div>
+    <div class="orders-modal-content">
+      <!-- Filtros de Status -->
+      <div class="orders-filters">
+        <button class="filter-btn active" data-status="todos" onclick="filterOrders('todos')">
+          Todos
+        </button>
+        <button class="filter-btn" data-status="pendente" onclick="filterOrders('pendente')">
+          <span class="status-indicator pending"></span>
+          Aguardando
+        </button>
+        <button class="filter-btn" data-status="confirmado" onclick="filterOrders('confirmado')">
+          <span class="status-indicator confirmed"></span>
+          Confirmados
+        </button>
+        <button class="filter-btn" data-status="entregue" onclick="filterOrders('entregue')">
+          <span class="status-indicator delivered"></span>
+          Entregues
+        </button>
+      </div>
+
+      <!-- Lista de Pedidos -->
+      <div class="orders-list" id="ordersList">
+        <!-- Pedidos serão inseridos aqui dinamicamente -->
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="ordersEmptyState" style="display: none;">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 11H3v10h6V11z"></path>
+          <path d="M15 3H9v18h6V3z"></path>
+          <path d="M21 7h-6v14h6V7z"></path>
+        </svg>
+        <h4>Nenhum pedido encontrado</h4>
+        <p>Você ainda não fez nenhum pedido.</p>
+        <button class="btn-primary" onclick="closeOrdersModal(); showCategory('todos')">Ver Produtos</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Configurações -->
+<div class="settings-modal-overlay" id="settingsModalOverlay" onclick="closeSettingsModal()">
+  <div class="settings-modal" onclick="event.stopPropagation()">
+    <div class="settings-modal-header">
+      <h3>Configurações</h3>
+      <button class="settings-modal-close" onclick="closeSettingsModal()" aria-label="Fechar configurações">×</button>
+    </div>
+    <div class="settings-modal-content">
+      <div class="settings-section">
+        <h4>Preferências de Conta</h4>
+        <div class="setting-item">
+          <label>
+            <input type="checkbox" id="emailNotifications">
+            <span>Receber notificações por e-mail</span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label>
+            <input type="checkbox" id="smsNotifications">
+            <span>Receber notificações por SMS</span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <h4>Privacidade</h4>
+        <div class="setting-item">
+          <label>
+            <input type="checkbox" id="profilePublic">
+            <span>Tornar perfil público</span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label>
+            <input type="checkbox" id="showReviews">
+            <span>Mostrar minhas avaliações publicamente</span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <h4>Sobre</h4>
+        <div class="setting-info">
+          <p>Versão: 1.0.0</p>
+          <p>Última atualização: 2024</p>
+        </div>
+      </div>
+      
+      <div class="settings-actions">
+        <button class="btn-secondary">Cancelar</button>
+        <button class="btn-primary">Salvar Alterações</button>
+      </div>
+    </div>
+  </div>
+</div>
 
   <!-- Navegação Principal -->
   <nav class="header-nav">
@@ -962,7 +1253,6 @@
 </div>
 
 <!-- Scripts -->
-<script src="js/profile-menu.js"></script>
 <script src="js/script.js"></script>
 
 <!-- Script específico para menu de filtros mobile -->
@@ -1046,6 +1336,5 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 100);
 });
 </script>
-<script src="auth.js"></script>
 </body>
 </html>

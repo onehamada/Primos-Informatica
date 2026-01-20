@@ -319,19 +319,21 @@ function loadImagesOnScroll(container) {
 let allProducts = [];
 
 function loadProducts() {
-  console.log('🔍 loadProducts chamada');
+  console.log('🚀 loadProducts() iniciada');
   return fetch('data/products.csv')
     .then(function(response) {
-      console.log('🔍 Response recebido do CSV');
+      console.log('📁 CSV response status:', response.status);
+      if (!response.ok) {
+        throw new Error('Erro ao carregar arquivo CSV: ' + response.statusText);
+      }
       return response.text();
     })
     .then(function(csvText) {
-      console.log('🔍 CSV recebido, tamanho:', csvText.length);
-      console.log('🔍 Primeiros 200 caracteres do CSV:', csvText.substring(0, 200));
-      
+      console.log('📄 CSV text carregado, tamanho:', csvText.length);
       const lines = csvText.split('\n');
+      console.log('📊 Linhas no CSV:', lines.length);
       const headers = lines[0].split(';').map(h => h.trim());
-      console.log('🔍 Headers do CSV:', headers);
+      console.log('🏷️ Headers:', headers);
       
       const products = [];
       const productMap = {}; // Usar mapa para evitar duplicatas por código
@@ -356,13 +358,11 @@ function loadProducts() {
           
           // Garantir que o código não seja vazio
           if (!product.codigo) {
-            console.warn('⚠️ Produto sem código na linha', i + ':', product);
             continue; // Pular produtos sem código
           }
           
           // Verificar se já existe produto com este código
           if (productMap[product.codigo]) {
-            console.warn('⚠️ Código duplicado encontrado:', product.codigo, '- Produto existente:', productMap[product.codigo].nome, '- Novo produto:', product.nome);
             // Adicionar sufixo ao código para evitar duplicatas
             const originalCode = product.codigo;
             let suffix = 1;
@@ -370,7 +370,6 @@ function loadProducts() {
               suffix++;
             }
             product.codigo = product.codigo + '_' + suffix;
-            console.log('🔧 Código ajustado para:', product.codigo);
           }
           
           productMap[product.codigo] = product;
@@ -378,15 +377,12 @@ function loadProducts() {
         }
       }
       
-      console.log('🔍 Produtos parseados do CSV:', products.length);
-      console.log('🔍 Primeiros 3 produtos parseados:', products.slice(0, 3));
-      
       allProducts = products;
       return products;
     })
     .catch(function(error) {
-      console.error('❌ Erro ao carregar produtos:', error);
-      allProducts = [];
+      console.error('Erro ao carregar produtos:', error);
+      return [];
     });
 }
 
@@ -440,8 +436,6 @@ function displayProducts(products) {
 
 // === PREENCHER HOME ===
 function populateHome() {
-  console.log('Preenchendo home...');
-  
   // Preencher categorias na home
   populateHomeCategories();
   
@@ -501,8 +495,6 @@ function populateHomeCategories() {
   setTimeout(function() {
     loadImagesOnScroll(categoriesGrid);
   }, 200);
-  
-  console.log('Categorias da home preenchidas:', categoryNames.length);
 }
 
 // === PREENCHER MENUS DE NAVEGAÇÃO DINAMICAMENTE ===
@@ -617,8 +609,6 @@ function populateNavigationMenus() {
     
     mobileNavTabs.innerHTML = staticHTML + generateCategoryButtons(true);
   }
-  
-  console.log('🧭 Menus de navegação atualizados com', categoryNames.length, 'categorias do CSV');
 }
 
 // === PREENCHER PRODUTOS EM DESTAQUE DA HOME ===
@@ -661,8 +651,6 @@ function populateHomeHighlights() {
   setTimeout(function() {
     loadImagesOnScroll(highlightsGrid);
   }, 200);
-  
-  console.log('Produtos em destaque da home preenchidos:', finalHighlights.length);
 }
 
 // === FUNÇÕES DE AVALIAÇÕES ===
@@ -674,37 +662,22 @@ let uploadedPhotos = [];
 
 // Função para obter avaliações de um produto
 function getProductReviews(productId) {
-  console.log('🔍 getProductReviews chamada para produto:', productId);
-  
   try {
     // Tentar localStorage primeiro
-    console.log('🔍 Tentando localStorage...');
-    let reviews = JSON.parse(localStorage.getItem('primos_reviews') || '[]');
-    console.log('🔍 Reviews do localStorage:', reviews.length, reviews);
+    const storedReviews = localStorage.getItem('productReviews');
+    let reviews = [];
     
-    if (reviews.length === 0) {
-      console.log('🔍 Nenhuma avaliação encontrada no localStorage');
+    if (storedReviews) {
+      reviews = JSON.parse(storedReviews);
     }
     
+    // Filtrar avaliações do produto específico
     const productReviews = reviews.filter(review => review.productId === productId);
-    console.log('🔍 Reviews filtradas para produto:', productReviews.length, productReviews);
     
     return productReviews;
-  } catch (e) {
-    console.warn('🔍 Erro ao parsear avaliações do localStorage:', e);
-    reviews = [];
     
-    // Tentar sessionStorage como fallback
-    try {
-      const sessionStored = sessionStorage.getItem('primos_reviews');
-      if (sessionStored) {
-        const sessionReviews = JSON.parse(sessionStored);
-        return sessionReviews.filter(review => review.productId === productId);
-      }
-    } catch (e) {
-      console.error('❌ Erro no fallback sessionStorage:', e);
-    }
-    
+  } catch (error) {
+    console.error('Erro ao carregar avaliações:', error);
     return [];
   }
 }
@@ -1607,8 +1580,6 @@ function addToCart(productCode) {
 
 // === INICIALIZAÇÃO ===
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀 DOM Carregado - Iniciando aplicação...');
-  
   // Verificar se usuário está logado e atualizar UI
   checkAuthStatus();
   
@@ -1623,23 +1594,24 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   loadProducts().then(function() {
-    console.log('📦 Produtos carregados:', allProducts.length);
-    console.log('🏠 Exibindo página inicial...');
-    
+    console.log('✅ loadProducts() concluída com sucesso');
     // Preencher menus de navegação dinamicamente
     populateNavigationMenus();
+    console.log('✅ populateNavigationMenus() executada');
     
     // Preencher home
     populateHome();
+    console.log('✅ populateHome() executada');
     
     showCategory('inicio');
+    console.log('✅ showCategory(inicio) executada');
   }).catch(function(error) {
-    // Erro silencioso - log removido para produção
+    console.error('❌ Erro ao carregar produtos:', error);
+    console.error('❌ Stack trace:', error.stack);
   });
   
   window.addEventListener('hashchange', function() {
     const hash = window.location.hash.substring(1) || 'inicio';
-    console.log('🔗 Hash change:', hash);
     showCategory(hash);
   });
   
@@ -1648,7 +1620,6 @@ document.addEventListener('DOMContentLoaded', function() {
   window.addEventListener('resize', function() {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(function() {
-      console.log('📱 Tela redimensionada, atualizando exibição do usuário...');
       checkAuthStatus();
     }, 250);
   });
@@ -1656,150 +1627,425 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // === FUNÇÕES DE AUTENTICAÇÃO ===
 
-// Função para verificar status de autenticação
 function checkAuthStatus() {
-  console.log('🔍 Verificando status de autenticação...');
-  
+  console.log('🔍 checkAuthStatus() chamada');
   const usuarioLogado = localStorage.getItem('usuarioLogado');
   const authBtn = document.querySelector('.auth-btn');
   const authText = document.querySelector('.auth-text');
   
-  console.log('📊 Dados encontrados:', {
+  console.log('📊 Estado checkAuthStatus:', {
     usuarioLogado: !!usuarioLogado,
-    authBtn: !!authBtn,
-    authText: !!authText,
-    authBtnElement: authBtn,
-    authBtnClasses: authBtn ? authBtn.className : 'not found'
+    authBtnEncontrado: !!authBtn,
+    authBtnClasses: authBtn ? authBtn.className : 'not found',
+    authBtnListeners: authBtn ? authBtn.onclick : 'no onclick'
   });
   
-  if (usuarioLogado && authBtn) {
+  if (!authBtn) {
+    console.error('❌ Botão de autenticação não encontrado na página!');
+    return;
+  }
+  
+  // Limpar TODOS os eventos anteriores - remove e recria o botão
+  const newAuthBtn = authBtn.cloneNode(true);
+  authBtn.parentNode.replaceChild(newAuthBtn, authBtn);
+  
+  if (usuarioLogado) {
+    // USUÁRIO LOGADO - Configurar para mostrar menu
+    console.log('✅ Configurando botão para usuário logado');
     let usuario;
     try {
-      // Verificar se o dado parece ser JSON
-      if (usuarioLogado.trim().startsWith('{') || usuarioLogado.trim().startsWith('[')) {
-        usuario = JSON.parse(usuarioLogado);
-        console.log('👤 Usuário está logado (formato JSON):', usuario);
-      } else {
-        // Formato antigo (apenas email ou string simples)
-        usuario = { 
-          email: usuarioLogado, 
-          nome: usuarioLogado.includes('@') ? usuarioLogado.split('@')[0] : usuarioLogado 
-        };
-        console.log('👤 Usuário está logado (formato antigo):', usuario);
-      }
+      usuario = JSON.parse(usuarioLogado);
     } catch (e) {
-      console.error('❌ Erro ao processar usuário logado:', e);
-      console.log('📝 Dado bruto:', usuarioLogado);
-      
-      // Fallback seguro - criar usuário básico
-      const emailMatch = usuarioLogado.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
-      if (emailMatch) {
-        usuario = { 
-          email: emailMatch[1], 
-          nome: emailMatch[1].split('@')[0] 
-        };
-      } else {
-        // Último recurso - usar o dado como nome
-        usuario = { 
-          email: 'usuario@exemplo.com', 
-          nome: usuarioLogado.substring(0, 20) || 'Usuário' 
-        };
-      }
-      console.log('🔄 Usuário reconstruído com fallback:', usuario);
+      console.error('❌ Erro ao parsear usuário:', e);
+      localStorage.removeItem('usuarioLogado');
+      checkAuthStatus(); // Recursivo para mostrar botão de login
+      return;
     }
     
-    // Esconder texto em todos os dispositivos
-    if (authText) {
-      authText.style.display = 'none';
-    }
-    
-    // Remover todos os event listeners anteriores
-    authBtn.replaceWith(authBtn.cloneNode(true));
-    const newAuthBtn = document.querySelector('.auth-btn');
-    
-    // Adicionar conteúdo após o clone
-    const userInitial = usuario.nome.charAt(0).toUpperCase();
-    
-    // Estilos inline para garantir funcionamento no mobile
-    const inlineStyles = `
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      width: 18px !important;
-      height: 18px !important;
-      font-weight: 700 !important;
-      font-size: 10px !important;
-      color: white !important;
-      text-transform: uppercase !important;
-      background: rgba(255, 255, 255, 0.4) !important;
-      border-radius: 50% !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      margin: 0 auto !important;
-      position: relative !important;
+    // Configurar aparência do botão
+    const userInitial = usuario.nome?.charAt(0).toUpperCase() || 'U';
+    newAuthBtn.innerHTML = `
+      <span class="user-initial" style="
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 18px !important;
+        height: 18px !important;
+        font-weight: 700 !important;
+        font-size: 10px !important;
+        color: white !important;
+        text-transform: uppercase !important;
+        background: rgba(255, 255, 255, 0.4) !important;
+        border-radius: 50% !important;
+      ">${userInitial}</span>
     `;
-    
-    newAuthBtn.innerHTML = `<span class="user-initial" style="${inlineStyles}">${userInitial}</span>`;
     newAuthBtn.title = `${usuario.nome} (${usuario.email})`;
-    
-    // Adicionar classe logged-in
     newAuthBtn.classList.add('logged-in');
     
-    // NÃO adicionar event listener aqui - deixar para o ProfileMenuManager
-    console.log('✅ Botão configurado com dados do usuário, ProfileMenuManager vai gerenciar os eventos');
-    
-    // Mostrar texto se existir
+    // Esconder texto
     if (authText) {
       authText.style.display = 'none';
     }
     
-    console.log('✅ Botão configurado com dados do usuário, ProfileMenuManager vai gerenciar os eventos');
-  } else if (authBtn) {
-    console.log('🔓 Usuário não está logado, configurando botão de login');
+    // ADICIONAR EVENTO CORRETO - Mostrar menu
+    newAuthBtn.addEventListener('click', function(e) {
+      console.log('👤 Botão de usuário logado clicado - evento addEventListener');
+      e.preventDefault();
+      e.stopPropagation();
+      showUserMenu();
+    });
     
-    // Remover classe se não estiver logado
-    authBtn.classList.remove('logged-in');
+    console.log('✅ Botão de perfil configurado com sucesso');
     
-    // Restaurar botão original
-    authBtn.innerHTML = `
+  } else {
+    // USUÁRIO NÃO LOGADO - Configurar para redirecionar
+    console.log('🔓 Configurando botão para usuário não logado');
+    // Restaurar aparência original
+    newAuthBtn.innerHTML = `
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
         <circle cx="12" cy="7" r="4"></circle>
       </svg>
-      <span class="auth-text">Entrar / Cadastrar</span>
+      <span class="auth-text">Faça Login/Cadastre</span>
     `;
+    newAuthBtn.classList.remove('logged-in');
+    newAuthBtn.title = 'Faça Login / Cadastre-se';
     
-    // Remover todos os event listeners anteriores
-    authBtn.replaceWith(authBtn.cloneNode(true));
-    const newAuthBtn = document.querySelector('.auth-btn');
-    
-    // Adicionar event listener robusto
-    newAuthBtn.addEventListener('click', function(e) {
-      console.log('🖱️ Botão de login clicado via addEventListener');
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('🔗 Redirecionando para auth.html...');
-      window.location.href = 'auth.html';
-    });
-    
-    // Também adicionar onclick como fallback
-    newAuthBtn.onclick = function(e) {
-      console.log('🖱️ Botão de login clicado via onclick');
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('🔗 Redirecionando para auth.html...');
-      window.location.href = 'auth.html';
-    };
-    
-    // Mostrar texto se existir
+    // Mostrar texto
     if (authText) {
       authText.style.display = 'inline';
     }
     
-    console.log('✅ Botão de login configurado para usuário não logado');
-  } else {
-    console.error('❌ Botão de autenticação não encontrado na página!');
+    // ADICIONAR EVENTO CORRETO - Redirecionar para login
+    newAuthBtn.addEventListener('click', function(e) {
+      console.log('🔓 Botão de login clicado - evento addEventListener');
+      console.log('🔍 e.target:', e.target);
+      console.log('🔍 e.currentTarget:', e.currentTarget);
+      console.log('🔍 newAuthBtn === e.currentTarget:', newAuthBtn === e.currentTarget);
+      console.log('🔍 Vai redirecionar para auth.html');
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('🔓 Executando window.location.href = "auth.html"');
+      window.location.href = 'auth.html';
+    });
+    
+    console.log('✅ Botão de login configurado com sucesso');
   }
+}
+
+// Função para mostrar menu do usuário
+function showUserMenu() {
+  // Fechar menu existente primeiro
+  closeUserMenu();
+  
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  
+  if (!usuarioLogado) {
+    return;
+  }
+  
+  let usuario;
+  try {
+    usuario = JSON.parse(usuarioLogado);
+  } catch (e) {
+    return;
+  }
+  
+  // Criar overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'user-menu-overlay';
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  `;
+  
+  // Criar menu
+  const menu = document.createElement('div');
+  menu.style.cssText = `
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 24px;
+    width: 100%;
+    max-width: 350px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 10001;
+    -webkit-overflow-scrolling: touch;
+  `;
+  
+  menu.innerHTML = `
+    <div class="user-menu-header" style="text-align: center; margin-bottom: 20px;">
+      <div style="
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 0 auto 15px;
+        flex-shrink: 0;
+        aspect-ratio: 1;
+      ">
+        ${usuario.nome.charAt(0).toUpperCase()}
+      </div>
+      <h3 style="margin: 0 0 5px; color: #333; font-size: 18px; word-wrap: break-word;">
+        ${usuario.nome}
+      </h3>
+      <p style="margin: 0; color: #666; font-size: 14px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-all; max-width: 100%;">
+        ${usuario.email}
+      </p>
+    </div>
+    
+    <div class="user-menu-actions" style="display: flex; flex-direction: column; gap: 4px;">
+      <button onclick="viewProfile()" style="
+        width: 100%;
+        padding: 14px 16px;
+        background: transparent;
+        border: none;
+        border-radius: 10px;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.2s ease;
+        color: #333;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      ">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span style="overflow: hidden; text-overflow: ellipsis;">Meu Perfil</span>
+      </button>
+      
+      ${isAdmin() ? `
+      <button onclick="viewMyProducts()" style="
+        width: 100%;
+        padding: 14px 16px;
+        background: transparent;
+        border: none;
+        border-radius: 10px;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.2s ease;
+        color: #333;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      ">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+        </svg>
+        <span style="overflow: hidden; text-overflow: ellipsis;">Meus Produtos</span>
+      </button>
+      ` : ''}
+      
+      <button onclick="viewMyReviews()" style="
+        width: 100%;
+        padding: 14px 16px;
+        background: transparent;
+        border: none;
+        border-radius: 10px;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.2s ease;
+        color: #333;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      ">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+          <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"></polygon>
+        </svg>
+        <span style="overflow: hidden; text-overflow: ellipsis;">Minhas Avaliações</span>
+      </button>
+      
+      <button onclick="viewOrders()" style="
+        width: 100%;
+        padding: 14px 16px;
+        background: transparent;
+        border: none;
+        border-radius: 10px;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.2s ease;
+        color: #333;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      ">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14,2 14,8 20,8"></polyline>
+        </svg>
+        <span style="overflow: hidden; text-overflow: ellipsis;">Meus Pedidos</span>
+      </button>
+      
+      <button onclick="viewSettings()" style="
+        width: 100%;
+        padding: 14px 16px;
+        background: transparent;
+        border: none;
+        border-radius: 10px;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.2s ease;
+        color: #333;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      ">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 9.96l4.24 4.24M20.46 14.04l-4.24 4.24M7.78 7.78L3.54 3.54"></path>
+        </svg>
+        <span style="overflow: hidden; text-overflow: ellipsis;">Configurações</span>
+      </button>
+      
+      <button onclick="logout()" style="
+        width: 100%;
+        padding: 14px 16px;
+        background: transparent;
+        border: none;
+        border-radius: 10px;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.2s ease;
+        color: #ef4444;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 8px;
+        border-top: 1px solid #e5e7eb;
+        padding-top: 20px;
+      ">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16,17 21,12 16,7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        <span style="overflow: hidden; text-overflow: ellipsis;">Sair</span>
+      </button>
+    </div>
+  `;
+  
+  // Adicionar hover effects
+  const buttons = menu.querySelectorAll('button');
+  buttons.forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      btn.style.background = '#f3f4f6';
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.background = 'transparent';
+    });
+  });
+  
+  overlay.appendChild(menu);
+  document.body.appendChild(overlay);
+  
+  // Animar entrada
+  setTimeout(() => {
+    menu.style.transform = 'translateY(0)';
+    menu.style.opacity = '1';
+  }, 10);
+  
+  // Fechar ao clicar no overlay
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      closeUserMenu();
+    }
+  });
+  
+  // Fechar ao pressionar ESC
+  const handleEscape = (e) => {
+    if (e.key === 'Escape') {
+      closeUserMenu();
+      document.removeEventListener('keydown', handleEscape);
+    }
+  };
+  document.addEventListener('keydown', handleEscape);
+}
+
+// Função para fechar menu do usuário
+function closeUserMenu() {
+  const overlay = document.querySelector('#user-menu-overlay');
+  if (overlay) {
+    overlay.remove();
+  }
+}
+
+// REMOVIDO: Função viewProfile() antiga - substituída pela nova versão no final do arquivo
+
+// Função para fechar overlay de perfil
+function closeProfileOverlay() {
+  const overlay = document.querySelector('#profile-overlay');
+  if (overlay) {
+    overlay.remove();
+  }
+}
+
+function viewMyProducts() {
+  closeUserMenu();
+}
+
+// Funções de ação do perfil
+function editProfile() {
+  console.log('✏️ Editar perfil - Em desenvolvimento');
+}
+
+function changePassword() {
+  console.log('🔒 Alterar senha - Em desenvolvimento');
+}
+
+// Função de logout
+function logout() {
+  localStorage.removeItem('usuarioLogado');
+  window.location.reload();
 }
 
 // Função de teste para verificar se o botão está funcionando
@@ -2359,25 +2605,52 @@ window.repairUserData = function() {
   checkAuthStatus();
 };
 
-// Funções placeholder para o menu
-function viewProfile() {
-  alert('Perfil do usuário - Em desenvolvimento');
+// === FUNÇÕES DE VERIFICAÇÃO ===
+
+function isAdmin() {
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) return false;
+  
+  const usuario = JSON.parse(usuarioLogado);
+  return usuario.email === 'teste@primos.com';
 }
 
-function viewOrders() {
-  alert('Meus Pedidos - Em desenvolvimento');
+// === FUNÇÕES GLOBAIS ===
+window.isAdmin = isAdmin;
+
+// === FUNÇÕES DO MENU DE USUÁRIO ===
+function viewProfile() {
+  closeUserMenu();
+  openProfileModal();
 }
 
 function viewMyProducts() {
-  alert('Meus Produtos - Em desenvolvimento');
+  closeUserMenu();
+  openProductsModal();
 }
 
 function viewMyReviews() {
-  alert('Minhas Avaliações - Em desenvolvimento');
+  closeUserMenu();
+  openReviewsModal();
+}
+
+function viewOrders() {
+  closeUserMenu();
+  openOrdersModal();
 }
 
 function viewSettings() {
-  alert('Configurações - Em desenvolvimento');
+  closeUserMenu();
+  openSettingsModal();
+}
+
+function logout() {
+  closeUserMenu(); // Fecha o user-menu-overlay
+  
+  if (confirm('Tem certeza que deseja sair?')) {
+    localStorage.removeItem('usuarioLogado');
+    window.location.reload();
+  }
 }
 
 // === FUNÇÕES DE BUSCA MELHORADAS ===
@@ -2611,8 +2884,6 @@ let currentFilters = {
 
 
 function applyFilters() {
-  console.log('Aplicando filtros...');
-  
   // Coletar categorias selecionadas
   const categoryCheckboxes = document.querySelectorAll('.category-filters input[type="checkbox"]:checked');
   currentFilters.categories = Array.from(categoryCheckboxes).map(cb => cb.value.toLowerCase());
@@ -2622,8 +2893,6 @@ function applyFilters() {
   const maxPriceInput = document.getElementById('maxPrice');
   currentFilters.minPrice = minPriceInput.value ? parseFloat(minPriceInput.value) : null;
   currentFilters.maxPrice = maxPriceInput.value ? parseFloat(maxPriceInput.value) : null;
-  
-  console.log('Filtros aplicados:', currentFilters);
   
   // Filtrar produtos
   filterProducts();
@@ -2637,23 +2906,20 @@ function applyFilters() {
 
 function clearFilters() {
   console.log('Limpando filtros...');
-  
-  // Resetar filtros
   currentFilters = {
     categories: [],
-    minPrice: null,
-    maxPrice: null,
-    searchQuery: currentFilters.searchQuery // Mantém busca
+    brands: [],
+    priceRange: { min: 0, max: 10000 }
   };
   
-  // Limpar UI
-  const checkboxes = document.querySelectorAll('.category-filters input[type="checkbox"]');
+  // Limpar seleções na UI
+  const checkboxes = document.querySelectorAll('.filter-checkbox');
   checkboxes.forEach(cb => cb.checked = false);
   
-  document.getElementById('minPrice').value = '';
-  document.getElementById('maxPrice').value = '';
-  
-  console.log('Filtros limpos:', currentFilters);
+  const minPrice = document.getElementById('minPrice');
+  const maxPrice = document.getElementById('maxPrice');
+  if (minPrice) minPrice.value = '';
+  if (maxPrice) maxPrice.value = '';
   
   // Aplicar filtros vazios (mostra tudo)
   filterProducts();
@@ -2662,9 +2928,447 @@ function clearFilters() {
   toggleFilters();
 }
 
-function filterProducts() {
-  console.log('Filtrando produtos com:', currentFilters);
+function toggleFilters() {
+  const filtersPanel = document.getElementById('filtersPanel');
+  const filtersToggle = document.getElementById('filtersToggle');
+  const filtersMenuOverlay = document.getElementById('filtersMenuOverlay');
   
+  if (filtersPanel && filtersToggle && filtersMenuOverlay) {
+    const isActive = filtersPanel.classList.contains('active');
+    
+    if (isActive) {
+      // Fechar tudo
+      filtersPanel.classList.remove('active');
+      filtersToggle.classList.remove('active');
+      filtersMenuOverlay.classList.remove('active');
+    } else {
+      // Abrir igual ao mobile-menu-sidebar
+      filtersPanel.classList.add('active');
+      filtersToggle.classList.add('active');
+      filtersMenuOverlay.classList.add('active');
+    }
+  }
+}
+
+function toggleFiltersMenu() {
+  console.log('🧪 toggleFiltersMenu() chamada - Verificando se está sendo chamada no desktop');
+  console.log('📊 Estado atual:', {
+    filtersMenuOverlay: !!document.getElementById('filtersMenuOverlay'),
+    filtersToggle: !!document.getElementById('filtersToggle'),
+    filtersPanel: !!document.getElementById('filtersPanel'),
+    isActive: document.getElementById('filtersMenuOverlay')?.classList.contains('active')
+  });
+  
+  toggleFilters();
+}
+
+// === FUNÇÕES DOS MODAIS DO USER-MENU ===
+
+function openProfileModal() {
+  const overlay = document.getElementById('profileModalOverlay');
+  if (overlay) {
+    // Atualizar informações do perfil antes de abrir
+    updateProfileModalInfo();
+    
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function updateProfileModalInfo() {
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) return;
+  
+  const usuario = JSON.parse(usuarioLogado);
+  
+  // Atualizar inicial
+  const initial = usuario.nome ? usuario.nome.charAt(0).toUpperCase() : 'U';
+  const profileInitialLargeModal = document.getElementById('profileInitialLargeModal');
+  if (profileInitialLargeModal) {
+    profileInitialLargeModal.textContent = initial;
+  }
+  
+  // Atualizar informações básicas
+  const profileNameModal = document.getElementById('profileNameModal');
+  const profileEmailModal = document.getElementById('profileEmailModal');
+  if (profileNameModal) {
+    profileNameModal.textContent = usuario.nome || 'Usuário';
+  }
+  if (profileEmailModal) {
+    profileEmailModal.textContent = usuario.email || 'usuario@exemplo.com';
+  }
+  
+  // Atualizar data de cadastro
+  const profileMemberSince = document.getElementById('profileMemberSince');
+  if (profileMemberSince && usuario.dataCadastro) {
+    const date = new Date(usuario.dataCadastro);
+    profileMemberSince.textContent = date.toLocaleDateString('pt-BR');
+  }
+  
+  // Carregar estatísticas do usuário
+  loadUserStatsForProfile();
+  
+  // Mostrar/ocultar botão Meus Produtos para administradores
+  const profileMyProductsBtn = document.getElementById('profileMyProductsBtn');
+  if (profileMyProductsBtn) {
+    profileMyProductsBtn.style.display = isAdmin() ? 'flex' : 'none';
+  }
+}
+
+function loadUserStatsForProfile() {
+  // Buscar pedidos do localStorage
+  const orders = JSON.parse(localStorage.getItem('pedidos') || '[]');
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  
+  if (!usuarioLogado) return;
+  
+  const usuario = JSON.parse(usuarioLogado);
+  const userOrders = orders.filter(order => 
+    order.email === usuario.email || 
+    order.usuarioId === usuario.id ||
+    order.usuarioEmail === usuario.email
+  );
+
+  const totalOrders = userOrders.length;
+  const totalSpent = userOrders.reduce((sum, order) => {
+    return sum + (order.total || 0);
+  }, 0);
+
+  const lastOrder = userOrders.length > 0 ? 
+    new Date(userOrders[userOrders.length - 1].data).toLocaleDateString('pt-BR') : 
+    '--';
+
+  // Atualizar estatísticas na UI
+  const totalOrdersEl = document.getElementById('totalOrders');
+  const totalSpentEl = document.getElementById('totalSpent');
+  const lastOrderEl = document.getElementById('lastOrder');
+
+  if (totalOrdersEl) totalOrdersEl.textContent = totalOrders;
+  if (totalSpentEl) totalSpentEl.textContent = `R$ ${totalSpent.toFixed(2)}`;
+  if (lastOrderEl) lastOrderEl.textContent = lastOrder;
+}
+
+function closeProfileModal() {
+  const overlay = document.getElementById('profileModalOverlay');
+  if (overlay) {
+    overlay.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+}
+
+function editProfile() {
+  alert('Funcionalidade de editar perfil em desenvolvimento');
+}
+
+function openProductsModal() {
+  const overlay = document.getElementById('productsModalOverlay');
+  if (overlay) {
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeProductsModal() {
+  const overlay = document.getElementById('productsModalOverlay');
+  if (overlay) {
+    overlay.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+}
+
+function openReviewsModal() {
+  const overlay = document.getElementById('reviewsModalOverlay');
+  if (overlay) {
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeReviewsModal() {
+  const overlay = document.getElementById('reviewsModalOverlay');
+  if (overlay) {
+    overlay.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+}
+
+function openOrdersModal() {
+  const overlay = document.getElementById('ordersModalOverlay');
+  if (overlay) {
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    loadUserOrders(); // Carregar os pedidos do usuário
+  }
+}
+
+function closeOrdersModal() {
+  const overlay = document.getElementById('ordersModalOverlay');
+  if (overlay) {
+    overlay.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+}
+
+// === FUNÇÕES DE GERENCIAMENTO DE PEDIDOS ===
+
+let currentFilter = 'todos';
+let userOrders = [];
+
+function loadUserOrders() {
+  // Buscar pedidos do localStorage
+  const allOrders = JSON.parse(localStorage.getItem('pedidos') || '[]');
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  
+  if (!usuarioLogado) {
+    console.log('❌ Usuário não está logado');
+    return;
+  }
+  
+  const usuario = JSON.parse(usuarioLogado);
+  
+  // Filtrar pedidos do usuário atual
+  userOrders = allOrders.filter(order => 
+    order.email === usuario.email || 
+    order.usuarioId === usuario.id ||
+    order.usuarioEmail === usuario.email
+  );
+  
+  console.log('📋 Pedidos do usuário:', userOrders);
+  
+  // Carregar pedidos com filtro atual
+  displayOrders(currentFilter);
+}
+
+function displayOrders(filter = 'todos') {
+  currentFilter = filter;
+  const ordersList = document.getElementById('ordersList');
+  const emptyState = document.getElementById('ordersEmptyState');
+  
+  if (!ordersList || !emptyState) return;
+  
+  // Filtrar pedidos pelo status
+  let filteredOrders = userOrders;
+  if (filter !== 'todos') {
+    filteredOrders = userOrders.filter(order => order.status === filter);
+  }
+  
+  // Ordenar por data (mais recentes primeiro)
+  filteredOrders.sort((a, b) => new Date(b.data) - new Date(a.data));
+  
+  // Limpar lista atual
+  ordersList.innerHTML = '';
+  
+  if (filteredOrders.length === 0) {
+    // Mostrar empty state
+    ordersList.style.display = 'none';
+    emptyState.style.display = 'block';
+    
+    // Atualizar mensagem do empty state
+    const emptyMessage = emptyState.querySelector('h4');
+    const emptyDescription = emptyState.querySelector('p');
+    
+    if (filter === 'todos') {
+      emptyMessage.textContent = 'Nenhum pedido encontrado';
+      emptyDescription.textContent = 'Você ainda não fez nenhum pedido.';
+    } else {
+      const filterText = {
+        'pendente': 'aguardando',
+        'confirmado': 'confirmados',
+        'entregue': 'entregues'
+      };
+      emptyMessage.textContent = `Nenhum pedido ${filterText[filter]}`;
+      emptyDescription.textContent = `Você não tem pedidos ${filterText[filter]}.`;
+    }
+  } else {
+    // Mostrar lista de pedidos
+    ordersList.style.display = 'block';
+    emptyState.style.display = 'none';
+    
+    // Renderizar cada pedido
+    filteredOrders.forEach(order => {
+      const orderElement = createOrderElement(order);
+      ordersList.appendChild(orderElement);
+    });
+  }
+  
+  // Atualizar botões de filtro
+  updateFilterButtons(filter);
+}
+
+function createOrderElement(order) {
+  const orderDiv = document.createElement('div');
+  orderDiv.className = 'order-item';
+  
+  // Formatar data
+  const orderDate = new Date(order.data);
+  const formattedDate = orderDate.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+  
+  // Formatar total
+  const formattedTotal = order.total ? 
+    order.total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 
+    'R$ 0,00';
+  
+  // Status text
+  const statusText = getOrderStatusText(order.status);
+  
+  // Criar HTML do pedido
+  orderDiv.innerHTML = `
+    <div class="order-header">
+      <div class="order-id">#${order.id || '000'}</div>
+      <div class="order-status ${order.status}">
+        <span class="status-indicator ${order.status}"></span>
+        ${statusText}
+      </div>
+    </div>
+    
+    <div class="order-date">${formattedDate}</div>
+    
+    <div class="order-items">
+      ${order.items ? order.items.map(item => createOrderItemHTML(item)).join('') : ''}
+    </div>
+    
+    <div class="order-footer">
+      <div class="order-total">${formattedTotal}</div>
+      <div class="order-actions">
+        ${getOrderActions(order)}
+      </div>
+    </div>
+  `;
+  
+  return orderDiv;
+}
+
+function createOrderItemHTML(item) {
+  const productName = item.nome || item.productName || 'Produto';
+  const quantity = item.quantity || item.quantidade || 1;
+  const price = item.preco || item.price || 0;
+  const formattedPrice = price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  
+  return `
+    <div class="order-item-product">
+      <div class="order-product-image">
+        <img src="images/products/thumbnail/${item.codigo || 'placeholder'}.jpg" 
+             alt="${productName}" 
+             onerror="this.src='images/placeholder.png'">
+      </div>
+      <div class="order-product-info">
+        <div class="order-product-name">${productName}</div>
+        <div class="order-product-quantity">Quantidade: ${quantity}</div>
+      </div>
+      <div class="order-product-price">${formattedPrice}</div>
+    </div>
+  `;
+}
+
+function getOrderActions(order) {
+  let actions = '';
+  
+  if (order.status === 'pendente') {
+    actions += `
+      <button class="order-action-btn" onclick="cancelOrder('${order.id}')">
+        Cancelar
+      </button>
+      <button class="order-action-btn primary" onclick="trackOrder('${order.id}')">
+        Acompanhar
+      </button>
+    `;
+  } else if (order.status === 'confirmado') {
+    actions += `
+      <button class="order-action-btn" onclick="trackOrder('${order.id}')">
+        Acompanhar
+      </button>
+    `;
+  } else if (order.status === 'entregue') {
+    actions += `
+      <button class="order-action-btn primary" onclick="reviewOrder('${order.id}')">
+        Avaliar
+      </button>
+      <button class="order-action-btn" onclick="reorderOrder('${order.id}')">
+        Repetir
+      </button>
+    `;
+  }
+  
+  return actions;
+}
+
+function filterOrders(status) {
+  displayOrders(status);
+}
+
+function updateFilterButtons(activeFilter) {
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  
+  filterButtons.forEach(btn => {
+    if (btn.dataset.status === activeFilter) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+}
+
+function getOrderStatusText(status) {
+  const statusMap = {
+    'pendente': 'Aguardando',
+    'confirmado': 'Confirmado',
+    'entregue': 'Entregue',
+    'cancelado': 'Cancelado',
+    'em_transporte': 'Em Transporte'
+  };
+  
+  return statusMap[status] || status;
+}
+
+// Ações dos pedidos
+function cancelOrder(orderId) {
+  if (confirm('Tem certeza que deseja cancelar este pedido?')) {
+    // Implementar lógica de cancelamento
+    console.log('🚫 Cancelando pedido:', orderId);
+    showNotification('Pedido cancelado com sucesso', 'success');
+    loadUserOrders(); // Recarregar pedidos
+  }
+}
+
+function trackOrder(orderId) {
+  // Implementar rastreamento
+  console.log('📍 Rastreando pedido:', orderId);
+  showNotification('Funcionalidade de rastreamento em desenvolvimento', 'info');
+}
+
+function reviewOrder(orderId) {
+  // Implementar avaliação
+  console.log('⭐ Avaliando pedido:', orderId);
+  showNotification('Funcionalidade de avaliação em desenvolvimento', 'info');
+}
+
+function reorderOrder(orderId) {
+  // Implementar repetição de pedido
+  console.log('🔄 Repetindo pedido:', orderId);
+  showNotification('Funcionalidade de repetir pedido em desenvolvimento', 'info');
+}
+
+function openSettingsModal() {
+  const overlay = document.getElementById('settingsModalOverlay');
+  if (overlay) {
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeSettingsModal() {
+  const overlay = document.getElementById('settingsModalOverlay');
+  if (overlay) {
+    overlay.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+}
+
+function filterProducts() {
   let filteredProducts = allProducts.filter(product => {
     // Filtro de categorias
     if (currentFilters.categories.length > 0) {
@@ -2710,8 +3414,6 @@ function filterProducts() {
     
     return true;
   });
-  
-  console.log('Produtos filtrados:', filteredProducts.length);
   
   // Atualizar display com produtos filtrados
   displayFilteredProducts(filteredProducts);
@@ -2779,10 +3481,12 @@ function displayFilteredProducts(filteredProducts) {
 document.addEventListener('click', function(e) {
   const filtersToggle = document.getElementById('filtersToggle');
   const filtersPanel = document.getElementById('filtersPanel');
+  const filtersMenuOverlay = document.getElementById('filtersMenuOverlay');
   
-  if (filtersToggle && filtersPanel && 
+  if (filtersToggle && filtersPanel && filtersMenuOverlay && 
       !filtersToggle.contains(e.target) && 
       !filtersPanel.contains(e.target) &&
+      !filtersMenuOverlay.contains(e.target) &&
       filtersPanel.classList.contains('active')) {
     toggleFilters();
   }
@@ -2796,11 +3500,31 @@ window.removeFromCart = removeFromCart;
 window.toggleMobileMenu = toggleMobileMenu;
 window.closeMobileMenu = closeMobileMenu;
 window.toggleFilters = toggleFilters;
+window.toggleFiltersMenu = toggleFiltersMenu;
 window.applyFilters = applyFilters;
 window.clearFilters = clearFilters;
 window.showCheckoutOptions = showCheckoutOptions;
 window.scrollToTop = scrollToTop; // Adicionar função global
 window.finalizeViaWhatsApp = finalizeViaWhatsApp;
+
+// Funções dos modais do user-menu
+window.openProfileModal = openProfileModal;
+window.closeProfileModal = closeProfileModal;
+window.openProductsModal = openProductsModal;
+window.closeProductsModal = closeProductsModal;
+window.openReviewsModal = openReviewsModal;
+window.closeReviewsModal = closeReviewsModal;
+window.openOrdersModal = openOrdersModal;
+window.closeOrdersModal = closeOrdersModal;
+window.openSettingsModal = openSettingsModal;
+window.closeSettingsModal = closeSettingsModal;
+
+// Funções de gerenciamento de pedidos
+window.filterOrders = filterOrders;
+window.cancelOrder = cancelOrder;
+window.trackOrder = trackOrder;
+window.reviewOrder = reviewOrder;
+window.reorderOrder = reorderOrder;
 
 // Funções de autenticação
 window.checkAuthStatus = checkAuthStatus;
@@ -2809,6 +3533,108 @@ window.logout = logout;
 window.viewProfile = viewProfile;
 window.viewOrders = viewOrders;
 window.testAuthButton = testAuthButton;
+
+// === FUNÇÕES DE TESTE ===
+
+// Gerar pedidos de teste para demonstração
+window.generateTestOrders = function() {
+  console.log('🧪 Gerando pedidos de teste...');
+  
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) {
+    console.log('❌ Usuário não está logado');
+    return;
+  }
+  
+  const usuario = JSON.parse(usuarioLogado);
+  const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+  
+  // Pedidos de teste
+  const testOrders = [
+    {
+      id: 'ORD001',
+      usuarioId: usuario.id,
+      usuarioEmail: usuario.email,
+      email: usuario.email,
+      data: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 dias atrás
+      status: 'entregue',
+      total: 1299.90,
+      items: [
+        {
+          codigo: '001',
+          nome: 'Placa de Vídeo RTX 3060',
+          quantidade: 1,
+          preco: 1299.90
+        }
+      ]
+    },
+    {
+      id: 'ORD002',
+      usuarioId: usuario.id,
+      usuarioEmail: usuario.email,
+      email: usuario.email,
+      data: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 dias atrás
+      status: 'confirmado',
+      total: 2499.80,
+      items: [
+        {
+          codigo: '002',
+          nome: 'Processador Intel i7-12700K',
+          quantidade: 1,
+          preco: 1899.90
+        },
+        {
+          codigo: '003',
+          nome: 'Memória RAM 16GB DDR4',
+          quantidade: 2,
+          preco: 299.95
+        }
+      ]
+    },
+    {
+      id: 'ORD003',
+      usuarioId: usuario.id,
+      usuarioEmail: usuario.email,
+      email: usuario.email,
+      data: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 dia atrás
+      status: 'pendente',
+      total: 899.90,
+      items: [
+        {
+          codigo: '004',
+          nome: 'SSD NVMe 1TB',
+          quantidade: 1,
+          preco: 599.90
+        },
+        {
+          codigo: '005',
+          nome: 'Fonte 650W 80 Plus',
+          quantidade: 1,
+          preco: 299.90
+        }
+      ]
+    }
+  ];
+  
+  // Adicionar pedidos de teste ao localStorage (se não existirem)
+  testOrders.forEach(testOrder => {
+    const existingOrder = pedidos.find(p => p.id === testOrder.id);
+    if (!existingOrder) {
+      pedidos.push(testOrder);
+    }
+  });
+  
+  localStorage.setItem('pedidos', JSON.stringify(pedidos));
+  console.log('✅ Pedidos de teste gerados:', testOrders.length);
+  console.log('📋 Total de pedidos:', pedidos.length);
+  
+  // Recarregar pedidos se o modal estiver aberto
+  if (document.getElementById('ordersModalOverlay')?.classList.contains('active')) {
+    loadUserOrders();
+  }
+  
+  showNotification('Pedidos de teste gerados com sucesso!', 'success');
+};
 
 // === BOTÃO VOLTAR AO TOPO ===
 function scrollToTop() {
@@ -2855,3 +3681,875 @@ window.searchProducts = searchProducts;
 window.showSearchResults = showSearchResults;
 window.hideSearchResults = hideSearchResults;
 window.selectSearchProduct = selectSearchProduct;
+
+// === SISTEMA DE MENU DE PERFIL ===
+class ProfileMenuManager {
+  constructor() {
+    this.isOpen = false;
+    this.currentUser = null;
+    this.elements = {};
+    this.init();
+  }
+
+  init() {
+    console.log('🚀 ProfileMenuManager iniciado');
+    
+    // Verificar autenticação apenas no carregamento
+    this.checkAuthentication();
+    
+    // Configurar elementos
+    this.setupElements();
+    
+    // Configurar event listeners
+    this.setupEventListeners();
+  }
+
+  setupElements() {
+    this.elements = {
+      profileBtn: document.getElementById('profileBtn'),
+      profileDropdown: document.getElementById('profileDropdown'),
+      profileAvatar: document.getElementById('profileAvatar'),
+      profileInitial: document.getElementById('profileInitial'),
+      profileInitialLarge: document.getElementById('profileInitialLarge'),
+      profileName: document.getElementById('profileName'),
+      profileEmail: document.getElementById('profileEmail'),
+      viewProfileBtn: document.getElementById('viewProfileBtn'),
+      myOrdersBtn: document.getElementById('myOrdersBtn'),
+      settingsBtn: document.getElementById('settingsBtn'),
+      logoutBtn: document.getElementById('logoutBtn')
+    };
+  }
+
+  setupEventListeners() {
+    const { profileBtn, viewProfileBtn, myOrdersBtn, settingsBtn, logoutBtn } = this.elements;
+
+    // Toggle menu
+    if (profileBtn) {
+      profileBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggleMenu();
+      });
+    }
+
+    // Fechar menu ao clicar em qualquer opção
+    const profileDropdown = document.getElementById('profileDropdown');
+    if (profileDropdown) {
+      profileDropdown.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        this.closeMenu();
+        
+        // Identificar qual opção foi clicada
+        const clickedElement = e.target.closest('.profile-menu-item');
+        if (clickedElement) {
+          setTimeout(() => {
+            if (clickedElement.id === 'viewProfileBtn') {
+              this.handleViewProfile();
+            } else if (clickedElement.id === 'myOrdersBtn') {
+              this.handleMyOrders();
+            } else if (clickedElement.id === 'settingsBtn') {
+              this.handleSettings();
+            } else if (clickedElement.id === 'logoutBtn') {
+              this.handleLogout();
+            }
+          }, 50);
+        }
+      });
+    }
+
+    // Fechar menu ao pressionar ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.isOpen) {
+        this.closeMenu();
+      }
+    });
+
+    // Fechar menu ao clicar fora
+    document.addEventListener('click', (e) => {
+      if (this.isOpen && !this.isClickInsideMenu(e.target)) {
+        this.closeMenu();
+      }
+    });
+  }
+
+  checkAuthentication() {
+    // Verificação APENAS no carregamento - NUNCA no clique
+    const usuarioLogado = localStorage.getItem('usuarioLogado');
+    
+    if (usuarioLogado) {
+      try {
+        this.currentUser = JSON.parse(usuarioLogado);
+        this.showProfileButton();
+        this.updateProfileInfo();
+      } catch (e) {
+        console.error('❌ Erro ao parsear usuário:', e);
+        localStorage.removeItem('usuarioLogado');
+        this.hideProfileButton();
+      }
+    } else {
+      this.hideProfileButton();
+    }
+  }
+
+  showProfileButton() {
+    const { profileBtn } = this.elements;
+    if (profileBtn) {
+      profileBtn.style.display = 'flex';
+    }
+  }
+
+  hideProfileButton() {
+    const { profileBtn } = this.elements;
+    if (profileBtn) {
+      profileBtn.style.display = 'none';
+    }
+  }
+
+  updateProfileInfo() {
+    if (!this.currentUser) return;
+
+    const { profileInitial, profileInitialLarge, profileName, profileEmail } = this.elements;
+    
+    // Atualizar inicial
+    const initial = this.currentUser.nome ? this.currentUser.nome.charAt(0).toUpperCase() : 'U';
+    if (profileInitial) profileInitial.textContent = initial;
+    if (profileInitialLarge) profileInitialLarge.textContent = initial;
+    
+    // Atualizar nome e email
+    if (profileName) profileName.textContent = this.currentUser.nome || 'Usuário';
+    if (profileEmail) profileEmail.textContent = this.currentUser.email || 'usuario@exemplo.com';
+  }
+
+  toggleMenu() {
+    if (this.isOpen) {
+      this.closeMenu();
+    } else {
+      this.openMenu();
+    }
+  }
+
+  openMenu() {
+    if (!this.currentUser) return;
+
+    const { profileDropdown, profileBtn } = this.elements;
+
+    // Atualizar ARIA
+    if (profileBtn) {
+      profileBtn.setAttribute('aria-expanded', 'true');
+    }
+
+    // Mostrar dropdown
+    if (profileDropdown) {
+      profileDropdown.style.display = 'block';
+      // Forçar reflow para animação
+      profileDropdown.offsetHeight;
+      profileDropdown.classList.add('active');
+    }
+
+    this.isOpen = true;
+  }
+
+  closeMenu() {
+    const { profileDropdown, profileBtn } = this.elements;
+
+    // Atualizar ARIA
+    if (profileBtn) {
+      profileBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    // Esconder dropdown
+    if (profileDropdown) {
+      profileDropdown.classList.remove('active');
+    }
+
+    // Remover display após animação
+    setTimeout(() => {
+      if (profileDropdown) {
+        profileDropdown.style.display = 'none';
+      }
+    }, 150);
+
+    this.isOpen = false;
+  }
+
+  isClickInsideMenu(target) {
+    const { profileBtn, profileDropdown } = this.elements;
+    
+    return profileBtn?.contains(target) || profileDropdown?.contains(target);
+  }
+
+  handleViewProfile() {
+    // Menu já foi fechado no evento de clique
+    // Pequeno delay para garantir que o overlay foi removido
+    setTimeout(() => {
+      this.openProfileModal();
+    }, 100);
+  }
+
+  openProfileModal() {
+    if (!this.currentUser) return;
+
+    const modal = document.getElementById('profileModal');
+    if (!modal) return;
+
+    // Garantir que NENHUM overlay esteja ativo antes de abrir o modal
+    this.forceCloseAllOverlays();
+
+    // Atualizar informações do modal
+    this.updateProfileModal();
+
+    // Mostrar modal
+    modal.style.display = 'block';
+    // Forçar reflow para animação
+    modal.offsetHeight;
+    modal.classList.add('active');
+
+    // Prevenir scroll do body
+    document.body.style.overflow = 'hidden';
+
+    // Foco no botão fechar para acessibilidade
+    setTimeout(() => {
+      const closeBtn = modal.querySelector('.profile-modal-close');
+      if (closeBtn) {
+        closeBtn.focus();
+      }
+    }, 100);
+
+    console.log('👤 Modal de perfil aberto');
+  }
+
+  forceCloseAllOverlays() {
+    // Forçar fechamento de qualquer overlay aberto
+    const overlays = document.querySelectorAll('.profile-overlay.active, .cart-overlay.active, .mobile-menu-overlay.active');
+    overlays.forEach(overlay => {
+      overlay.classList.remove('active');
+      overlay.style.display = 'none';
+    });
+
+    // Forçar fechamento de qualquer dropdown aberto
+    const dropdowns = document.querySelectorAll('.profile-dropdown.active, .cart-sidebar.active');
+    dropdowns.forEach(dropdown => {
+      dropdown.classList.remove('active');
+      dropdown.style.display = 'none';
+    });
+
+    console.log('🧹 Todos os overlays e dropdowns foram fechados');
+  }
+
+  updateProfileModal() {
+    if (!this.currentUser) return;
+
+    const elements = {
+      profileInitialLargeModal: document.getElementById('profileInitialLargeModal'),
+      profileNameModal: document.getElementById('profileNameModal'),
+      profileEmailModal: document.getElementById('profileEmailModal'),
+      profileMemberSince: document.getElementById('profileMemberSince'),
+      totalOrders: document.getElementById('totalOrders'),
+      totalSpent: document.getElementById('totalSpent'),
+      lastOrder: document.getElementById('lastOrder')
+    };
+
+    // Atualizar inicial
+    const initial = this.currentUser.nome ? this.currentUser.nome.charAt(0).toUpperCase() : 'U';
+    if (elements.profileInitialLargeModal) {
+      elements.profileInitialLargeModal.textContent = initial;
+    }
+
+    // Atualizar informações básicas
+    if (elements.profileNameModal) {
+      elements.profileNameModal.textContent = this.currentUser.nome || 'Usuário';
+    }
+    if (elements.profileEmailModal) {
+      elements.profileEmailModal.textContent = this.currentUser.email || 'usuario@exemplo.com';
+    }
+
+    // Atualizar data de cadastro
+    if (elements.profileMemberSince && this.currentUser.dataCadastro) {
+      const date = new Date(this.currentUser.dataCadastro);
+      elements.profileMemberSince.textContent = date.toLocaleDateString('pt-BR');
+    }
+
+    // Carregar estatísticas do usuário
+    this.loadUserStats();
+  }
+
+  loadUserStats() {
+    // Buscar pedidos do localStorage
+    const orders = JSON.parse(localStorage.getItem('pedidos') || '[]');
+    const userOrders = orders.filter(order => 
+      order.email === this.currentUser.email || 
+      order.usuarioId === this.currentUser.id
+    );
+
+    const totalOrders = userOrders.length;
+    const totalSpent = userOrders.reduce((sum, order) => {
+      return sum + (order.total || 0);
+    }, 0);
+
+    const lastOrder = userOrders.length > 0 ? 
+      new Date(userOrders[userOrders.length - 1].date).toLocaleDateString('pt-BR') : 
+      '--';
+
+    // Atualizar estatísticas na UI
+    const totalOrdersEl = document.getElementById('totalOrders');
+    const totalSpentEl = document.getElementById('totalSpent');
+    const lastOrderEl = document.getElementById('lastOrder');
+
+    if (totalOrdersEl) totalOrdersEl.textContent = totalOrders;
+    if (totalSpentEl) totalSpentEl.textContent = `R$ ${totalSpent.toFixed(2)}`;
+    if (lastOrderEl) lastOrderEl.textContent = lastOrder;
+  }
+
+  handleMyOrders() {
+    // Menu já foi fechado no evento de clique
+    console.log('📦 Meus pedidos');
+    // Abrir modal de pedidos
+    openOrdersModal();
+  }
+
+  handleSettings() {
+    // Menu já foi fechado no evento de clique
+    console.log('⚙️ Configurações');
+    // Implementar lógica de configurações
+    alert('Funcionalidade de configurações em desenvolvimento');
+  }
+
+  handleLogout() {
+    // Menu já foi fechado no evento de clique
+    if (confirm('Tem certeza que deseja sair?')) {
+      // Remover usuário do localStorage
+      localStorage.removeItem('usuarioLogado');
+      
+      console.log('👋 Usuário deslogado');
+      
+      // Recarregar página para atualizar UI
+      window.location.reload();
+    }
+  }
+
+  // Método público para forçar atualização
+  refresh() {
+    this.checkAuthentication();
+  }
+}
+
+// Instanciar o gerenciador de menu de perfil
+let profileMenuManager;
+
+// Inicializar quando o DOM estiver pronto
+function initializeProfileMenu() {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      profileMenuManager = new ProfileMenuManager();
+      // Expor globalmente APÓS instanciação
+      window.ProfileMenuManager = ProfileMenuManager;
+      window.profileMenuManager = profileMenuManager;
+      console.log('✅ ProfileMenuManager exposto globalmente');
+    });
+  } else {
+    profileMenuManager = new ProfileMenuManager();
+    // Expor globalmente APÓS instanciação
+    window.ProfileMenuManager = ProfileMenuManager;
+    window.profileMenuManager = profileMenuManager;
+    console.log('✅ ProfileMenuManager exposto globalmente');
+  }
+}
+
+// Inicializar imediatamente
+initializeProfileMenu();
+
+// === FUNÇÕES DE TESTE ===
+window.testProfileMenu = function() {
+  console.log('🧪 TESTANDO MENU DE PERFIL');
+  
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  const profileBtn = document.getElementById('profileBtn');
+  const profileDropdown = document.getElementById('profileDropdown');
+  
+  console.log('📊 Estado atual:', {
+    usuarioLogado: !!usuarioLogado,
+    usuarioData: usuarioLogado ? JSON.parse(usuarioLogado) : null,
+    profileBtnExists: !!profileBtn,
+    profileBtnVisible: profileBtn ? profileBtn.style.display !== 'none' : false,
+    profileDropdownExists: !!profileDropdown,
+    isMobile: window.innerWidth <= 768
+  });
+  
+  if (!usuarioLogado) {
+    console.log('❌ Usuário não está logado. Use simulateLoginOnIndex() primeiro.');
+    return;
+  }
+  
+  if (!profileBtn) {
+    console.log('❌ Botão de perfil não encontrado');
+    return;
+  }
+  
+  console.log('✅ Teste de clique no botão de perfil...');
+  profileBtn.click();
+  
+  setTimeout(() => {
+    const isOpen = profileDropdown?.classList.contains('active');
+    console.log('📂 Menu aberto:', isOpen);
+    
+    if (isOpen) {
+      console.log('✅ Teste de fechamento com ESC...');
+      const escEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+      document.dispatchEvent(escEvent);
+      
+      setTimeout(() => {
+        const stillOpen = profileDropdown?.classList.contains('active');
+        console.log('📂 Menu fechado com ESC:', !stillOpen);
+        
+        console.log('✅ Teste concluído!');
+      }, 300);
+    }
+  }, 300);
+};
+
+window.simulateLoginOnIndex = function() {
+  console.log('🧪 SIMULANDO LOGIN NA PÁGINA INICIAL...');
+  
+  const usuario = {
+    id: Date.now(),
+    nome: 'Usuário Teste',
+    email: 'teste@primos.com',
+    dataCadastro: new Date().toISOString()
+  };
+  
+  localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+  console.log('✅ Usuário salvo no localStorage:', usuario);
+  
+  // Atualizar a UI
+  if (window.profileMenuManager) {
+    window.profileMenuManager.refresh();
+  } else {
+    console.log('❌ ProfileMenuManager não encontrado. Recarregue a página.');
+  }
+};
+
+window.simulateLogoutOnIndex = function() {
+  console.log('🧪 SIMULANDO LOGOUT NA PÁGINA INICIAL...');
+  
+  localStorage.removeItem('usuarioLogado');
+  console.log('✅ Usuário removido do localStorage');
+  
+  // Atualizar a UI
+  if (window.profileMenuManager) {
+    window.profileMenuManager.refresh();
+  } else {
+    console.log('❌ ProfileMenuManager não encontrado. Recarregue a página.');
+  }
+};
+
+// Inicializar imediatamente
+initializeProfileMenu();
+
+// Adicionar event listener para o botão de filtros
+document.addEventListener('DOMContentLoaded', function() {
+  const filtersToggle = document.getElementById('filtersToggle');
+  if (filtersToggle) {
+    console.log('✅ Botão de filtros encontrado, adicionando event listener');
+    filtersToggle.addEventListener('click', function(e) {
+      console.log('🖱️ Botão de filtros clicado!');
+      e.preventDefault();
+      e.stopPropagation();
+      toggleFiltersMenu();
+    });
+  } else {
+    console.log('❌ Botão de filtros não encontrado');
+  }
+});
+
+window.testAnyOptionClosesOverlay = function() {
+  console.log('🧪 TESTANDO SE QUALQUER OPÇÃO FECHA O OVERLAY');
+  
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) {
+    console.log('❌ Usuário não está logado. Use simulateLoginOnIndex() primeiro.');
+    return;
+  }
+  
+  const profileBtn = document.getElementById('profileBtn');
+  const profileDropdown = document.getElementById('profileDropdown');
+  const profileOverlay = document.getElementById('profileOverlay');
+  
+  console.log('📊 Estado inicial:', {
+    profileBtnExists: !!profileBtn,
+    dropdownExists: !!profileDropdown,
+    overlayExists: !!profileOverlay,
+    dropdownVisible: profileDropdown ? profileDropdown.style.display !== 'none' : false,
+    overlayVisible: profileOverlay ? profileOverlay.style.display !== 'none' : false
+  });
+  
+  if (!profileBtn || !profileDropdown || !profileOverlay) {
+    console.log('❌ Elementos necessários não encontrados');
+    return;
+  }
+  
+  console.log('✅ Passo 1: Abrindo menu dropdown...');
+  profileBtn.click();
+  
+  setTimeout(() => {
+    console.log('📊 Após abrir menu:', {
+      dropdownActive: profileDropdown.classList.contains('active'),
+      overlayActive: profileOverlay.classList.contains('active')
+    });
+    
+    if (!profileDropdown.classList.contains('active')) {
+      console.log('❌ Menu não abriu corretamente');
+      return;
+    }
+    
+    // Testar clique em diferentes áreas do menu
+    const testAreas = [
+      { name: 'header', selector: '.profile-dropdown-header' },
+      { name: 'content', selector: '.profile-dropdown-content' },
+      { name: 'Meu Perfil button', selector: '#viewProfileBtn' },
+      { name: 'Meus Pedidos button', selector: '#myOrdersBtn' },
+      { name: 'Configurações button', selector: '#settingsBtn' },
+      { name: 'Sair button', selector: '#logoutBtn' }
+    ];
+    
+    let testIndex = 0;
+    
+    function runNextTest() {
+      if (testIndex >= testAreas.length) {
+        console.log('✅ Todos os testes concluídos!');
+        return;
+      }
+      
+      const test = testAreas[testIndex];
+      console.log(`✅ Passo ${testIndex + 2}: Testando clique em "${test.name}"...`);
+      
+      // Reabrir menu se estiver fechado
+      if (!profileDropdown.classList.contains('active')) {
+        profileBtn.click();
+        setTimeout(() => {
+          performTest();
+        }, 200);
+      } else {
+        performTest();
+      }
+      
+      function performTest() {
+        const element = document.querySelector(test.selector);
+        if (element) {
+          console.log(`📊 Clicando em: ${test.name}`);
+          element.click();
+          
+          setTimeout(() => {
+            const overlayClosed = !profileOverlay.classList.contains('active') && profileOverlay.style.display === 'none';
+            const dropdownClosed = !profileDropdown.classList.contains('active') && profileDropdown.style.display === 'none';
+            
+            console.log(`📊 Resultado para "${test.name}":`, {
+              overlayClosed: overlayClosed,
+              dropdownClosed: dropdownClosed,
+              overlayActive: profileOverlay.classList.contains('active'),
+              dropdownActive: profileDropdown.classList.contains('active')
+            });
+            
+            if (overlayClosed && dropdownClosed) {
+              console.log(`✅ SUCESSO: "${test.name}" fechou o overlay!`);
+            } else {
+              console.log(`❌ PROBLEMA: "${test.name}" NÃO fechou o overlay!`);
+            }
+            
+            testIndex++;
+            setTimeout(runNextTest, 500);
+          }, 200);
+        } else {
+          console.log(`❌ Elemento "${test.name}" não encontrado`);
+          testIndex++;
+          setTimeout(runNextTest, 100);
+        }
+      }
+    }
+    
+    runNextTest();
+  }, 300);
+};
+
+window.testButtonsCloseOverlay = function() {
+  console.log('🧪 TESTANDO SE BOTÕES FECHAM O OVERLAY');
+  
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) {
+    console.log('❌ Usuário não está logado. Use simulateLoginOnIndex() primeiro.');
+    return;
+  }
+  
+  const profileBtn = document.getElementById('profileBtn');
+  const profileDropdown = document.getElementById('profileDropdown');
+  const profileOverlay = document.getElementById('profileOverlay');
+  
+  console.log('📊 Estado inicial:', {
+    profileBtnExists: !!profileBtn,
+    dropdownExists: !!profileDropdown,
+    overlayExists: !!profileOverlay,
+    dropdownVisible: profileDropdown ? profileDropdown.style.display !== 'none' : false,
+    overlayVisible: profileOverlay ? profileOverlay.style.display !== 'none' : false
+  });
+  
+  if (!profileBtn || !profileDropdown || !profileOverlay) {
+    console.log('❌ Elementos necessários não encontrados');
+    return;
+  }
+  
+  console.log('✅ Passo 1: Abrindo menu dropdown...');
+  profileBtn.click();
+  
+  setTimeout(() => {
+    console.log('📊 Após abrir menu:', {
+      dropdownActive: profileDropdown.classList.contains('active'),
+      overlayActive: profileOverlay.classList.contains('active')
+    });
+    
+    if (!profileDropdown.classList.contains('active')) {
+      console.log('❌ Menu não abriu corretamente');
+      return;
+    }
+    
+    console.log('✅ Passo 2: Testando clique em "Meu Perfil"...');
+    const viewProfileBtn = document.getElementById('viewProfileBtn');
+    if (viewProfileBtn) {
+      console.log('📊 Clicando no botão "Meu Perfil"...');
+      viewProfileBtn.click();
+      
+      setTimeout(() => {
+        console.log('📊 Após clicar "Meu Perfil":', {
+          dropdownActive: profileDropdown.classList.contains('active'),
+          overlayActive: profileOverlay.classList.contains('active'),
+          dropdownDisplay: profileDropdown.style.display,
+          overlayDisplay: profileOverlay.style.display
+        });
+        
+        const overlayClosed = !profileOverlay.classList.contains('active') && profileOverlay.style.display === 'none';
+        const dropdownClosed = !profileDropdown.classList.contains('active') && profileDropdown.style.display === 'none';
+        
+        if (overlayClosed && dropdownClosed) {
+          console.log('✅ SUCESSO: Overlay e dropdown fecharam ao clicar no botão!');
+        } else {
+          console.log('❌ PROBLEMA: Overlay/dropdown não fecharam ao clicar no botão');
+        }
+        
+        console.log('✅ Teste concluído!');
+      }, 200);
+    } else {
+      console.log('❌ Botão "Meu Perfil" não encontrado');
+    }
+  }, 300);
+};
+
+window.testOverlayFix = function() {
+  console.log('🧪 TESTANDO CORREÇÃO DO OVERLAY');
+  
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) {
+    console.log('❌ Usuário não está logado. Use simulateLoginOnIndex() primeiro.');
+    return;
+  }
+  
+  const profileBtn = document.getElementById('profileBtn');
+  const profileDropdown = document.getElementById('profileDropdown');
+  const profileOverlay = document.getElementById('profileOverlay');
+  const profileModal = document.getElementById('profileModal');
+  
+  console.log('📊 Estado inicial:', {
+    profileBtnExists: !!profileBtn,
+    dropdownExists: !!profileDropdown,
+    overlayExists: !!profileOverlay,
+    modalExists: !!profileModal,
+    dropdownVisible: profileDropdown ? profileDropdown.style.display !== 'none' : false,
+    overlayVisible: profileOverlay ? profileOverlay.style.display !== 'none' : false,
+    modalVisible: profileModal ? profileModal.style.display !== 'none' : false
+  });
+  
+  if (!profileBtn || !profileDropdown || !profileOverlay || !profileModal) {
+    console.log('❌ Elementos necessários não encontrados');
+    return;
+  }
+  
+  console.log('✅ Passo 1: Abrindo menu dropdown...');
+  profileBtn.click();
+  
+  setTimeout(() => {
+    console.log('📊 Após abrir menu:', {
+      dropdownActive: profileDropdown.classList.contains('active'),
+      overlayActive: profileOverlay.classList.contains('active')
+    });
+    
+    console.log('✅ Passo 2: Clicando em "Meu Perfil"...');
+    const viewProfileBtn = document.getElementById('viewProfileBtn');
+    if (viewProfileBtn) {
+      viewProfileBtn.click();
+      
+      setTimeout(() => {
+        console.log('📊 Após clicar "Meu Perfil":', {
+          dropdownActive: profileDropdown.classList.contains('active'),
+          overlayActive: profileOverlay.classList.contains('active'),
+          dropdownDisplay: profileDropdown.style.display,
+          overlayDisplay: profileOverlay.style.display,
+          modalActive: profileModal.classList.contains('active'),
+          modalDisplay: profileModal.style.display
+        });
+        
+        const overlayProblem = profileOverlay.classList.contains('active') || profileOverlay.style.display !== 'none';
+        const dropdownProblem = profileDropdown.classList.contains('active') || profileDropdown.style.display !== 'none';
+        
+        if (overlayProblem || dropdownProblem) {
+          console.log('❌ PROBLEMA DETECTADO: Overlay/dropdown não fecharam corretamente');
+        } else {
+          console.log('✅ SUCESSO: Overlay e dropdown fecharam corretamente');
+        }
+        
+        console.log('✅ Teste concluído!');
+      }, 300);
+    } else {
+      console.log('❌ Botão "Meu Perfil" não encontrado');
+    }
+  }, 300);
+};
+
+window.diagnoseProfileSystem = function() {
+  console.log('🔍 DIAGNÓSTICO COMPLETO DO SISTEMA DE PERFIL');
+  
+  const diagnostic = {
+    // Estado do DOM
+    domReady: document.readyState === 'complete',
+    profileBtnExists: !!document.getElementById('profileBtn'),
+    profileDropdownExists: !!document.getElementById('profileDropdown'),
+    profileModalExists: !!document.getElementById('profileModal'),
+    
+    // Estado do usuário
+    usuarioLogado: !!localStorage.getItem('usuarioLogado'),
+    usuarioData: null,
+    
+    // Estado do ProfileMenuManager
+    classExists: typeof ProfileMenuManager !== 'undefined',
+    globalInstanceExists: !!window.profileMenuManager,
+    localInstanceExists: !!profileMenuManager,
+    
+    // Estado das funções
+    viewProfileExists: typeof viewProfile === 'function',
+    closeProfileModalExists: typeof closeProfileModal === 'function'
+  };
+  
+  if (diagnostic.usuarioLogado) {
+    try {
+      diagnostic.usuarioData = JSON.parse(localStorage.getItem('usuarioLogado'));
+    } catch (e) {
+      diagnostic.usuarioData = 'ERROR';
+    }
+  }
+  
+  console.log('📊 RESULTADO DO DIAGNÓSTICO:', diagnostic);
+  
+  // Verificar problemas específicos
+  if (!diagnostic.profileBtnExists) {
+    console.error('❌ Botão de perfil não encontrado no DOM');
+  }
+  
+  if (!diagnostic.profileModalExists) {
+    console.error('❌ Modal de perfil não encontrado no DOM');
+  }
+  
+  if (!diagnostic.classExists) {
+    console.error('❌ Classe ProfileMenuManager não definida');
+  }
+  
+  if (!diagnostic.globalInstanceExists) {
+    console.error('❌ Instância global do ProfileMenuManager não encontrada');
+  }
+  
+  if (!diagnostic.usuarioLogado) {
+    console.warn('⚠️ Nenhum usuário logado');
+  }
+  
+  // Tentar corrigir problemas
+  if (!diagnostic.globalInstanceExists && diagnostic.classExists) {
+    console.log('🔧 Tentando criar instância do ProfileMenuManager...');
+    try {
+      window.profileMenuManager = new ProfileMenuManager();
+      console.log('✅ ProfileMenuManager criado manualmente');
+    } catch (error) {
+      console.error('❌ Falha ao criar ProfileMenuManager:', error);
+    }
+  }
+  
+  return diagnostic;
+};
+
+window.testProfileModal = function() {
+  console.log('🧪 TESTANDO MODAL DE PERFIL');
+  
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  const profileModal = document.getElementById('profileModal');
+  
+  console.log('📊 Estado atual:', {
+    usuarioLogado: !!usuarioLogado,
+    usuarioData: usuarioLogado ? JSON.parse(usuarioLogado) : null,
+    profileModalExists: !!profileModal,
+    profileModalVisible: profileModal ? profileModal.style.display !== 'none' : false
+  });
+  
+  if (!usuarioLogado) {
+    console.log('❌ Usuário não está logado. Use simulateLoginOnIndex() primeiro.');
+    return;
+  }
+  
+  if (!profileModal) {
+    console.log('❌ Modal de perfil não encontrado');
+    return;
+  }
+  
+  console.log('✅ Teste de abertura do modal...');
+  
+  // Abrir modal através do ProfileMenuManager
+  if (window.profileMenuManager) {
+    window.profileMenuManager.openProfileModal();
+    
+    setTimeout(() => {
+      const isOpen = profileModal.classList.contains('active');
+      console.log('📂 Modal aberto:', isOpen);
+      
+      if (isOpen) {
+        console.log('✅ Teste de fechamento com ESC...');
+        const escEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+        document.dispatchEvent(escEvent);
+        
+        setTimeout(() => {
+          const stillOpen = profileModal.classList.contains('active');
+          console.log('📂 Modal fechado com ESC:', !stillOpen);
+          
+          console.log('✅ Teste do modal concluído!');
+        }, 400);
+      }
+    }, 400);
+  } else {
+    console.log('❌ ProfileMenuManager não encontrado');
+  }
+};
+
+// === FUNÇÕES GLOBAIS DO MODAL DE PERFIL ===
+window.editProfile = function() {
+  console.log('✏️ Editar perfil');
+  alert('Funcionalidade de edição de perfil em desenvolvimento');
+};
+
+window.viewSettings = function() {
+  console.log('⚙️ Ver configurações');
+  alert('Funcionalidade de configurações em desenvolvimento');
+};
+
+// Fechar modal com ESC
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('profileModalOverlay');
+    if (modal && modal.classList.contains('active')) {
+      closeProfileModal();
+    }
+  }
+});
