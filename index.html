@@ -353,16 +353,8 @@
   
   <link rel="stylesheet" href="css/styles.css" />
   
-  <!-- Desativar Service Worker -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for(let registration of registrations) {
-          registration.unregister();
-        }
-      });
-    }
-  </script>
+  <!-- Funções Compartilhadas -->
+  <script src="js/common.js"></script>
 </head>
 <body>
 

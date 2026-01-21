@@ -2145,45 +2145,6 @@
   }
 }
 
-/* === Botão Voltar ao Topo === */
-.back-to-top {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(100px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 997; /* Hierarquia correta */
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.back-to-top.visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.back-to-top:hover {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-}
-
-.back-to-top:active {
-  transform: translateY(0);
-}
-
 /* === Melhorias de Performance === */
 img {
   image-rendering: -webkit-optimize-contrast;
@@ -2621,22 +2582,6 @@ img {
   .product-info .price {
     font-size: 15px;
   }
-}
-
-.back-to-top.visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.back-to-top:hover {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-}
-
-.back-to-top:active {
-  transform: translateY(0);
 }
 
 /* === Animações de Entrada Suaves === */
