@@ -501,6 +501,9 @@ function populateHomeCategories() {
 function populateNavigationMenus() {
   if (allProducts.length === 0) return;
   
+  console.log('🔍 Debug: populateNavigationMenus iniciada');
+  console.log('🔍 Debug: allProducts.length =', allProducts.length);
+  
   // Obter categorias únicas dos produtos
   const categories = {};
   for (let i = 0; i < allProducts.length; i++) {
@@ -516,6 +519,8 @@ function populateNavigationMenus() {
   }
   
   const categoryNames = Object.keys(categories).sort();
+  console.log('🔍 Debug: categoryNames encontradas =', categoryNames);
+  console.log('🔍 Debug: número de categorias =', categoryNames.length);
   
   // Gerar HTML para as categorias (exceto as especiais)
   function generateCategoryButtons(closeMenu = false, isDesktop = false) {
@@ -563,6 +568,8 @@ function populateNavigationMenus() {
     return html;
   }
   
+  console.log('🔍 Debug: HTML gerado para categorias desktop =', generateCategoryButtons(false, true));
+  
   // Atualizar menu desktop (header-nav)
   const navTabs = document.querySelector('.nav-tabs');
   if (navTabs) {
@@ -584,7 +591,9 @@ function populateNavigationMenus() {
       </button>
     `;
     
-    navTabs.innerHTML = staticHTML + generateCategoryButtons(false, true);
+    const finalHTML = staticHTML + generateCategoryButtons(false, true);
+    console.log('🔍 Debug: HTML final do nav-tabs =', finalHTML);
+    navTabs.innerHTML = finalHTML;
   }
   
   // Atualizar menu mobile (mobile-nav-tabs)
