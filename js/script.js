@@ -174,7 +174,8 @@ function showPromocoes() {
   const promocoesProducts = [];
   
   for (let i = 0; i < allProducts.length; i++) {
-    if (allProducts[i].promocao === 'sim') {
+    // JSON usa booleano true, CSV usava string 'sim'
+    if (allProducts[i].promocao === true || allProducts[i].promocao === 'sim') {
       promocoesProducts.push(allProducts[i]);
     }
   }
@@ -319,65 +320,55 @@ function loadImagesOnScroll(container) {
 let allProducts = [];
 
 function loadProducts() {
-  console.log('🚀 loadProducts() iniciada');
-  return fetch('data/products.csv')
+  console.log('🚀 loadProducts() iniciada - JSON mode');
+  return fetch('data/products.json')
     .then(function(response) {
-      console.log('📁 CSV response status:', response.status);
+      console.log('📁 JSON response status:', response.status);
       if (!response.ok) {
-        throw new Error('Erro ao carregar arquivo CSV: ' + response.statusText);
+        throw new Error('Erro ao carregar arquivo JSON: ' + response.statusText);
       }
-      return response.text();
+      return response.json();
     })
-    .then(function(csvText) {
-      console.log('📄 CSV text carregado, tamanho:', csvText.length);
-      const lines = csvText.split('\n');
-      console.log('📊 Linhas no CSV:', lines.length);
-      const headers = lines[0].split(';').map(h => h.trim());
-      console.log('🏷️ Headers:', headers);
+    .then(function(jsonData) {
+      console.log('📄 JSON carregado, produtos:', jsonData.length);
       
       const products = [];
       const productMap = {}; // Usar mapa para evitar duplicatas por código
       
-      for (let i = 1; i < lines.length; i++) {
-        const values = lines[i].split(';').map(v => v.trim());
+      for (let i = 0; i < jsonData.length; i++) {
+        const product = jsonData[i];
         
-        if (values.length >= headers.length) {
-          const product = {};
-          headers.forEach((header, index) => {
-            product[header] = values[index] || '';
-          });
-          
-          // Garantir que todos os campos obrigatórios existam
-          product.codigo = product.codigo || product.Código || '';
-          product.nome = product.nome || product.Nome || '';
-          product.preco = product.preco || product.Preço || '';
-          product.categoria = product.categoria || product.Categoria || '';
-          product.marca = product.marca || product.Marca || '';
-          product.descricao = product.descricao || product.Descrição || '';
-          product.imagem = product.imagem || product.Imagem || '';
-          
-          // Garantir que o código não seja vazio
-          if (!product.codigo) {
-            continue; // Pular produtos sem código
-          }
-          
-          // Verificar se já existe produto com este código
-          if (productMap[product.codigo]) {
-            // Adicionar sufixo ao código para evitar duplicatas
-            const originalCode = product.codigo;
-            let suffix = 1;
-            while (productMap[product.codigo + '_' + suffix]) {
-              suffix++;
-            }
-            product.codigo = product.codigo + '_' + suffix;
-          }
-          
-          productMap[product.codigo] = product;
-          products.push(product);
+        // Garantir que todos os campos obrigatórios existam
+        product.codigo = product.codigo || '';
+        product.nome = product.nome || '';
+        product.preco = product.preco || 0;
+        product.categoria = product.categoria || '';
+        product.marca = product.marca || '';
+        product.descricao = product.descricao || '';
+        product.imagem = product.imagem || '';
+        
+        // Garantir que o código não seja vazio
+        if (!product.codigo) {
+          continue; // Pular produtos sem código
         }
+        
+        // Verificar se já existe produto com este código
+        if (productMap[product.codigo]) {
+          // Adicionar sufixo ao código para evitar duplicatas
+          const originalCode = product.codigo;
+          let suffix = 1;
+          while (productMap[product.codigo + '_' + suffix]) {
+            suffix++;
+          }
+          product.codigo = product.codigo + '_' + suffix;
+        }
+        
+        productMap[product.codigo] = product;
+        products.push(product);
       }
       
       allProducts = products;
+      console.log('✅', allProducts.length, 'produtos carregados do JSON');
       return products;
     })
     .catch(function(error) {
@@ -649,14 +640,15 @@ function populateHomeHighlights() {
   
   // Adicionar produtos em promoção primeiro
   for (let i = 0; i < allProducts.length; i++) {
-    if (allProducts[i].promocao === 'sim') {
+    // JSON usa booleano true, CSV usava string 'sim'
+    if (allProducts[i].promocao === true || allProducts[i].promocao === 'sim') {
       highlights.push(allProducts[i]);
     }
   }
   
   // Se tiver menos de 6 produtos em destaque, adicionar produtos aleatórios
   if (highlights.length < 6) {
-    const otherProducts = allProducts.filter(p => p.promocao !== 'sim');
+    const otherProducts = allProducts.filter(p => p.promocao !== true && p.promocao !== 'sim');
     const needed = 6 - highlights.length;
     const selected = otherProducts.sort(() => 0.5 - Math.random()).slice(0, needed);
     highlights.push(...selected);
