@@ -7655,6 +7655,34 @@ main {
   height: 16px;
 }
 
+/* Estilos para menu de filtros mobile */
+.mobile-filters-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mobile-filters-tabs .mobile-nav-tab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+  width: 100%;
+  text-align: left;
+}
+
+.mobile-filters-tabs .mobile-nav-tab:hover {
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
 /* Responsive: Esconder nav desktop e mostrar menu mobile */
 @media (max-width: 768px) {
   .header-nav {
