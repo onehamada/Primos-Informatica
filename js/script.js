@@ -585,6 +585,34 @@ function populateNavigationMenus() {
     `;
     
     navTabs.innerHTML = staticHTML + generateCategoryButtons(false, true);
+    
+    // Adicionar detecção de scroll para indicadores visuais
+    navTabs.addEventListener('scroll', function() {
+      const headerNav = document.querySelector('.header-nav');
+      if (headerNav) {
+        // Verificar se pode scrollar para a esquerda
+        if (this.scrollLeft > 0) {
+          headerNav.classList.add('scrollable-left');
+        } else {
+          headerNav.classList.remove('scrollable-left');
+        }
+        
+        // Verificar se pode scrollar para a direita
+        if (this.scrollLeft < this.scrollWidth - this.clientWidth) {
+          headerNav.classList.add('scrollable-right');
+        } else {
+          headerNav.classList.remove('scrollable-right');
+        }
+      }
+    });
+    
+    // Verificar inicialmente se há scroll necessário
+    setTimeout(function() {
+      const headerNav = document.querySelector('.header-nav');
+      if (navTabs.scrollWidth > navTabs.clientWidth) {
+        headerNav.classList.add('scrollable-right');
+      }
+    }, 100);
   }
   
   // Atualizar menu mobile (mobile-nav-tabs)
