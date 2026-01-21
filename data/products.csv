@@ -7,21 +7,21 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 402226;MOUSE MULTILASER PRETO USB MO255;mouse;15,00;1;Mouse USB preto MO255;Multilaser;nao;mouse-multilaser-mo255.webp
 1939;MOUSE MULTILASER SEM FIO RECARREGÁVEL 2.4 GHZ MO277;mouse;70,00;1;Mouse recarregável sem fio MO277;Multilaser;nao;mouse-multilaser-mo277.webp
 1938;MOUSE MULTILASER S/FIO BLUETOOTH M5750 MO403;mouse;90,00;1;Mouse Bluetooth sem fio MO403;Multilaser;nao;mouse-multilaser-mo403.webp
-1536;ROTEADOR WR TP-LINK MESH AC1200 EC220-G5;redes;201,00;1;Roteador Mesh AC1200 EC220-G5;TP-Link;nao;roteador-tplink-ec220g5.webp
-1352;ROTEADOR WR TP-LINK DUAL BAND AC1350 EC230-G1;redes;260,00;1;Roteador Dual Band AC1350 EC230-G1;TP-Link;nao;roteador-tplink-ec230g1.webp
-1879;ROTEADOR WRE MERCUSYS AC1200 D BAND GIGABIT MR30G;redes;199,00;1;Roteador AC1200 Dual Band MR30G;Mercusys;nao;roteador-mercusys-mr30g.webp
-1881;ROTEADOR TP-LINK AC1350 C60 ARCHER DUAL BAND;redes;209,00;1;Roteador Dual Band AC1350 C60 Archer;TP-Link;nao;roteador-tplink-c60.webp
-1088;ROTEADOR WR TP LINK AX1500 DUAL BAND AX12 WIFI 6;redes;280,00;1;Roteador AX1500 Dual Band AX12 WiFi 6;TP-Link;nao;roteador-tplink-ax12.webp
-402579;ROTEADOR WR TP LINK AX1800 DUAL BAND AX23 WIFI 6;redes;470,00;1;Roteador AX1800 Dual Band AX23 WiFi 6;TP-Link;nao;roteador-tplink-ax23.webp
-1562;UBIQUITI AP UNIFI AC U6-PRO 4X4 S/FONTE;redes;1775,00;1;Access Point UniFi AC U6-Pro 4x4;Ubiquiti;nao;ap-ubiquiti-u6pro.webp
-1072;UBIQUITI AP UNIFI UAP-AC-LITE-BR;redes;890,00;1;Access Point UniFi UAP-AC-Lite;Ubiquiti;nao;ap-ubiquiti-uapaclite.webp
-1559;REPETIDOR WIRELESS TPLINK DUAL BAND AC750 RE200;redes;189,00;1;Repetidor Dual Band AC750 RE200;TP-Link;nao;repetidor-tplink-re200.webp
-1291;ADAPTADOR USB REDE RJ45 3.0;redes;145,00;1;Adaptador USB RJ45 2.0;Generico;nao;adaptador-usb-rj45-empree.webp
-1532;ADAPTADOR USB WIRELESS 600MBPS 5G;redes;105,00;1;Adaptador USB Wireless 600Mbps 5G;Generico;nao;adaptador-usb-600mbps-5g.webp
-1296;ADAPTADOR USB WIRELESS AC1300 TENDA U12;redes;150,00;1;Adaptador USB Wireless AC1300 U12;Tenda;nao;adaptador-tenda-u12.webp
-1558;ADAPTADOR USB WIRELESS AC1300 TP-LINK ARCHER T3U;redes;165,00;1;Adaptador USB Wireless AC1300 T3U;TP-Link;nao;adaptador-tplink-t3u.webp
-1560;ADAPTADOR USB WIRELESS AC1300 TP-LINK ARCHER T4U;redes;210,00;1;Adaptador USB Wireless AC1300 T4U;TP-Link;nao;adaptador-tplink-t4u.webp
-1557;ADAPTADOR USB WIRELESS TX20U PLUS TP-LINK WIFI 6;redes;225,00;1;Adaptador USB TX20U Plus WiFi 6;TP-Link;nao;adaptador-tplink-tx20u.webp
+1536;ROTEADOR WR TP-LINK MESH AC1200 EC220-G5;Redes;201,00;1;Roteador Mesh AC1200 EC220-G5;TP-Link;nao;roteador-tplink-ec220g5.webp
+1352;ROTEADOR WR TP-LINK DUAL BAND AC1350 EC230-G1;Redes;260,00;1;Roteador Dual Band AC1350 EC230-G1;TP-Link;nao;roteador-tplink-ec230g1.webp
+1879;ROTEADOR WRE MERCUSYS AC1200 D BAND GIGABIT MR30G;Redes;199,00;1;Roteador AC1200 Dual Band MR30G;Mercusys;nao;roteador-mercusys-mr30g.webp
+1881;ROTEADOR TP-LINK AC1350 C60 ARCHER DUAL BAND;Redes;209,00;1;Roteador Dual Band AC1350 C60 Archer;TP-Link;nao;roteador-tplink-c60.webp
+1088;ROTEADOR WR TP LINK AX1500 DUAL BAND AX12 WIFI 6;Redes;280,00;1;Roteador AX1500 Dual Band AX12 WiFi 6;TP-Link;nao;roteador-tplink-ax12.webp
+402579;ROTEADOR WR TP LINK AX1800 DUAL BAND AX23 WIFI 6;Redes;470,00;1;Roteador AX1800 Dual Band AX23 WiFi 6;TP-Link;nao;roteador-tplink-ax23.webp
+1562;UBIQUITI AP UNIFI AC U6-PRO 4X4 S/FONTE;Redes;1775,00;1;Access Point UniFi AC U6-Pro 4x4;Ubiquiti;nao;ap-ubiquiti-u6pro.webp
+1072;UBIQUITI AP UNIFI UAP-AC-LITE-BR;Redes;890,00;1;Access Point UniFi UAP-AC-Lite;Ubiquiti;nao;ap-ubiquiti-uapaclite.webp
+1559;REPETIDOR WIRELESS TPLINK DUAL BAND AC750 RE200;Redes;189,00;1;Repetidor Dual Band AC750 RE200;TP-Link;nao;repetidor-tplink-re200.webp
+1291;ADAPTADOR USB REDE RJ45 3.0;Redes;145,00;1;Adaptador USB RJ45 2.0;Generico;nao;adaptador-usb-rj45-empree.webp
+1532;ADAPTADOR USB WIRELESS 600MBPS 5G;Redes;105,00;1;Adaptador USB Wireless 600Mbps 5G;Generico;nao;adaptador-usb-600mbps-5g.webp
+1296;ADAPTADOR USB WIRELESS AC1300 TENDA U12;Redes;150,00;1;Adaptador USB Wireless AC1300 U12;Tenda;nao;adaptador-tenda-u12.webp
+1558;ADAPTADOR USB WIRELESS AC1300 TP-LINK ARCHER T3U;Redes;165,00;1;Adaptador USB Wireless AC1300 T3U;TP-Link;nao;adaptador-tplink-t3u.webp
+1560;ADAPTADOR USB WIRELESS AC1300 TP-LINK ARCHER T4U;Redes;210,00;1;Adaptador USB Wireless AC1300 T4U;TP-Link;nao;adaptador-tplink-t4u.webp
+1557;ADAPTADOR USB WIRELESS TX20U PLUS TP-LINK WIFI 6;Redes;225,00;1;Adaptador USB TX20U Plus WiFi 6;TP-Link;nao;adaptador-tplink-tx20u.webp
 1871;TECLADO BRIGHT PRETO USB 0014;teclado;19,90;1;Teclado USB preto 0014;Bright;nao;teclado-bright-usb-0014.webp
 1867;MOUSE HAYOM OFFICER USB MU2904;mouse;5,90;1;Mouse USB Officer MU2904;Hayom;nao;mouse-hayom-mu2904.webp
 1698;MOUSE GAMER FORTREX RGB CRUSADER 70526;mouse;87,25;1;Mouse gamer RGB Crusader 70526;Fortrex;nao;mouse-fortrex-crusader-70526.webp
@@ -42,18 +42,18 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1949;PLACA MAE BRAZILPC A520 AM4 ULTRA;placa mãe;555,00;1;Placa-mãe chipset A520 socket AM4;BrazilPC;nao;placa-mae-brazilpc-a520.webp
 1950;PLACA MAE BRAZILPC H510 1200 DDR4;placa mãe;605,00;1;Placa-mãe H510 socket LGA1200 DDR4;BrazilPC;nao;placa-mae-brazilpc-h510.webp
 1659;CAIXA DE SOM JBL BOOMBOX 3 BLACK;audio;3102,45;1;Caixa de som bluetooth JBL Boombox 3 IPX7;JBL;nao;jbl-boombox-3-black.webp
-1967;KVM 2 PORTAS SWITCH USB;redes;155,00;1;Switch KVM USB com 2 portas;Generico;nao;kvm-2-portas-usb.webp
+1967;KVM 2 PORTAS SWITCH USB;Redes;155,00;1;Switch KVM USB com 2 portas;Generico;nao;kvm-2-portas-usb.webp
 1499;SPLITTER HDMI 8 PORTAS KNUK PK-SW100;acessorios;180,00;1;Splitter HDMI com 8 portas;Knuk;nao;splitter-hdmi-8-portas.webp
 1951;CABO DE REDE CAT6 305M LAN MAX;cabos;860,00;1;Cabo de rede CAT6 caixa 305 metros;Lan Max;nao;cabo-rede-cat6-305m-lanmax.webp
 1948;CABO DE REDE CAT6 100M AZUL MPT;cabos;261,00;1;Cabo de rede CAT6 azul caixa 100 metros;MPT;nao;cabo-rede-cat6-100m-mpt.webp
 1592;CABO DE REDE CAT6 305M SOHPLUS AZUL;cabos;1333,00;1;Cabo de rede CAT6 azul caixa 305 metros;Sohplus;nao;cabo-rede-cat6-305m-sohplus.webp
-1561;SWITCH TP-LINK 16 PORTAS GIGABIT TL-SG1016;redes;640,00;1;Switch Gigabit 16 portas TP-Link;TP-Link;nao;switch-tplink-tl-sg1016.webp
-1351;SWITCH TP-LINK 24 PORTAS GIGABIT SG1024D;redes;850,00;1;Switch Gigabit 24 portas TP-Link;TP-Link;nao;switch-tplink-sg1024d.webp
-1353;SWITCH TP-LINK 8 PORTAS GIGABIT LS1008G;redes;183,00;1;Switch Gigabit 8 portas TP-Link;TP-Link;nao;switch-tplink-ls1008g.webp
-1204;SWITCH TP-LINK 5 PORTAS GIGABIT LS1005G;redes;115,00;1;Switch Gigabit 5 portas TP-Link;TP-Link;nao;switch-tplink-ls1005g.webp
-1058;SWITCH MERCUSYS 8 PORTAS GIGABIT MS108G;redes;115,00;1;Switch Gigabit 8 portas Mercusys;Mercusys;nao;switch-mercusys-ms108g.webp
-1059;SWITCH MERCUSYS 5 PORTAS GIGABIT MS105G;redes;84,30;1;Switch Gigabit 5 portas Mercusys;Mercusys;nao;switch-mercusys-ms105g.webp
-400548;KVM D-LINK 16 PORTAS USB PS2 KVM-450;redes;1655,00;1;Switch KVM 16 portas USB e PS/2;D-Link;nao;kvm-dlink-kvm450.webp
+1561;SWITCH TP-LINK 16 PORTAS GIGABIT TL-SG1016;Redes;640,00;1;Switch Gigabit 16 portas TP-Link;TP-Link;nao;switch-tplink-tl-sg1016.webp
+1351;SWITCH TP-LINK 24 PORTAS GIGABIT SG1024D;Redes;850,00;1;Switch Gigabit 24 portas TP-Link;TP-Link;nao;switch-tplink-sg1024d.webp
+1353;SWITCH TP-LINK 8 PORTAS GIGABIT LS1008G;Redes;183,00;1;Switch Gigabit 8 portas TP-Link;TP-Link;nao;switch-tplink-ls1008g.webp
+1204;SWITCH TP-LINK 5 PORTAS GIGABIT LS1005G;Redes;115,00;1;Switch Gigabit 5 portas TP-Link;TP-Link;nao;switch-tplink-ls1005g.webp
+1058;SWITCH MERCUSYS 8 PORTAS GIGABIT MS108G;Redes;115,00;1;Switch Gigabit 8 portas Mercusys;Mercusys;nao;switch-mercusys-ms108g.webp
+1059;SWITCH MERCUSYS 5 PORTAS GIGABIT MS105G;Redes;84,30;1;Switch Gigabit 5 portas Mercusys;Mercusys;nao;switch-mercusys-ms105g.webp
+400548;KVM D-LINK 16 PORTAS USB PS2 KVM-450;Redes;1655,00;1;Switch KVM 16 portas USB e PS/2;D-Link;nao;kvm-dlink-kvm450.webp
 1823;CABO CONSOLE USB RJ45;cabos;70,00;1;Cabo console USB para RJ45;Generico;nao;cabo-console-usb-rj45.webp
 1631;WEB CAMERA USB FULL HD 1080P;webcam;78,00;1;Webcam USB resolução Full HD 1080p;Generico;nao;webcam-usb-fullhd.webp
 401767;WEBCAM LED 1.5MP USB COM MICROFONE;webcam;145,00;1;Webcam USB 1.5MP com microfone;BrazilPC;nao;webcam-led-15mp-brazilpc.webp
@@ -95,10 +95,10 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 400936;MOUSE MULTILASER SEM FIO PRETO MO307;mouse;45,00;2;Mouse Multilaser sem fio MO307 preto;Multilaser;nao;mouse-multilaser-mo307-v2.webp
 1938;MOUSE MULTILASER SEM FIO RECARREGAVEL 2.4 GHZ MO277;mouse;75,00;1;Mouse Multilaser recarregável MO277 2.4GHz;Multilaser;nao;mouse-multilaser-mo277-v2.webp
 1938;MOUSE MULTILASER S/FIO BLUETOOTH M5750 MO403;mouse;90,00;1;Mouse Multilaser Bluetooth M5750 MO403;Multilaser;nao;mouse-multilaser-mo403-v2.webp
-1562;UBIQUITI AP UNIFI AC U6-PRO 4X4 S/FONTE;access-point;1775,00;1;Access Point UniFi AC U6-Pro 4x4 sem fonte;Ubiquiti;nao;ap-ubiquiti-u6pro.webp
-1072;UBIQUITI AP UNIFI UAP-AC-LITE-BR;access-point;890,00;1;accessAccess Point UniFi UAP-AC-Lite;Ubiquiti;nao;ap-ubiquiti-uap-ac-lite.webp
-1559;REPETIDOR WIRELES TP LINK DUAL BAND AC750 RE200;repetidor;189,00;1;Repetidor Dual Band AC750 RE200;TP-Link;nao;repetidor-tplink-re200.webp
-1557;ADAPTADOR USB WIRELESS TX20U PLUS TP-LINK WI-FI 6;adaptador;225,00;1;Adaptador USB TX20U Plus WiFi 6;TP-Link;nao;adaptador-tplink-tx20u-plus.webp
+1562;UBIQUITI AP UNIFI AC U6-PRO 4X4 S/FONTE;Redes;1775,00;1;Access Point UniFi AC U6-Pro 4x4 sem fonte;Ubiquiti;nao;ap-ubiquiti-u6pro.webp
+1072;UBIQUITI AP UNIFI UAP-AC-LITE-BR;Redes;890,00;1;accessAccess Point UniFi UAP-AC-Lite;Ubiquiti;nao;ap-ubiquiti-uap-ac-lite.webp
+1559;REPETIDOR WIRELES TP LINK DUAL BAND AC750 RE200;Redes;189,00;1;Repetidor Dual Band AC750 RE200;TP-Link;nao;repetidor-tplink-re200.webp
+1557;ADAPTADOR USB WIRELESS TX20U PLUS TP-LINK WI-FI 6;Redes;225,00;1;Adaptador USB TX20U Plus WiFi 6;TP-Link;nao;adaptador-tplink-tx20u-plus.webp
 1617;MONITOR 21.5 GBT LED HDMI E VGA GBT-M218;monitor;312,00;1;Monitor 21.5 GBT-M218 HDMI VGA;GBT;nao;monitor-gbt-215-hdmi-vga-m218.webp
 1618;MONITOR 23.5 GBT LED HDMI VGA GBT-M218;monitor;410,88;1;Monitor 23.5 GBT-M218 HDMI VGA;GBT;nao;monitor-gbt-235-hdmi-vga-m218.webp
 1932;MONITOR 32 SAMSUNG GAMER QHD LS32CG55 ODYSSEY;monitor;1650,00;1;Monitor gamer 32 QHD LS32CG55 Odyssey;Samsung;nao;monitor-samsung-32-gamer-qhd-odyssey.webp
