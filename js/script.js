@@ -518,12 +518,13 @@ function populateNavigationMenus() {
   const categoryNames = Object.keys(categories).sort();
   
   // Gerar HTML para as categorias (exceto as especiais)
-  function generateCategoryButtons(closeMenu = false) {
+  function generateCategoryButtons(closeMenu = false, isDesktop = false) {
     let html = '';
     for (let i = 0; i < categoryNames.length; i++) {
       const category = categoryNames[i];
       const displayName = category.charAt(0).toUpperCase() + category.slice(1);
       const closeMenuAction = closeMenu ? '; toggleMobileMenu()' : '';
+      const buttonClass = isDesktop ? 'nav-tab' : 'mobile-nav-tab';
       
       // Mapear categorias para ícones apropriados
       const iconMap = {
@@ -551,7 +552,7 @@ function populateNavigationMenus() {
       const icon = iconMap[category] || '<rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>';
       
       html += `
-        <button type="button" class="mobile-nav-tab" data-target="${category}" onclick="showCategory('${category}')${closeMenuAction}">
+        <button type="button" class="${buttonClass}" data-target="${category}" onclick="showCategory('${category}')${closeMenuAction}">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             ${icon}
           </svg>
@@ -583,7 +584,7 @@ function populateNavigationMenus() {
       </button>
     `;
     
-    navTabs.innerHTML = staticHTML + generateCategoryButtons(false);
+    navTabs.innerHTML = staticHTML + generateCategoryButtons(false, true);
   }
   
   // Atualizar menu mobile (mobile-nav-tabs)
