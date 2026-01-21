@@ -193,13 +193,14 @@
 .nav-tabs {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   padding: 0 20px;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  flex-wrap: nowrap;
 }
 
 .nav-tabs::-webkit-scrollbar {
@@ -207,7 +208,7 @@
 }
 
 .nav-tab {
-  padding: 12px 16px;
+  padding: 10px 12px;
   background: transparent;
   border: none;
   border-bottom: 3px solid transparent;
@@ -216,7 +217,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .nav-tab:hover {
