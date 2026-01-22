@@ -577,6 +577,42 @@
   </div>
 </div>
 
+<!-- Modal de Editar Perfil -->
+<div class="edit-profile-modal-overlay" id="editProfileModalOverlay" onclick="closeEditProfileModal()">
+  <div class="edit-profile-modal" onclick="event.stopPropagation()">
+    <div class="edit-profile-modal-header">
+      <h3>Editar Perfil</h3>
+      <button class="edit-profile-modal-close" onclick="closeEditProfileModal()" aria-label="Fechar edição">×</button>
+    </div>
+    <div class="edit-profile-modal-content">
+      <form id="editProfileForm" onsubmit="saveProfileChanges(event)">
+        <div class="form-group">
+          <label for="editNome">Nome Completo</label>
+          <input type="text" id="editNome" name="nome" required placeholder="Seu nome completo">
+          <div class="error-message" id="editNomeError"></div>
+        </div>
+        
+        <div class="form-group">
+          <label for="editEmail">E-mail</label>
+          <input type="email" id="editEmail" name="email" required placeholder="seu@email.com">
+          <div class="error-message" id="editEmailError"></div>
+        </div>
+        
+        <div class="form-group">
+          <label for="editTelefone">Telefone (opcional)</label>
+          <input type="tel" id="editTelefone" name="telefone" placeholder="(61) 99999-9999">
+          <div class="error-message" id="editTelefoneError"></div>
+        </div>
+        
+        <div class="edit-profile-actions">
+          <button type="button" class="cancel-edit-btn" onclick="closeEditProfileModal()">Cancelar</button>
+          <button type="submit" class="save-edit-btn">Salvar Alterações</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!-- Modal de Meus Produtos -->
 <div class="products-modal-overlay" id="productsModalOverlay" onclick="closeProductsModal()">
   <div class="products-modal" onclick="event.stopPropagation()">

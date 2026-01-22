@@ -486,7 +486,7 @@
   {
     "codigo": "1499",
     "nome": "SPLITTER HDMI 8 PORTAS KNUK PK-SW100",
-    "categoria": "acessorios",
+    "categoria": "Redes",
     "preco": 180,
     "qt": 1,
     "descricao": "Splitter HDMI com 8 portas",
@@ -497,7 +497,7 @@
   {
     "codigo": "1951",
     "nome": "CABO DE REDE CAT6 305M LAN MAX",
-    "categoria": "cabos",
+    "categoria": "Redes",
     "preco": 860,
     "qt": 1,
     "descricao": "Cabo de rede CAT6 caixa 305 metros",
@@ -508,7 +508,7 @@
   {
     "codigo": "1948",
     "nome": "CABO DE REDE CAT6 100M AZUL MPT",
-    "categoria": "cabos",
+    "categoria": "Redes",
     "preco": 261,
     "qt": 1,
     "descricao": "Cabo de rede CAT6 azul caixa 100 metros",
@@ -519,7 +519,7 @@
   {
     "codigo": "1592",
     "nome": "CABO DE REDE CAT6 305M SOHPLUS AZUL",
-    "categoria": "cabos",
+    "categoria": "Redes",
     "preco": 1333,
     "qt": 1,
     "descricao": "Cabo de rede CAT6 azul caixa 305 metros",
@@ -607,7 +607,7 @@
   {
     "codigo": "1823",
     "nome": "CABO CONSOLE USB RJ45",
-    "categoria": "cabos",
+    "categoria": "Redes",
     "preco": 70,
     "qt": 1,
     "descricao": "Cabo console USB para RJ45",

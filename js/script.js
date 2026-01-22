@@ -4552,10 +4552,7 @@ window.testProfileModal = function() {
 };
 
 // === FUNÇÕES GLOBAIS DO MODAL DE PERFIL ===
-window.editProfile = function() {
-  console.log('✏️ Editar perfil');
-  alert('Funcionalidade de edição de perfil em desenvolvimento');
-};
+// Função editProfile foi movida para a seção de edição de perfil (linha 4577)
 
 window.viewSettings = function() {
   console.log('⚙️ Ver configurações');
@@ -4571,3 +4568,285 @@ document.addEventListener('keydown', function(e) {
     }
   }
 });
+
+// === FUNÇÕES DO MODAL DE EDITAR PERFIL ===
+
+function editProfile() {
+  closeProfileModal();
+  openEditProfileModal();
+}
+
+function openEditProfileModal() {
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) {
+    showNotification('Você precisa estar logado para editar o perfil', 'error');
+    return;
+  }
+  
+  // Verificar se elementos existem antes de prosseguir
+  const requiredElements = ['editNome', 'editEmail', 'editTelefone', 'editProfileModalOverlay'];
+  const missingElements = requiredElements.filter(id => !document.getElementById(id));
+  
+  if (missingElements.length > 0) {
+    console.error('Elementos necessários não encontrados:', missingElements);
+    showNotification('Erro ao abrir formulário de edição. Recarregue a página.', 'error');
+    return;
+  }
+  
+  const usuario = JSON.parse(usuarioLogado);
+  
+  // Preencher formulário com dados atuais
+  document.getElementById('editNome').value = usuario.nome || '';
+  document.getElementById('editEmail').value = usuario.email || '';
+  document.getElementById('editTelefone').value = usuario.telefone || '';
+  
+  // Limpar erros anteriores
+  clearEditProfileErrors();
+  
+  // Abrir modal
+  const overlay = document.getElementById('editProfileModalOverlay');
+  if (overlay) {
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeEditProfileModal() {
+  const overlay = document.getElementById('editProfileModalOverlay');
+  if (overlay) {
+    overlay.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+  
+  // Limpar formulário
+  document.getElementById('editProfileForm').reset();
+  clearEditProfileErrors();
+}
+
+function clearEditProfileErrors() {
+  // Limpar mensagens de erro
+  const errorElements = [
+    'editNomeError',
+    'editEmailError', 
+    'editTelefoneError'
+  ];
+  
+  errorElements.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.textContent = '';
+      element.style.display = 'none';
+    }
+  });
+  
+  // Limpar estilos de erro dos inputs
+  const inputs = ['editNome', 'editEmail', 'editTelefone'];
+  inputs.forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+      input.style.borderColor = '#e5e7eb';
+      input.classList.remove('error');
+    }
+  });
+}
+
+function showEditProfileError(fieldId, message) {
+  const input = document.getElementById(fieldId);
+  const error = document.getElementById(fieldId + 'Error');
+  
+  if (input) {
+    input.style.borderColor = '#ef4444';
+    input.classList.add('error');
+  }
+  
+  if (error) {
+    error.textContent = message;
+    error.style.display = 'block';
+  }
+}
+
+function validateEditProfileForm(nome, email, telefone) {
+  clearEditProfileErrors();
+  let isValid = true;
+  
+  // Validar nome
+  if (!nome.trim()) {
+    showEditProfileError('editNome', 'Nome é obrigatório');
+    isValid = false;
+  } else if (nome.trim().length < 3) {
+    showEditProfileError('editNome', 'Nome deve ter pelo menos 3 caracteres');
+    isValid = false;
+  }
+  
+  // Validar email
+  if (!email.trim()) {
+    showEditProfileError('editEmail', 'E-mail é obrigatório');
+    isValid = false;
+  } else if (!email.includes('@') || !email.includes('.')) {
+    showEditProfileError('editEmail', 'E-mail inválido');
+    isValid = false;
+  }
+  
+  // Validar telefone (opcional, mas se preenchido deve ser válido)
+  if (telefone.trim()) {
+    const telefoneRegex = /^(\d{10,11}|\(\d{2}\)\s?\d{4,5}-?\d{4})$/;
+    if (!telefoneRegex.test(telefone.replace(/\D/g, ''))) {
+      showEditProfileError('editTelefone', 'Telefone inválido');
+      isValid = false;
+    }
+  }
+  
+  return isValid;
+}
+
+function saveProfileChanges(event) {
+  event.preventDefault();
+  
+  const formData = new FormData(event.target);
+  const nome = formData.get('nome');
+  const email = formData.get('email');
+  const telefone = formData.get('telefone');
+  
+  if (!validateEditProfileForm(nome, email, telefone)) {
+    return;
+  }
+  
+  // Obter usuário atual
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) {
+    showNotification('Sessão expirada. Faça login novamente.', 'error');
+    closeEditProfileModal();
+    return;
+  }
+  
+  const usuario = JSON.parse(usuarioLogado);
+  
+  // Verificar se email mudou e se já existe
+  if (email !== usuario.email) {
+    const users = JSON.parse(localStorage.getItem('usuarios') || '[]');
+    const emailExists = users.find(user => 
+      user.email === email.toLowerCase() && user.id !== usuario.id
+    );
+    
+    if (emailExists) {
+      showEditProfileError('editEmail', 'Este e-mail já está em uso por outra conta');
+      return;
+    }
+  }
+  
+  // Atualizar dados do usuário
+  const updatedUser = {
+    ...usuario,
+    nome: nome.trim(),
+    email: email.toLowerCase().trim(),
+    telefone: telefone.trim(),
+    dataAtualizacao: new Date().toISOString()
+  };
+  
+  // Salvar no localStorage
+  localStorage.setItem('usuarioLogado', JSON.stringify(updatedUser));
+  
+  // Atualizar na lista de usuários
+  const users = JSON.parse(localStorage.getItem('usuarios') || '[]');
+  const userIndex = users.findIndex(user => user.id === usuario.id);
+  
+  if (userIndex !== -1) {
+    users[userIndex] = updatedUser;
+    localStorage.setItem('usuarios', JSON.stringify(users));
+  }
+  
+  // Mostrar sucesso
+  showNotification('Perfil atualizado com sucesso!', 'success');
+  
+  // Fechar modal
+  closeEditProfileModal();
+  
+  // Atualizar interface
+  updateProfileModalInfo();
+  updateProfileDropdown();
+  updateProfileButton();
+  
+  // Se houver ProfileMenuManager, atualizar também
+  if (window.profileMenuManager) {
+    window.profileMenuManager.currentUser = updatedUser;
+    window.profileMenuManager.updateProfileInfo();
+  }
+}
+
+function updateProfileDropdown() {
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) return;
+  
+  const usuario = JSON.parse(usuarioLogado);
+  
+  // Atualizar nome no dropdown
+  const profileName = document.getElementById('profileName');
+  if (profileName) {
+    profileName.textContent = usuario.nome;
+  }
+  
+  const profileNameModal = document.getElementById('profileNameModal');
+  if (profileNameModal) {
+    profileNameModal.textContent = usuario.nome;
+  }
+  
+  // Atualizar email
+  const profileEmail = document.getElementById('profileEmail');
+  if (profileEmail) {
+    profileEmail.textContent = usuario.email;
+  }
+  
+  const profileEmailModal = document.getElementById('profileEmailModal');
+  if (profileEmailModal) {
+    profileEmailModal.textContent = usuario.email;
+  }
+  
+  // Atualizar iniciais
+  const initial = usuario.nome.charAt(0).toUpperCase();
+  const profileInitial = document.querySelector('.profile-initial');
+  if (profileInitial) {
+    profileInitial.textContent = initial;
+  }
+  
+  const profileInitialLarge = document.querySelector('.profile-initial-large');
+  if (profileInitialLarge) {
+    profileInitialLarge.textContent = initial;
+  }
+  
+  const profileInitialLargeModal = document.querySelector('.profile-initial-large-modal');
+  if (profileInitialLargeModal) {
+    profileInitialLargeModal.textContent = initial;
+  }
+}
+
+function updateProfileButton() {
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) return;
+  
+  const usuario = JSON.parse(usuarioLogado);
+  
+  // Atualizar botão de perfil se existir
+  const profileBtn = document.getElementById('profileBtn');
+  if (profileBtn) {
+    const avatar = profileBtn.querySelector('.profile-initial');
+    if (avatar) {
+      avatar.textContent = usuario.nome.charAt(0).toUpperCase();
+    }
+  }
+}
+
+// Fechar modal com ESC
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('editProfileModalOverlay');
+    if (modal && modal.classList.contains('active')) {
+      closeEditProfileModal();
+    }
+  }
+});
+
+// Adicionar funções ao escopo global
+window.editProfile = editProfile;
+window.openEditProfileModal = openEditProfileModal;
+window.closeEditProfileModal = closeEditProfileModal;
+window.saveProfileChanges = saveProfileChanges;
