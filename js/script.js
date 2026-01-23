@@ -327,9 +327,12 @@ function loadProducts() {
   return fetch('data/products.json')
     .then(function(response) {
       console.log('📁 JSON response status:', response.status);
+      console.log('📁 JSON response URL:', response.url);
+      
       if (!response.ok) {
-        throw new Error('Erro ao carregar arquivo JSON: ' + response.statusText);
+        throw new Error('Erro ao carregar produtos: ' + response.status);
       }
+      
       return response.json();
     })
     .then(function(jsonData) {
@@ -5917,4 +5920,4 @@ document.addEventListener('keydown', function(e) {
 window.editProfile = editProfile;
 window.openEditProfileModal = openEditProfileModal;
 window.closeEditProfileModal = closeEditProfileModal;
-window.saveProfileChanges = saveProfileChanges;
+window.saveProfileChanges = saveProfileChanges;;
