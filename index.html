@@ -1238,23 +1238,23 @@
     <script src="js/common.js"></script>
     <script src="js/script.js"></script>
     
-    <!-- Firebase Scripts (carregados após o site principal) -->
+    <!-- Firebase Scripts (Compat Mode - carregados após o site) -->
     <script>
         // Carregar Firebase apenas após o site estar pronto
         window.addEventListener('load', function() {
             console.log('🚀 Carregando Firebase...');
             
-            // Carregar Firebase dinamicamente
+            // Carregar Firebase versão compat (não modular)
             const firebaseApp = document.createElement('script');
-            firebaseApp.src = 'https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js';
+            firebaseApp.src = 'https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js';
             document.head.appendChild(firebaseApp);
             
             const firebaseFirestore = document.createElement('script');
-            firebaseFirestore.src = 'https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js';
+            firebaseFirestore.src = 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js';
             document.head.appendChild(firebaseFirestore);
             
             const firebaseAnalytics = document.createElement('script');
-            firebaseAnalytics.src = 'https://www.gstatic.com/firebasejs/12.8.0/firebase-analytics.js';
+            firebaseAnalytics.src = 'https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics-compat.js';
             document.head.appendChild(firebaseAnalytics);
             
             // Carregar configuração após os SDKs
@@ -1266,6 +1266,8 @@
                 const orders = document.createElement('script');
                 orders.src = 'js/firebase-orders.js';
                 document.head.appendChild(orders);
+                
+                console.log('🔥 Firebase carregado com sucesso!');
             }, 1000);
         });
     </script>

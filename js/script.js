@@ -5920,4 +5920,4 @@ document.addEventListener('keydown', function(e) {
 window.editProfile = editProfile;
 window.openEditProfileModal = openEditProfileModal;
 window.closeEditProfileModal = closeEditProfileModal;
-window.saveProfileChanges = saveProfileChanges;;
+window.saveProfileChanges = saveProfileChanges;
