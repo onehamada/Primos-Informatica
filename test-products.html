@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Produtos - Primos Informática</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .product { border: 1px solid #ddd; margin: 10px; padding: 10px; }
+        .error { color: red; background: #ffe6e6; padding: 10px; margin: 10px 0; }
+        .success { color: green; background: #e6ffe6; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste de Carregamento de Produtos</h1>
+    
+    <div id="status">
+        <div class="error">⚠️ Testando carregamento...</div>
+    </div>
+    
+    <div id="products">
+        <p>Carregando produtos...</p>
+    </div>
+
+    <script>
+        console.log('🚀 Iniciando teste de produtos...');
+        
+        // Teste 1: Verificar se o arquivo JSON existe
+        fetch('data/products.json')
+            .then(response => {
+                console.log('📁 Response status:', response.status);
+                console.log('📁 Response ok:', response.ok);
+                
+                if (!response.ok) {
+                    throw new Error('Erro HTTP: ' + response.status);
+                }
+                
+                return response.json();
+            })
+            .then(data => {
+                console.log('📄 JSON carregado:', data.length, 'produtos');
+                
+                const statusDiv = document.getElementById('status');
+                statusDiv.innerHTML = '<div class="success">✅ Sucesso! ' + data.length + ' produtos carregados</div>';
+                
+                const productsDiv = document.getElementById('products');
+                productsDiv.innerHTML = '<h2>📦 Produtos (' + data.length + ')</h2>';
+                
+                // Mostrar primeiros 10 produtos
+                const limit = Math.min(10, data.length);
+                for (let i = 0; i < limit; i++) {
+                    const product = data[i];
+                    productsDiv.innerHTML += `
+                        <div class="product">
+                            <strong>${product.nome}</strong><br>
+                            Código: ${product.codigo}<br>
+                            Preço: R$ ${product.preco}<br>
+                            Categoria: ${product.categoria}
+                        </div>
+                    `;
+                }
+                
+                if (data.length > 10) {
+                    productsDiv.innerHTML += '<p><em>... e mais ' + (data.length - 10) + ' produtos</em></p>';
+                }
+            })
+            .catch(error => {
+                console.error('❌ Erro:', error);
+                
+                const statusDiv = document.getElementById('status');
+                statusDiv.innerHTML = '<div class="error">❌ Erro: ' + error.message + '</div>';
+                
+                const productsDiv = document.getElementById('products');
+                productsDiv.innerHTML = '<p>Não foi possível carregar os produtos.</p>';
+            });
+    </script>
+</body>
+</html>
