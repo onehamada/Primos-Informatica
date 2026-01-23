@@ -1,30 +1,37 @@
-// Sistema de Pedidos com Firebase (Modular)
-import { 
-  collection, 
-  addDoc, 
-  getDocs, 
-  query, 
-  where, 
-  orderBy, 
-  updateDoc, 
-  doc, 
-  serverTimestamp,
-  onSnapshot 
-} from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
-
+// Sistema de Pedidos com Firebase (Compat Mode)
 class FirebaseOrders {
   constructor() {
-    this.db = window.firebaseDB;
+    this.db = null;
     this.ordersCollection = 'orders';
+    
+    // Aguardar Firebase estar disponível
+    this.waitForFirebase();
+  }
+  
+  waitForFirebase() {
+    const checkDB = () => {
+      if (window.firebaseDB) {
+        this.db = window.firebaseDB;
+        console.log('🔥 FirebaseOrders conectado ao banco de dados');
+      } else {
+        setTimeout(checkDB, 100);
+      }
+    };
+    checkDB();
   }
 
   // Salvar pedido no Firebase
   async saveOrder(orderData) {
+    if (!this.db) {
+      console.error('❌ Firebase não está disponível');
+      return { success: false, error: 'Firebase não disponível' };
+    }
+    
     try {
-      const orderRef = await addDoc(collection(this.db, this.ordersCollection), {
+      const orderRef = await this.db.collection(this.ordersCollection).add({
         ...orderData,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       });
       
       console.log('✅ Pedido salvo no Firebase:', orderRef.id);
@@ -37,13 +44,16 @@ class FirebaseOrders {
 
   // Buscar todos os pedidos (para admin)
   async getAllOrders() {
+    if (!this.db) {
+      console.error('❌ Firebase não está disponível');
+      return { success: false, error: 'Firebase não disponível' };
+    }
+    
     try {
-      const q = query(
-        collection(this.db, this.ordersCollection),
-        orderBy('createdAt', 'desc')
-      );
-      
-      const snapshot = await getDocs(q);
+      const snapshot = await this.db
+        .collection(this.ordersCollection)
+        .orderBy('createdAt', 'desc')
+        .get();
       
       const orders = [];
       snapshot.forEach(doc => {
@@ -63,14 +73,17 @@ class FirebaseOrders {
 
   // Buscar pedidos de um usuário específico
   async getUserOrders(userEmail) {
+    if (!this.db) {
+      console.error('❌ Firebase não está disponível');
+      return { success: false, error: 'Firebase não disponível' };
+    }
+    
     try {
-      const q = query(
-        collection(this.db, this.ordersCollection),
-        where('email', '==', userEmail),
-        orderBy('createdAt', 'desc')
-      );
-      
-      const snapshot = await getDocs(q);
+      const snapshot = await this.db
+        .collection(this.ordersCollection)
+        .where('email', '==', userEmail)
+        .orderBy('createdAt', 'desc')
+        .get();
       
       const orders = [];
       snapshot.forEach(doc => {
@@ -90,11 +103,15 @@ class FirebaseOrders {
 
   // Atualizar status do pedido
   async updateOrderStatus(orderId, status) {
+    if (!this.db) {
+      console.error('❌ Firebase não está disponível');
+      return { success: false, error: 'Firebase não disponível' };
+    }
+    
     try {
-      const orderRef = doc(this.db, this.ordersCollection, orderId);
-      await updateDoc(orderRef, {
+      await this.db.collection(this.ordersCollection).doc(orderId).update({
         status: status,
-        updatedAt: serverTimestamp()
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       });
       
       console.log('✅ Status atualizado:', orderId, status);
@@ -107,21 +124,24 @@ class FirebaseOrders {
 
   // Listener em tempo real para novos pedidos (admin)
   onNewOrder(callback) {
-    const q = query(
-      collection(this.db, this.ordersCollection),
-      orderBy('createdAt', 'desc')
-    );
+    if (!this.db) {
+      console.error('❌ Firebase não está disponível');
+      return null;
+    }
     
-    return onSnapshot(q, (snapshot) => {
-      const orders = [];
-      snapshot.forEach(doc => {
-        orders.push({
-          id: doc.id,
-          ...doc.data()
+    return this.db
+      .collection(this.ordersCollection)
+      .orderBy('createdAt', 'desc')
+      .onSnapshot((snapshot) => {
+        const orders = [];
+        snapshot.forEach(doc => {
+          orders.push({
+            id: doc.id,
+            ...doc.data()
+          });
         });
+        callback(orders);
       });
-      callback(orders);
-    });
   }
 }
 
@@ -130,5 +150,3 @@ const firebaseOrders = new FirebaseOrders();
 
 // Exportar para uso global
 window.firebaseOrders = firebaseOrders;
-
-export { firebaseOrders };

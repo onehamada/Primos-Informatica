@@ -1,9 +1,4 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-analytics.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
-
-// Your web app's Firebase configuration
+// Configuração do Firebase (Compat Mode)
 const firebaseConfig = {
   apiKey: "AIzaSyAvJUdjnY7xjnlTSYJAQZ6safylKXKlzLc",
   authDomain: "primos-informatica-ecommerce.firebaseapp.com",
@@ -14,14 +9,28 @@ const firebaseConfig = {
   measurementId: "G-J6KVL50YGQ"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const db = getFirestore(app);
+// Aguardar Firebase estar disponível
+function initializeFirebase() {
+  if (typeof firebase !== 'undefined') {
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    
+    // Exportar para uso global
+    window.firebaseDB = db;
+    window.firebaseApp = firebase.app();
+    
+    console.log('🔥 Firebase inicializado com sucesso!');
+    return true;
+  }
+  return false;
+}
 
-// Exportar para uso global
-window.firebaseApp = app;
-window.firebaseDB = db;
-window.firebaseAnalytics = analytics;
-
-console.log('🔥 Firebase inicializado com sucesso!');
+// Tentar inicializar imediatamente ou aguardar
+if (!initializeFirebase()) {
+  // Se Firebase não estiver disponível, aguardar
+  const checkFirebase = setInterval(() => {
+    if (initializeFirebase()) {
+      clearInterval(checkFirebase);
+    }
+  }, 100);
+}
