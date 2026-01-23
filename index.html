@@ -363,9 +363,9 @@
     <div class="header-container">
       <!-- Logo e Nome -->
       <div class="header-brand">
-        <img src="images/logo.png" alt="Primos Informática" onclick="showCategory('inicio')" />
+        <img src="images/logo.png" alt="Primos Informática" onclick="goToHomePage()" />
         <div class="brand-info">
-          <h1 onclick="showCategory('inicio')">Primos Informática</h1>
+          <h1 onclick="goToHomePage()">Primos Informática</h1>
           <span class="brand-tagline">Hardware em Brasília</span>
         </div>
       </div>
@@ -464,7 +464,7 @@
       <span>Meu Perfil</span>
     </button>
     
-    <button class="profile-menu-item" id="myOrdersBtn" type="button">
+    <button class="profile-menu-item" id="myOrdersBtn" type="button" onclick="viewOrders()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M9 11H3v10h6V11z"></path>
         <path d="M15 3H9v18h6V3z"></path>
@@ -547,7 +547,7 @@
           </svg>
           Meus Pedidos
         </button>
-        
+                
         <button class="profile-action-btn" id="profileMyProductsBtn" onclick="viewMyProducts()" style="display: none;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 7h-9"></path>
@@ -656,52 +656,6 @@
   </div>
 </div>
 
-<!-- Modal de Meus Pedidos -->
-<div class="orders-modal-overlay" id="ordersModalOverlay" onclick="closeOrdersModal()">
-  <div class="orders-modal" onclick="event.stopPropagation()">
-    <div class="orders-modal-header">
-      <h3>Meus Pedidos</h3>
-      <button class="orders-modal-close" onclick="closeOrdersModal()" aria-label="Fechar pedidos">×</button>
-    </div>
-    <div class="orders-modal-content">
-      <!-- Filtros de Status -->
-      <div class="orders-filters">
-        <button class="filter-btn active" data-status="todos" onclick="filterOrders('todos')">
-          Todos
-        </button>
-        <button class="filter-btn" data-status="pendente" onclick="filterOrders('pendente')">
-          <span class="status-indicator pending"></span>
-          Aguardando
-        </button>
-        <button class="filter-btn" data-status="confirmado" onclick="filterOrders('confirmado')">
-          <span class="status-indicator confirmed"></span>
-          Confirmados
-        </button>
-        <button class="filter-btn" data-status="entregue" onclick="filterOrders('entregue')">
-          <span class="status-indicator delivered"></span>
-          Entregues
-        </button>
-      </div>
-
-      <!-- Lista de Pedidos -->
-      <div class="orders-list" id="ordersList">
-        <!-- Pedidos serão inseridos aqui dinamicamente -->
-      </div>
-
-      <!-- Empty State -->
-      <div class="empty-state" id="ordersEmptyState" style="display: none;">
-        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M9 11H3v10h6V11z"></path>
-          <path d="M15 3H9v18h6V3z"></path>
-          <path d="M21 7h-6v14h6V7z"></path>
-        </svg>
-        <h4>Nenhum pedido encontrado</h4>
-        <p>Você ainda não fez nenhum pedido.</p>
-        <button class="btn-primary" onclick="closeOrdersModal(); showCategory('todos')">Ver Produtos</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Modal de Configurações -->
 <div class="settings-modal-overlay" id="settingsModalOverlay" onclick="closeSettingsModal()">
@@ -930,7 +884,7 @@
       <div class="cart-total">
         <span>Total: <strong id="cartTotal">R$ 0,00</strong></span>
       </div>
-      <button class="btn-primary" onclick="showCheckoutOptions()">Finalizar Pedido</button>
+      <button class="btn-primary" onclick="navigateToCheckout()">Finalizar Pedido</button>
       <button class="btn-outline" onclick="clearCart()">Esvaziar Carrinho</button>
     </div>
   </div>

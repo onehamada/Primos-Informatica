@@ -62,6 +62,9 @@ window.addEventListener('load', forceScrollToTop);
 
 // === FUNÇÃO PRINCIPAL - CATEGORIAS ===
 function showCategory(category) {
+  // Resetar navegação antes de mostrar categoria
+  resetNavigation();
+  
   // Limpar observer anterior
   if (window.currentObserver) {
     window.currentObserver.disconnect();
@@ -1259,7 +1262,7 @@ function createProductCard(product) {
 }
 
 // === CARRINHO ===
-let cart = [];
+window.cart = [];
 
 function toggleCart() {
   const cartSidebar = document.getElementById('cartSidebar');
@@ -1303,6 +1306,16 @@ function updateCartDisplay() {
   let total = 0;
   let itemCount = 0;
   
+  // Usar carrinho global ou localStorage
+  const cart = window.cart || JSON.parse(localStorage.getItem('cart') || '[]');
+  
+  // Salvar carrinho no localStorage
+  localStorage.setItem('cart', JSON.stringify(cart));
+  
+  console.log('🛒 Atualizando display do carrinho...');
+  console.log('📦 Conteúdo do carrinho:', cart);
+  console.log('📊 Quantidade de itens:', cart.length);
+  
   if (cart.length === 0) {
     cartItems.innerHTML = '<p style="text-align: center; padding: 20px; color: #666;">Seu carrinho está vazio</p>';
   } else {
@@ -1340,20 +1353,26 @@ function updateCartDisplay() {
   
   cartCount.textContent = itemCount;
   cartTotal.textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+  
+  console.log(`💰 Total do carrinho: R$ ${total.toFixed(2)}`);
+  console.log(`📊 Contador de itens: ${itemCount}`);
 }
 
 function removeFromCart(productCode) {
-  cart = cart.filter(item => item.codigo !== productCode);
+  window.cart = window.cart.filter(item => item.codigo !== productCode);
   updateCartDisplay();
 }
 
 function clearCart() {
-  cart = [];
+  // Limpar carrinho global e localStorage
+  window.cart = [];
+  localStorage.removeItem('cart');
   updateCartDisplay();
 }
 
 // === FUNÇÕES DE CHECKOUT ===
 function showCheckoutOptions() {
+  const cart = window.cart || JSON.parse(localStorage.getItem('cart') || '[]');
   if (cart.length === 0) {
     alert('Seu carrinho está vazio! Adicione produtos para continuar.');
     return;
@@ -1544,12 +1563,24 @@ function addToCart(productCode) {
   const cartBtn = document.querySelector('.cart-btn');
   const clickedButton = event.target;
   
+  console.log('🛒 Adicionando produto ao carrinho...');
+  console.log('📦 Código do produto:', productCode);
+  console.log('📊 Carrinho antes de adicionar:', window.cart);
+  
+  // Inicializar carrinho global se não existir
+  if (!window.cart) {
+    window.cart = [];
+  }
+  
   for (let i = 0; i < allProducts.length; i++) {
     if (allProducts[i].codigo === productCode) {
-      cart.push({
+      window.cart.push({
         ...allProducts[i],
         quantity: 1
       });
+      
+      console.log('✅ Produto adicionado:', allProducts[i].nome);
+      console.log('📊 Carrinho após adicionar:', window.cart);
       
       // Animação no botão clicado
       clickedButton.classList.remove('adding', 'added');
@@ -2647,15 +2678,1239 @@ function viewMyProducts() {
   openProductsModal();
 }
 
-function viewMyReviews() {
-  closeUserMenu();
-  openReviewsModal();
+// === FUNÇÕES DO CHECKOUT ===
+function loadCheckoutSummary() {
+  const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+  const itemsContainer = document.getElementById('checkout-items');
+  const subtotalElement = document.getElementById('checkout-subtotal');
+  const totalElement = document.getElementById('checkout-total');
+  
+  console.log('🛒 Carregando resumo do checkout...');
+  console.log('📦 Carrinho encontrado:', cart);
+  console.log('📊 Quantidade de itens:', cart.length);
+  
+  if (!itemsContainer || !subtotalElement || !totalElement) {
+    console.log('❌ Elementos do checkout não encontrados');
+    return;
+  }
+  
+  // Limpar items
+  itemsContainer.innerHTML = '';
+  
+  // Verificar se o carrinho está vazio
+  if (cart.length === 0) {
+    console.log('❌ Carrinho está vazio, mostrando mensagem');
+    itemsContainer.innerHTML = `
+      <div style="text-align: center; padding: 40px; color: #6b7280;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 16px auto; opacity: 0.5;">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <h3 style="margin: 0 0 8px 0; font-size: 16px; color: #374151;">Seu carrinho está vazio</h3>
+        <p style="margin: 0; font-size: 14px;">Adicione produtos para continuar</p>
+      </div>
+    `;
+    
+    // Resetar valores
+    subtotalElement.textContent = 'R$ 0,00';
+    totalElement.textContent = 'R$ 0,00';
+    window.checkoutSubtotal = 0;
+    
+    // Desabilitar botão de finalizar
+    const submitButton = document.querySelector('#checkout-form button[type="submit"]');
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.style.opacity = '0.5';
+      submitButton.style.cursor = 'not-allowed';
+      submitButton.textContent = 'Carrinho Vazio';
+    }
+    
+    return;
+  }
+  
+  console.log('✅ Carrinho tem itens, processando...');
+  
+  // Habilitar botão de finalizar
+  const submitButton = document.querySelector('#checkout-form button[type="submit"]');
+  if (submitButton) {
+    submitButton.disabled = false;
+    submitButton.style.opacity = '1';
+    submitButton.style.cursor = 'pointer';
+    submitButton.textContent = 'Finalizar Pedido';
+  }
+  
+  let subtotal = 0;
+  
+  // Adicionar items ao resumo
+  cart.forEach((item, index) => {
+    // Corrigir tratamento de preço para preservar centavos
+    const priceString = (item.preco || '0').toString().replace(',', '.');
+    const price = parseFloat(priceString);
+    const quantity = item.quantidade || item.quantity || 1;
+    const itemTotal = price * quantity;
+    subtotal += itemTotal;
+    
+    console.log(`📋 Item ${index + 1}: ${item.nome} - Qtd: ${quantity} - Preço: R$ ${price.toFixed(2)} - Total: R$ ${itemTotal.toFixed(2)}`);
+    
+    const itemElement = document.createElement('div');
+    itemElement.style.cssText = `
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f3f4f6;
+    `;
+    itemElement.innerHTML = `
+      <div style="flex: 1;">
+        <div style="color: #374151; font-weight: 500;">${item.nome}</div>
+        <div style="color: #6b7280; font-size: 14px;">Qtd: ${quantity}</div>
+      </div>
+      <div style="color: #374151; font-weight: 500;">R$ ${itemTotal.toFixed(2)}</div>
+    `;
+    itemsContainer.appendChild(itemElement);
+    
+    // Forçar reflow para garantir que o elemento apareça
+    console.log(`📦 Elemento do item ${index + 1} adicionado ao DOM:`, itemElement);
+  });
+  
+  // Verificar se os itens foram adicionados
+  console.log(`📊 Quantidade de elementos no container: ${itemsContainer.children.length}`);
+  console.log(`📋 Conteúdo HTML do container:`, itemsContainer.innerHTML);
+  
+  // Atualizar subtotal
+  subtotalElement.textContent = `R$ ${subtotal.toFixed(2)}`;
+  
+  // Calcular total inicial (sem frete)
+  totalElement.textContent = `R$ ${subtotal.toFixed(2)}`;
+  
+  // Salvar subtotal para cálculo do frete
+  window.checkoutSubtotal = subtotal;
+  
+  console.log(`💰 Subtotal calculado: R$ ${subtotal.toFixed(2)}`);
+}
+
+function formatCEP(input) {
+  let value = input.value.replace(/\D/g, '');
+  
+  if (value.length > 5) {
+    value = value.slice(0, 5) + '-' + value.slice(5, 8);
+  }
+  
+  input.value = value;
+}
+
+function calculateUberShipping(cep) {
+  const cleanCEP = cep.replace(/\D/g, '');
+  
+  if (cleanCEP.length !== 8) {
+    document.getElementById('checkout-shipping').textContent = 'CEP inválido';
+    document.getElementById('uber-info').style.display = 'none';
+    return;
+  }
+  
+  // Simular cálculo de distância baseado no CEP
+  // Em um projeto real, você usaria uma API de geolocalização
+  const baseCEP = '70853510'; // CEP da loja (Asa Norte, Brasília)
+  const distance = calculateDistanceByCEP(baseCEP, cleanCEP);
+  
+  // Calcular frete baseado na distância
+  const baseShipping = 8.00; // Frete base
+  const shippingPerKm = 2.50; // R$ 2,50 por km
+  const shippingCost = baseShipping + (distance * shippingPerKm);
+  
+  // Calcular tempo estimado (baseado na distância)
+  const estimatedTime = Math.max(15, Math.round(distance * 3)); // Mínimo 15 minutos
+  
+  // Atualizar interface
+  document.getElementById('checkout-shipping').textContent = `R$ ${shippingCost.toFixed(2)}`;
+  document.getElementById('uber-time').textContent = estimatedTime;
+  document.getElementById('uber-distance').textContent = distance.toFixed(1);
+  document.getElementById('uber-info').style.display = 'block';
+  
+  // Atualizar total
+  updateCheckoutTotal(shippingCost);
+  
+  // Salvar dados do frete
+  window.checkoutShipping = shippingCost;
+  window.checkoutDistance = distance;
+  window.checkoutTime = estimatedTime;
+}
+
+function calculateDistanceByCEP(cep1, cep2) {
+  // Função simplificada para calcular distância entre CEPs
+  // Em produção, use API como Google Maps ou similar
+  
+  // Prefixos dos CEPs de Brasília e região
+  const brasiliaPrefixes = ['70', '71', '72', '73'];
+  const prefix1 = cep1.substring(0, 2);
+  const prefix2 = cep2.substring(0, 2);
+  
+  // Mesma região de Brasília
+  if (brasiliaPrefixes.includes(prefix1) && brasiliaPrefixes.includes(prefix2)) {
+    // Distância baseada nos primeiros dígitos do CEP
+    const diff = Math.abs(parseInt(cep1.substring(2, 5)) - parseInt(cep2.substring(2, 5)));
+    return Math.max(2, diff / 10); // Mínimo 2km
+  }
+  
+  // Fora de Brasília (simulação)
+  return 25; // 25km fixo para fora da região
+}
+
+function updateCheckoutTotal(shippingCost = 0) {
+  const subtotal = window.checkoutSubtotal || 0;
+  const shipping = shippingCost || window.checkoutShipping || 0;
+  const discount = 0; // Sem desconto por enquanto
+  
+  const total = subtotal + shipping - discount;
+  
+  document.getElementById('checkout-total').textContent = `R$ ${total.toFixed(2)}`;
+  document.getElementById('checkout-discount').textContent = `-R$ ${discount.toFixed(2)}`;
+}
+
+function submitOrder(event) {
+  event.preventDefault();
+  
+  console.log('🛒 Enviando pedido...');
+  
+  // Coletar dados do formulário
+  const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+  console.log('📦 Carrinho no submitOrder:', cart);
+  
+  // Verificar se carrinho está vazio
+  if (cart.length === 0) {
+    alert('Seu carrinho está vazio! Não é possível finalizar o pedido.');
+    return;
+  }
+  
+  // Calcular totais corretamente
+  let subtotal = 0;
+  cart.forEach(item => {
+    const priceString = (item.preco || '0').toString().replace(',', '.');
+    const price = parseFloat(priceString);
+    const quantity = item.quantidade || item.quantity || 1;
+    subtotal += price * quantity;
+  });
+  
+  const orderData = {
+    codigo: generateOrderCode(),
+    data: new Date().toISOString(),
+    status: 'pendente',
+    cliente: {
+      nome: document.getElementById('checkout-nome').value,
+      email: document.getElementById('checkout-email').value,
+      telefone: document.getElementById('checkout-telefone').value
+    },
+    // Adicionar email direto no pedido para compatibilidade
+    email: document.getElementById('checkout-email').value,
+    usuarioEmail: document.getElementById('checkout-email').value,
+    endereco: {
+      cep: document.getElementById('checkout-cep').value,
+      rua: document.getElementById('checkout-rua').value,
+      numero: document.getElementById('checkout-numero').value,
+      complemento: document.getElementById('checkout-complemento').value,
+      bairro: document.getElementById('checkout-bairro').value,
+      cidade: document.getElementById('checkout-cidade').value,
+      estado: document.getElementById('checkout-estado').value
+    },
+    pagamento: document.querySelector('input[name="payment"]:checked').value,
+    frete: {
+      tipo: 'uber',
+      valor: window.checkoutShipping || 0,
+      distancia: window.checkoutDistance || 0,
+      tempo: window.checkoutTime || 0
+    },
+    itens: cart,
+    total: subtotal,
+    totalComFrete: subtotal + (window.checkoutShipping || 0)
+  };
+  
+  console.log('📋 Dados do pedido:', orderData);
+  
+  // Salvar pedido no localStorage
+  const orders = JSON.parse(localStorage.getItem('pedidos') || '[]');
+  console.log('📦 Pedidos antes de salvar:', orders.length);
+  orders.push(orderData);
+  localStorage.setItem('pedidos', JSON.stringify(orders));
+  console.log('💾 Pedido salvo! Total agora:', orders.length);
+  console.log('📧 Email do cliente no pedido:', orderData.cliente.email);
+  console.log('📧 Email do usuário logado:', JSON.parse(localStorage.getItem('usuarioLogado') || '{}').email);
+  
+  // Limpar carrinho
+  localStorage.removeItem('cart');
+  window.cart = []; // Limpar carrinho global
+  
+  // Atualizar display
+  updateCartDisplay();
+  
+  // Mostrar confirmação
+  showOrderConfirmation(orderData);
+  
+  console.log('✅ Pedido gerado com sucesso:', orderData);
+}
+
+function generateOrderCode() {
+  const timestamp = Date.now().toString();
+  const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+  return `PED${timestamp.slice(-6)}${random}`;
+}
+
+function showOrderConfirmation(orderData) {
+  // Criar página de confirmação
+  const confirmationPage = document.createElement('div');
+  confirmationPage.id = 'confirmation-page';
+  confirmationPage.style.cssText = `
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #f8fafc;
+    font-family: 'Inter', sans-serif;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10000;
+  `;
+  
+  confirmationPage.innerHTML = `
+    <div style="
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 500px;
+      margin: 20px;
+    ">
+      <div style="
+        width: 80px;
+        height: 80px;
+        background: #10b981;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px auto;
+      ">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      
+      <h1 style="margin: 0 0 10px 0; color: #1f2937; font-size: 28px;">Pedido Confirmado!</h1>
+      <p style="margin: 0 0 30px 0; color: #6b7280; font-size: 16px;">Seu pedido foi recebido com sucesso</p>
+      
+      <div style="
+        background: #f3f4f6;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        text-align: left;
+      ">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+          <span style="color: #6b7280;">Código do Pedido:</span>
+          <span style="color: #1f2937; font-weight: 600;">${orderData.codigo}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+          <span style="color: #6b7280;">Status:</span>
+          <span style="color: #f59e0b; font-weight: 600;">Aguardando Confirmação</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+          <span style="color: #6b7280;">Total:</span>
+          <span style="color: #1f2937; font-weight: 600;">R$ ${orderData.totalComFrete.toFixed(2)}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: #6b7280;">Entrega estimada:</span>
+          <span style="color: #1f2937; font-weight: 600;">${orderData.frete.tempo} minutos</span>
+        </div>
+      </div>
+      
+      <div style="display: grid; gap: 10px;">
+        <button onclick="goToHomePage()" style="
+          width: 100%;
+          padding: 15px;
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        " onmouseover="this.style.background='linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)'" onmouseout="this.style.background='linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'">
+          Continuar Comprando
+        </button>
+        
+        <button onclick="viewOrders()" style="
+          width: 100%;
+          padding: 15px;
+          background: white;
+          color: #3b82f6;
+          border: 2px solid #3b82f6;
+          border-radius: 8px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        " onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+          Meus Pedidos
+        </button>
+      </div>
+    </div>
+  `;
+  
+  // Esconder checkout e mostrar confirmação
+  document.getElementById('checkout-page').style.display = 'none';
+  document.body.appendChild(confirmationPage);
+}
+
+function backToCart() {
+  // Esconder checkout
+  const checkoutPage = document.getElementById('checkout-page');
+  if (checkoutPage) {
+    checkoutPage.style.display = 'none';
+  }
+  
+  // Mostrar carrinho
+  toggleCart();
 }
 
 function viewOrders() {
+  console.log('🚀 viewOrders() chamada - navegando para pedidos');
+  
+  // Esconder página de confirmação se estiver ativa
+  const confirmationPage = document.getElementById('confirmation-page');
+  if (confirmationPage) {
+    console.log('🗑️ Removendo página de confirmação');
+    confirmationPage.remove();
+  }
+  
   closeUserMenu();
-  openOrdersModal();
+  navigateToOrdersPage();
 }
+
+// === SPA DE FINALIZAÇÃO DE PEDIDO ===
+function navigateToCheckout() {
+  console.log('🛒 Navegando para checkout...');
+  
+  // Verificar se o carrinho está vazio
+  const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+  console.log('📦 Conteúdo do carrinho:', cart);
+  console.log('📊 Quantidade de itens:', cart.length);
+  
+  if (cart.length === 0) {
+    alert('Seu carrinho está vazio! Adicione produtos antes de finalizar o pedido.');
+    return;
+  }
+  
+  // Esconder conteúdo atual
+  const mainContent = document.querySelector('main') || document.body;
+  if (mainContent) {
+    mainContent.style.display = 'none';
+  }
+  
+  // Fechar carrinho se estiver aberto
+  const cartOverlay = document.getElementById('cartOverlay');
+  if (cartOverlay && cartOverlay.classList.contains('active')) {
+    cartOverlay.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+  
+  // Criar página de checkout SPA
+  createCheckoutPage();
+}
+
+function createCheckoutPage() {
+  // Verificar se já existe
+  if (document.getElementById('checkout-page')) {
+    document.getElementById('checkout-page').style.display = 'block';
+    return;
+  }
+  
+  // Criar container da página de checkout
+  const checkoutPage = document.createElement('div');
+  checkoutPage.id = 'checkout-page';
+  checkoutPage.style.cssText = `
+    display: block;
+    min-height: 100vh;
+    padding: 20px;
+    background: #f8fafc;
+    font-family: 'Inter', sans-serif;
+  `;
+  
+  checkoutPage.innerHTML = `
+    <div class="checkout-container" style="max-width: 1200px; margin: 0 auto;">
+      <!-- Header da página -->
+      <div class="checkout-header" style="
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      ">
+        <div>
+          <h1 style="margin: 0; color: #1f2937; font-size: 24px;">Finalizar Pedido</h1>
+          <p style="margin: 8px 0 0 0; color: #6b7280; font-size: 14px;">Preencha seus dados para concluir a compra</p>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button onclick="backToCart()" style="
+            padding: 10px 20px;
+            background: #6b7280;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+          " onmouseover="this.style.background='#4b5563'" onmouseout="this.style.background='#6b7280'">
+            ← Voltar ao Carrinho
+          </button>
+        </div>
+      </div>
+      
+      <!-- Conteúdo principal do checkout -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <!-- Formulário de dados -->
+        <div class="checkout-form" style="
+          background: white;
+          padding: 30px;
+          border-radius: 12px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        ">
+          <h2 style="margin: 0 0 20px 0; color: #1f2937; font-size: 20px;">Dados do Cliente</h2>
+          
+          <form id="checkout-form" onsubmit="submitOrder(event)">
+            <!-- Dados Pessoais -->
+            <div style="margin-bottom: 25px;">
+              <h3 style="margin: 0 0 15px 0; color: #374151; font-size: 16px; font-weight: 600;">Dados Pessoais</h3>
+              
+              <div style="display: grid; gap: 15px;">
+                <div>
+                  <label style="display: block; margin-bottom: 5px; color: #374151; font-weight: 500;">Nome Completo *</label>
+                  <input type="text" id="checkout-nome" required style="
+                    width: 100%;
+                    padding: 12px;
+                    border: 2px solid #e5e7eb;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    transition: all 0.2s ease;
+                  " onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                
+                <div>
+                  <label style="display: block; margin-bottom: 5px; color: #374151; font-weight: 500;">E-mail *</label>
+                  <input type="email" id="checkout-email" required style="
+                    width: 100%;
+                    padding: 12px;
+                    border: 2px solid #e5e7eb;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    transition: all 0.2s ease;
+                  " onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                
+                <div>
+                  <label style="display: block; margin-bottom: 5px; color: #374151; font-weight: 500;">Telefone *</label>
+                  <input type="tel" id="checkout-telefone" required placeholder="(61) 99999-9999" style="
+                    width: 100%;
+                    padding: 12px;
+                    border: 2px solid #e5e7eb;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    transition: all 0.2s ease;
+                  " onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+              </div>
+            </div>
+            
+            <!-- Endereço -->
+            <div style="margin-bottom: 25px;">
+              <h3 style="margin: 0 0 15px 0; color: #374151; font-size: 16px; font-weight: 600;">Endereço de Entrega</h3>
+              
+              <div style="display: grid; gap: 15px;">
+                <div>
+                  <label style="display: block; margin-bottom: 5px; color: #374151; font-weight: 500;">CEP *</label>
+                  <input type="text" id="checkout-cep" required maxlength="9" placeholder="00000-000" style="
+                    width: 100%;
+                    padding: 12px;
+                    border: 2px solid #e5e7eb;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    transition: all 0.2s ease;
+                  " oninput="formatCEP(this); calculateUberShipping(this.value)" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px;">
+                  <div>
+                    <label style="display: block; margin-bottom: 5px; color: #374151; font-weight: 500;">Rua *</label>
+                    <input type="text" id="checkout-rua" required style="
+                      width: 100%;
+                      padding: 12px;
+                      border: 2px solid #e5e7eb;
+                      border-radius: 8px;
+                      font-size: 14px;
+                      transition: all 0.2s ease;
+                    " onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
+                  </div>
+                  
+                  <div>
+                    <label style="display: block; margin-bottom: 5px; color: #374151; font-weight: 500;">Número *</label>
+                    <input type="text" id="checkout-numero" required style="
+                      width: 100%;
+                      padding: 12px;
+                      border: 2px solid #e5e7eb;
+                      border-radius: 8px;
+                      font-size: 14px;
+                      transition: all 0.2s ease;
+                    " onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
+                  </div>
+                </div>
+                
+                <div>
+                  <label style="display: block; margin-bottom: 5px; color: #374151; font-weight: 500;">Complemento</label>
+                  <input type="text" id="checkout-complemento" placeholder="Apto, casa, etc." style="
+                    width: 100%;
+                    padding: 12px;
+                    border: 2px solid #e5e7eb;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    transition: all 0.2s ease;
+                  " onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                
+                <div>
+                  <label style="display: block; margin-bottom: 5px; color: #374151; font-weight: 500;">Bairro *</label>
+                  <input type="text" id="checkout-bairro" required style="
+                    width: 100%;
+                    padding: 12px;
+                    border: 2px solid #e5e7eb;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    transition: all 0.2s ease;
+                  " onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                  <div>
+                    <label style="display: block; margin-bottom: 5px; color: #374151; font-weight: 500;">Cidade *</label>
+                    <input type="text" id="checkout-cidade" required style="
+                      width: 100%;
+                      padding: 12px;
+                      border: 2px solid #e5e7eb;
+                      border-radius: 8px;
+                      font-size: 14px;
+                      transition: all 0.2s ease;
+                    " onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
+                  </div>
+                  
+                  <div>
+                    <label style="display: block; margin-bottom: 5px; color: #374151; font-weight: 500;">Estado *</label>
+                    <input type="text" id="checkout-estado" required maxlength="2" placeholder="DF" style="
+                      width: 100%;
+                      padding: 12px;
+                      border: 2px solid #e5e7eb;
+                      border-radius: 8px;
+                      font-size: 14px;
+                      transition: all 0.2s ease;
+                    " onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Método de Pagamento -->
+            <div style="margin-bottom: 25px;">
+              <h3 style="margin: 0 0 15px 0; color: #374151; font-size: 16px; font-weight: 600;">Método de Pagamento</h3>
+              
+              <div style="display: grid; gap: 10px;">
+                <label style="display: flex; align-items: center; padding: 15px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#e5e7eb'">
+                  <input type="radio" name="payment" value="pix" required style="margin-right: 10px;">
+                  <span style="color: #374151;">📱 PIX</span>
+                </label>
+                
+                <label style="display: flex; align-items: center; padding: 15px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#e5e7eb'">
+                  <input type="radio" name="payment" value="cartao" required style="margin-right: 10px;">
+                  <span style="color: #374151;">💳 Cartão de Crédito/Débito</span>
+                </label>
+                
+                <label style="display: flex; align-items: center; padding: 15px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#e5e7eb'">
+                  <input type="radio" name="payment" value="dinheiro" required style="margin-right: 10px;">
+                  <span style="color: #374151;">💵 Dinheiro</span>
+                </label>
+              </div>
+            </div>
+            
+            <button type="submit" style="
+              width: 100%;
+              padding: 15px;
+              background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+              color: white;
+              border: none;
+              border-radius: 8px;
+              font-size: 16px;
+              font-weight: 600;
+              cursor: pointer;
+              transition: all 0.2s ease;
+            " onmouseover="this.style.background='linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)'" onmouseout="this.style.background='linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'">
+              Finalizar Pedido
+            </button>
+          </form>
+        </div>
+        
+        <!-- Resumo do Pedido -->
+        <div class="checkout-summary" style="
+          background: white;
+          padding: 30px;
+          border-radius: 12px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          height: fit-content;
+        ">
+          <h2 style="margin: 0 0 20px 0; color: #1f2937; font-size: 20px;">Resumo do Pedido</h2>
+          
+          <div id="checkout-items" style="margin-bottom: 20px;">
+            <!-- Items serão inseridos aqui -->
+          </div>
+          
+          <div style="border-top: 1px solid #e5e7eb; padding-top: 20px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+              <span style="color: #6b7280;">Subtotal:</span>
+              <span id="checkout-subtotal" style="color: #374151; font-weight: 500;">R$ 0,00</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+              <span style="color: #6b7280;">Frete UBER:</span>
+              <span id="checkout-shipping" style="color: #374151; font-weight: 500;">Calculando...</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+              <span style="color: #6b7280;">Desconto:</span>
+              <span id="checkout-discount" style="color: #10b981; font-weight: 500;">-R$ 0,00</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px; padding-top: 15px; border-top: 2px solid #e5e7eb;">
+              <span style="color: #1f2937; font-weight: 600; font-size: 18px;">Total:</span>
+              <span id="checkout-total" style="color: #1f2937; font-weight: 600; font-size: 18px;">R$ 0,00</span>
+            </div>
+            
+            <div id="uber-info" style="
+              background: #fef3c7;
+              border: 1px solid #fbbf24;
+              border-radius: 8px;
+              padding: 15px;
+              margin-bottom: 20px;
+              display: none;
+            ">
+              <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                <span style="margin-right: 8px;">🚗</span>
+                <span style="color: #92400e; font-weight: 600;">Entrega via UBER</span>
+              </div>
+              <p style="margin: 0; color: #78350f; font-size: 14px;">
+                Tempo estimado: <span id="uber-time">--</span> minutos<br>
+                Distância: <span id="uber-distance">--</span> km
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Adicionar ao body
+  document.body.appendChild(checkoutPage);
+  
+  // Preencher dados do usuário logado se existir
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (usuarioLogado) {
+    const usuario = JSON.parse(usuarioLogado);
+    console.log('👤 Preenchendo dados do usuário logado:', usuario);
+    
+    // Preencher campos do formulário
+    const nomeField = document.getElementById('checkout-nome');
+    const emailField = document.getElementById('checkout-email');
+    const telefoneField = document.getElementById('checkout-telefone');
+    
+    if (nomeField && usuario.nome) nomeField.value = usuario.nome;
+    if (emailField && usuario.email) emailField.value = usuario.email;
+    if (telefoneField && usuario.telefone) telefoneField.value = usuario.telefone;
+  }
+  
+  // Carregar resumo do carrinho
+  loadCheckoutSummary();
+  
+  console.log('✅ Página de checkout criada via SPA');
+  
+}
+
+// === NAVEGAÇÃO SPA ===
+function navigateToOrdersPage() {
+  console.log('📦 Navegando para página de pedidos...');
+  
+  // Esconder página de confirmação se estiver ativa
+  const confirmationPage = document.getElementById('confirmation-page');
+  if (confirmationPage) {
+    confirmationPage.remove();
+  }
+  
+  // Esconder conteúdo atual
+  const mainContent = document.querySelector('main') || document.body;
+  if (mainContent) {
+    mainContent.style.display = 'none';
+  }
+  
+  // Criar página de pedidos SPA
+  createOrdersPage();
+}
+
+function createOrdersPage() {
+  // Verificar se já existe
+  if (document.getElementById('orders-page')) {
+    document.getElementById('orders-page').style.display = 'block';
+    // Carregar pedidos mesmo que a página já exista
+    loadUserOrders();
+    return;
+  }
+  
+  // Criar container da página de pedidos
+  const ordersPage = document.createElement('div');
+  ordersPage.id = 'orders-page';
+  ordersPage.style.cssText = `
+    display: block;
+    min-height: 100vh;
+    padding: 20px;
+    background: #f8fafc;
+    font-family: 'Inter', sans-serif;
+  `;
+  
+  ordersPage.innerHTML = `
+    <div class="orders-container" style="max-width: 1200px; margin: 0 auto;">
+      <!-- Header da página -->
+      <div class="orders-header" style="
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      ">
+        <div>
+          <h1 style="margin: 0; color: #1f2937; font-size: 24px;">Meus Pedidos</h1>
+          <p style="margin: 8px 0 0 0; color: #6b7280; font-size: 14px;">Acompanhe seus pedidos e histórico</p>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button onclick="backToMainPage()" style="
+            padding: 10px 20px;
+            background: #6b7280;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+          " onmouseover="this.style.background='#4b5563'" onmouseout="this.style.background='#6b7280'">
+            ← Voltar
+          </button>
+          <button onclick="goToHomePage()" style="
+            padding: 10px 20px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+          " onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
+            🏠 Página Inicial
+          </button>
+        </div>
+      </div>
+      
+      <!-- Conteúdo principal - Lista de Pedidos -->
+      <div class="orders-content" style="
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        min-height: 400px;
+      ">
+        <div id="orders-list-container">
+          <!-- Pedidos serão carregados aqui -->
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Adicionar ao body
+  document.body.appendChild(ordersPage);
+  
+  console.log('✅ Página de pedidos criada via SPA');
+  
+  // Carregar pedidos do usuário
+  setTimeout(() => {
+    console.log('🚀 Executando loadUserOrders()...');
+    loadUserOrders();
+  }, 200); // Aumentado para 200ms para garantir atualização do localStorage
+}
+
+function loadUserOrders() {
+  // Buscar pedidos do localStorage
+  const allOrders = JSON.parse(localStorage.getItem('pedidos') || '[]');
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  
+  console.log('📋 Carregando pedidos do usuário...');
+  console.log('👤 Usuário logado:', usuarioLogado);
+  console.log('📦 Todos os pedidos:', allOrders);
+  
+  if (!usuarioLogado) {
+    console.log('❌ Usuário não está logado');
+    displayEmptyOrders('Você precisa estar logado para ver seus pedidos.');
+    return;
+  }
+  
+  const usuario = JSON.parse(usuarioLogado);
+  console.log('👤 Dados do usuário:', usuario);
+  console.log('📧 Email do usuário:', usuario.email);
+  
+  // Filtrar pedidos do usuário atual
+  const userOrders = allOrders.filter(order => {
+    console.log('🔍 Verificando pedido:', order);
+    console.log('📧 Email do pedido (cliente.email):', order.cliente?.email);
+    console.log('📧 Email do pedido (email):', order.email);
+    console.log('📧 Email do pedido (usuarioEmail):', order.usuarioEmail);
+    console.log('📧 Email do usuário:', usuario.email);
+    
+    const match = order.cliente?.email === usuario.email || 
+                 order.email === usuario.email ||
+                 order.usuarioEmail === usuario.email;
+    
+    console.log('✅ Match:', match);
+    
+    // Se for um dos seus pedidos, mostrar detalhes completos
+    if (match) {
+      console.log('🎯 PEDIDO ENCONTRADO:', order);
+    }
+    
+    return match;
+  });
+  
+  console.log('📊 Pedidos do usuário filtrados:', userOrders);
+  console.log('📊 Quantidade de pedidos:', userOrders.length);
+  
+  // Carregar pedidos na página
+  displayOrders(userOrders);
+}
+
+function displayOrders(orders) {
+  const container = document.getElementById('orders-list-container');
+  
+  console.log('📋 Exibindo pedidos...');
+  console.log('📦 Container encontrado:', container);
+  console.log('📊 Pedidos para exibir:', orders);
+  
+  if (!container) {
+    console.log('❌ Container de pedidos não encontrado');
+    return;
+  }
+  
+  if (orders.length === 0) {
+    console.log('❌ Nenhum pedido encontrado');
+    displayEmptyOrders('Você ainda não tem nenhum pedido.');
+    return;
+  }
+  
+  // Ordenar pedidos por data (mais recente primeiro)
+  orders.sort((a, b) => new Date(b.data) - new Date(a.data));
+  
+  const ordersHTML = orders.map(order => createOrderCard(order)).join('');
+  console.log('📋 HTML dos pedidos gerado:', ordersHTML);
+  
+  container.innerHTML = `
+    <div style="display: grid; gap: 15px;">
+      ${ordersHTML}
+    </div>
+  `;
+  
+  console.log(`✅ ${orders.length} pedidos exibidos`);
+  console.log('📋 Conteúdo final do container:', container.innerHTML);
+}
+
+function createOrderCard(order) {
+  const orderDate = new Date(order.data).toLocaleDateString('pt-BR');
+  const orderTime = new Date(order.data).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  
+  // Verificar se tem frete, senão usar valores padrão
+  const freteTipo = order.frete?.tipo || 'padrão';
+  const freteValor = order.frete?.valor || 0;
+  const totalComFrete = order.totalComFrete || order.total || 0;
+  
+  return `
+    <div style="
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 20px;
+      background: white;
+      transition: all 0.2s ease;
+    " onmouseover="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.1)'" onmouseout="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none'">
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+        <div>
+          <h3 style="margin: 0 0 5px 0; color: #1f2937; font-size: 16px; font-weight: 600;">${order.codigo || order.id}</h3>
+          <p style="margin: 0; color: #6b7280; font-size: 14px;">${orderDate} às ${orderTime}</p>
+        </div>
+        <div style="
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 500;
+          background: ${getStatusColor(order.status)};
+          color: white;
+        ">
+          ${getStatusText(order.status)}
+        </div>
+      </div>
+      
+      <div style="display: grid; gap: 8px; margin-bottom: 15px;">
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: #6b7280; font-size: 14px;">Itens:</span>
+          <span style="color: #374151; font-weight: 500;">${order.itens?.length || 0} produto(s)</span>
+        </div>
+        
+        <!-- Mostrar nomes dos produtos -->
+        ${order.itens && order.itens.length > 0 ? `
+        <div style="margin-top: 8px;">
+          <span style="color: #6b7280; font-size: 14px; display: block; margin-bottom: 4px;">Produtos:</span>
+          <div style="color: #374151; font-size: 13px; line-height: 1.4;">
+            ${order.itens.map((item, index) => 
+              `<div style="padding: 2px 0; border-bottom: ${index < order.itens.length - 1 ? '1px solid #f3f4f6' : 'none'};">
+                • ${item.nome || item.produto || 'Produto sem nome'} 
+                <span style="color: #6b7280;">(Qtd: ${item.quantidade || item.quantity || 1})</span>
+              </div>`
+            ).join('')}
+          </div>
+        </div>
+        ` : ''}
+        
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: #6b7280; font-size: 14px;">Frete:</span>
+          <span style="color: #374151; font-weight: 500;">${freteTipo.toUpperCase()} - R$ ${freteValor.toFixed(2)}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: #6b7280; font-size: 14px;">Total:</span>
+          <span style="color: #1f2937; font-weight: 600; font-size: 16px;">R$ ${totalComFrete.toFixed(2)}</span>
+        </div>
+      </div>
+      
+      ${order.endereco ? `
+      <div style="padding-top: 15px; border-top: 1px solid #f3f4f6;">
+        <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">
+          <strong>Entrega:</strong> ${order.endereco.rua}, ${order.endereco.numero} - ${order.endereco.bairro}, ${order.endereco.cidade}/${order.endereco.estado}
+        </p>
+      </div>
+      ` : ''}
+      
+      ${order.status === 'pendente' ? `
+      <div style="padding-top: 15px; border-top: 1px solid #f3f4f6; display: flex; gap: 10px;">
+        <button onclick="cancelOrder('${order.codigo || order.id}')" style="
+          padding: 8px 16px;
+          background: #ef4444;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          transition: all 0.2s ease;
+        " onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">
+          ❌ Cancelar Pedido
+        </button>
+      </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function cancelOrder(orderCode) {
+  console.log('🚀 cancelOrder() chamada com orderCode:', orderCode);
+  
+  if (!confirm('Tem certeza que deseja cancelar este pedido? Esta ação não pode ser desfeita.')) {
+    console.log('❌ Usuário cancelou a operação');
+    return;
+  }
+  
+  // Buscar pedidos do localStorage
+  const allOrders = JSON.parse(localStorage.getItem('pedidos') || '[]');
+  console.log('📦 Total de pedidos:', allOrders.length);
+  
+  // Encontrar e atualizar o pedido
+  const orderIndex = allOrders.findIndex(order => {
+    console.log('🔍 Verificando pedido:', order.codigo, order.id, '===', orderCode);
+    // Converter tudo para string para comparação
+    const orderCodigo = String(order.codigo || '');
+    const orderId = String(order.id || '');
+    const targetCode = String(orderCode);
+    
+    console.log('🔍 Comparação:', orderCodigo, orderId, '===', targetCode);
+    
+    return orderCodigo === targetCode || orderId === targetCode;
+  });
+  
+  console.log('📍 Índice do pedido encontrado:', orderIndex);
+  
+  if (orderIndex === -1) {
+    console.log('❌ Pedido não encontrado!');
+    alert('Pedido não encontrado!');
+    return;
+  }
+  
+  console.log('✅ Pedido encontrado antes do cancelamento:', allOrders[orderIndex]);
+  
+  // Atualizar status para cancelado
+  allOrders[orderIndex].status = 'cancelado';
+  allOrders[orderIndex].dataCancelamento = new Date().toISOString();
+  
+  console.log('✅ Pedido atualizado:', allOrders[orderIndex]);
+  
+  // Salvar no localStorage
+  localStorage.setItem('pedidos', JSON.stringify(allOrders));
+  console.log('💾 Pedidos salvos no localStorage');
+  
+  // Mostrar mensagem de sucesso
+  alert(`Pedido ${orderCode} cancelado com sucesso!`);
+  
+  // Recarregar a lista de pedidos
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (usuarioLogado) {
+    const usuario = JSON.parse(usuarioLogado);
+    const userOrders = allOrders.filter(order => 
+      order.cliente?.email === usuario.email || 
+      order.email === usuario.email ||
+      order.usuarioEmail === usuario.email
+    );
+    console.log('🔄 Recarregando pedidos do usuário:', userOrders.length);
+    displayOrders(userOrders);
+  }
+}
+
+function getStatusText(status) {
+  const statusMap = {
+    'pendente': 'Aguardando Confirmação',
+    'confirmado': 'Confirmado',
+    'preparando': 'Preparando',
+    'enviado': 'Enviado',
+    'entregue': 'Entregue',
+    'cancelado': 'Cancelado'
+  };
+  return statusMap[status] || status;
+}
+
+function getStatusColor(status) {
+  const colorMap = {
+    'pendente': '#f59e0b',
+    'confirmado': '#3b82f6',
+    'preparando': '#8b5cf6',
+    'enviado': '#06b6d4',
+    'entregue': '#10b981',
+    'cancelado': '#ef4444'
+  };
+  return colorMap[status] || '#6b7280';
+}
+
+function displayEmptyOrders(message) {
+  const container = document.getElementById('orders-list-container');
+  if (!container) return;
+  
+  container.innerHTML = `
+    <div style="text-align: center; padding: 60px 20px; color: #6b7280;">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 16px auto; opacity: 0.5;">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      <h3 style="margin: 0 0 8px 0; font-size: 18px; color: #374151;">${message}</h3>
+      <p style="margin: 8px 0 0 0; font-size: 14px;">Adicione produtos ao carrinho e finalize seu primeiro pedido!</p>
+    </div>
+  `;
+}
+
+function backToMainPage() {
+  console.log('🔙 Voltando para página principal...');
+  
+  // Esconder página de pedidos
+  const ordersPage = document.getElementById('orders-page');
+  if (ordersPage) {
+    ordersPage.style.display = 'none';
+  }
+  
+  // Mostrar conteúdo principal
+  const mainContent = document.querySelector('main') || document.body;
+  if (mainContent) {
+    mainContent.style.display = 'block';
+  }
+}
+
+function goToHomePage() {
+  console.log('🏠 Indo para página inicial...');
+  
+  // Esconder página de pedidos
+  const ordersPage = document.getElementById('orders-page');
+  if (ordersPage) {
+    ordersPage.style.display = 'none';
+  }
+  
+  // Mostrar conteúdo principal
+  const mainContent = document.querySelector('main') || document.body;
+  if (mainContent) {
+    mainContent.style.display = 'block';
+  }
+  
+  // Resetar para categoria inicial
+  if (typeof showCategory === 'function') {
+    showCategory('inicio');
+  }
+  
+  // Resetar navegação
+  resetNavigation();
+}
+
+function resetNavigation() {
+  // Esconder qualquer página SPA ativa
+  const spaPages = ['orders-page', 'checkout-page', 'confirmation-page'];
+  spaPages.forEach(pageId => {
+    const page = document.getElementById(pageId);
+    if (page) {
+      page.style.display = 'none';
+    }
+  });
+  
+  // Remover página de confirmação se existir
+  const confirmationPage = document.getElementById('confirmation-page');
+  if (confirmationPage) {
+    confirmationPage.remove();
+  }
+  
+  // Mostrar conteúdo principal
+  const mainContent = document.querySelector('main') || document.body;
+  if (mainContent) {
+    mainContent.style.display = 'block';
+  }
+  
+  // Resetar header e navegação
+  const header = document.querySelector('.modern-header');
+  if (header) {
+    header.style.display = 'block';
+  }
+  
+  console.log('✅ Navegação resetada para página inicial');
+}
+
 
 function viewSettings() {
   closeUserMenu();
@@ -3110,254 +4365,14 @@ function closeReviewsModal() {
   }
 }
 
-function openOrdersModal() {
-  const overlay = document.getElementById('ordersModalOverlay');
-  if (overlay) {
-    overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    loadUserOrders(); // Carregar os pedidos do usuário
-  }
+
+
+// === FUNÇÕES AUXILIARES ===
+function showNotification(message, type = 'info') {
+  console.log(`🔔 ${type}: ${message}`);
 }
 
-function closeOrdersModal() {
-  const overlay = document.getElementById('ordersModalOverlay');
-  if (overlay) {
-    overlay.classList.remove('active');
-    document.body.style.overflow = 'auto';
-  }
-}
-
-// === FUNÇÕES DE GERENCIAMENTO DE PEDIDOS ===
-
-let currentFilter = 'todos';
-let userOrders = [];
-
-function loadUserOrders() {
-  // Buscar pedidos do localStorage
-  const allOrders = JSON.parse(localStorage.getItem('pedidos') || '[]');
-  const usuarioLogado = localStorage.getItem('usuarioLogado');
-  
-  if (!usuarioLogado) {
-    console.log('❌ Usuário não está logado');
-    return;
-  }
-  
-  const usuario = JSON.parse(usuarioLogado);
-  
-  // Filtrar pedidos do usuário atual
-  userOrders = allOrders.filter(order => 
-    order.email === usuario.email || 
-    order.usuarioId === usuario.id ||
-    order.usuarioEmail === usuario.email
-  );
-  
-  console.log('📋 Pedidos do usuário:', userOrders);
-  
-  // Carregar pedidos com filtro atual
-  displayOrders(currentFilter);
-}
-
-function displayOrders(filter = 'todos') {
-  currentFilter = filter;
-  const ordersList = document.getElementById('ordersList');
-  const emptyState = document.getElementById('ordersEmptyState');
-  
-  if (!ordersList || !emptyState) return;
-  
-  // Filtrar pedidos pelo status
-  let filteredOrders = userOrders;
-  if (filter !== 'todos') {
-    filteredOrders = userOrders.filter(order => order.status === filter);
-  }
-  
-  // Ordenar por data (mais recentes primeiro)
-  filteredOrders.sort((a, b) => new Date(b.data) - new Date(a.data));
-  
-  // Limpar lista atual
-  ordersList.innerHTML = '';
-  
-  if (filteredOrders.length === 0) {
-    // Mostrar empty state
-    ordersList.style.display = 'none';
-    emptyState.style.display = 'block';
-    
-    // Atualizar mensagem do empty state
-    const emptyMessage = emptyState.querySelector('h4');
-    const emptyDescription = emptyState.querySelector('p');
-    
-    if (filter === 'todos') {
-      emptyMessage.textContent = 'Nenhum pedido encontrado';
-      emptyDescription.textContent = 'Você ainda não fez nenhum pedido.';
-    } else {
-      const filterText = {
-        'pendente': 'aguardando',
-        'confirmado': 'confirmados',
-        'entregue': 'entregues'
-      };
-      emptyMessage.textContent = `Nenhum pedido ${filterText[filter]}`;
-      emptyDescription.textContent = `Você não tem pedidos ${filterText[filter]}.`;
-    }
-  } else {
-    // Mostrar lista de pedidos
-    ordersList.style.display = 'block';
-    emptyState.style.display = 'none';
-    
-    // Renderizar cada pedido
-    filteredOrders.forEach(order => {
-      const orderElement = createOrderElement(order);
-      ordersList.appendChild(orderElement);
-    });
-  }
-  
-  // Atualizar botões de filtro
-  updateFilterButtons(filter);
-}
-
-function createOrderElement(order) {
-  const orderDiv = document.createElement('div');
-  orderDiv.className = 'order-item';
-  
-  // Formatar data
-  const orderDate = new Date(order.data);
-  const formattedDate = orderDate.toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  });
-  
-  // Formatar total
-  const formattedTotal = order.total ? 
-    order.total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 
-    'R$ 0,00';
-  
-  // Status text
-  const statusText = getOrderStatusText(order.status);
-  
-  // Criar HTML do pedido
-  orderDiv.innerHTML = `
-    <div class="order-header">
-      <div class="order-id">#${order.id || '000'}</div>
-      <div class="order-status ${order.status}">
-        <span class="status-indicator ${order.status}"></span>
-        ${statusText}
-      </div>
-    </div>
-    
-    <div class="order-date">${formattedDate}</div>
-    
-    <div class="order-items">
-      ${order.items ? order.items.map(item => createOrderItemHTML(item)).join('') : ''}
-    </div>
-    
-    <div class="order-footer">
-      <div class="order-total">${formattedTotal}</div>
-      <div class="order-actions">
-        ${getOrderActions(order)}
-      </div>
-    </div>
-  `;
-  
-  return orderDiv;
-}
-
-function createOrderItemHTML(item) {
-  const productName = item.nome || item.productName || 'Produto';
-  const quantity = item.quantity || item.quantidade || 1;
-  const price = item.preco || item.price || 0;
-  const formattedPrice = price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  
-  return `
-    <div class="order-item-product">
-      <div class="order-product-image">
-        <img src="images/products/thumbnail/${item.codigo || 'placeholder'}.jpg" 
-             alt="${productName}" 
-             onerror="this.src='images/placeholder.png'">
-      </div>
-      <div class="order-product-info">
-        <div class="order-product-name">${productName}</div>
-        <div class="order-product-quantity">Quantidade: ${quantity}</div>
-      </div>
-      <div class="order-product-price">${formattedPrice}</div>
-    </div>
-  `;
-}
-
-function getOrderActions(order) {
-  let actions = '';
-  
-  if (order.status === 'pendente') {
-    actions += `
-      <button class="order-action-btn" onclick="cancelOrder('${order.id}')">
-        Cancelar
-      </button>
-      <button class="order-action-btn primary" onclick="trackOrder('${order.id}')">
-        Acompanhar
-      </button>
-    `;
-  } else if (order.status === 'confirmado') {
-    actions += `
-      <button class="order-action-btn" onclick="trackOrder('${order.id}')">
-        Acompanhar
-      </button>
-    `;
-  } else if (order.status === 'entregue') {
-    actions += `
-      <button class="order-action-btn primary" onclick="reviewOrder('${order.id}')">
-        Avaliar
-      </button>
-      <button class="order-action-btn" onclick="reorderOrder('${order.id}')">
-        Repetir
-      </button>
-    `;
-  }
-  
-  return actions;
-}
-
-function filterOrders(status) {
-  displayOrders(status);
-}
-
-function updateFilterButtons(activeFilter) {
-  const filterButtons = document.querySelectorAll('.filter-btn');
-  
-  filterButtons.forEach(btn => {
-    if (btn.dataset.status === activeFilter) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
-    }
-  });
-}
-
-function getOrderStatusText(status) {
-  const statusMap = {
-    'pendente': 'Aguardando',
-    'confirmado': 'Confirmado',
-    'entregue': 'Entregue',
-    'cancelado': 'Cancelado',
-    'em_transporte': 'Em Transporte'
-  };
-  
-  return statusMap[status] || status;
-}
-
-// Ações dos pedidos
-function cancelOrder(orderId) {
-  if (confirm('Tem certeza que deseja cancelar este pedido?')) {
-    // Implementar lógica de cancelamento
-    console.log('🚫 Cancelando pedido:', orderId);
-    showNotification('Pedido cancelado com sucesso', 'success');
-    loadUserOrders(); // Recarregar pedidos
-  }
-}
-
-function trackOrder(orderId) {
-  // Implementar rastreamento
-  console.log('📍 Rastreando pedido:', orderId);
-  showNotification('Funcionalidade de rastreamento em desenvolvimento', 'info');
-}
-
+// Ações dos pedidos (mantidas para compatibilidade)
 function reviewOrder(orderId) {
   // Implementar avaliação
   console.log('⭐ Avaliando pedido:', orderId);
@@ -3532,15 +4547,10 @@ window.openProductsModal = openProductsModal;
 window.closeProductsModal = closeProductsModal;
 window.openReviewsModal = openReviewsModal;
 window.closeReviewsModal = closeReviewsModal;
-window.openOrdersModal = openOrdersModal;
-window.closeOrdersModal = closeOrdersModal;
 window.openSettingsModal = openSettingsModal;
 window.closeSettingsModal = closeSettingsModal;
 
 // Funções de gerenciamento de pedidos
-window.filterOrders = filterOrders;
-window.cancelOrder = cancelOrder;
-window.trackOrder = trackOrder;
 window.reviewOrder = reviewOrder;
 window.reorderOrder = reorderOrder;
 
@@ -3548,9 +4558,24 @@ window.reorderOrder = reorderOrder;
 window.checkAuthStatus = checkAuthStatus;
 window.showUserMenu = showUserMenu;
 window.logout = logout;
-window.viewProfile = viewProfile;
 window.viewOrders = viewOrders;
-window.testAuthButton = testAuthButton;
+window.backToMainPage = backToMainPage;
+window.navigateToOrdersPage = navigateToOrdersPage;
+window.goToHomePage = goToHomePage;
+window.resetNavigation = resetNavigation;
+window.navigateToCheckout = navigateToCheckout;
+window.loadCheckoutSummary = loadCheckoutSummary;
+window.formatCEP = formatCEP;
+window.calculateUberShipping = calculateUberShipping;
+window.submitOrder = submitOrder;
+window.backToCart = backToCart;
+window.loadUserOrders = loadUserOrders;
+window.displayOrders = displayOrders;
+window.createOrderCard = createOrderCard;
+window.getStatusText = getStatusText;
+window.getStatusColor = getStatusColor;
+window.displayEmptyOrders = displayEmptyOrders;
+window.cancelOrder = cancelOrder;
 
 // === FUNÇÕES DE TESTE ===
 
@@ -4023,8 +5048,8 @@ class ProfileMenuManager {
   handleMyOrders() {
     // Menu já foi fechado no evento de clique
     console.log('📦 Meus pedidos');
-    // Abrir modal de pedidos
-    openOrdersModal();
+    // Navegar para página SPA de pedidos
+    viewOrders();
   }
 
   handleSettings() {

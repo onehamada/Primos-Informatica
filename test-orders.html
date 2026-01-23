@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Pedidos - Primos Informática</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .order-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #fafafa;
+        }
+        .product-item {
+            background: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+            border-left: 3px solid #3b82f6;
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Teste de Pedidos - Primos Informática</h1>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalOrders">0</div>
+                <div class="stat-label">Total de Pedidos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalItems">0</div>
+                <div class="stat-label">Total de Itens</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalValue">R$ 0</div>
+                <div class="stat-label">Valor Total</div>
+            </div>
+        </div>
+        
+        <div>
+            <button onclick="loadOrders()">🔄 Carregar Pedidos</button>
+            <button onclick="clearOrders()">🗑️ Limpar Pedidos</button>
+            <button onclick="createTestOrder()">➕ Criar Pedido Teste</button>
+            <button onclick="checkCart()">🛒 Ver Carrinho</button>
+        </div>
+        
+        <div id="ordersList"></div>
+        
+        <div style="margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 5px;">
+            <h3>📝 Debug Info:</h3>
+            <div id="debugInfo"></div>
+        </div>
+    </div>
+
+    <script>
+        function loadOrders() {
+            try {
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                const ordersList = document.getElementById('ordersList');
+                const debugInfo = document.getElementById('debugInfo');
+                
+                console.log('📋 Pedidos encontrados:', orders);
+                
+                // Atualizar estatísticas
+                let totalItems = 0;
+                let totalValue = 0;
+                
+                orders.forEach(order => {
+                    if (order.items) {
+                        order.items.forEach(item => {
+                            const qty = item.quantity || item.quantidade || 1;
+                            const price = item.price || item.preco || 0;
+                            totalItems += qty;
+                            totalValue += (qty * price);
+                        });
+                    }
+                });
+                
+                document.getElementById('totalOrders').textContent = orders.length;
+                document.getElementById('totalItems').textContent = totalItems;
+                document.getElementById('totalValue').textContent = `R$ ${totalValue.toFixed(2)}`;
+                
+                // Mostrar pedidos
+                if (orders.length === 0) {
+                    ordersList.innerHTML = '<p style="text-align: center; color: #666;">Nenhum pedido encontrado.</p>';
+                    debugInfo.innerHTML = '<p>Nenhum pedido no localStorage.</p>';
+                    return;
+                }
+                
+                let html = '';
+                orders.forEach((order, index) => {
+                    const orderDate = new Date(order.createdAt || Date.now()).toLocaleString('pt-BR');
+                    const items = order.items || [];
+                    
+                    let productsHtml = '';
+                    items.forEach(item => {
+                        const name = item.name || item.nome || 'Produto sem nome';
+                        const qty = item.quantity || item.quantidade || 1;
+                        const price = item.price || item.preco || 0;
+                        const total = qty * price;
+                        
+                        productsHtml += `
+                            <div class="product-item">
+                                <strong>${name}</strong><br>
+                                ${qty}x R$ ${price.toFixed(2)} = <strong>R$ ${total.toFixed(2)}</strong>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `
+                        <div class="order-item">
+                            <h3>📦 Pedido #${order.id || index + 1}</h3>
+                            <p><strong>Data:</strong> ${orderDate}</p>
+                            <p><strong>Cliente:</strong> ${order.customer?.nome || 'Não informado'}</p>
+                            <p><strong>Status:</strong> ${order.status || 'Pendente'}</p>
+                            <p><strong>Total:</strong> R$ ${(order.totals?.total || 0).toFixed(2)}</p>
+                            
+                            <h4>📋 Produtos (${items.length}):</h4>
+                            ${productsHtml}
+                        </div>
+                    `;
+                });
+                
+                ordersList.innerHTML = html;
+                debugInfo.innerHTML = `
+                    <p><strong>Pedidos no localStorage:</strong> ${orders.length}</p>
+                    <p><strong>Estrutura do primeiro pedido:</strong></p>
+                    <pre style="background: #f5f5f5; padding: 10px; border-radius: 3px; overflow-x: auto;">
+${JSON.stringify(orders[0] || {}, null, 2)}
+                    </pre>
+                `;
+                
+            } catch (error) {
+                console.error('❌ Erro ao carregar pedidos:', error);
+                document.getElementById('ordersList').innerHTML = `<p style="color: red;">Erro: ${error.message}</p>`;
+            }
+        }
+        
+        function clearOrders() {
+            if (confirm('Tem certeza que deseja limpar todos os pedidos?')) {
+                localStorage.removeItem('orders');
+                loadOrders();
+                alert('Pedidos limpos com sucesso!');
+            }
+        }
+        
+        function createTestOrder() {
+            const testOrder = {
+                id: Date.now(),
+                customer: {
+                    nome: 'Cliente Teste',
+                    telefone: '61 99999-9999',
+                    endereco: 'Endereço de Teste'
+                },
+                delivery: 'uber',
+                payment: 'pix',
+                items: [
+                    {
+                        name: 'Produto Teste 1',
+                        nome: 'Produto Teste 1',
+                        quantity: 2,
+                        quantidade: 2,
+                        price: 100.00,
+                        preco: 100.00
+                    },
+                    {
+                        name: 'Produto Teste 2',
+                        nome: 'Produto Teste 2',
+                        quantity: 1,
+                        quantidade: 1,
+                        price: 250.50,
+                        preco: 250.50
+                    }
+                ],
+                totals: {
+                    subtotal: 450.50,
+                    delivery: 15.00,
+                    total: 465.50
+                },
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+            
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            orders.push(testOrder);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            
+            loadOrders();
+            alert('Pedido teste criado com sucesso!');
+        }
+        
+        function checkCart() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            alert(`Carrinho tem ${cart.length} itens:\n\n${JSON.stringify(cart, null, 2)}`);
+        }
+        
+        // Carregar pedidos ao abrir a página
+        loadOrders();
+    </script>
+</body>
+</html>
