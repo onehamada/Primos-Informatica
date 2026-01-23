@@ -2873,6 +2873,12 @@ function submitOrder(event) {
   
   console.log('🛒 Enviando pedido...');
   
+  // Tornar a função async para usar await
+  submitOrderAsync();
+}
+
+async function submitOrderAsync() {
+  
   // Coletar dados do formulário
   const cart = JSON.parse(localStorage.getItem('cart') || '[]');
   console.log('📦 Carrinho no submitOrder:', cart);
@@ -2927,12 +2933,25 @@ function submitOrder(event) {
   
   console.log('📋 Dados do pedido:', orderData);
   
-  // Salvar pedido no localStorage
+  // Salvar pedido no localStorage E no Firebase
   const orders = JSON.parse(localStorage.getItem('pedidos') || '[]');
   console.log('📦 Pedidos antes de salvar:', orders.length);
   orders.push(orderData);
   localStorage.setItem('pedidos', JSON.stringify(orders));
-  console.log('💾 Pedido salvo! Total agora:', orders.length);
+  console.log('💾 Pedido salvo no localStorage! Total agora:', orders.length);
+  
+  // Salvar no Firebase também
+  try {
+    const firebaseResult = await firebaseOrders.saveOrder(orderData);
+    if (firebaseResult.success) {
+      console.log('🔥 Pedido salvo no Firebase com ID:', firebaseResult.id);
+    } else {
+      console.error('❌ Erro ao salvar no Firebase:', firebaseResult.error);
+    }
+  } catch (error) {
+    console.error('❌ Erro Firebase:', error);
+  }
+  
   console.log('📧 Email do cliente no pedido:', orderData.cliente.email);
   console.log('📧 Email do usuário logado:', JSON.parse(localStorage.getItem('usuarioLogado') || '{}').email);
   
@@ -3559,53 +3578,77 @@ function createOrdersPage() {
     console.log('🚀 Executando loadUserOrders()...');
     loadUserOrders();
   }, 200); // Aumentado para 200ms para garantir atualização do localStorage
-}
 
 function loadUserOrders() {
-  // Buscar pedidos do localStorage
-  const allOrders = JSON.parse(localStorage.getItem('pedidos') || '[]');
+  console.log(' Carregando pedidos do usuário...');
+  
   const usuarioLogado = localStorage.getItem('usuarioLogado');
-  
-  console.log('📋 Carregando pedidos do usuário...');
-  console.log('👤 Usuário logado:', usuarioLogado);
-  console.log('📦 Todos os pedidos:', allOrders);
-  
   if (!usuarioLogado) {
     console.log('❌ Usuário não está logado');
-    displayEmptyOrders('Você precisa estar logado para ver seus pedidos.');
+    displayOrders([]);
     return;
   }
   
   const usuario = JSON.parse(usuarioLogado);
-  console.log('👤 Dados do usuário:', usuario);
-  console.log('📧 Email do usuário:', usuario.email);
+  console.log(' Usuário logado:', usuario);
   
-  // Filtrar pedidos do usuário atual
+  // Tentar buscar do Firebase primeiro
+  if (typeof firebaseOrders !== 'undefined') {
+    firebaseOrders.getUserOrders(usuario.email)
+      .then(result => {
+        if (result.success) {
+          console.log(' Pedidos carregados do Firebase:', result.orders.length);
+          displayOrders(result.orders);
+        } else {
+          console.error('❌ Erro ao buscar do Firebase:', result.error);
+          // Fallback para localStorage
+          loadUserOrdersFromLocalStorage(usuario);
+        }
+      })
+      .catch(error => {
+        console.error('❌ Erro Firebase:', error);
+        // Fallback para localStorage
+        loadUserOrdersFromLocalStorage(usuario);
+      });
+  } else {
+    // Fallback para localStorage
+    loadUserOrdersFromLocalStorage(usuario);
+  }
+}
+
+// Função fallback para localStorage
+function loadUserOrdersFromLocalStorage(usuario) {
+  console.log(' Usando localStorage como fallback...');
+  
+  const allOrders = JSON.parse(localStorage.getItem('pedidos') || '[]');
+  console.log(' Todos os pedidos:', allOrders);
+  
   const userOrders = allOrders.filter(order => {
-    console.log('🔍 Verificando pedido:', order);
-    console.log('📧 Email do pedido (cliente.email):', order.cliente?.email);
-    console.log('📧 Email do pedido (email):', order.email);
-    console.log('📧 Email do pedido (usuarioEmail):', order.usuarioEmail);
-    console.log('📧 Email do usuário:', usuario.email);
+    console.log(' Verificando pedido:', order);
     
-    const match = order.cliente?.email === usuario.email || 
-                 order.email === usuario.email ||
-                 order.usuarioEmail === usuario.email;
+    const clienteEmail = order.cliente?.email;
+    const orderEmail = order.email;
+    const usuarioEmail = order.usuarioEmail;
     
-    console.log('✅ Match:', match);
+    console.log(' Email do pedido (cliente.email):', clienteEmail);
+    console.log(' Email do pedido (email):', orderEmail);
+    console.log(' Email do pedido (usuarioEmail):', usuarioEmail);
+    console.log(' Email do usuário:', usuario.email);
     
-    // Se for um dos seus pedidos, mostrar detalhes completos
+    const match = clienteEmail === usuario.email || 
+                 orderEmail === usuario.email || 
+                 usuarioEmail === usuario.email;
+    
+    console.log(' Match:', match);
+    
     if (match) {
-      console.log('🎯 PEDIDO ENCONTRADO:', order);
+      console.log(' PEDIDO ENCONTRADO:', order);
     }
     
     return match;
   });
   
-  console.log('📊 Pedidos do usuário filtrados:', userOrders);
-  console.log('📊 Quantidade de pedidos:', userOrders.length);
-  
-  // Carregar pedidos na página
+  console.log(' Total de pedidos do usuário:', userOrders.length);
   displayOrders(userOrders);
 }
 
