@@ -1238,39 +1238,16 @@
     <script src="js/common.js"></script>
     <script src="js/script.js"></script>
     
-    <!-- Firebase Scripts (Compat Mode - carregados após o site) -->
+    <!-- Firebase DESABILITADO TEMPORARIAMENTE -->
+    <!--
     <script>
-        // Carregar Firebase apenas após o site estar pronto
+        // Firebase desabilitado para garantir que produtos funcionem
         window.addEventListener('load', function() {
-            console.log('🚀 Carregando Firebase...');
-            
-            // Carregar Firebase versão compat (não modular)
-            const firebaseApp = document.createElement('script');
-            firebaseApp.src = 'https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js';
-            document.head.appendChild(firebaseApp);
-            
-            const firebaseFirestore = document.createElement('script');
-            firebaseFirestore.src = 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js';
-            document.head.appendChild(firebaseFirestore);
-            
-            const firebaseAnalytics = document.createElement('script');
-            firebaseAnalytics.src = 'https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics-compat.js';
-            document.head.appendChild(firebaseAnalytics);
-            
-            // Carregar configuração após os SDKs
-            setTimeout(() => {
-                const config = document.createElement('script');
-                config.src = 'js/firebase-config.js';
-                document.head.appendChild(config);
-                
-                const orders = document.createElement('script');
-                orders.src = 'js/firebase-orders.js';
-                document.head.appendChild(orders);
-                
-                console.log('🔥 Firebase carregado com sucesso!');
-            }, 1000);
+            console.log('🚀 Firebase desabilitado temporariamente...');
+            console.log('🛒 Foco nos produtos primeiro!');
         });
     </script>
+    -->
 
 <!-- Script específico para menu de filtros mobile -->
 <script>
