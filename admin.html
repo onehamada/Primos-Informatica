@@ -51,28 +51,29 @@
         
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             color: #374151;
             font-weight: 500;
         }
         
         .form-group input {
             width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e5e7eb;
+            padding: 12px;
+            border: 1px solid #d1d5db;
             border-radius: 8px;
             font-size: 16px;
-            transition: border-color 0.2s;
+            box-sizing: border-box;
         }
         
         .form-group input:focus {
             outline: none;
             border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
         
         .login-btn {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: #3b82f6;
             color: white;
             border: none;
@@ -80,106 +81,152 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.3s ease;
         }
         
         .login-btn:hover {
             background: #2563eb;
         }
         
-        .login-btn:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-        }
-        
         .error-message {
+            display: none;
             background: #fef2f2;
             color: #dc2626;
             padding: 12px;
             border-radius: 8px;
             margin-bottom: 20px;
             border: 1px solid #fecaca;
-            display: none;
         }
         
-        /* Admin Container (hidden initially) */
+        /* Admin Panel */
         .admin-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
             display: none;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         
         .admin-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
+            background: white;
+            padding: 20px;
             border-radius: 12px;
-            margin-bottom: 30px;
-            text-align: center;
-            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-header h1 {
+            margin: 0;
+            color: #1f2937;
+        }
+        
+        .admin-header p {
+            margin: 5px 0 0 0;
+            color: #6b7280;
         }
         
         .logout-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.2);
+            background: #ef4444;
             color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 16px;
-            border-radius: 6px;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.2s;
+            font-weight: 600;
         }
         
         .logout-btn:hover {
-            background: rgba(255,255,255,0.3);
+            background: #dc2626;
         }
         
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         
         .stat-card {
             background: white;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             text-align: center;
         }
         
         .stat-number {
-            font-size: 2em;
+            font-size: 24px;
             font-weight: bold;
-            color: #3b82f6;
+            color: #1f2937;
+            margin-bottom: 5px;
         }
         
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group select,
+        .filter-group input {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .filter-btn:hover {
+            background: #2563eb;
+        }
+        
+        /* Orders Table */
         .orders-table {
             background: white;
             border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         
         .order-row {
-            border-bottom: 1px solid #f3f4f6;
-            padding: 15px;
-            transition: background 0.2s;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            padding: 16px;
+            transition: all 0.3s ease;
         }
         
         .order-row:hover {
-            background: #f9fafb;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
         }
         
         .order-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f3f4f6;
         }
         
         .order-id {
@@ -192,13 +239,28 @@
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
+            text-transform: uppercase;
         }
         
-        .status-pendente { background: #fef3c7; color: #92400e; }
-        .status-confirmado { background: #dbeafe; color: #1e40af; }
-        .status-enviado { background: #d1fae5; color: #065f46; }
-        .status-entregue { background: #e5e7eb; color: #374151; }
-        .status-cancelado { background: #fee2e2; color: #991b1b; }
+        .status-pendente {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-confirmado {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-enviado {
+            background: #e9d5ff;
+            color: #6b21a8;
+        }
+        
+        .status-entregue {
+            background: #d1fae5;
+            color: #065f46;
+        }
         
         .loading {
             text-align: center;
@@ -206,38 +268,10 @@
             color: #6b7280;
         }
         
-        .filters {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .filter-group {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .filter-group select, .filter-group input {
-            padding: 8px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-        }
-        
-        .filter-btn {
-            padding: 8px 16px;
-            background: #3b82f6;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        
-        .filter-btn:hover {
-            background: #2563eb;
+        /* Remove loading class when orders are loaded */
+        #ordersList:not(.loading) {
+            visibility: visible !important;
+            opacity: 1 !important;
         }
     </style>
 </head>
@@ -246,7 +280,7 @@
     <div id="loginScreen" class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <h1>🔐 Painel Admin</h1>
+                <h1>🔐 Acesso Administrativo</h1>
                 <p>Primos Informática</p>
             </div>
             
@@ -275,8 +309,10 @@
     <!-- Admin Panel (hidden initially) -->
     <div id="adminPanel" class="admin-container">
         <div class="admin-header">
-            <h1>🔥 Painel Administrativo</h1>
-            <p>Primos Informática - Gestão de Pedidos</p>
+            <div>
+                <h1>🔥 Painel Administrativo</h1>
+                <p>Primos Informática - Gestão de Pedidos</p>
+            </div>
             <button class="logout-btn" onclick="logout()">Sair</button>
         </div>
         
@@ -314,6 +350,7 @@
                 
                 <button class="filter-btn" onclick="filterOrders()">Filtrar</button>
                 <button class="filter-btn" onclick="loadOrders()">🔄 Atualizar</button>
+                <button class="filter-btn" style="background-color: #ef4444; color: white;" onclick="clearAllOrders()">🗑️ Limpar Todos os Pedidos</button>
             </div>
         </div>
 
@@ -345,79 +382,106 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         
-        // Exportar para uso global
+        // Exportar para uso global ANTES de carregar o firebase-orders.js
         window.firebaseDB = db;
         window.firebaseApp = firebase.app();
         
         console.log('🔥 Firebase inicializado com sucesso!');
     </script>
     
+    <!-- Firebase Orders (depois que Firebase estiver disponível) -->
     <script src="js/firebase-orders.js"></script>
     
     <script>
         // Admin credentials
         const ADMIN_EMAIL = 'teste@primos.com';
-        const ADMIN_PASSWORD = 'admin123'; // Senha simples para teste
+        const ADMIN_PASSWORD = 'admin123';
         
         let allOrders = [];
         let unsubscribe = null;
         
-        // Login functionality
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Login function
+        function login() {
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const errorMessage = document.getElementById('errorMessage');
             
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            if (!emailInput || !passwordInput) {
+                console.error('Campos de email ou senha não encontrados!');
+                return;
+            }
+            
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            
+            console.log('Tentativa de login com:', email);
             
             if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-                // Login successful
+                console.log('Login bem-sucedido!');
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
-                
-                // Load orders
+                errorMessage.style.display = 'none';
                 loadOrders();
-                
-                // Clear form
-                document.getElementById('loginForm').reset();
-                document.getElementById('errorMessage').style.display = 'none';
+                setupRealTimeListener(); // Ativa listener em tempo real
             } else {
-                // Login failed
-                document.getElementById('errorMessage').style.display = 'block';
-                
-                // Shake animation
-                const loginCard = document.querySelector('.login-card');
-                loginCard.style.animation = 'shake 0.5s';
-                setTimeout(() => {
-                    loginCard.style.animation = '';
-                }, 500);
-            }
-        });
-        
-        // Logout functionality
-        function logout() {
-            document.getElementById('loginScreen').style.display = 'flex';
-            document.getElementById('adminPanel').style.display = 'none';
-            
-            // Unsubscribe from real-time updates
-            if (unsubscribe) {
-                unsubscribe();
-                unsubscribe = null;
+                console.log('Falha no login. Verifique as credenciais.');
+                errorMessage.style.display = 'block';
+                const loginForm = document.getElementById('loginForm');
+                if (loginForm) {
+                    loginForm.classList.add('shake');
+                    setTimeout(() => {
+                        loginForm.classList.remove('shake');
+                    }, 500);
+                }
             }
         }
         
-        // Load orders
+        // Logout function
+        function logout() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            if (unsubscribe) {
+                unsubscribe();
+            }
+        }
+        
+        // Load orders - VERSÃO CORRIGIDA
         async function loadOrders() {
             try {
                 const result = await firebaseOrders.getAllOrders();
                 if (result.success) {
-                    allOrders = result.orders;
+                    allOrders = result.orders || [];
+                    console.log('📦 Pedidos carregados:', allOrders.length);
+                    console.log('🔄 Chamando displayOrders...');
                     displayOrders(allOrders);
+                    console.log('🔄 Chamando updateStatistics...');
                     updateStatistics();
+                    console.log('✅ loadOrders concluído');
                 }
             } catch (error) {
                 console.error('Erro ao carregar pedidos:', error);
-                document.getElementById('ordersList').innerHTML = '<p>Erro ao carregar pedidos. Aguarde a propagação da API (5-10 minutos).</p>';
+                const ordersList = document.getElementById('ordersList');
+                if (ordersList) {
+                    ordersList.innerHTML = '<p>Erro ao carregar pedidos</p>';
+                }
             }
+        }
+        
+        // Setup real-time listener
+        function setupRealTimeListener() {
+            if (unsubscribe) {
+                unsubscribe(); // Remove listener anterior
+            }
+            
+            unsubscribe = window.firebaseDB.collection('orders')
+                .onSnapshot((snapshot) => {
+                    console.log('🔄 Mudança detectada no Firestore!');
+                    loadOrders(); // Recarrega todos os pedidos
+                }, (error) => {
+                    console.error('Erro no listener em tempo real:', error);
+                });
         }
         
         // Update statistics
@@ -425,7 +489,10 @@
             const total = allOrders.length;
             const pending = allOrders.filter(o => (o.status || 'pendente') === 'pendente').length;
             const confirmed = allOrders.filter(o => o.status === 'confirmado').length;
-            const revenue = allOrders.reduce((sum, order) => sum + (order.total || 0), 0);
+            const revenue = allOrders.reduce((sum, order) => {
+                const total = parseFloat(order.total?.toString().replace(',', '.') || 0);
+                return sum + total;
+            }, 0);
             
             document.getElementById('totalOrders').textContent = total;
             document.getElementById('pendingOrders').textContent = pending;
@@ -435,17 +502,27 @@
         
         // Display orders
         function displayOrders(orders) {
+            console.log('🎨 Exibindo pedidos:', orders.length, 'pedidos');
             const ordersList = document.getElementById('ordersList');
             
+            // Remove a classe loading para tornar visível
+            ordersList.classList.remove('loading');
+            
+            console.log('📍 Elemento ordersList encontrado:', !!ordersList);
+            
             if (orders.length === 0) {
-                ordersList.innerHTML = '<p>Nenhum pedido encontrado</p>';
+                if (ordersList) {
+                    ordersList.innerHTML = '<p>Nenhum pedido encontrado</p>';
+                }
                 return;
             }
             
+            console.log('📋 Processando', orders.length, 'pedidos para exibição');
             let html = '';
-            orders.forEach(order => {
+            orders.forEach((order, index) => {
+                console.log(` Pedido ${index + 1}:`, order);
                 const statusClass = `status-${order.status || 'pendente'}`;
-                const total = (order.total || 0).toFixed(2);
+                const total = parseFloat(order.total?.toString().replace(',', '.') || 0).toFixed(2);
                 
                 html += `
                     <div class="order-row">
@@ -453,25 +530,26 @@
                             <span class="order-id">#${order.id}</span>
                             <span class="order-status ${statusClass}">${order.status || 'Pendente'}</span>
                         </div>
-                        <div><strong>Cliente:</strong> ${order.nome}</div>
-                        <div><strong>Email:</strong> ${order.email}</div>
-                        <div><strong>Telefone:</strong> ${order.telefone}</div>
+                        <div><strong>Cliente:</strong> ${order.cliente?.nome || order.nome || 'No informado'}</div>
+                        <div><strong>Email:</strong> ${order.cliente?.email || order.email || 'No informado'}</div>
+                        <div><strong>Telefone:</strong> ${order.cliente?.telefone || order.telefone || 'No informado'}</div>
+                        <div><strong>Tipo de Entrega:</strong> <span style="color: ${order.tipoEntrega === 'retirada' ? '#10b981' : '#3b82f6'}; font-weight: 600;">${order.tipoEntrega === 'retirada' ? ' Retirada na Loja' : ' Entrega por Aplicativo'}</span></div>
                         <div><strong>Total:</strong> R$ ${total}</div>
-                        <div><strong>Data:</strong> ${new Date(order.createdAt?.toDate?.() || order.createdAt).toLocaleString('pt-BR')}</div>
+                        <div><strong>Data:</strong> ${new Date(order.createdAt?.toDate?.() || order.createdAt || order.data).toLocaleString('pt-BR')}</div>
                         <div style="margin-top: 10px;">
-                            <select onchange="updateOrderStatus('${order.id}', this.value)">
-                                <option value="pendente" ${order.status === 'pendente' ? 'selected' : ''}>Pendente</option>
-                                <option value="confirmado" ${order.status === 'confirmado' ? 'selected' : ''}>Confirmado</option>
-                                <option value="enviado" ${order.status === 'enviado' ? 'selected' : ''}>Enviado</option>
-                                <option value="entregue" ${order.status === 'entregue' ? 'selected' : ''}>Entregue</option>
-                                <option value="cancelado" ${order.status === 'cancelado' ? 'selected' : ''}>Cancelado</option>
-                            </select>
+                            <button onclick="updateOrderStatus('${order.id}', 'confirmado')" style="margin-right: 5px; padding: 5px 10px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer;">Confirmar</button>
+                            <button onclick="updateOrderStatus('${order.id}', 'enviado')" style="margin-right: 5px; padding: 5px 10px; background: #8b5cf6; color: white; border: none; border-radius: 4px; cursor: pointer;">Enviar</button>
+                            <button onclick="updateOrderStatus('${order.id}', 'entregue')" style="padding: 5px 10px; background: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer;">Entregue</button>
                         </div>
                     </div>
                 `;
             });
             
+            console.log(' HTML gerado, tamanho:', html.length);
+            console.log(' Atualizando elemento ordersList...');
             ordersList.innerHTML = html;
+            console.log(' Pedidos exibidos com sucesso!');
+            console.log('✅ Pedidos exibidos com sucesso!');
         }
         
         // Update order status
@@ -480,7 +558,7 @@
                 const result = await firebaseOrders.updateOrderStatus(orderId, status);
                 if (result.success) {
                     console.log('Status atualizado com sucesso');
-                    loadOrders(); // Reload orders
+                    loadOrders();
                 }
             } catch (error) {
                 console.error('Erro ao atualizar status:', error);
@@ -500,20 +578,167 @@
             
             if (searchFilter) {
                 filtered = filtered.filter(order => 
-                    order.nome.toLowerCase().includes(searchFilter) ||
-                    order.email.toLowerCase().includes(searchFilter)
+                    (order.nome || '').toLowerCase().includes(searchFilter) ||
+                    (order.email || '').toLowerCase().includes(searchFilter)
                 );
             }
             
             displayOrders(filtered);
         }
         
+        // Função para limpar todos os pedidos
+        async function clearAllOrders() {
+            if (!confirm('⚠️ ATENÇÃO: Esta ação irá remover TODOS os pedidos do sistema.\n\nIsso inclui:\n✅ Todos os pedidos do localStorage\n✅ Todos os pedidos do Firebase\n\nTem certeza que deseja continuar?')) {
+                console.log('Operação de limpeza cancelada pelo usuário');
+                return { success: false, message: 'Operação cancelada' };
+            }
+
+            try {
+                console.log('🚀 Iniciando limpeza de todos os pedidos...');
+                
+                // 1. Limpar pedidos do localStorage
+                localStorage.removeItem('pedidos');
+                console.log('✅ Pedidos removidos do localStorage');
+                
+                // 2. Limpar do Firebase se estiver disponível
+                let firebaseCleared = false;
+                if (typeof firebase !== 'undefined') {
+                    try {
+                        console.log('🔥 Conectando ao Firebase para remover pedidos...');
+                        const db = firebase.firestore();
+                        const batch = db.batch();
+                        const ordersRef = db.collection('orders');
+                        
+                        // Buscar todos os pedidos
+                        const snapshot = await ordersRef.get();
+                        
+                        if (snapshot.empty) {
+                            console.log('ℹ️ Nenhum pedido encontrado no Firebase para remoção');
+                        } else {
+                            // Adicionar cada pedido ao batch para exclusão
+                            snapshot.docs.forEach(doc => {
+                                batch.delete(doc.ref);
+                            });
+                            
+                            // Executar a exclusão em lote
+                            await batch.commit();
+                            console.log(`✅ ${snapshot.size} pedidos removidos do Firebase`);
+                            firebaseCleared = true;
+                        }
+                    } catch (firebaseError) {
+                        console.error('❌ Erro ao limpar pedidos do Firebase:', firebaseError);
+                        // Não interrompe o fluxo, continua para limpar o localStorage
+                    }
+                }
+                
+                // 3. Atualizar a interface
+                allOrders = [];
+                updateStatistics();
+                document.getElementById('ordersList').innerHTML = '<p>Nenhum pedido encontrado</p>';
+                
+                const message = 'Todos os pedidos foram removidos com sucesso!' + 
+                               (firebaseCleared ? ' (LocalStorage e Firebase)' : ' (apenas LocalStorage)');
+                
+                showNotification(message, 'success');
+                console.log('✅ Limpeza de pedidos concluída com sucesso');
+                
+                return { 
+                    success: true, 
+                    message: message,
+                    firebaseCleared: firebaseCleared
+                };
+                
+            } catch (error) {
+                console.error('❌ Erro ao limpar pedidos:', error);
+                showNotification(`Erro ao limpar pedidos: ${error.message}`, 'error');
+                return { 
+                    success: false, 
+                    message: `Erro: ${error.message}`,
+                    error: error
+                };
+            }
+        }
+        
+        // Adicionar ao escopo global
+        window.clearAllOrders = clearAllOrders;
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            // Wait for Firebase to be ready
-            setTimeout(() => {
-                loadOrders();
-            }, 1000);
+            console.log('DOM carregado, inicializando...');
+            
+            // Adiciona listeners para os filtros
+            const safeAddListener = (id, event, callback) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener(event, callback);
+                } else {
+                    console.warn(`Elemento com ID '${id}' não encontrado`);
+                }
+            };
+            
+            // Adiciona listener para o formulário de login
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault(); // Evita o comportamento padrão do formulário
+                    login();
+                });
+            } else {
+                console.error('Formulário de login não encontrado!');
+            }
+            
+            safeAddListener('searchFilter', 'input', filterOrders);
+            safeAddListener('statusFilter', 'change', filterOrders);
+
+            // Inicializa o carregamento dos pedidos após o Firebase estar pronto
+            const initializeAdmin = () => {
+                if (typeof firebaseOrders !== 'undefined' && window.firebaseDB) {
+                    console.log('FirebaseOrders e FirebaseDB detectados, carregando pedidos...');
+                    loadOrders();
+                    
+                    // Adiciona listener para atualizações de status em tempo real
+                    window.addEventListener('orderStatusChanged', (event) => {
+                        console.log('Evento orderStatusChanged recebido:', event.detail);
+                        const { orderCode, status } = event.detail;
+                        
+                        // Atualiza o status do pedido na interface
+                        const orderElement = document.querySelector(`.order-row .order-id[data-order-code="${orderCode}"]`);
+                        if (orderElement) {
+                            const statusElement = orderElement.closest('.order-row').querySelector('.order-status');
+                            if (statusElement) {
+                                statusElement.textContent = status === 'cancelado' ? 'Cancelado' : 
+                                                         status === 'pendente' ? 'Pendente' : 
+                                                         status === 'enviado' ? 'Enviado' : 
+                                                         status === 'entregue' ? 'Entregue' : status;
+                                
+                                // Atualiza a classe de cor do status
+                                statusElement.className = 'order-status ' + 
+                                    (status === 'cancelado' ? 'status-canceled' : 
+                                     status === 'pendente' ? 'status-pending' : 
+                                     status === 'enviado' ? 'status-shipped' : 
+                                     'status-delivered');
+                                
+                                console.log(`Status do pedido ${orderCode} atualizado para: ${status}`);
+                                
+                                // Atualiza as estatísticas
+                                updateStatistics();
+                            }
+                        } else {
+                            console.log(`Pedido ${orderCode} não encontrado na interface, recarregando lista...`);
+                            loadOrders(); // Recarrega a lista se o pedido não for encontrado
+                        }
+                    });
+                } else {
+                    console.error('FirebaseOrders ou FirebaseDB não encontrado');
+                    console.log('firebaseOrders:', typeof firebaseOrders);
+                    console.log('firebaseDB:', window.firebaseDB);
+                    // Tenta novamente após 1 segundo
+                    setTimeout(initializeAdmin, 1000);
+                }
+            };
+            
+            // Inicia a inicialização do admin
+            setTimeout(initializeAdmin, 1000);
         });
     </script>
 </body>

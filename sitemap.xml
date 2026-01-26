@@ -1,63 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://onehamada.github.io/Primos-Informatica/</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/</loc>
+    <lastmod>2026-01-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://onehamada.github.io/Primos-Informatica/#inicio</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/#inicio</loc>
+    <lastmod>2026-01-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://onehamada.github.io/Primos-Informatica/#promo</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/#promocoes</loc>
+    <lastmod>2026-01-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://onehamada.github.io/Primos-Informatica/#processador</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/#computadores</loc>
+    <lastmod>2026-01-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://onehamada.github.io/Primos-Informatica/#placa de vídeo</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/#monitores</loc>
+    <lastmod>2026-01-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://onehamada.github.io/Primos-Informatica/#placa mãe</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/#perifericos</loc>
+    <lastmod>2026-01-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://onehamada.github.io/Primos-Informatica/#ssd</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/#redes</loc>
+    <lastmod>2026-01-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://onehamada.github.io/Primos-Informatica/#hd externo</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/#gabinetes</loc>
+    <lastmod>2026-01-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://onehamada.github.io/Primos-Informatica/#hd interno</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/#processadores</loc>
+    <lastmod>2026-01-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://onehamada.github.io/Primos-Informatica/#fonte</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/#placas-mae</loc>
+    <lastmod>2026-01-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primos-informatica-ecommerce.web.app/#memorias</loc>
+    <lastmod>2026-01-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primos-informatica-ecommerce.web.app/#armazenamento</loc>
+    <lastmod>2026-01-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primos-informatica-ecommerce.web.app/#fontes</loc>
+    <lastmod>2026-01-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primos-informatica-ecommerce.web.app/#coolers</loc>
+    <lastmod>2026-01-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primos-informatica-ecommerce.web.app/#acessorios</loc>
+    <lastmod>2026-01-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primos-informatica-ecommerce.web.app/admin.html</loc>
+    <lastmod>2026-01-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 </urlset>

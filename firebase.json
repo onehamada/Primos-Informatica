@@ -1,0 +1,29 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "**/*.exe",
+      "**/*.bat",
+      "**/*.cmd",
+      "**/*.ps1",
+      "**/*.py",
+      "**/*.jar",
+      "**/*.sh",
+      "**/tools/**",
+      "**/servers/**",
+      "**/__pycache__/**",
+      "**/*.pyc",
+      "**/*.pyo",
+      "**/*.pyd"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

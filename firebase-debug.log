@@ -1,0 +1,16 @@
+[debug] [2026-01-23T20:27:44.156Z] ----------------------------------------------------------------------
+[debug] [2026-01-23T20:27:44.160Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Primos Informatica\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2026-01-23T20:27:44.160Z] CLI Version:   15.4.0
+[debug] [2026-01-23T20:27:44.161Z] Platform:      win32
+[debug] [2026-01-23T20:27:44.161Z] Node Version:  v24.13.0
+[debug] [2026-01-23T20:27:44.161Z] Time:          Fri Jan 23 2026 17:27:44 GMT-0300 (Horário Padrão de Brasília)
+[debug] [2026-01-23T20:27:44.161Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-01-23T20:27:46.956Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-01-23T20:27:46.956Z] > authorizing via signed-in user (caetanot6671@gmail.com)
+[debug] [2026-01-23T20:27:46.957Z] [iam] checking project primos-informatica-ecommerce for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-01-23T20:27:46.958Z] Checked if tokens are valid: true, expires at: 1769202765632
+[debug] [2026-01-23T20:27:46.958Z] Checked if tokens are valid: true, expires at: 1769202765632
+[debug] [2026-01-23T20:27:46.959Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/primos-informatica-ecommerce:testIamPermissions [none]
+[debug] [2026-01-23T20:27:46.960Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/primos-informatica-ecommerce:testIamPermissions x-goog-quota-user=projects/primos-informatica-ecommerce
+[debug] [2026-01-23T20:27:46.960Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/primos-informatica-ecommerce:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}

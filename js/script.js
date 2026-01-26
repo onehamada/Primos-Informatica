@@ -1587,15 +1587,23 @@ function addToCart(productCode) {
       void clickedButton.offsetWidth; // Força reflow
       clickedButton.classList.add('adding');
       
+      // Aplica o estilo verde
+      clickedButton.style.backgroundColor = '#10B981';
+      clickedButton.style.borderColor = '#0d9f6e';
+      clickedButton.style.color = 'white';
+      
       setTimeout(() => {
         clickedButton.classList.remove('adding');
         clickedButton.classList.add('added');
         
-        // Remove o checkmark após 1.5s
+        // Volta ao normal após 1 segundo
         setTimeout(() => {
           clickedButton.classList.remove('added');
-        }, 1500);
-      }, 600);
+          clickedButton.style.backgroundColor = '';
+          clickedButton.style.borderColor = '';
+          clickedButton.style.color = '';
+        }, 1000);
+      }, 100);
       
       setTimeout(() => {
         const productElement = document.querySelector(`[data-product-code="${productCode}"]`);
@@ -2871,6 +2879,11 @@ function updateCheckoutTotal(shippingCost = 0) {
 function submitOrder(event) {
   event.preventDefault();
   
+  // Desativa a validação nativa do navegador
+  if (event && event.target && event.target.checkValidity) {
+    event.stopPropagation();
+  }
+  
   console.log('🛒 Enviando pedido...');
   
   // Coletar dados do formulário
@@ -2879,9 +2892,18 @@ function submitOrder(event) {
   
   // Verificar se carrinho está vazio
   if (cart.length === 0) {
-    alert('Seu carrinho está vazio! Não é possível finalizar o pedido.');
+    showNotification('Seu carrinho está vazio! Não é possível finalizar o pedido.', 'error');
     return;
   }
+  
+  // Verificar se o método de entrega foi selecionado
+  const deliveryMethod = document.querySelector('input[name="delivery-method"]:checked');
+  if (!deliveryMethod) {
+    showNotification('Por favor, selecione um método de entrega', 'error');
+    return;
+  }
+  
+  const isDelivery = deliveryMethod.value === 'entrega';
   
   // Calcular totais corretamente
   let subtotal = 0;
@@ -2892,19 +2914,50 @@ function submitOrder(event) {
     subtotal += price * quantity;
   });
   
-  const orderData = {
-    codigo: generateOrderCode(),
-    data: new Date().toISOString(),
-    status: 'pendente',
-    cliente: {
-      nome: document.getElementById('checkout-nome').value,
-      email: document.getElementById('checkout-email').value,
-      telefone: document.getElementById('checkout-telefone').value
-    },
-    // Adicionar email direto no pedido para compatibilidade
+  // Validar campos obrigatórios
+  let isValid = true;
+  const requiredFields = ['checkout-nome', 'checkout-email', 'checkout-telefone'];
+  
+  // Se for entrega, adiciona os campos de endereço obrigatórios
+  if (isDelivery) {
+    requiredFields.push('checkout-cep', 'checkout-rua', 'checkout-numero', 'checkout-bairro', 'checkout-cidade', 'checkout-estado');
+  }
+  
+  // Primeiro, remove todas as classes de erro
+  document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+  
+  // Valida cada campo
+  for (const fieldId of requiredFields) {
+    const field = document.getElementById(fieldId);
+    if (field && !field.value.trim()) {
+      field.classList.add('is-invalid');
+      if (isValid) {
+        // Rola até o primeiro campo inválido
+        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const fieldName = field.placeholder || field.getAttribute('name') || fieldId.replace('checkout-', '');
+        showNotification(`Por favor, preencha o campo ${fieldName}`, 'error');
+        isValid = false;
+      }
+    }
+  }
+  
+  if (!isValid) {
+    return;
+  }
+  
+  // Preparar objeto de cliente
+  const cliente = {
+    nome: document.getElementById('checkout-nome').value,
     email: document.getElementById('checkout-email').value,
-    usuarioEmail: document.getElementById('checkout-email').value,
-    endereco: {
+    telefone: document.getElementById('checkout-telefone').value
+  };
+
+  // Preparar objeto de endereço ou retirada
+  let endereco = null;
+  let freteValor = 0;
+  
+  if (isDelivery) {
+    endereco = {
       cep: document.getElementById('checkout-cep').value,
       rua: document.getElementById('checkout-rua').value,
       numero: document.getElementById('checkout-numero').value,
@@ -2912,17 +2965,39 @@ function submitOrder(event) {
       bairro: document.getElementById('checkout-bairro').value,
       cidade: document.getElementById('checkout-cidade').value,
       estado: document.getElementById('checkout-estado').value
-    },
+    };
+    freteValor = window.checkoutShipping || 0;
+  } else {
+    // Informações de retirada
+    endereco = {
+      tipo: 'retirada',
+      endereco: 'SCLN 113 Bloco A Loja 02, Asa Norte, Brasília - DF',
+      horario: 'Segunda a Sexta, das 9h às 18h',
+      telefone: '(61) 3340-6740'
+    };
+    freteValor = 0;
+  }
+
+  const orderData = {
+    codigo: generateOrderCode(),
+    data: new Date().toISOString(),
+    status: 'pendente',
+    tipoEntrega: isDelivery ? 'entrega' : 'retirada',
+    cliente: cliente,
+    // Adicionar email direto no pedido para compatibilidade
+    email: cliente.email,
+    usuarioEmail: cliente.email,
+    endereco: endereco,
     pagamento: document.querySelector('input[name="payment"]:checked').value,
     frete: {
-      tipo: 'uber',
-      valor: window.checkoutShipping || 0,
-      distancia: window.checkoutDistance || 0,
-      tempo: window.checkoutTime || 0
+      tipo: isDelivery ? 'uber' : 'retirada',
+      valor: freteValor,
+      distancia: isDelivery ? (window.checkoutDistance || 0) : 0,
+      tempo: isDelivery ? (window.checkoutTime || 0) : 0
     },
     itens: cart,
     total: subtotal,
-    totalComFrete: subtotal + (window.checkoutShipping || 0)
+    totalComFrete: subtotal + freteValor
   };
   
   console.log('📋 Dados do pedido:', orderData);
@@ -2932,9 +3007,27 @@ function submitOrder(event) {
   console.log('📦 Pedidos antes de salvar:', orders.length);
   orders.push(orderData);
   localStorage.setItem('pedidos', JSON.stringify(orders));
-  console.log('💾 Pedido salvo! Total agora:', orders.length);
+  console.log('💾 Pedido salvo no localStorage! Total agora:', orders.length);
   console.log('📧 Email do cliente no pedido:', orderData.cliente.email);
   console.log('📧 Email do usuário logado:', JSON.parse(localStorage.getItem('usuarioLogado') || '{}').email);
+  
+  // Salvar pedido no Firebase
+  if (typeof firebaseOrders !== 'undefined') {
+    console.log('🔥 Salvando pedido no Firebase...');
+    firebaseOrders.saveOrder(orderData)
+      .then(result => {
+        if (result.success) {
+          console.log('✅ Pedido salvo no Firebase:', result.id);
+        } else {
+          console.error('❌ Erro ao salvar no Firebase:', result.error);
+        }
+      })
+      .catch(error => {
+        console.error('❌ Erro ao salvar no Firebase:', error);
+      });
+  } else {
+    console.warn('⚠️ FirebaseOrders não disponível - pedido não salvo no Firebase');
+  }
   
   // Limpar carrinho
   localStorage.removeItem('cart');
@@ -2945,6 +3038,95 @@ function submitOrder(event) {
   
   // Mostrar confirmação
   showOrderConfirmation(orderData);
+  
+  // Preparar mensagem para o WhatsApp
+  let message = `*NOVO PEDIDO* - ${orderData.codigo}%0A%0A`;
+  
+  // Adicionar itens do pedido
+  message += `*Itens do Pedido:*%0A`;
+  orderData.itens.forEach(item => {
+    const price = parseFloat((item.preco || '0').toString().replace(',', '.'));
+    const total = price * (item.quantidade || 1);
+    message += `- ${item.nome || 'Produto'} x${item.quantidade || 1} - R$ ${total.toFixed(2)}%0A`;
+  });
+  
+  // Adicionar totais
+  message += `%0A*Subtotal:* R$ ${orderData.total.toFixed(2)}%0A`;
+  message += `*Frete:* R$ ${orderData.frete.valor.toFixed(2)}%0A`;
+  message += `*Total:* R$ ${orderData.totalComFrete.toFixed(2)}%0A%0A`;
+  
+  // Adicionar dados do cliente
+  message += `*Dados do Cliente*%0A`;
+  message += `Nome: ${orderData.cliente.nome}%0A`;
+  message += `Telefone: ${orderData.cliente.telefone}%0A`;
+  message += `E-mail: ${orderData.cliente.email}%0A%0A`;
+  
+  // Adicionar endereço
+  message += `*Endereço de Entrega*%0A`;
+  message += `${orderData.endereco.rua}, ${orderData.endereco.numero}`;
+  if (orderData.endereco.complemento) {
+    message += ` - ${orderData.endereco.complemento}`;
+  }
+  message += `%0A${orderData.endereco.bairro} - ${orderData.endereco.cidade}/${orderData.endereco.estado}%0A`;
+  message += `CEP: ${orderData.endereco.cep}%0A%0A`;
+  
+  // Adicionar método de pagamento
+  message += `*Pagamento:* ${orderData.pagamento === 'pix' ? 'PIX' : orderData.pagamento === 'credit' ? 'Cartão de Crédito' : 'Boleto'}%0A`;
+  message += `*Status:* ${orderData.status}%0A%0A`;
+  
+  // Adicionar link de confirmação
+  message += `_Pedido recebido em ${new Date().toLocaleString()}_`;
+  
+  // Adicionar botão de WhatsApp na tela de confirmação
+  const confirmationDiv = document.querySelector('#confirmation-page > div');
+  if (confirmationDiv) {
+    const whatsappNumber = '556133406740';
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+    
+    const whatsappButton = document.createElement('button');
+    whatsappButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#25D366" style="vertical-align: middle; margin-right: 8px;">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.966-.273-.099-.471-.148-.67.15-.197.297-.767.963-.94 1.16-.173.199-.347.221-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.795-1.484-1.761-1.66-2.059-.173-.297-.018-.458.13-.606.136-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.549 4.142 1.595 5.945L0 24l6.335-1.652a11.882 11.882 0 005.723 1.47h.005c6.554 0 11.89-5.335 11.89-11.893 0-3.18-1.259-6.19-3.546-8.468z"/>
+      </svg>
+      Enviar Pedido pelo WhatsApp
+    `;
+    
+    whatsappButton.style.cssText = `
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 15px;
+      margin-top: 15px;
+      background: #25D366;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    `;
+    
+    whatsappButton.onmouseover = () => {
+      whatsappButton.style.background = '#128C7E';
+    };
+    
+    whatsappButton.onmouseout = () => {
+      whatsappButton.style.background = '#25D366';
+    };
+    
+    whatsappButton.onclick = (e) => {
+      e.preventDefault();
+      window.open(whatsappUrl, '_blank');
+    };
+    
+    // Adicionar o botão antes do botão de continuar comprando
+    const continueButton = confirmationDiv.querySelector('button');
+    if (continueButton) {
+      continueButton.parentNode.insertBefore(whatsappButton, continueButton.nextSibling);
+    }
+  }
   
   console.log('✅ Pedido gerado com sucesso:', orderData);
 }
@@ -3185,7 +3367,7 @@ function createCheckoutPage() {
         ">
           <h2 style="margin: 0 0 20px 0; color: #1f2937; font-size: 20px;">Dados do Cliente</h2>
           
-          <form id="checkout-form" onsubmit="submitOrder(event)">
+          <form id="checkout-form" onsubmit="submitOrder(event)" novalidate>
             <!-- Dados Pessoais -->
             <div style="margin-bottom: 25px;">
               <h3 style="margin: 0 0 15px 0; color: #374151; font-size: 16px; font-weight: 600;">Dados Pessoais</h3>
@@ -3229,9 +3411,24 @@ function createCheckoutPage() {
               </div>
             </div>
             
-            <!-- Endereço -->
+            <!-- Tipo de Entrega -->
             <div style="margin-bottom: 25px;">
-              <h3 style="margin: 0 0 15px 0; color: #374151; font-size: 16px; font-weight: 600;">Endereço de Entrega</h3>
+              <h3 style="margin: 0 0 15px 0; color: #374151; font-size: 16px; font-weight: 600;">Tipo de Entrega</h3>
+              
+              <div style="display: grid; gap: 10px; margin-bottom: 20px;">
+                <label style="display: flex; align-items: center; padding: 15px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="if(!document.getElementById('delivery-method-retirada').checked) this.style.borderColor='#e5e7eb'">
+                  <input type="radio" id="delivery-method-entrega" name="delivery-method" value="entrega" checked required style="margin-right: 10px;" onchange="toggleDeliveryFields(true)">
+                  <span style="color: #374151;">🚚 Entrega por Aplicativo</span>
+                </label>
+                
+                <label style="display: flex; align-items: center; padding: 15px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="if(!document.getElementById('delivery-method-entrega').checked) this.style.borderColor='#e5e7eb'">
+                  <input type="radio" id="delivery-method-retirada" name="delivery-method" value="retirada" required style="margin-right: 10px;" onchange="toggleDeliveryFields(false)">
+                  <span style="color: #374151;">🏠 Retirada na Loja</span>
+                </label>
+              </div>
+              
+              <div id="endereco-entrega" style="margin-top: 20px;">
+                <h3 style="margin: 0 0 15px 0; color: #374151; font-size: 16px; font-weight: 600;">Endereço de Entrega</h3>
               
               <div style="display: grid; gap: 15px;">
                 <div>
@@ -3322,6 +3519,16 @@ function createCheckoutPage() {
                   </div>
                 </div>
               </div>
+              </div>
+              
+              <div id="endereco-retirada" style="display: none; margin-top: 20px; background: #f0fdf4; padding: 15px; border-radius: 8px; border: 1px solid #bbf7d0;">
+                <h3 style="margin: 0 0 10px 0; color: #166534; font-size: 16px; font-weight: 600;">Informações para Retirada</h3>
+                <p style="margin: 0; color: #166534; font-size: 14px; line-height: 1.5;">
+                  Endereço: SCLN 113 Bloco A Loja 02, Asa Norte, Brasília - DF<br>
+                  Horário de Funcionamento: Segunda a Sexta, das 9h às 18h<br>
+                  Telefone: (61) 3340-6740
+                </p>
+              </div>
             </div>
             
             <!-- Método de Pagamento -->
@@ -3383,9 +3590,13 @@ function createCheckoutPage() {
               <span id="checkout-subtotal" style="color: #374151; font-weight: 500;">R$ 0,00</span>
             </div>
             
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <div id="frete-container" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
               <span style="color: #6b7280;">Frete UBER:</span>
               <span id="checkout-shipping" style="color: #374151; font-weight: 500;">Calculando...</span>
+            </div>
+            <div id="retirada-container" style="display: none; justify-content: space-between; margin-bottom: 10px; color: #10b981; font-weight: 500;">
+              <span>Retirada na Loja</span>
+              <span>Grátis</span>
             </div>
             
             <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
@@ -3424,6 +3635,25 @@ function createCheckoutPage() {
   // Adicionar ao body
   document.body.appendChild(checkoutPage);
   
+  // Função para alternar entre campos de entrega e retirada
+  window.toggleDeliveryFields = function(isDelivery) {
+    document.getElementById('endereco-entrega').style.display = isDelivery ? 'block' : 'none';
+    document.getElementById('endereco-retirada').style.display = isDelivery ? 'none' : 'block';
+    document.getElementById('frete-container').style.display = isDelivery ? 'flex' : 'none';
+    document.getElementById('retirada-container').style.display = isDelivery ? 'none' : 'flex';
+    
+    // Atualiza o total sem frete se for retirada
+    if (!isDelivery) {
+      updateCheckoutTotal(0);
+    } else {
+      // Recalcula o frete se voltar para entrega
+      const cep = document.getElementById('checkout-cep').value;
+      if (cep && cep.length === 9) {
+        calculateUberShipping(cep);
+      }
+    }
+  };
+  
   // Preencher dados do usuário logado se existir
   const usuarioLogado = localStorage.getItem('usuarioLogado');
   if (usuarioLogado) {
@@ -3443,8 +3673,35 @@ function createCheckoutPage() {
   // Carregar resumo do carrinho
   loadCheckoutSummary();
   
+  // Inicializar estado dos campos de endereço (entrega selecionada por padrão)
+  toggleDeliveryFields(true);
+  
   console.log('✅ Página de checkout criada via SPA');
   
+}
+
+// Função para alternar campos de endereço baseado no tipo de entrega
+function toggleDeliveryFields(isDelivery) {
+  const enderecoFields = document.getElementById('endereco-entrega');
+  if (enderecoFields) {
+    if (isDelivery) {
+      enderecoFields.style.display = 'block';
+      // Adiciona atributo required aos campos de endereço
+      const enderecoInputs = enderecoFields.querySelectorAll('input');
+      enderecoInputs.forEach(input => {
+        if (!input.hasAttribute('data-optional')) {
+          input.setAttribute('required', '');
+        }
+      });
+    } else {
+      enderecoFields.style.display = 'none';
+      // Remove atributo required dos campos de endereço
+      const enderecoInputs = enderecoFields.querySelectorAll('input');
+      enderecoInputs.forEach(input => {
+        input.removeAttribute('required');
+      });
+    }
+  }
 }
 
 // === NAVEGAÇÃO SPA ===
@@ -3562,13 +3819,10 @@ function createOrdersPage() {
 }
 
 function loadUserOrders() {
-  // Buscar pedidos do localStorage
-  const allOrders = JSON.parse(localStorage.getItem('pedidos') || '[]');
   const usuarioLogado = localStorage.getItem('usuarioLogado');
   
   console.log('📋 Carregando pedidos do usuário...');
   console.log('👤 Usuário logado:', usuarioLogado);
-  console.log('📦 Todos os pedidos:', allOrders);
   
   if (!usuarioLogado) {
     console.log('❌ Usuário não está logado');
@@ -3579,6 +3833,67 @@ function loadUserOrders() {
   const usuario = JSON.parse(usuarioLogado);
   console.log('👤 Dados do usuário:', usuario);
   console.log('📧 Email do usuário:', usuario.email);
+  
+  // Carregar pedidos do Firebase se disponível
+  if (typeof firebaseOrders !== 'undefined') {
+    console.log('🔥 Carregando pedidos do Firebase...');
+    firebaseOrders.getAllOrders()
+      .then(result => {
+        if (result.success) {
+          console.log('📦 Pedidos do Firebase:', result.orders);
+          
+          // Filtrar pedidos do usuário atual
+          const userOrders = result.orders.filter(order => {
+            console.log('🔍 Verificando pedido:', order);
+            console.log('📧 Email do pedido (cliente.email):', order.cliente?.email);
+            console.log('📧 Email do pedido (email):', order.email);
+            console.log('📧 Email do pedido (usuarioEmail):', order.usuarioEmail);
+            console.log('📧 Email do usuário:', usuario.email);
+            
+            const match = order.cliente?.email === usuario.email || 
+                         order.email === usuario.email ||
+                         order.usuarioEmail === usuario.email;
+            
+            console.log('✅ Match:', match);
+            
+            // Se for um dos seus pedidos, mostrar detalhes completos
+            if (match) {
+              console.log('🎯 PEDIDO ENCONTRADO:', order);
+            }
+            
+            return match;
+          });
+          
+          console.log('📊 Pedidos do usuário filtrados:', userOrders);
+          console.log('📊 Quantidade de pedidos:', userOrders.length);
+          
+          // Carregar pedidos na página
+          displayOrders(userOrders);
+        } else {
+          console.error('❌ Erro ao carregar pedidos do Firebase:', result.error);
+          // Fallback para localStorage
+          loadUserOrdersFromLocalStorage(usuario);
+        }
+      })
+      .catch(error => {
+        console.error('❌ Erro ao carregar pedidos do Firebase:', error);
+        // Fallback para localStorage
+        loadUserOrdersFromLocalStorage(usuario);
+      });
+  } else {
+    console.warn('⚠️ FirebaseOrders não disponível - usando localStorage');
+    // Fallback para localStorage
+    loadUserOrdersFromLocalStorage(usuario);
+  }
+}
+
+function loadUserOrdersFromLocalStorage(usuario) {
+  // Buscar pedidos do localStorage
+  const allOrders = JSON.parse(localStorage.getItem('pedidos') || '[]');
+  console.log('📦 Todos os pedidos do localStorage:', allOrders);
+  
+  console.log('📋 Carregando pedidos do usuário do localStorage...');
+  console.log('👤 Usuário:', usuario);
   
   // Filtrar pedidos do usuário atual
   const userOrders = allOrders.filter(order => {
@@ -3740,63 +4055,375 @@ function createOrderCard(order) {
 function cancelOrder(orderCode) {
   console.log('🚀 cancelOrder() chamada com orderCode:', orderCode);
   
-  if (!confirm('Tem certeza que deseja cancelar este pedido? Esta ação não pode ser desfeita.')) {
-    console.log('❌ Usuário cancelou a operação');
+  // Criar um ID único para o botão de cancelamento
+  const cancelButtonId = `cancel-button-${orderCode}`;
+  const cancelButton = document.querySelector(`button[onclick*="${orderCode}"]`);
+  const originalButtonHTML = cancelButton ? cancelButton.outerHTML : null;
+  
+  // Mostrar confirmação personalizada
+  const confirmationModal = `
+    <div id="cancelConfirmationModal" style="
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background: rgba(0,0,0,0.5); display: flex; justify-content: center; 
+      align-items: center; z-index: 1000;">
+      <div style="background: white; padding: 24px; border-radius: 8px; 
+      max-width: 400px; width: 90%; text-align: center;">
+        <h3 style="margin-top: 0; color: #1f2937;">Cancelar Pedido</h3>
+        <p>Tem certeza que deseja cancelar o pedido <strong>${orderCode}</strong>?</p>
+        <p style="color: #6b7280; font-size: 14px;">Esta ação não pode ser desfeita.</p>
+        <div style="display: flex; gap: 12px; justify-content: center; margin-top: 24px;">
+          <button id="confirmCancelBtn" style="
+            padding: 8px 16px; background: #ef4444; color: white; 
+            border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
+            Sim, cancelar pedido
+          </button>
+          <button id="cancelCancelBtn" style="
+            padding: 8px 16px; background: #e5e7eb; color: #4b5563; 
+            border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
+            Manter pedido
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Injetar o modal no DOM
+  document.body.insertAdjacentHTML('beforeend', confirmationModal);
+  const modal = document.getElementById('cancelConfirmationModal');
+  
+  // Funções auxiliares
+  const showLoading = () => {
+    if (cancelButton) {
+      cancelButton.disabled = true;
+      cancelButton.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"></div> Cancelando...';
+    }
+  };
+  
+  const removeModal = () => modal && modal.parentNode && modal.parentNode.removeChild(modal);
+  
+  // Evento de confirmação
+  document.getElementById('confirmCancelBtn').onclick = async () => {
+    removeModal();
+    showLoading();
+    
+    try {
+      console.log('🔍 Buscando pedido com código:', orderCode);
+      const allOrders = JSON.parse(localStorage.getItem('pedidos') || '[]');
+      
+      // Encontrar o índice do pedido específico usando o orderCode
+      const orderIndex = allOrders.findIndex(order => {
+        const orderIdMatch = String(order.id || '') === String(orderCode);
+        const orderCodeMatch = String(order.codigo || '') === String(orderCode);
+        console.log(`Verificando pedido - ID: ${order.id}, Código: ${order.codigo}, Procurado: ${orderCode}, Match: ${orderIdMatch || orderCodeMatch}`);
+        return orderIdMatch || orderCodeMatch;
+      });
+      
+      if (orderIndex === -1) throw new Error('Pedido não encontrado');
+      
+      console.log('📝 Pedido encontrado para cancelamento:', allOrders[orderIndex]);
+      
+      // Criar uma cópia do pedido para modificar
+      const orderToUpdate = { ...allOrders[orderIndex] };
+      
+      // Atualizar status localmente
+      orderToUpdate.status = 'cancelado';
+      orderToUpdate.dataCancelamento = new Date().toISOString();
+      
+      // Atualizar apenas o pedido específico no array
+      allOrders[orderIndex] = orderToUpdate;
+      
+      // Salvar de volta no localStorage
+      localStorage.setItem('pedidos', JSON.stringify(allOrders));
+      console.log('✅ Pedido atualizado no localStorage');
+      
+      // Atualizar Firebase
+      if (typeof firebase !== 'undefined' && (orderToUpdate.id || orderToUpdate.codigo)) {
+        console.log('🔥 Atualizando pedido no Firebase...');
+        const db = firebase.firestore();
+        
+        try {
+          // Primeiro, tentar atualizar pelo ID
+          if (orderToUpdate.id) {
+            await db.collection('orders').doc(orderToUpdate.id).update({
+              status: 'cancelado',
+              dataCancelamento: firebase.firestore.FieldValue.serverTimestamp(),
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            console.log(`✅ Pedido ${orderToUpdate.id} atualizado no Firebase`);
+          } 
+          // Se não tiver ID ou se a atualização falhar, tentar pelo código
+          if (orderToUpdate.codigo && (!orderToUpdate.id || orderToUpdate.id === orderToUpdate.codigo)) {
+            const querySnapshot = await db.collection('orders')
+              .where('codigo', '==', orderToUpdate.codigo)
+              .limit(1)
+              .get();
+              
+            if (!querySnapshot.empty) {
+              const doc = querySnapshot.docs[0];
+              await doc.ref.update({
+                status: 'cancelado',
+                dataCancelamento: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+              });
+              console.log(`✅ Pedido ${doc.id} atualizado no Firebase usando busca por código`);
+            }
+          }
+        } catch (firebaseError) {
+          console.error('❌ Erro ao atualizar pedido no Firebase:', firebaseError);
+          throw new Error('Não foi possível atualizar o pedido no servidor. O status foi atualizado localmente.');
+        }
+      }
+      
+      showNotification('Pedido cancelado com sucesso!', 'success');
+      
+      // Recarregar a lista de pedidos
+      const usuario = JSON.parse(localStorage.getItem('usuarioLogado') || '{}');
+      if (usuario && usuario.email) {
+        console.log('🔄 Atualizando exibição dos pedidos...');
+        const storedOrders = JSON.parse(localStorage.getItem('pedidos') || '[]');
+        const userOrders = storedOrders.filter(order => 
+          (order.cliente?.email === usuario.email) || 
+          (order.email === usuario.email) || 
+          (order.usuarioEmail === usuario.email)
+        );
+        console.log(`🔄 ${userOrders.length} pedidos encontrados para o usuário`);
+        displayOrders(userOrders);
+      }
+      
+      // Remover botão
+      if (cancelButton) cancelButton.remove();
+      
+    } catch (error) {
+      console.error('❌ Erro ao cancelar pedido:', error);
+      showNotification(`Erro ao cancelar pedido: ${error.message}`, 'error');
+      if (cancelButton) cancelButton.outerHTML = originalButtonHTML;
+    }
+  };
+  
+  // Evento de cancelamento
+  document.getElementById('cancelCancelBtn').onclick = removeModal;
+  
+  // Fechar modal ao clicar fora
+  modal.onclick = (e) => e.target === modal && removeModal();
+  
+  // Fechar com ESC
+  const handleKeyDown = (e) => e.key === 'Escape' && (removeModal(), document.removeEventListener('keydown', handleKeyDown));
+  document.addEventListener('keydown', handleKeyDown);
+  
+  // Recarregar a lista de pedidos do usuário
+  const loadUserOrders = () => {
+    const usuarioLogado = localStorage.getItem('usuarioLogado');
+    if (usuarioLogado) {
+      const usuario = JSON.parse(usuarioLogado);
+      const storedOrders = JSON.parse(localStorage.getItem('pedidos') || '[]');
+      const userOrders = storedOrders.filter(order => 
+        (order.cliente?.email === usuario.email) || 
+        (order.email === usuario.email) ||
+        (order.usuarioEmail === usuario.email)
+      );
+      console.log('🔄 Recarregando pedidos do usuário:', userOrders.length);
+      displayOrders(userOrders);
+    }
+  };
+  
+  // Carregar pedidos imediatamente
+  loadUserOrders();
+  
+  // Notificar o painel admin sobre a mudança
+  if (typeof firebase !== 'undefined') {
+    console.log('📢 Notificando painel admin sobre a mudança de status');
+    // Disparar um evento personalizado para notificar o painel admin
+    const event = new CustomEvent('orderStatusChanged', {
+      detail: { 
+        orderCode: orderCode, 
+        status: 'cancelado',
+        timestamp: new Date().toISOString()
+      }
+    });
+    window.dispatchEvent(event);
+    
+    // Função assíncrona para atualizar o Firebase
+    const updateFirebaseStatus = async () => {
+      try {
+        const db = firebase.firestore();
+        // Buscar o pedido pelo código para garantir que estamos atualizando o correto
+        const querySnapshot = await db.collection('orders')
+          .where('codigo', '==', orderCode)
+          .limit(1)
+          .get();
+          
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0];
+          await doc.ref.update({
+            status: 'cancelado',
+            dataCancelamento: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          console.log(`✅ Pedido ${doc.id} atualizado no Firebase usando busca por código`);
+        }
+      } catch (error) {
+        console.error('❌ Erro ao atualizar status no Firebase:', error);
+      }
+    };
+    
+    // Chamar a função assíncrona
+    updateFirebaseStatus().catch(error => {
+      console.error('❌ Erro ao executar atualização no Firebase:', error);
+    });
+  }
+}
+
+async function deleteAllOrders() {
+  if (!confirm('⚠️ ATENÇÃO: Esta ação irá remover TODOS os pedidos do sistema. Tem certeza que deseja continuar?')) {
+    console.log('Operação cancelada pelo usuário');
     return;
   }
-  
-  // Buscar pedidos do localStorage
-  const allOrders = JSON.parse(localStorage.getItem('pedidos') || '[]');
-  console.log('📦 Total de pedidos:', allOrders.length);
-  
-  // Encontrar e atualizar o pedido
-  const orderIndex = allOrders.findIndex(order => {
-    console.log('🔍 Verificando pedido:', order.codigo, order.id, '===', orderCode);
-    // Converter tudo para string para comparação
-    const orderCodigo = String(order.codigo || '');
-    const orderId = String(order.id || '');
-    const targetCode = String(orderCode);
+
+  try {
+    console.log('🚀 Iniciando exclusão de todos os pedidos...');
     
-    console.log('🔍 Comparação:', orderCodigo, orderId, '===', targetCode);
+    // 1. Limpar pedidos do localStorage
+    localStorage.removeItem('pedidos');
+    console.log('✅ Pedidos removidos do localStorage');
     
-    return orderCodigo === targetCode || orderId === targetCode;
-  });
-  
-  console.log('📍 Índice do pedido encontrado:', orderIndex);
-  
-  if (orderIndex === -1) {
-    console.log('❌ Pedido não encontrado!');
-    alert('Pedido não encontrado!');
-    return;
+    // 2. Remover do Firebase se estiver disponível
+    if (typeof firebase !== 'undefined') {
+      console.log('🔥 Conectando ao Firebase para remover pedidos...');
+      const db = firebase.firestore();
+      const batch = db.batch();
+      const ordersRef = db.collection('orders');
+      
+      // Buscar todos os pedidos
+      const snapshot = await ordersRef.get();
+      
+      // Adicionar cada pedido ao batch para exclusão
+      snapshot.docs.forEach(doc => {
+        batch.delete(doc.ref);
+      });
+      
+      // Executar a exclusão em lote
+      await batch.commit();
+      console.log(`✅ ${snapshot.size} pedidos removidos do Firebase`);
+    }
+    
+    // 3. Atualizar a interface
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado') || '{}');
+    if (usuarioLogado && usuarioLogado.email) {
+      // Se for admin, recarregar a página
+      if (window.location.pathname.includes('admin')) {
+        window.location.reload();
+      } else {
+        // Se for usuário normal, limpar a lista
+        const ordersContainer = document.getElementById('orders-list-container');
+        if (ordersContainer) {
+          ordersContainer.innerHTML = '<p>Nenhum pedido encontrado.</p>';
+        }
+      }
+    }
+    
+    showNotification('Todos os pedidos foram removidos com sucesso!', 'success');
+    
+  } catch (error) {
+    console.error('❌ Erro ao excluir pedidos:', error);
+    showNotification(`Erro ao excluir pedidos: ${error.message}`, 'error');
   }
+}
+
+// Adicionar ao escopo global
+window.deleteAllOrders = deleteAllOrders;
+
+// Função para limpar todos os pedidos do localStorage e do Firebase
+async function clearAllOrders() {
+  // Confirmar com o usuário antes de prosseguir
+  const confirmDelete = confirm('⚠️ ATENÇÃO: Esta ação irá remover TODOS os pedidos do sistema.\n\nIsso inclui:\n✅ Todos os pedidos do localStorage\n✅ Todos os pedidos do Firebase\n\nTem certeza que deseja continuar?');
   
-  console.log('✅ Pedido encontrado antes do cancelamento:', allOrders[orderIndex]);
-  
-  // Atualizar status para cancelado
-  allOrders[orderIndex].status = 'cancelado';
-  allOrders[orderIndex].dataCancelamento = new Date().toISOString();
-  
-  console.log('✅ Pedido atualizado:', allOrders[orderIndex]);
-  
-  // Salvar no localStorage
-  localStorage.setItem('pedidos', JSON.stringify(allOrders));
-  console.log('💾 Pedidos salvos no localStorage');
-  
-  // Mostrar mensagem de sucesso
-  alert(`Pedido ${orderCode} cancelado com sucesso!`);
-  
-  // Recarregar a lista de pedidos
-  const usuarioLogado = localStorage.getItem('usuarioLogado');
-  if (usuarioLogado) {
-    const usuario = JSON.parse(usuarioLogado);
-    const userOrders = allOrders.filter(order => 
-      order.cliente?.email === usuario.email || 
-      order.email === usuario.email ||
-      order.usuarioEmail === usuario.email
-    );
-    console.log('🔄 Recarregando pedidos do usuário:', userOrders.length);
-    displayOrders(userOrders);
+  if (!confirmDelete) {
+    console.log('Operação de limpeza cancelada pelo usuário');
+    return { success: false, message: 'Operação cancelada' };
   }
+
+  try {
+    console.log('🚀 Iniciando limpeza de todos os pedidos...');
+    
+    // 1. Limpar pedidos do localStorage
+    localStorage.removeItem('pedidos');
+    console.log('✅ Pedidos removidos do localStorage');
+    
+    // 2. Limpar do Firebase se estiver disponível
+    let firebaseCleared = false;
+    if (typeof firebase !== 'undefined') {
+      try {
+        console.log('🔥 Conectando ao Firebase para remover pedidos...');
+        const db = firebase.firestore();
+        const batch = db.batch();
+        const ordersRef = db.collection('orders');
+        
+        // Buscar todos os pedidos
+        const snapshot = await ordersRef.get();
+        
+        if (snapshot.empty) {
+          console.log('ℹ️ Nenhum pedido encontrado no Firebase para remoção');
+        } else {
+          // Adicionar cada pedido ao batch para exclusão
+          snapshot.docs.forEach(doc => {
+            batch.delete(doc.ref);
+          });
+          
+          // Executar a exclusão em lote
+          await batch.commit();
+          console.log(`✅ ${snapshot.size} pedidos removidos do Firebase`);
+          firebaseCleared = true;
+        }
+      } catch (firebaseError) {
+        console.error('❌ Erro ao limpar pedidos do Firebase:', firebaseError);
+        // Não interrompe o fluxo, continua para limpar o localStorage
+      }
+    }
+    
+    // 3. Atualizar a interface
+    if (window.location.pathname.includes('admin.html')) {
+      // Se estiver na página de admin, recarregar a lista
+      if (window.loadOrders) {
+        window.loadOrders();
+      } else if (window.location.reload) {
+        window.location.reload();
+      }
+    } else {
+      // Se estiver na página de usuário, limpar a lista
+      const ordersContainer = document.getElementById('orders-list-container');
+      if (ordersContainer) {
+        ordersContainer.innerHTML = '<p>Nenhum pedido encontrado.</p>';
+      }
+    }
+    
+    const message = 'Todos os pedidos foram removidos com sucesso!' + 
+                   (firebaseCleared ? ' (LocalStorage e Firebase)' : ' (apenas LocalStorage)');
+    
+    showNotification(message, 'success');
+    console.log('✅ Limpeza de pedidos concluída com sucesso');
+    
+    return { 
+      success: true, 
+      message: message,
+      firebaseCleared: firebaseCleared
+    };
+    
+  } catch (error) {
+    console.error('❌ Erro ao limpar pedidos:', error);
+    showNotification(`Erro ao limpar pedidos: ${error.message}`, 'error');
+    return { 
+      success: false, 
+      message: `Erro: ${error.message}`,
+      error: error
+    };
+  }
+}
+
+// Adicionar ao escopo global para acesso pelo console
+try {
+  window.clearAllOrders = clearAllOrders;
+} catch (e) {
+  console.error('Erro ao adicionar clearAllOrders ao escopo global:', e);
 }
 
 function getStatusText(status) {
@@ -5649,21 +6276,6 @@ function closeEditProfileModal() {
 }
 
 function clearEditProfileErrors() {
-  // Limpar mensagens de erro
-  const errorElements = [
-    'editNomeError',
-    'editEmailError', 
-    'editTelefoneError'
-  ];
-  
-  errorElements.forEach(id => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.textContent = '';
-      element.style.display = 'none';
-    }
-  });
-  
   // Limpar estilos de erro dos inputs
   const inputs = ['editNome', 'editEmail', 'editTelefone'];
   inputs.forEach(id => {
