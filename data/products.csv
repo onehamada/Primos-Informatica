@@ -3,6 +3,8 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 400772;MONITOR 21.5 PHILIPS LED FULL HD 221V8 WVA HDMI;monitor;825,00;1;Monitor 21.5 Full HD 221V8 WVA HDMI;Philips;nao;monitor-philips-215-fullhd-221v8.webp
 1117;MONITOR 15.4 HAYOM MO 6006;monitor;300,00;1;Monitor 15.4 MO6006;Hayom;nao;monitor-hayom-154-mo6006.webp
 1115;MONITOR 17.1 HAYOM MO6004;monitor;330,00;1;Monitor 17.1 MO6004;Hayom;nao;monitor-hayom-171-mo6004.webp
+1554;GABINETE GAMER GB1792;gabinetes;240,00;3;Gabinete Gamer GB1792;Hayom;nao;gabinete-hayom-gb1792.webp
+1947;GABINETE GAMER MID TOWER C/3 FANS HAYOM GB1789;gabinetes;372,00;5;Gabinete Gamer Mid Tower com 3 Fans Hayom GB1789;Hayom;nao;gabinete-hayom-gb1789.webp
 400396;MOUSE MULTILASER SEM FIO PRETO MO307;mouse;22,00;2;Mouse sem fio preto MO307;Multilaser;nao;mouse-multilaser-mo307.webp
 402226;MOUSE MULTILASER PRETO USB MO255;mouse;15,00;1;Mouse USB preto MO255;Multilaser;nao;mouse-multilaser-mo255.webp
 1939;MOUSE MULTILASER SEM FIO RECARREGÁVEL 2.4 GHZ MO277;mouse;70,00;1;Mouse recarregável sem fio MO277;Multilaser;nao;mouse-multilaser-mo277.webp
@@ -76,7 +78,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 402155;TECLADO MULTILASER USB MULTIMÍDIA TC193;teclado;25,00;1;Teclado USB multimídia TC193;Multilaser;nao;teclado-multilaser-tc193.webp
 1086;KIT TECLADO E MOUSE OEX CAMBO OFFICE TM.406;kit-teclado-mouse;125,00;1;Kit teclado e mouse TM.406;OEX;nao;kit-oex-tm406.webp
 1841;TECLADO LOGITECH GAMER G413SE;teclado;585,00;1;Teclado gamer G413SE;Logitech;nao;teclado-logitech-g413se.webp
-402216;MINI TECLADO MULTILASER MEC GK-510;teclado;195,00;1;Mini teclado mecânico GK-510;Multilaser;nao;teclado-multilaser-gk510.webp
+402216;MINI TECLADO MULTILASER MEC GK-510;teclado;195,00;1;Mini teclado mecânico GK-510;Multilaser;sim;teclado-multilaser-gk510.webp
 1243;MINI TECLADO TOUCHPAD WIRELESS KEYBOARD KNUP VERDE;teclado;45,00;1;Mini teclado touchpad wireless verde;Knup;nao;mini-teclado-knup-verde.webp
 2133;KIT TECLADO E MOUSE WIRELESS FATSC40 FEASSO 495;kit-teclado-mouse;250,00;1;Kit teclado e mouse FATSC40;Feasso;nao;kit-feasso-fatsc40.webp
 1146;TECLADO USB PRETO BPC-8236 BRAZIL;teclado;25,00;1;Teclado USB preto BPC-8236;BPC;nao;teclado-bpc-8236.webp
@@ -141,7 +143,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1046;PLACA DE VÍDEO AMD RX570 8GB DDR5 PCYES;placa de vídeo;964,60;2;RX570 8GB DDR5 256 bits PCYes;AMD;sim;rx570.webp
 1899;PLACA DE VÍDEO NVIDIA GTX1050 4GB DDR5 GALAX;placa de vídeo;1190,00;2;GTX 1050 4GB DDR5 128 bits Galax;NVIDIA;nao;gtx1050.webp
 402270;PLACA DE VÍDEO NVIDIA GTX1050 TI 4GB DDR5 ASUS;placa de vídeo;1530,00;2;GTX 1050 Ti 4GB DDR5 128 bits ASUS;NVIDIA;nao;gtx1050ti.webp
-401807;PLACA DE VÍDEO NVIDIA GTX1660 6GB DDR5 GALAX;placa de vídeo;1534,50;1;GTX 1660 6GB DDR5 192 bits Galax;NVIDIA;sim;gtx1660.webp
+401807;PLACA DE VÍDEO NVIDIA GTX1660 6GB DDR5 GALAX;placa de vídeo;1534,50;1;GTX 1660 6GB DDR5 192 bits Galax;NVIDIA;nao;gtx1660.webp
 1933;HD SSD 120GB 2.5 GET;ssd;190,00;1;SSD 120GB 2.5 polegadas GET;GET;nao;ssd120get.webp
 1548;HD SSD 240GB 2.5 SANDISK 530MB/S G26;ssd;425,00;1;SSD 240GB 2.5 SANDISK 530MB/s G26;SANDISK;nao;ssd240sandisk.webp
 1866;HD SSD 240GB SSD1901 HAYOM;ssd;315,00;1;SSD 240GB modelo SSD1901;HAYOM;nao;ssd240hayom.webp
@@ -171,4 +173,4 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 2014;PLACA MAE HAYOM 1155 B75M S/V/R DDR3 PLM2301;placa mãe;185,00;3;Placa Mãe Hayom 1155 B75M S/V/R DDR3 PLM2301;Hayom;sim;hayom-1155-b75m.webp
 2015;PLACA MAE HAYOM 1155 H61M EL DDR3 PLM2300;placa mãe;160,00;3;Placa Mãe Hayom 1155 H61M EL DDR3 PLM2300;Hayom;nao;hayom-1155-h61m.webp
 2016;PLACA MAE PCWARE 1151 8ª IPMB360 PRO-GAMING DDR4;placa mãe;828,00;3;Placa Mãe PCWARE 1151 8ª IPMB360 PRO-GAMING DDR4;PCWARE;nao;pcware-1151-ipmb360.webp
-2017;PLACA MAE PCWARE 1151 8ª/9ªG IPMH310G DDR4;placa mãe;530,00;3;Placa Mãe PCWARE 1151 8ª/9ªG IPMH310G DDR4;PCWARE;sim;ipmh310g.webp
+1906;AMD RYZEN 5 5600GT;processador;1208,00;1;Processador AMD Ryzen 5 5600GT - 6 núcleos, 12 threads, clock até 4.6GHz;AMD;nao;amd-ryzen5-5600gt.webp

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -340,7 +340,7 @@
   <link rel="canonical" href="https://onehamada.github.io/Primos-Informatica/" />
   
   <!-- Favicon completo para todos os dispositivos -->
-  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="images/favicons/favicon.ico" sizes="any">
   <link rel="icon" href="images/favicons/favicon-32x32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="images/favicons/favicon-16x16.png" type="image/png" sizes="16x16">
   
@@ -1158,6 +1158,11 @@
     <h2>Fontes</h2>
     <div class="products-grid"></div>
   </div>
+
+  <div id="gabinetes" class="category" style="display:none;">
+    <h2>Gabinetes</h2>
+    <div class="products-grid"></div>
+  </div>
 </main>
 
 <footer>
@@ -1171,6 +1176,8 @@
   <button type="button" onclick="showCategory('hd externo')">HDs Externos</button>
   <button type="button" onclick="showCategory('hd interno')">HDs Internos</button>
   <button type="button" onclick="showCategory('fonte')">Fontes</button>
+  <button type="button" onclick="showCategory('gabinetes')">Gabinetes</button>
+  <button type="button" onclick="showCategory('teclado')">Teclados</button>
 </footer>
 
 <!-- Botão Flutuante WhatsApp -->
@@ -1238,7 +1245,38 @@
 </div>
 
 <!-- Scripts -->
-<script src="js/script.js"></script>
+<script src="js/script.js" defer></script>
+
+<!-- Firebase SDK (Compat Mode) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+<!-- Firebase Configuration -->
+<script>
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAvJUdjnY7xjnlTSYJAQZ6safylKXKlzLc",
+        authDomain: "primos-informatica-ecommerce.firebaseapp.com",
+        projectId: "primos-informatica-ecommerce",
+        storageBucket: "primos-informatica-ecommerce.firebasestorage.app",
+        messagingSenderId: "989269165415",
+        appId: "1:989269165415:web:e372a9915f616f9cae9bc2",
+        measurementId: "G-J6KVL50YGQ"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    
+    // Exportar para uso global
+    window.firebaseDB = db;
+    window.firebaseApp = firebase.app();
+    
+    console.log('🔥 Firebase inicializado no site principal!');
+</script>
+
+<!-- Firebase Orders -->
+<script src="js/firebase-orders.js"></script>
 
 <!-- Script específico para menu de filtros mobile -->
 <script>
@@ -1321,5 +1359,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 100);
 });
 </script>
+
+<!-- Sistema de Notificações -->
+<script src="js/notifications.js"></script>
 </body>
 </html>

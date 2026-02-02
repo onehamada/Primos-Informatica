@@ -50,7 +50,7 @@ function openSimpleCheckout() {
   console.log('openSimpleCheckout chamado');
   const cart = JSON.parse(localStorage.getItem('cart') || '[]');
   if (cart.length === 0) {
-    alert('Seu carrinho está vazio!');
+    showWarning('Seu carrinho está vazio!', 'Atenção');
     return;
   }
   
@@ -396,7 +396,7 @@ function processSimpleCheckout(event) {
           if (typeof showNotification === 'function') {
             showNotification('Pedido cancelado com sucesso', 'success');
           } else {
-            alert('Pedido cancelado com sucesso!');
+            showSuccess('Pedido cancelado com sucesso!', 'Sucesso');
           }
           
           // Recarregar a lista de pedidos
@@ -412,11 +412,11 @@ function processSimpleCheckout(event) {
           
         } else {
           console.error('Pedido não encontrado:', orderId);
-          alert('Pedido não encontrado!');
+          showError('Pedido não encontrado!', 'Erro');
         }
       } catch (error) {
         console.error('Erro ao cancelar pedido:', error);
-        alert('Erro ao cancelar pedido. Tente novamente.');
+        showError('Erro ao cancelar pedido. Tente novamente.', 'Erro');
       }
     } else {
       console.log('Cancelamento de pedido cancelado pelo usuário');
@@ -494,3 +494,4 @@ function processSimpleCheckout(event) {
   window.calculateDeliveryFee = calculateDeliveryFee;
   window.cancelOrder = cancelOrder;
   window.openOrdersModal = openOrdersModal;
+}

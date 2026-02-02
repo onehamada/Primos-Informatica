@@ -3,7 +3,7 @@
 function openSimpleCheckout() {
   const cart = JSON.parse(localStorage.getItem('cart') || '[]');
   if (cart.length === 0) {
-    alert('Seu carrinho está vazio!');
+    showWarning('Seu carrinho está vazio!', 'Atenção');
     return;
   }
   
@@ -281,7 +281,7 @@ function processSimpleCheckout(event) {
   const whatsappUrl = `https://wa.me/556133406740?text=${encodeURIComponent(message)}`;
   window.open(whatsappUrl, '_blank');
   
-  alert('Pedido enviado com sucesso! Você será redirecionado para o WhatsApp.');
+  showSuccess('Pedido enviado com sucesso! Você será redirecionado para o WhatsApp.', 'Pedido Confirmado');
 }
 
 // Event listeners

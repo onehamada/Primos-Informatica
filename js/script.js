@@ -173,15 +173,57 @@ function showPromocoes() {
   // Mostrar a seção
   promocoesSection.style.display = 'block';
   
-  // Filtrar produtos em promoção
-  const promocoesProducts = [];
-  
-  for (let i = 0; i < allProducts.length; i++) {
-    // JSON usa booleano true, CSV usava string 'sim'
-    if (allProducts[i].promocao === true || allProducts[i].promocao === 'sim') {
-      promocoesProducts.push(allProducts[i]);
+  // Produtos específicos para promoção
+  const produtosPromocaoEspecificos = [
+    {
+      codigo: "2011",
+      nome: "PLACA MAE BRAZIL PC 1155 DDR3 BPC-H61-ITX-M.2",
+      categoria: "placa mãe",
+      preco: 189,
+      qt: 3,
+      descricao: "Placa Mãe Brazil PC 1155 DDR3 BPC-H61-ITX-M.2",
+      marca: "Brazil PC",
+      promocao: true,
+      imagem: "bpc-h61-itx-m2.webp"
+    },
+    {
+      codigo: "1892",
+      nome: "FONTE REAL 750 W 80 PLUS MGS",
+      categoria: "fonte",
+      preco: 350,
+      qt: 3,
+      descricao: "Fonte Real 750W 80 Plus MGS",
+      marca: "MGS",
+      promocao: true,
+      imagem: "mgs_fonte750w.webp"
+    },
+    {
+      codigo: "1554",
+      nome: "GABINETE GAMER GB1792",
+      categoria: "gabinetes",
+      preco: 215,
+      qt: 3,
+      descricao: "Gabinete Gamer GB1792",
+      marca: "Hayom",
+      promocao: true,
+      imagem: "gabinete-hayom-gb1792.webp"
+    },
+    {
+      codigo: "402216",
+      nome: "MINI TECLADO MULTILASER MEC GK-510",
+      categoria: "teclado",
+      preco: 195,
+      qt: 1,
+      descricao: "Mini teclado mecânico GK-510",
+      marca: "Multilaser",
+      promocao: true,
+      precoOriginal: 220,
+      imagem: "teclado-multilaser-gk510.webp"
     }
-  }
+  ];
+  
+  // Aplicar promoções visuais aos produtos específicos
+  const promocoesProducts = produtosPromocaoEspecificos.map(produto => aplicarPromocaoVisual(produto));
   
   // Criar HTML
   let productsHTML = '<h2>PRODUTOS EM PROMOÇÃO</h2>';
@@ -192,6 +234,11 @@ function showPromocoes() {
     for (let i = 0; i < promocoesProducts.length; i++) {
       productsHTML += createProductCard(promocoesProducts[i]);
     }
+    productsHTML += '</div>';
+    
+    // Adicionar informação sobre promoções
+    productsHTML += '<div style="text-align: center; margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px; color: #0369a1;">';
+    productsHTML += '<small>🎁 Promoções especiais selecionadas para você!</small>';
     productsHTML += '</div>';
   }
   
@@ -204,6 +251,96 @@ function showPromocoes() {
   setTimeout(function() {
     loadImagesOnScroll(promocoesSection);
   }, 200);
+}
+
+// === SISTEMA DE VALORES PROMOCIONAIS ===
+function calcularValorPromocional(precoOriginal, categoria = null) {
+  // Tabela de descontos por categoria
+  const descontosPorCategoria = {
+    'placa de vídeo': 15,      // 15% de desconto
+    'processador': 12,         // 12% de desconto
+    'placa mãe': 10,          // 10% de desconto
+    'ssd': 20,                // 20% de desconto
+    'fonte': 18,              // 18% de desconto
+    'memória': 25,            // 25% de desconto
+    'monitor': 8,              // 8% de desconto
+    'gabinetes': 22,          // 22% de desconto
+    'mouse': 30,              // 30% de desconto
+    'teclado': 28,             // 28% de desconto
+    'default': 15             // 15% padrão para outras categorias
+  };
+  
+  // Obter percentual de desconto
+  let percentualDesconto = descontosPorCategoria.default;
+  if (categoria && descontosPorCategoria[categoria.toLowerCase()]) {
+    percentualDesconto = descontosPorCategoria[categoria.toLowerCase()];
+  }
+  
+  // Regras especiais por faixa de preço
+  if (precoOriginal > 2000) {
+    percentualDesconto = Math.min(percentualDesconto, 10); // Máximo 10% para produtos caros
+  } else if (precoOriginal > 1000) {
+    percentualDesconto = Math.min(percentualDesconto, 12); // Máximo 12% para produtos médios
+  } else if (precoOriginal < 100) {
+    percentualDesconto = Math.max(percentualDesconto, 35); // Mínimo 35% para produtos baratos
+  }
+  
+  // Calcular valor promocional
+  const valorDesconto = (precoOriginal * percentualDesconto) / 100;
+  const precoPromocional = precoOriginal - valorDesconto;
+  
+  // Arredondar para 2 casas decimais
+  return {
+    precoOriginal: precoOriginal,
+    precoPromocional: Math.round(precoPromocional * 100) / 100,
+    percentualDesconto: percentualDesconto,
+    economia: Math.round(valorDesconto * 100) / 100
+  };
+}
+
+// Função para aplicar promoção a um produto (apenas visual)
+function aplicarPromocaoVisual(produto) {
+  if (!produto) return produto;
+  
+  // Usar precoOriginal se fornecido, senão usar preco atual
+  const precoOriginalBase = produto.precoOriginal || produto.preco;
+  
+  // Calcular valor promocional baseado no preço original
+  const calculo = calcularValorPromocional(precoOriginalBase, produto.categoria);
+  
+  // Criar produto com promoção visual (não altera o original)
+  const produtoPromocional = {
+    ...produto,
+    precoPromocional: produto.preco, // Preço promocional atual
+    promocao: true,
+    percentualDesconto: Math.round(((precoOriginalBase - produto.preco) / precoOriginalBase) * 100),
+    economia: precoOriginalBase - produto.preco,
+    precoOriginal: precoOriginalBase // Preço original para exibição
+  };
+  
+  return produtoPromocional;
+}
+
+// Função para gerar promoções automáticas (apenas visual)
+function gerarPromocoesVisuais(produtos, maxProdutos = 10) {
+  const produtosEmPromocao = [];
+  
+  // Embaralhar produtos para seleção aleatória
+  const produtosEmbaralhados = [...produtos].sort(() => Math.random() - 0.5);
+  
+  // Selecionar produtos para promoção
+  for (let i = 0; i < Math.min(maxProdutos, produtosEmbaralhados.length); i++) {
+    const produto = produtosEmbaralhados[i];
+    
+    // Não promover produtos já em promoção
+    if (produto.promocao) continue;
+    
+    // Aplicar promoção visual
+    const produtoPromocional = aplicarPromocaoVisual(produto);
+    produtosEmPromocao.push(produtoPromocional);
+  }
+  
+  return produtosEmPromocao;
 }
 
 // === LAZY LOADING MELHORADO ===
@@ -1234,8 +1371,29 @@ function createProductCard(product) {
   const averageRating = calculateAverageRating(reviews);
   const reviewCount = reviews.length;
   
+  // Verificar se produto está em promoção
+  const isPromocao = product.promocao === true;
+  const promocaoBadge = ''; // Removido ícone de fogo 🔥
+  
+  // Montar preço com promoção (se houver)
+  let priceHTML = formattedPrice;
+  if (isPromocao && product.precoPromocional && product.precoOriginal) {
+    const promocionalPrice = 'R$ ' + product.precoPromocional.toFixed(2).replace('.', ',');
+    const originalPrice = 'R$ ' + product.precoOriginal.toFixed(2).replace('.', ',');
+    const economia = 'R$ ' + product.economia.toFixed(2).replace('.', ',');
+    
+    priceHTML = `
+      <div class="price-promocional">
+        <span class="preco-promocional">${promocionalPrice}</span>
+        <span class="preco-original">${originalPrice}</span>
+        <span class="economia">Economia ${economia} (${product.percentualDesconto}% OFF)</span>
+      </div>
+    `;
+  }
+  
   return '<div class="product-card" data-product-code="' + product.codigo + '">' +
     '<div class="product-image">' +
+    promocaoBadge +
     '<div class="image-placeholder">📦</div>' +
     '<img data-src="' + imagePath + '" alt="' + product.nome + '">' +
     '</div>' +
@@ -1246,7 +1404,7 @@ function createProductCard(product) {
     '<span class="rating-text">' + averageRating.toFixed(1) + ' (' + reviewCount + ')</span>' +
     '<button class="review-btn" onclick="openReviewModal(\'' + product.codigo + '\')">Avaliar</button>' +
     '</div>' +
-    '<p class="price">' + formattedPrice + '</p>' +
+    '<p class="price">' + priceHTML + '</p>' +
     '<button class="btn-primary" onclick="addToCart(\'' + product.codigo + '\')">Adicionar</button>' +
     '</div>' +
     '<div class="product-reviews" id="reviews-' + product.codigo + '" style="display: none;">' +
@@ -1582,28 +1740,25 @@ function addToCart(productCode) {
       console.log('✅ Produto adicionado:', allProducts[i].nome);
       console.log('📊 Carrinho após adicionar:', window.cart);
       
-      // Animação no botão clicado
+      // Animação de piscada no botão clicado
       clickedButton.classList.remove('adding', 'added');
       void clickedButton.offsetWidth; // Força reflow
       clickedButton.classList.add('adding');
       
-      // Aplica o estilo verde
-      clickedButton.style.backgroundColor = '#10B981';
-      clickedButton.style.borderColor = '#0d9f6e';
-      clickedButton.style.color = 'white';
+      // Muda o texto temporariamente
+      const originalText = clickedButton.textContent;
+      clickedButton.textContent = '✓ Adicionado!';
       
       setTimeout(() => {
         clickedButton.classList.remove('adding');
         clickedButton.classList.add('added');
         
-        // Volta ao normal após 1 segundo
+        // Volta ao texto original após 1.5 segundos
         setTimeout(() => {
           clickedButton.classList.remove('added');
-          clickedButton.style.backgroundColor = '';
-          clickedButton.style.borderColor = '';
-          clickedButton.style.color = '';
-        }, 1000);
-      }, 100);
+          clickedButton.textContent = originalText;
+        }, 1500);
+      }, 1800); // 3 pulsos de 0.6s = 1.8s
       
       setTimeout(() => {
         const productElement = document.querySelector(`[data-product-code="${productCode}"]`);
@@ -2808,7 +2963,7 @@ function formatCEP(input) {
   input.value = value;
 }
 
-function calculateUberShipping(cep) {
+async function calculateUberShipping(cep) {
   const cleanCEP = cep.replace(/\D/g, '');
   
   if (cleanCEP.length !== 8) {
@@ -2817,52 +2972,298 @@ function calculateUberShipping(cep) {
     return;
   }
   
-  // Simular cálculo de distância baseado no CEP
-  // Em um projeto real, você usaria uma API de geolocalização
-  const baseCEP = '70853510'; // CEP da loja (Asa Norte, Brasília)
-  const distance = calculateDistanceByCEP(baseCEP, cleanCEP);
+  // Mostrar status de carregamento
+  document.getElementById('checkout-shipping').textContent = 'Calculando...';
+  document.getElementById('uber-info').style.display = 'none';
   
-  // Calcular frete baseado na distância
-  const baseShipping = 8.00; // Frete base
-  const shippingPerKm = 2.50; // R$ 2,50 por km
-  const shippingCost = baseShipping + (distance * shippingPerKm);
-  
-  // Calcular tempo estimado (baseado na distância)
-  const estimatedTime = Math.max(15, Math.round(distance * 3)); // Mínimo 15 minutos
-  
-  // Atualizar interface
-  document.getElementById('checkout-shipping').textContent = `R$ ${shippingCost.toFixed(2)}`;
-  document.getElementById('uber-time').textContent = estimatedTime;
-  document.getElementById('uber-distance').textContent = distance.toFixed(1);
-  document.getElementById('uber-info').style.display = 'block';
-  
-  // Atualizar total
-  updateCheckoutTotal(shippingCost);
-  
-  // Salvar dados do frete
-  window.checkoutShipping = shippingCost;
-  window.checkoutDistance = distance;
-  window.checkoutTime = estimatedTime;
+  try {
+    // Calcular distância real usando API
+    const distance = await calculateDistanceByCEP('70853510', cleanCEP);
+    
+    // Calcular frete baseado na distância - valores mais competitivos (10% mais baratos)
+    let shippingCost;
+    
+    // Verificar se o subtotal qualifica para frete grátis
+    const subtotal = window.checkoutSubtotal || 0;
+    const freeShippingThreshold = 300.00; // Frete grátis acima de R$ 300
+    
+    if (subtotal >= freeShippingThreshold) {
+      shippingCost = 0; // Frete grátis!
+    } else {
+      // Calcular frete com 10% de desconto
+      if (distance <= 5) {
+        // Até 5km - entrega próxima: R$ 12,00 → R$ 10,80
+        shippingCost = 10.80;
+      } else if (distance <= 10) {
+        // 5-10km - entrega média: R$ 18,00 → R$ 16,20
+        shippingCost = 16.20;
+      } else if (distance <= 15) {
+        // 10-15km - entrega longa: R$ 25,00 → R$ 22,50
+        shippingCost = 22.50;
+      } else if (distance <= 20) {
+        // 15-20km - entrega muito longa: R$ 35,00 → R$ 31,50
+        shippingCost = 31.50;
+      } else {
+        // Acima de 20km - entrega remota: R$ 45,00 → R$ 40,50
+        shippingCost = 40.50;
+      }
+    }
+    
+    // Calcular tempo estimado (baseado na distância)
+    const estimatedTime = Math.max(20, Math.round(distance * 2.5)); // Mínimo 20 minutos
+    
+    // Atualizar interface
+    const shippingElement = document.getElementById('checkout-shipping');
+    const uberInfo = document.getElementById('uber-info');
+    
+    if (shippingCost === 0) {
+      shippingElement.innerHTML = '<span style="color: #10b981; font-weight: 600;">🎉 GRÁTIS!</span>';
+      shippingElement.style.color = '#10b981';
+    } else {
+      shippingElement.textContent = `R$ ${shippingCost.toFixed(2)}`;
+      shippingElement.style.color = '#374151';
+    }
+    
+    document.getElementById('uber-time').textContent = estimatedTime;
+    document.getElementById('uber-distance').textContent = distance.toFixed(1);
+    uberInfo.style.display = 'block';
+    
+    // Atualizar total
+    updateCheckoutTotal(shippingCost);
+    
+    // Salvar dados do frete
+    window.checkoutShipping = shippingCost;
+    window.checkoutDistance = distance;
+    window.checkoutTime = estimatedTime;
+    
+  } catch (error) {
+    console.log('❌ Erro no cálculo de frete:', error);
+    document.getElementById('checkout-shipping').textContent = 'Erro no cálculo';
+    document.getElementById('uber-info').style.display = 'none';
+  }
 }
 
-function calculateDistanceByCEP(cep1, cep2) {
-  // Função simplificada para calcular distância entre CEPs
-  // Em produção, use API como Google Maps ou similar
+async function calculateDistanceByCEP(cep1, cep2) {
+  // Função que usa OpenRouteService API para calcular distância real
+  // Converte CEPs para coordenadas e calcula distância real da rota
   
-  // Prefixos dos CEPs de Brasília e região
-  const brasiliaPrefixes = ['70', '71', '72', '73'];
-  const prefix1 = cep1.substring(0, 2);
-  const prefix2 = cep2.substring(0, 2);
+  try {
+    // Converter CEPs para coordenadas
+    const coords1 = await cepToCoordinates(cep1);
+    const coords2 = await cepToCoordinates(cep2);
+    
+    if (!coords1 || !coords2) {
+      console.log('⚠️ Não foi possível obter coordenadas, usando fallback');
+      return calculateDistanceFallback(cep1, cep2);
+    }
+    
+    // Calcular distância real usando OpenRouteService
+    const distance = await calculateRealDistance(coords1, coords2);
+    
+    console.log(`📍 Distância real calculada: ${distance.toFixed(2)}km`);
+    return distance;
+    
+  } catch (error) {
+    console.log('❌ Erro na API, usando fallback:', error.message);
+    return calculateDistanceFallback(cep1, cep2);
+  }
+}
+
+// Função para converter CEP em coordenadas usando API de geocoding
+async function cepToCoordinates(cep) {
+  const cleanCEP = cep.replace(/\D/g, '');
   
-  // Mesma região de Brasília
-  if (brasiliaPrefixes.includes(prefix1) && brasiliaPrefixes.includes(prefix2)) {
-    // Distância baseada nos primeiros dígitos do CEP
-    const diff = Math.abs(parseInt(cep1.substring(2, 5)) - parseInt(cep2.substring(2, 5)));
-    return Math.max(2, diff / 10); // Mínimo 2km
+  if (cleanCEP.length !== 8) {
+    return null;
   }
   
-  // Fora de Brasília (simulação)
-  return 25; // 25km fixo para fora da região
+  try {
+    // Usar Nominatim (OpenStreetMap) para geocoding - gratuito
+    const response = await fetch(`https://nominatim.openstreetmap.org/search?postalcode=${cleanCEP}&country=Brazil&format=json&limit=1`);
+    
+    if (!response.ok) {
+      throw new Error('Erro na API de geocoding');
+    }
+    
+    const data = await response.json();
+    
+    if (data && data.length > 0) {
+      const result = data[0];
+      return {
+        lat: parseFloat(result.lat),
+        lon: parseFloat(result.lon)
+      };
+    }
+    
+    return null;
+    
+  } catch (error) {
+    console.log('❌ Erro no geocoding:', error.message);
+    return null;
+  }
+}
+
+// Função para calcular distância real entre duas coordenadas
+async function calculateRealDistance(coords1, coords2) {
+  try {
+    // OpenRouteService API - gratuita e precisa
+    const apiKey = '5b3ce3597851110001cf624443c4b8d9d9164a839b5c4c1a5c8b5b4c'; // Chave gratuita demo
+    
+    const response = await fetch('https://api.openrouteservice.org/v2/directions/driving-car', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': apiKey
+      },
+      body: JSON.stringify({
+        coordinates: [
+          [coords1.lon, coords1.lat],
+          [coords2.lon, coords2.lat]
+        ],
+        units: 'km'
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error('Erro na API de roteamento');
+    }
+    
+    const data = await response.json();
+    
+    if (data && data.routes && data.routes.length > 0) {
+      const distance = data.routes[0].segments[0].distance / 1000; // Converter metros para km
+      return distance;
+    }
+    
+    throw new Error('Rota não encontrada');
+    
+  } catch (error) {
+    // Fallback para cálculo de distância em linha reta
+    console.log('⚠️ Usando cálculo de distância em linha reta como fallback');
+    return calculateStraightLineDistance(coords1, coords2);
+  }
+}
+
+// Cálculo de distância em linha reta (fallback)
+function calculateStraightLineDistance(coords1, coords2) {
+  const R = 6371; // Raio da Terra em km
+  const dLat = (coords2.lat - coords1.lat) * Math.PI / 180;
+  const dLon = (coords2.lon - coords1.lon) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(coords1.lat * Math.PI / 180) * Math.cos(coords2.lat * Math.PI / 180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+// Função fallback original (mantida para casos de erro)
+function calculateDistanceFallback(cep1, cep2) {
+  const baseCEP = cep1.substring(0, 5); // CEP da loja: 70853
+  const targetCEP = cep2.substring(0, 5);
+  
+  // Mapeamento das regiões de Brasília e distâncias aproximadas da Asa Norte (70853)
+  const regioesBrasilia = {
+    // Asa Norte - mesma região
+    '70800': 2, '70801': 2, '70802': 2, '70803': 2, '70804': 2,
+    '70850': 1, '70851': 1, '70852': 1, '70853': 0, '70854': 1, '70855': 1, '70856': 1, '70857': 1, '70858': 1, '70859': 1,
+    '70860': 2, '70861': 2, '70862': 2, '70863': 2, '70864': 2, '70865': 2, '70866': 2, '70867': 2, '70868': 2, '70869': 2,
+    '70870': 3, '70871': 3, '70872': 3, '70873': 3, '70874': 3, '70875': 3, '70876': 3, '70877': 3, '70878': 3, '70879': 3,
+    '70890': 3, '70891': 3, '70892': 3, '70893': 3, '70894': 3, '70895': 3, '70896': 3, '70897': 3, '70898': 3, '70899': 3,
+    
+    // Asa Sul
+    '70800': 4, '70801': 4, '70802': 4, '70803': 4, '70804': 4,
+    '70810': 5, '70811': 5, '70812': 5, '70813': 5, '70814': 5, '70815': 5, '70816': 5, '70817': 5, '70818': 5, '70819': 5,
+    '70820': 6, '70821': 6, '70822': 6, '70823': 6, '70824': 6, '70825': 6, '70826': 6, '70827': 6, '70828': 6, '70829': 6,
+    '70830': 7, '70831': 7, '70832': 7, '70833': 7, '70834': 7, '70835': 7, '70836': 7, '70837': 7, '70838': 7, '70839': 7,
+    '70840': 8, '70841': 8, '70842': 8, '70843': 8, '70844': 8, '70845': 8, '70846': 8, '70847': 8, '70848': 8, '70849': 8,
+    
+    // Setor Sudoeste, Sudeste, Norte
+    '70810': 6, '70811': 6, '70812': 6, '70813': 6, '70814': 6, '70815': 6, '70816': 6, '70817': 6, '70818': 6, '70819': 6,
+    '70820': 8, '70821': 8, '70822': 8, '70823': 8, '70824': 8, '70825': 8, '70826': 8, '70827': 8, '70828': 8, '70829': 8,
+    '70830': 10, '70831': 10, '70832': 10, '70833': 10, '70834': 10, '70835': 10, '70836': 10, '70837': 10, '70838': 10, '70839': 10,
+    
+    // Lago Norte, Lago Sul
+    '70815': 12, '70816': 12, '70817': 12, '70818': 12, '70819': 12,
+    '70820': 15, '70821': 15, '70822': 15, '70823': 15, '70824': 15, '70825': 15, '70826': 15, '70827': 15, '70828': 15, '70829': 15,
+    
+    // Áreas residenciais mais distantes
+    '70830': 18, '70831': 18, '70832': 18, '70833': 18, '70834': 18, '70835': 18, '70836': 18, '70837': 18, '70838': 18, '70839': 18,
+    '70840': 20, '70841': 20, '70842': 20, '70843': 20, '70844': 20, '70845': 20, '70846': 20, '70847': 20, '70848': 20, '70849': 20,
+    
+    // Cidades Satélites - Mapeamento Corrigido
+    // Ceilândia (71xxx)
+    '71800': 25, '71801': 25, '71802': 25, '71803': 25, '71804': 25, '71805': 25, '71806': 25, '71807': 25, '71808': 25, '71809': 25,
+    '71810': 26, '71811': 26, '71812': 26, '71813': 26, '71814': 26, '71815': 26, '71816': 26, '71817': 26, '71818': 26, '71819': 26,
+    '71820': 27, '71821': 27, '71822': 27, '71823': 27, '71824': 27, '71825': 27, '71826': 27, '71827': 27, '71828': 27, '71829': 27,
+    '71830': 28, '71831': 28, '71832': 28, '71833': 28, '71834': 28, '71835': 28, '71836': 28, '71837': 28, '71838': 28, '71839': 28,
+    '71840': 29, '71841': 29, '71842': 29, '71843': 29, '71844': 29, '71845': 29, '71846': 29, '71847': 29, '71848': 29, '71849': 29,
+    '71850': 30, '71851': 30, '71852': 30, '71853': 30, '71854': 30, '71855': 30, '71856': 30, '71857': 30, '71858': 30, '71859': 30,
+    '71860': 31, '71861': 31, '71862': 31, '71863': 31, '71864': 31, '71865': 31, '71866': 31, '71867': 31, '71868': 31, '71869': 31,
+    '71870': 32, '71871': 32, '71872': 32, '71873': 32, '71874': 32, '71875': 32, '71876': 32, '71877': 32, '71878': 32, '71879': 32,
+    '71880': 33, '71881': 33, '71882': 33, '71883': 33, '71884': 33, '71885': 33, '71886': 33, '71887': 33, '71888': 33, '71889': 33,
+    '71890': 34, '71891': 34, '71892': 34, '71893': 34, '71894': 34, '71895': 34, '71896': 34, '71897': 34, '71898': 34, '71899': 34,
+    
+    // Taguatinga (72xxx)
+    '72000': 20, '72001': 20, '72002': 20, '72003': 20, '72004': 20, '72005': 20, '72006': 20, '72007': 20, '72008': 20, '72009': 20,
+    '72010': 22, '72011': 22, '72012': 22, '72013': 22, '72014': 22, '72015': 22, '72016': 22, '72017': 22, '72018': 22, '72019': 22,
+    '72020': 24, '72021': 24, '72022': 24, '72023': 24, '72024': 24, '72025': 24, '72026': 24, '72027': 24, '72028': 24, '72029': 24,
+    '72030': 26, '72031': 26, '72032': 26, '72033': 26, '72034': 26, '72035': 26, '72036': 26, '72037': 26, '72038': 26, '72039': 26,
+    '72040': 28, '72041': 28, '72042': 28, '72043': 28, '72044': 28, '72045': 28, '72046': 28, '72047': 28, '72048': 28, '72049': 28,
+    '72050': 30, '72051': 30, '72052': 30, '72053': 30, '72054': 30, '72055': 30, '72056': 30, '72057': 30, '72058': 30, '72059': 30,
+    '72060': 32, '72061': 32, '72062': 32, '72063': 32, '72064': 32, '72065': 32, '72066': 32, '72067': 32, '72068': 32, '72069': 32,
+    '72070': 34, '72071': 34, '72072': 34, '72073': 34, '72074': 34, '72075': 34, '72076': 34, '72077': 34, '72078': 34, '72079': 34,
+    '72080': 36, '72081': 36, '72082': 36, '72083': 36, '72084': 36, '72085': 36, '72086': 36, '72087': 36, '72088': 36, '72089': 36,
+    '72090': 38, '72091': 38, '72092': 38, '72093': 38, '72094': 38, '72095': 38, '72096': 38, '72097': 38, '72098': 38, '72099': 38,
+    
+    // Samambaia (72xxx)
+    '72200': 30, '72201': 30, '72202': 30, '72203': 30, '72204': 30, '72205': 30, '72206': 30, '72207': 30, '72208': 30, '72209': 30,
+    '72210': 32, '72211': 32, '72212': 32, '72213': 32, '72214': 32, '72215': 32, '72216': 32, '72217': 32, '72218': 32, '72219': 32,
+    '72220': 34, '72221': 34, '72222': 34, '72223': 34, '72224': 34, '72225': 34, '72226': 34, '72227': 34, '72228': 34, '72229': 34,
+    '72230': 36, '72231': 36, '72232': 36, '72233': 36, '72234': 36, '72235': 36, '72236': 36, '72237': 36, '72238': 36, '72239': 36,
+    '72240': 38, '72241': 38, '72242': 38, '72243': 38, '72244': 38, '72245': 38, '72246': 38, '72247': 38, '72248': 38, '72249': 38,
+    '72250': 40, '72251': 40, '72252': 40, '72253': 40, '72254': 40, '72255': 40, '72256': 40, '72257': 40, '72258': 40, '72259': 40,
+    '72260': 42, '72261': 42, '72262': 42, '72263': 42, '72264': 42, '72265': 42, '72266': 42, '72267': 42, '72268': 42, '72269': 42,
+    '72270': 44, '72271': 44, '72272': 44, '72273': 44, '72274': 44, '72275': 44, '72276': 44, '72277': 44, '72278': 44, '72279': 44,
+    '72280': 46, '72281': 46, '72282': 46, '72283': 46, '72284': 46, '72285': 46, '72286': 46, '72287': 46, '72288': 46, '72289': 46,
+    '72290': 48, '72291': 48, '72292': 48, '72293': 48, '72294': 48, '72295': 48, '72296': 48, '72297': 48, '72298': 48, '72299': 48,
+    
+    // Outras cidades satélites
+    '72300': 35, '72301': 35, '72302': 35, '72303': 35, '72304': 35, '72305': 35, '72306': 35, '72307': 35, '72308': 35, '72309': 35, // Planaltina
+    '72400': 40, '72401': 40, '72402': 40, '72403': 40, '72404': 40, '72405': 40, '72406': 40, '72407': 40, '72408': 40, '72409': 40, // Sobradinho
+    '72500': 45, '72501': 45, '72502': 45, '72503': 45, '72504': 45, '72505': 45, '72506': 45, '72507': 45, '72508': 45, '72509': 45, // Gama
+    '72600': 50, '72601': 50, '72602': 50, '72603': 50, '72604': 50, '72605': 50, '72606': 50, '72607': 50, '72608': 50, '72609': 50, // Santa Maria
+    '72700': 55, '72701': 55, '72702': 55, '72703': 55, '72704': 55, '72705': 55, '72706': 55, '72707': 55, '72708': 55, '72709': 55, // Águas Claras
+    '72800': 60, '72801': 60, '72802': 60, '72803': 60, '72804': 60, '72805': 60, '72806': 60, '72807': 60, '72808': 60, '72809': 60, // Recanto das Emas
+    '72900': 65, '72901': 65, '72902': 65, '72903': 65, '72904': 65, '72905': 65, '72906': 65, '72907': 65, '72908': 65, '72909': 65  // Riacho Fundo
+  };
+  
+  // Verificar se o CEP está no mapeamento
+  if (regioesBrasilia[targetCEP] !== undefined) {
+    return regioesBrasilia[targetCEP];
+  }
+  
+  // Se não encontrar no mapeamento, usar cálculo baseado no prefixo
+  const prefix = targetCEP.substring(0, 2);
+  
+  // Brasília (70-73)
+  if (['70', '71', '72', '73'].includes(prefix)) {
+    // Calcular distância baseada na diferença do CEP de forma mais realista
+    const baseNum = parseInt(baseCEP.substring(2, 5));
+    const targetNum = parseInt(targetCEP.substring(2, 5));
+    const diff = Math.abs(baseNum - targetNum);
+    
+    // Mapeamento mais realista para Brasília
+    if (diff <= 10) return 2;   // Mesmo bairro
+    if (diff <= 50) return 5;   // Bairros próximos
+    if (diff <= 100) return 8;  // Mesma região
+    if (diff <= 200) return 12; // Regiões próximas
+    if (diff <= 300) return 16; // Regiões distantes
+    return 20;                  // Máximo em Brasília
+  }
+  
+  // Fora de Brasília (cidades satélites e Entorno)
+  return 35; // Distância média para cidades satélites
 }
 
 function updateCheckoutTotal(shippingCost = 0) {
@@ -3282,7 +3683,7 @@ function navigateToCheckout() {
   console.log('📊 Quantidade de itens:', cart.length);
   
   if (cart.length === 0) {
-    alert('Seu carrinho está vazio! Adicione produtos antes de finalizar o pedido.');
+    showWarning('Seu carrinho está vazio! Adicione produtos antes de finalizar o pedido.', 'Carrinho Vazio');
     return;
   }
   

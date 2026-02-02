@@ -83,6 +83,30 @@ class FirebaseOrders {
     }
   }
 
+  // Atualizar status de um pedido
+  async updateOrderStatus(orderId, status) {
+    if (!this.db) {
+      console.error('❌ Firebase não está disponível');
+      return { success: false, error: 'Firebase não disponível' };
+    }
+    
+    try {
+      console.log(`🔄 Atualizando pedido ${orderId} para status: ${status}`);
+      
+      // Atualiza o documento no Firestore
+      await this.db.collection(this.ordersCollection).doc(orderId).update({
+        status: status,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      
+      console.log(`✅ Status do pedido ${orderId} atualizado para: ${status}`);
+      return { success: true };
+    } catch (error) {
+      console.error(`❌ Erro ao atualizar status do pedido ${orderId}:`, error);
+      return { success: false, error: error.message };
+    }
+  }
+
   // ... resto do código continua igual
 }
 

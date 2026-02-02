@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Compra - Primos Informática</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --danger: #ef4444;
+            --success: #10b981;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-700: #374151;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: white;
+            box-shadow: var(--shadow);
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checkout-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+        
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #9ca3af;
+            position: relative;
+        }
+        
+        .step.active {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .step.completed {
+            color: var(--success);
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .step.active .step-number {
+            background-color: var(--primary);
+        }
+        
+        .step.completed .step-number {
+            background-color: var(--success);
+        }
+        
+        .step-line {
+            position: absolute;
+            top: 15px;
+            left: calc(100% + 5px);
+            width: 40px;
+            height: 2px;
+            background-color: #e5e7eb;
+        }
+        
+        .step:last-child .step-line {
+            display: none;
+        }
+        
+        .step.completed + .step .step-line {
+            background-color: var(--success);
+        }
+        
+        .checkout-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .checkout-form {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .checkout-summary {
+            width: 350px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            align-self: flex-start;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .col {
+            flex: 1;
+        }
+        
+        .payment-methods {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .payment-method {
+            flex: 1;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-method:hover {
+            border-color: var(--primary);
+        }
+        
+        .payment-method.active {
+            border-color: var(--primary);
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+        
+        .payment-method i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #6b7280;
+        }
+        
+        .payment-method.active i {
+            color: var(--primary);
+        }
+        
+        .card-element {
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            background: white;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+        
+        .order-summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        
+        .order-total {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .order-items {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        
+        .order-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .order-item-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        
+        .order-item-details {
+            flex: 1;
+        }
+        
+        .order-item-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .order-item-price {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .secure-payment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .secure-payment i {
+            color: var(--success);
+        }
+        
+        @media (max-width: 768px) {
+            .checkout-container {
+                flex-direction: column;
+            }
+            
+            .checkout-summary {
+                width: 100%;
+                position: static;
+            }
+            
+            .row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .payment-methods {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-laptop"></i>
+                    Primos Informática
+                </a>
+                <div class="secure-payment">
+                    <i class="fas fa-lock"></i>
+                    <span>Pagamento 100% seguro</span>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="checkout-steps">
+            <div class="step active">
+                <div class="step-number">1</div>
+                <span>Carrinho</span>
+            </div>
+            <div class="step active">
+                <div class="step-number">2</div>
+                <span>Pagamento</span>
+                <div class="step-line"></div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <span>Confirmação</span>
+            </div>
+        </div>
+        
+        <div class="checkout-container">
+            <div class="checkout-form">
+                <h2 class="section-title">Informações de Pagamento</h2>
+                
+                <div class="payment-methods">
+                    <div class="payment-method active" data-method="credit">
+                        <i class="far fa-credit-card"></i>
+                        <div>Cartão de Crédito</div>
+                    </div>
+                    <div class="payment-method" data-method="pix">
+                        <i class="fas fa-qrcode"></i>
+                        <div>PIX</div>
+                    </div>
+                    <div class="payment-method" data-method="boleto">
+                        <i class="fas fa-barcode"></i>
+                        <div>Boleto</div>
+                    </div>
+                </div>
+                
+                <div id="credit-card-form">
+                    <div class="form-group">
+                        <label class="form-label" for="card-name">Nome no Cartão</label>
+                        <input type="text" id="card-name" class="form-control" placeholder="Como está no cartão">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="card-number">Número do Cartão</label>
+                        <input type="text" id="card-number" class="form-control" placeholder="0000 0000 0000 0000">
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label" for="card-expiry">Validade</label>
+                                <input type="text" id="card-expiry" class="form-control" placeholder="MM/AA">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label" for="card-cvc">CVV</label>
+                                <input type="text" id="card-cvc" class="form-control" placeholder="123">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="installments">Parcelamento</label>
+                        <select id="installments" class="form-control">
+                            <option value="1">1x de R$ 1.199,90 (à vista)</option>
+                            <option value="2">2x de R$ 599,95</option>
+                            <option value="3">3x de R$ 399,97</option>
+                            <option value="4">4x de R$ 299,98</option>
+                            <option value="5">5x de R$ 239,98</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="pix-form" style="display: none;">
+                    <div class="form-group">
+                        <p>Pague com PIX e tenha 5% de desconto!</p>
+                        <button class="btn" id="generate-pix">
+                            <i class="fas fa-qrcode"></i> Gerar QR Code PIX
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="boleto-form" style="display: none;">
+                    <div class="form-group">
+                        <p>O boleto será exibido após a confirmação do pedido.</p>
+                        <p>O prazo para pagamento é de 3 dias úteis.</p>
+                    </div>
+                </div>
+                
+                <h2 class="section-title" style="margin-top: 40px;">Endereço de Entrega</h2>
+                
+                <div class="form-group">
+                    <label class="form-label" for="cep">CEP</label>
+                    <div class="row">
+                        <div class="col" style="max-width: 200px;">
+                            <input type="text" id="cep" class="form-control" placeholder="00000-000">
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-outline" id="search-cep">Buscar CEP</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label" for="street">Rua</label>
+                            <input type="text" id="street" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col" style="max-width: 100px;">
+                        <div class="form-group">
+                            <label class="form-label" for="number">Número</label>
+                            <input type="text" id="number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="complement">Complemento (opcional)</label>
+                    <input type="text" id="complement" class="form-control" placeholder="Apto, bloco, etc.">
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label" for="neighborhood">Bairro</label>
+                            <input type="text" id="neighborhood" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label" for="city">Cidade</label>
+                            <input type="text" id="city" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col" style="max-width: 100px;">
+                        <div class="form-group">
+                            <label class="form-label" for="state">UF</label>
+                            <input type="text" id="state" class="form-control" maxlength="2">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="checkbox" id="save-address" class="form-check-input">
+                        <label class="form-check-label" for="save-address">Salvar endereço para próximas compras</label>
+                    </div>
+                </div>
+                
+                <button class="btn" id="finalize-purchase" style="margin-top: 30px;">
+                    Finalizar Compra
+                </button>
+                
+                <div class="secure-payment" style="margin-top: 20px; justify-content: flex-start;">
+                    <i class="fas fa-lock"></i>
+                    <span>Seus dados estão protegidos com criptografia de ponta a ponta</span>
+                </div>
+            </div>
+            
+            <div class="checkout-summary">
+                <h3 class="section-title">Resumo do Pedido</h3>
+                
+                <div class="order-items">
+                    <!-- Exemplo de item do carrinho -->
+                    <div class="order-item">
+                        <img src="https://via.placeholder.com/60" alt="Notebook" class="order-item-img">
+                        <div class="order-item-details">
+                            <div class="order-item-title">Notebook Gamer Acer Nitro 5</div>
+                            <div class="order-item-price">R$ 5.999,90</div>
+                            <small>Quantidade: 1</small>
+                        </div>
+                    </div>
+                    
+                    <div class="order-item">
+                        <img src="https://via.placeholder.com/60" alt="Mouse" class="order-item-img">
+                        <div class="order-item-details">
+                            <div class="order-item-title">Mouse Gamer Logitech G502</div>
+                            <div class="order-item-price">R$ 399,90</div>
+                            <small>Quantidade: 1</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-summary-item">
+                    <span>Subtotal</span>
+                    <span>R$ 6.399,80</span>
+                </div>
+                
+                <div class="order-summary-item">
+                    <span>Frete</span>
+                    <span>Grátis</span>
+                </div>
+                
+                <div class="order-summary-item">
+                    <span>Desconto</span>
+                    <span>- R$ 0,00</span>
+                </div>
+                
+                <div class="order-total">
+                    <span>Total</span>
+                    <span>R$ 6.399,80</span>
+                </div>
+                
+                <div class="secure-payment" style="margin-top: 20px;">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Ambiente seguro</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Troca entre métodos de pagamento
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', () => {
+                // Remove a classe active de todos os métodos
+                document.querySelectorAll('.payment-method').forEach(m => {
+                    m.classList.remove('active');
+                });
+                
+                // Adiciona a classe active no método clicado
+                method.classList.add('active');
+                
+                // Esconde todos os formulários
+                document.getElementById('credit-card-form').style.display = 'none';
+                document.getElementById('pix-form').style.display = 'none';
+                document.getElementById('boleto-form').style.display = 'none';
+                
+                // Mostra o formulário correspondente
+                const methodType = method.getAttribute('data-method');
+                if (methodType === 'credit') {
+                    document.getElementById('credit-card-form').style.display = 'block';
+                } else if (methodType === 'pix') {
+                    document.getElementById('pix-form').style.display = 'block';
+                } else if (methodType === 'boleto') {
+                    document.getElementById('boleto-form').style.display = 'block';
+                }
+            });
+        });
+        
+        // Máscara para CEP
+        document.getElementById('cep').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 5) {
+                value = value.substring(0, 5) + '-' + value.substring(5, 8);
+            }
+            e.target.value = value;
+        });
+        
+        // Máscara para número do cartão
+        document.getElementById('card-number').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{4})/g, '$1 ').trim();
+            e.target.value = value.substring(0, 19);
+        });
+        
+        // Máscara para validade do cartão
+        document.getElementById('card-expiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value.substring(0, 5);
+        });
+        
+        // Máscara para CVV
+        document.getElementById('card-cvc').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+        });
+        
+        // Busca CEP
+        document.getElementById('search-cep').addEventListener('click', function() {
+            const cep = document.getElementById('cep').value.replace(/\D/g, '');
+            if (cep.length === 8) {
+                // Simulação de busca de CEP (substitua por uma chamada real à API dos Correios)
+                setTimeout(() => {
+                    // Dados de exemplo
+                    document.getElementById('street').value = 'Rua Exemplo';
+                    document.getElementById('neighborhood').value = 'Centro';
+                    document.getElementById('city').value = 'São Paulo';
+                    document.getElementById('state').value = 'SP';
+                    document.getElementById('number').focus();
+                }, 1000);
+            } else {
+                showError('Por favor, insira um CEP válido.', 'CEP Inválido');
+            }
+        });
+        
+        // Finalizar compra
+        document.getElementById('finalize-purchase').addEventListener('click', function() {
+            // Validação dos campos
+            const requiredFields = [
+                'card-name', 'card-number', 'card-expiry', 'card-cvc',
+                'cep', 'street', 'number', 'neighborhood', 'city', 'state'
+            ];
+            
+            let isValid = true;
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.style.borderColor = 'red';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#d1d5db';
+                }
+            });
+            
+            if (!isValid) {
+                showWarning('Por favor, preencha todos os campos obrigatórios.', 'Campos Obrigatórios');
+                return;
+            }
+            
+            // Simulação de processamento do pagamento
+            this.disabled = true;
+            this.textContent = 'Processando...';
+            
+            // Aqui você faria a chamada para a API de pagamento
+            setTimeout(() => {
+                // Simulação de sucesso
+                window.location.href = 'confirmacao.html';
+            }, 2000);
+        });
+        
+        // Gerar PIX
+        document.getElementById('generate-pix').addEventListener('click', function() {
+            // Aqui você faria a chamada para gerar o QR Code PIX
+            showSuccess('QR Code PIX gerado com sucesso!', 'PIX Gerado');
+            // Em uma implementação real, você mostraria o QR Code e as instruções de pagamento
+        });
+    </script>
+    
+    <!-- Sistema de Notificações -->
+    <script src="js/notifications.js"></script>
+</body>
+</html>

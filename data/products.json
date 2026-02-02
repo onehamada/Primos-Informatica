@@ -10,6 +10,7 @@
     "promocao": true,
     "imagem": "monitor-hayom-19-mo6001.webp"
   },
+
   {
     "codigo": "400772",
     "nome": "MONITOR 21.5 PHILIPS LED FULL HD 221V8 WVA HDMI",
@@ -854,7 +855,7 @@
     "qt": 1,
     "descricao": "Mini teclado mecânico GK-510",
     "marca": "Multilaser",
-    "promocao": false,
+    "promocao": true,
     "imagem": "teclado-multilaser-gk510.webp"
   },
   {
@@ -1569,7 +1570,7 @@
     "qt": 1,
     "descricao": "GTX 1660 6GB DDR5 192 bits Galax",
     "marca": "NVIDIA",
-    "promocao": true,
+    "promocao": false,
     "imagem": "gtx1660.webp"
   },
   {
@@ -1818,11 +1819,11 @@
     "codigo": "1892",
     "nome": "FONTE REAL 750 W 80 PLUS MGS",
     "categoria": "fonte",
-    "preco": 390,
+    "preco": 350,
     "qt": 3,
     "descricao": "Fonte Real 750W 80 Plus MGS",
     "marca": "MGS",
-    "promocao": false,
+    "promocao": true,
     "imagem": "mgs_fonte750w.webp"
   },
   {
@@ -1892,14 +1893,37 @@
     "imagem": "pcware-1151-ipmb360.webp"
   },
   {
-    "codigo": "2017",
-    "nome": "PLACA MAE PCWARE 1151 8ª/9ªG IPMH310G DDR4",
-    "categoria": "placa mãe",
-    "preco": 530,
-    "qt": 3,
-    "descricao": "Placa Mãe PCWARE 1151 8ª/9ªG IPMH310G DDR4",
-    "marca": "PCWARE",
-    "promocao": true,
-    "imagem": "ipmh310g.webp"
+    "codigo": "1906",
+    "nome": "AMD RYZEN 5 5600GT",
+    "categoria": "processador",
+    "preco": 1208,
+    "qt": 1,
+    "descricao": "Processador AMD Ryzen 5 5600GT - 6 núcleos, 12 threads, clock até 4.6GHz",
+    "marca": "AMD",
+    "promocao": false,
+    "imagem": "amd-ryzen5-5600gt.webp"
   }
+  ,{
+    "codigo": "1554",
+    "nome": "GABINETE GAMER GB1792",
+    "categoria": "gabinetes",
+    "preco": 240,
+    "qt": 3,
+    "descricao": "Gabinete Gamer GB1792",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "gabinete-hayom-gb1792.webp"
+  }
+  ,{
+    "codigo": "1947",
+    "nome": "GABINETE GAMER MID TOWER C/3 FANS HAYOM GB1789",
+    "categoria": "gabinetes",
+    "preco": 372,
+    "qt": 5,
+    "descricao": "Gabinete Gamer Mid Tower com 3 Fans Hayom GB1789",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "gabinete-hayom-gb1789.webp"
+  }
+
 ]
