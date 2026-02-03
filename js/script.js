@@ -1178,6 +1178,50 @@ function validateReviewForm(data) {
   return errors;
 }
 
+// Função para mostrar erros de validação
+function showValidationErrors(errors, containerId) {
+  console.log('🚨 Erros de validação:', errors);
+  
+  // Encontrar container de erros ou criar um
+  let errorContainer = document.getElementById(containerId);
+  if (!errorContainer) {
+    errorContainer = document.createElement('div');
+    errorContainer.id = containerId;
+    errorContainer.className = 'validation-errors';
+    
+    // Inserir antes do formulário
+    const form = document.getElementById('reviewForm');
+    if (form) {
+      form.parentNode.insertBefore(errorContainer, form);
+    }
+  }
+  
+  // Mostrar erros
+  errorContainer.innerHTML = `
+    <div class="error-banner" style="
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    ">
+      <strong>Por favor, corrija os seguintes erros:</strong>
+      <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+        ${errors.map(error => `<li>${error}</li>`).join('')}
+      </ul>
+    </div>
+  `;
+  
+  // Remover após 5 segundos
+  setTimeout(() => {
+    if (errorContainer) {
+      errorContainer.innerHTML = '';
+    }
+  }, 5000);
+}
+
 // Função para enviar avaliação
 function submitReview(event) {
   console.log('🚀 submitReview chamada!');
@@ -1268,14 +1312,18 @@ function saveReview(reviewData) {
     
     if (existingIndex !== -1) {
       // Atualizar avaliação existente
+      const originalId = reviews[existingIndex].id;
       reviews[existingIndex] = {
         ...reviews[existingIndex],
         ...reviewData,
-        id: reviews[existingIndex].id, // Manter ID original
+        id: originalId, // Manter ID original
         edited: true,
         date: new Date().toISOString()
       };
-      console.log('📝 Avaliação atualizada:', reviewData.productId);
+      console.log('📝 Avaliação atualizada:', reviewData.productId, 'ID mantido:', originalId);
+      
+      // Para verificação, usar o ID original
+      reviewData.id = originalId;
     } else {
       // Adicionar nova avaliação
       reviews.push(reviewData);
@@ -1449,6 +1497,7 @@ window.removePhoto = removePhoto;
 window.submitReview = submitReview;
 window.saveReview = saveReview;
 window.showSuccessMessage = showSuccessMessage;
+window.showValidationErrors = showValidationErrors;
 
 // === CARD DE PRODUTO ===
 function createProductCard(product) {
