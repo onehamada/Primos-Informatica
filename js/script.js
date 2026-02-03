@@ -43,13 +43,48 @@ function forceScrollToTop() {
   // Verificação específica para desktop
   if (window.innerWidth > 768) {
     // Desktop: scroll imediato e definitivo
-    requestAnimationFrame(() => {
-      window.scrollTo(0, 0);
-    });
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
   }
 }
 
-// Executar quando o DOM estiver pronto
+// === LIMPEZA DE PLACEHOLDERS RESIDUAIS ===
+function cleanupStalePlaceholders() {
+  // Encontrar todos os placeholders
+  const placeholders = document.querySelectorAll('.image-placeholder');
+  
+  placeholders.forEach(function(placeholder) {
+    // Verificar se há uma imagem carregada no mesmo container
+    const container = placeholder.parentElement;
+    if (container) {
+      const img = container.querySelector('img');
+      if (img && img.complete && img.naturalHeight !== 0 && img.src) {
+        // Imagem está carregada, remover placeholder
+        placeholder.classList.add('hiding');
+        setTimeout(function() {
+          if (placeholder.parentNode) {
+            placeholder.remove();
+          }
+        }, 100);
+      } else if (img && img.classList.contains('loaded')) {
+        // Imagem já marcada como carregada, remover placeholder
+        placeholder.classList.add('hiding');
+        setTimeout(function() {
+          if (placeholder.parentNode) {
+            placeholder.remove();
+          }
+        }, 100);
+      }
+    }
+  });
+}
+
+// === CONTROLE DE SCROLL RESTORATION ===
+// Impedir restauração automática de scroll do navegador
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', forceScrollToTop);
 } else {
@@ -58,12 +93,19 @@ if (document.readyState === 'loading') {
 }
 
 // Também executar no window.onload para garantir
-window.addEventListener('load', forceScrollToTop);
+window.addEventListener('load', function() {
+  forceScrollToTop();
+  // Limpar placeholders após carregamento completo da página
+  setTimeout(cleanupStalePlaceholders, 100);
+});
 
 // === FUNÇÃO PRINCIPAL - CATEGORIAS ===
 function showCategory(category) {
   // Resetar navegação antes de mostrar categoria
   resetNavigation();
+  
+  // Limpar placeholders residuais antes de mudar de categoria
+  cleanupStalePlaceholders();
   
   // Limpar observer anterior
   if (window.currentObserver) {
@@ -179,45 +221,48 @@ function showPromocoes() {
       codigo: "2011",
       nome: "PLACA MAE BRAZIL PC 1155 DDR3 BPC-H61-ITX-M.2",
       categoria: "placa mãe",
-      preco: 189,
+      preco: 189, // Valor promocional que você definiu
       qt: 3,
       descricao: "Placa Mãe Brazil PC 1155 DDR3 BPC-H61-ITX-M.2",
       marca: "Brazil PC",
       promocao: true,
+      precoOriginal: 210, // Valor original fictício para mostrar desconto
       imagem: "bpc-h61-itx-m2.webp"
     },
     {
       codigo: "1892",
       nome: "FONTE REAL 750 W 80 PLUS MGS",
       categoria: "fonte",
-      preco: 350,
+      preco: 350, // Valor promocional que você definiu
       qt: 3,
       descricao: "Fonte Real 750W 80 Plus MGS",
       marca: "MGS",
       promocao: true,
+      precoOriginal: 420, // Valor original fictício para mostrar desconto
       imagem: "mgs_fonte750w.webp"
     },
     {
       codigo: "1554",
       nome: "GABINETE GAMER GB1792",
       categoria: "gabinetes",
-      preco: 215,
+      preco: 215, // Valor promocional que você definiu
       qt: 3,
       descricao: "Gabinete Gamer GB1792",
       marca: "Hayom",
       promocao: true,
+      precoOriginal: 275, // Valor original fictício para mostrar desconto
       imagem: "gabinete-hayom-gb1792.webp"
     },
     {
       codigo: "402216",
       nome: "MINI TECLADO MULTILASER MEC GK-510",
       categoria: "teclado",
-      preco: 195,
+      preco: 195, // Valor promocional que você definiu
       qt: 1,
       descricao: "Mini teclado mecânico GK-510",
       marca: "Multilaser",
       promocao: true,
-      precoOriginal: 220,
+      precoOriginal: 220, // Valor original que você informou
       imagem: "teclado-multilaser-gk510.webp"
     }
   ];
@@ -305,16 +350,24 @@ function aplicarPromocaoVisual(produto) {
   // Usar precoOriginal se fornecido, senão usar preco atual
   const precoOriginalBase = produto.precoOriginal || produto.preco;
   
-  // Calcular valor promocional baseado no preço original
-  const calculo = calcularValorPromocional(precoOriginalBase, produto.categoria);
+  // Para produtos específicos, usar preco como promocional e precoOriginal como base
+  let precoPromocionalFinal;
+  if (produto.precoOriginal) {
+    // Tem precoOriginal definido, usar preco atual como promocional
+    precoPromocionalFinal = produto.preco;
+  } else {
+    // Calcular valor promocional baseado no preço original
+    const calculo = calcularValorPromocional(precoOriginalBase, produto.categoria);
+    precoPromocionalFinal = calculo.precoPromocional;
+  }
   
   // Criar produto com promoção visual (não altera o original)
   const produtoPromocional = {
     ...produto,
-    precoPromocional: produto.preco, // Preço promocional atual
+    precoPromocional: precoPromocionalFinal, // Preço promocional final
     promocao: true,
-    percentualDesconto: Math.round(((precoOriginalBase - produto.preco) / precoOriginalBase) * 100),
-    economia: precoOriginalBase - produto.preco,
+    percentualDesconto: Math.round(((precoOriginalBase - precoPromocionalFinal) / precoOriginalBase) * 100),
+    economia: precoOriginalBase - precoPromocionalFinal,
     precoOriginal: precoOriginalBase // Preço original para exibição
   };
   
@@ -396,6 +449,22 @@ function loadImagesOnScroll(container) {
           img.removeAttribute('data-src');
         };
         
+        // Verificar se a imagem já está carregada (cache) ou completa
+        if (img.complete && img.naturalHeight !== 0) {
+          // Imagem já está carregada, remover placeholder imediatamente
+          if (placeholder) {
+            placeholder.classList.add('hiding');
+            setTimeout(function() {
+              if (placeholder.parentNode) {
+                placeholder.remove();
+              }
+            }, 100);
+          }
+          img.classList.remove('loading');
+          img.classList.add('loaded');
+          img.removeAttribute('data-src');
+        }
+        
         img.onerror = function() {
           // Tentar carregar imagem fallback
           if (img.dataset && img.dataset.src) {
@@ -428,7 +497,10 @@ function loadImagesOnScroll(container) {
         // Iniciar carregamento
         // Pequeno delay para garantir que a animação seja aplicada
         setTimeout(() => {
-          img.src = img.dataset.src;
+          // Verificar se imagem já tem src para evitar carregamento duplicado
+          if (!img.src || img.src === window.location.href) {
+            img.src = img.dataset.src;
+          }
         }, 50);
         
         loaded.push(img);
@@ -1139,8 +1211,25 @@ function submitReview(event) {
     // Adicionar dados adicionais ao reviewData existente
     reviewData.id = Date.now();
     reviewData.productId = currentProductId;
-    reviewData.userEmail = 'anonimo@exemplo.com';
-    reviewData.userName = 'Usuário Anônimo';
+    
+    // Obter dados do usuário logado
+    const usuarioLogado = localStorage.getItem('usuarioLogado');
+    if (usuarioLogado) {
+      try {
+        const usuario = JSON.parse(usuarioLogado);
+        reviewData.userEmail = usuario.email;
+        reviewData.userName = usuario.nome;
+        console.log('👤 Dados do usuário obtidos:', usuario.email, usuario.nome);
+      } catch (e) {
+        console.error('❌ Erro ao obter dados do usuário:', e);
+        reviewData.userEmail = 'anonimo@exemplo.com';
+        reviewData.userName = 'Usuário Anônimo';
+      }
+    } else {
+      reviewData.userEmail = 'anonimo@exemplo.com';
+      reviewData.userName = 'Usuário Anônimo';
+    }
+    
     reviewData.photos = uploadedPhotos;
     reviewData.date = new Date().toISOString();
     reviewData.helpful = 0;
@@ -1200,12 +1289,17 @@ function saveReview(reviewData) {
     const verify = localStorage.getItem('primos_reviews');
     if (verify) {
       const verifyReviews = JSON.parse(verify);
+      console.log('📊 Total de avaliações após salvar:', verifyReviews.length);
+      console.log('🔍 Procurando avaliação com ID:', reviewData.id);
+      
       const found = verifyReviews.find(r => r.id === reviewData.id);
       if (found) {
         console.log('✅ Avaliação salva com sucesso:', reviewData.id);
+        console.log('📝 Dados salvos:', found);
         return true;
       } else {
-        console.error('❌ Falha ao salvar avaliação');
+        console.error('❌ Falha ao salvar avaliação - não encontrada após salvar');
+        console.error('📊 IDs disponíveis:', verifyReviews.map(r => r.id));
         return false;
       }
     } else {
@@ -1528,8 +1622,111 @@ function clearCart() {
   updateCartDisplay();
 }
 
+// === VERIFICAÇÃO DE AUTENTICAÇÃO ===
+function verificarLoginParaCheckout() {
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  
+  if (!usuarioLogado) {
+    // Mostrar modal de login necessário
+    showLoginRequiredModal();
+    return false;
+  }
+  
+  return true;
+}
+
+function showLoginRequiredModal() {
+  // Criar modal de login necessário
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+  `;
+  
+  modal.innerHTML = `
+    <div style="background: white; padding: 30px; border-radius: 12px; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);">
+      <div style="font-size: 48px; margin-bottom: 20px;">🔐</div>
+      <h2 style="margin: 0 0 15px 0; color: #333;">Login Necessário</h2>
+      <p style="margin: 0 0 25px 0; color: #666; line-height: 1.5;">
+        Para finalizar seu pedido, você precisa estar logado em sua conta.
+      </p>
+      <div style="display: flex; gap: 10px; justify-content: center;">
+        <button onclick="irParaLogin()" style="background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600;">
+          Fazer Login
+        </button>
+        <button onclick="fecharLoginModal()" style="background: #e5e7eb; color: #333; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px;">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Funções globais para os botões
+  window.irParaLogin = function() {
+    document.body.removeChild(modal);
+    window.location.href = 'auth.html';
+  };
+  
+  window.fecharLoginModal = function() {
+    document.body.removeChild(modal);
+  };
+}
+
+// === PREENCHIMENTO AUTOMÁTICO DE DADOS DO USUÁRIO ===
+function preencherDadosUsuarioLogado() {
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  
+  if (usuarioLogado) {
+    try {
+      const usuario = JSON.parse(usuarioLogado);
+      
+      // Preencher campos do formulário se existirem
+      const nomeField = document.getElementById('checkout-nome');
+      const emailField = document.getElementById('checkout-email');
+      const telefoneField = document.getElementById('checkout-telefone');
+      
+      if (nomeField && usuario.nome) {
+        nomeField.value = usuario.nome;
+        nomeField.readOnly = true; // Tornar somente leitura
+        nomeField.style.backgroundColor = '#f3f4f6';
+      }
+      
+      if (emailField && usuario.email) {
+        emailField.value = usuario.email;
+        emailField.readOnly = true; // Tornar somente leitura
+        emailField.style.backgroundColor = '#f3f4f6';
+      }
+      
+      if (telefoneField && usuario.telefone) {
+        telefoneField.value = usuario.telefone;
+        telefoneField.readOnly = true; // Tornar somente leitura
+        telefoneField.style.backgroundColor = '#f3f4f6';
+      }
+      
+      console.log('✅ Dados do usuário preenchidos automaticamente');
+    } catch (e) {
+      console.error('❌ Erro ao preencher dados do usuário:', e);
+    }
+  }
+}
+
 // === FUNÇÕES DE CHECKOUT ===
 function showCheckoutOptions() {
+  // Verificar se usuário está logado
+  if (!verificarLoginParaCheckout()) {
+    return;
+  }
+  
   const cart = window.cart || JSON.parse(localStorage.getItem('cart') || '[]');
   if (cart.length === 0) {
     alert('Seu carrinho está vazio! Adicione produtos para continuar.');
@@ -1541,6 +1738,11 @@ function showCheckoutOptions() {
 }
 
 function finalizeViaWhatsApp() {
+  // Verificar se usuário está logado
+  if (!verificarLoginParaCheckout()) {
+    return;
+  }
+  
   if (cart.length === 0) {
     alert('Seu carrinho está vazio! Adicione produtos para continuar.');
     return;
@@ -1817,6 +2019,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     showCategory('inicio');
     console.log('✅ showCategory(inicio) executada');
+    
+    // Limpar placeholders que possam ter ficado para trás
+    cleanupStalePlaceholders();
   }).catch(function(error) {
     console.error('❌ Erro ao carregar produtos:', error);
     console.error('❌ Stack trace:', error.stack);
@@ -2841,6 +3046,28 @@ function viewMyProducts() {
   openProductsModal();
 }
 
+function viewMyReviews() {
+  console.log('🔍 viewMyReviews() chamada');
+  closeUserMenu();
+  openReviewsModal();
+}
+
+// Expor imediatamente para garantir disponibilidade
+window.viewMyReviews = viewMyReviews;
+console.log('✅ viewMyReviews() exposta globalmente');
+
+// Garantir disponibilidade no final do carregamento
+document.addEventListener('DOMContentLoaded', function() {
+  window.viewMyReviews = viewMyReviews;
+  console.log('✅ viewMyReviews() reexposta no DOMContentLoaded');
+});
+
+// Garantir no window.onload também
+window.addEventListener('load', function() {
+  window.viewMyReviews = viewMyReviews;
+  console.log('✅ viewMyReviews() reexposta no window.onload');
+});
+
 // === FUNÇÕES DO CHECKOUT ===
 function loadCheckoutSummary() {
   const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -2851,6 +3078,9 @@ function loadCheckoutSummary() {
   console.log('🛒 Carregando resumo do checkout...');
   console.log('📦 Carrinho encontrado:', cart);
   console.log('📊 Quantidade de itens:', cart.length);
+  
+  // Preencher dados do usuário logado automaticamente
+  preencherDadosUsuarioLogado();
   
   if (!itemsContainer || !subtotalElement || !totalElement) {
     console.log('❌ Elementos do checkout não encontrados');
@@ -3280,6 +3510,11 @@ function updateCheckoutTotal(shippingCost = 0) {
 function submitOrder(event) {
   event.preventDefault();
   
+  // Verificar se usuário está logado
+  if (!verificarLoginParaCheckout()) {
+    return;
+  }
+  
   // Desativa a validação nativa do navegador
   if (event && event.target && event.target.checkValidity) {
     event.stopPropagation();
@@ -3287,9 +3522,7 @@ function submitOrder(event) {
   
   console.log('🛒 Enviando pedido...');
   
-  // Coletar dados do formulário
-  const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-  console.log('📦 Carrinho no submitOrder:', cart);
+  const cart = window.cart || JSON.parse(localStorage.getItem('cart') || '[]');
   
   // Verificar se carrinho está vazio
   if (cart.length === 0) {
@@ -3677,13 +3910,18 @@ function viewOrders() {
 function navigateToCheckout() {
   console.log('🛒 Navegando para checkout...');
   
+  // Verificar se usuário está logado
+  if (!verificarLoginParaCheckout()) {
+    return;
+  }
+  
   // Verificar se o carrinho está vazio
   const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-  console.log('📦 Conteúdo do carrinho:', cart);
+  console.log('📦 Carrinho encontrado:', cart);
   console.log('📊 Quantidade de itens:', cart.length);
   
   if (cart.length === 0) {
-    showWarning('Seu carrinho está vazio! Adicione produtos antes de finalizar o pedido.', 'Carrinho Vazio');
+    showNotification('Seu carrinho está vazio! Adicione produtos antes de finalizar.', 'error');
     return;
   }
   
@@ -5382,6 +5620,9 @@ function openReviewsModal() {
   if (overlay) {
     overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
+    
+    // Carregar avaliações do usuário logado
+    loadUserReviews();
   }
 }
 
@@ -5391,6 +5632,263 @@ function closeReviewsModal() {
     overlay.classList.remove('active');
     document.body.style.overflow = 'auto';
   }
+}
+
+// Função para carregar avaliações do usuário
+function loadUserReviews() {
+  console.log('🔍 Carregando avaliações do usuário...');
+  
+  // Obter usuário logado
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) {
+    console.log('❌ Usuário não está logado');
+    showEmptyReviewsState('Faça login para ver suas avaliações');
+    return;
+  }
+  
+  let usuario;
+  try {
+    usuario = JSON.parse(usuarioLogado);
+    console.log('👤 Usuário logado:', usuario.email);
+  } catch (e) {
+    console.error('❌ Erro ao parsear usuário:', e);
+    showEmptyReviewsState('Erro ao carregar dados do usuário');
+    return;
+  }
+  
+  // Carregar todas as avaliações
+  const stored = localStorage.getItem('primos_reviews');
+  if (!stored) {
+    console.log('📋 Nenhuma avaliação encontrada no sistema');
+    showEmptyReviewsState('Você ainda não avaliou nenhum produto');
+    return;
+  }
+  
+  let allReviews;
+  try {
+    allReviews = JSON.parse(stored);
+    console.log('📊 Total de avaliações no sistema:', allReviews.length);
+    console.log('📋 Todas as avaliações:', allReviews);
+  } catch (e) {
+    console.error('❌ Erro ao carregar avaliações:', e);
+    showEmptyReviewsState('Erro ao carregar avaliações');
+    return;
+  }
+  
+  // Filtrar avaliações do usuário
+  console.log('🔍 Filtrando avaliações para o usuário:', usuario.email);
+  const userReviews = allReviews.filter(review => {
+    const matchEmail = review.userEmail === usuario.email;
+    const matchName = review.userName && review.userName.includes(usuario.nome);
+    console.log(`📝 Avaliação ${review.id}: email="${review.userEmail}" -> ${matchEmail}, name="${review.userName}" -> ${matchName}`);
+    return matchEmail || matchName;
+  });
+  
+  console.log('📝 Avaliações do usuário encontradas:', userReviews.length);
+  console.log('📋 Avaliações filtradas:', userReviews);
+  
+  if (userReviews.length === 0) {
+    showEmptyReviewsState('Você ainda não avaliou nenhum produto');
+    return;
+  }
+  
+  // Exibir avaliações do usuário
+  displayUserReviews(userReviews, usuario);
+}
+
+// Função para exibir estado vazio
+function showEmptyReviewsState(message) {
+  const content = document.querySelector('.reviews-modal-content');
+  if (!content) return;
+  
+  content.innerHTML = `
+    <div class="empty-state">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+      </svg>
+      <h4>Nenhuma avaliação encontrada</h4>
+      <p>${message}</p>
+      <button class="btn-primary" onclick="closeReviewsModal(); showCategory('inicio');">Ver Produtos para Avaliar</button>
+    </div>
+  `;
+}
+
+// Função para exibir avaliações do usuário
+function displayUserReviews(reviews, usuario) {
+  const content = document.querySelector('.reviews-modal-content');
+  if (!content) return;
+  
+  console.log('🎨 Exibindo', reviews.length, 'avaliações do usuário');
+  
+  let reviewsHTML = `
+    <div class="user-reviews-header">
+      <div class="user-info">
+        <div class="user-avatar">${usuario.nome.charAt(0).toUpperCase()}</div>
+        <div class="user-details">
+          <h4>${usuario.nome}</h4>
+          <p>${reviews.length} ${reviews.length === 1 ? 'avaliação' : 'avaliações'}</p>
+        </div>
+      </div>
+    </div>
+    <div class="reviews-list">
+  `;
+  
+  reviews.forEach(review => {
+    const product = products.find(p => p.codigo === review.productId);
+    const productName = product ? product.nome : `Produto ${review.productId}`;
+    const productImage = product ? `images/products/thumbnail/${product.imagem || product.codigo + '.webp'}` : 'images/products/thumbnail/placeholder.webp';
+    
+    const date = new Date(review.date);
+    const formattedDate = date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+    
+    reviewsHTML += `
+      <div class="review-item" data-review-id="${review.id}">
+        <div class="review-product">
+          <img src="${productImage}" alt="${productName}" class="review-product-image" onerror="this.src='images/products/thumbnail/placeholder.webp'">
+          <div class="review-product-info">
+            <h5>${productName}</h5>
+            <div class="review-rating">
+              ${generateStars(review.rating)}
+              <span class="review-date">${formattedDate}</span>
+            </div>
+          </div>
+        </div>
+        <div class="review-content">
+          ${review.title ? `<h6>${review.title}</h6>` : ''}
+          <p>${review.text}</p>
+          ${review.photos && review.photos.length > 0 ? `
+            <div class="review-photos">
+              ${review.photos.map(photo => `
+                <img src="${photo}" alt="Foto da avaliação" class="review-photo" onclick="window.open('${photo}', '_blank')">
+              `).join('')}
+            </div>
+          ` : ''}
+        </div>
+        <div class="review-actions">
+          <button class="edit-review-btn" onclick="editReview(${review.id})">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            Editar
+          </button>
+          <button class="delete-review-btn" onclick="deleteReview(${review.id})">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            Excluir
+          </button>
+        </div>
+        ${review.edited ? '<span class="edited-badge">Editada</span>' : ''}
+      </div>
+    `;
+  });
+  
+  reviewsHTML += `
+    </div>
+  `;
+  
+  content.innerHTML = reviewsHTML;
+  console.log('✅ Avaliações exibidas com sucesso');
+}
+
+// Função para gerar estrelas
+function generateStars(rating) {
+  let stars = '';
+  for (let i = 1; i <= 5; i++) {
+    stars += `<span class="star ${i <= rating ? 'filled' : ''}">★</span>`;
+  }
+  return stars;
+}
+
+// Função para editar avaliação
+function editReview(reviewId) {
+  console.log('📝 Editando avaliação:', reviewId);
+  
+  // Carregar avaliações
+  const stored = localStorage.getItem('primos_reviews');
+  if (!stored) {
+    console.error('❌ Nenhuma avaliação encontrada');
+    return;
+  }
+  
+  let reviews;
+  try {
+    reviews = JSON.parse(stored);
+  } catch (e) {
+    console.error('❌ Erro ao carregar avaliações:', e);
+    return;
+  }
+  
+  const review = reviews.find(r => r.id === reviewId);
+  if (!review) {
+    console.error('❌ Avaliação não encontrada:', reviewId);
+    return;
+  }
+  
+  // Fechar modal de avaliações
+  closeReviewsModal();
+  
+  // Abrir modal de edição com os dados da avaliação
+  openEditReviewModal(review);
+}
+
+// Função para excluir avaliação
+function deleteReview(reviewId) {
+  console.log('🗑️ Excluindo avaliação:', reviewId);
+  
+  if (!confirm('Tem certeza que deseja excluir esta avaliação? Esta ação não pode ser desfeita.')) {
+    return;
+  }
+  
+  // Carregar avaliações
+  const stored = localStorage.getItem('primos_reviews');
+  if (!stored) {
+    console.error('❌ Nenhuma avaliação encontrada');
+    return;
+  }
+  
+  let reviews;
+  try {
+    reviews = JSON.parse(stored);
+  } catch (e) {
+    console.error('❌ Erro ao carregar avaliações:', e);
+    return;
+  }
+  
+  // Remover avaliação
+  const originalLength = reviews.length;
+  reviews = reviews.filter(r => r.id !== reviewId);
+  
+  if (reviews.length === originalLength) {
+    console.error('❌ Avaliação não encontrada para exclusão:', reviewId);
+    return;
+  }
+  
+  // Salvar avaliações atualizadas
+  localStorage.setItem('primos_reviews', JSON.stringify(reviews));
+  
+  console.log('✅ Avaliação excluída com sucesso');
+  
+  // Recarregar avaliações do usuário
+  loadUserReviews();
+  
+  // Mostrar mensagem de sucesso
+  showSuccessMessage('Avaliação excluída com sucesso!');
+}
+
+// Função para abrir modal de edição de avaliação
+function openEditReviewModal(review) {
+  // Implementar modal de edição
+  console.log('📝 Abrindo modal de edição para avaliação:', review);
+  
+  // Por enquanto, apenas mostrar os dados no console
+  alert(`Funcionalidade de edição em desenvolvimento\n\nAvaliação: ${review.title}\nNota: ${review.rating}\nTexto: ${review.text}`);
 }
 
 
@@ -5577,6 +6075,58 @@ window.openReviewsModal = openReviewsModal;
 window.closeReviewsModal = closeReviewsModal;
 window.openSettingsModal = openSettingsModal;
 window.closeSettingsModal = closeSettingsModal;
+
+// Funções do menu de usuário
+window.viewProfile = viewProfile;
+window.viewMyProducts = viewMyProducts;
+window.viewMyReviews = viewMyReviews;
+window.viewSettings = viewSettings;
+window.logout = logout;
+
+// Funções de avaliações
+window.loadUserReviews = loadUserReviews;
+window.editReview = editReview;
+window.deleteReview = deleteReview;
+window.openEditReviewModal = openEditReviewModal;
+
+// Função de teste para criar avaliação exemplo
+window.createTestReview = function() {
+  console.log('🧪 Criando avaliação de teste...');
+  
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (!usuarioLogado) {
+    console.error('❌ Usuário não está logado');
+    alert('Faça login primeiro');
+    return;
+  }
+  
+  const usuario = JSON.parse(usuarioLogado);
+  
+  // Criar avaliação de teste
+  const testReview = {
+    id: Date.now(),
+    productId: products[0] ? products[0].codigo : '1001',
+    userEmail: usuario.email,
+    userName: usuario.nome,
+    rating: 5,
+    title: 'Avaliação de Teste',
+    text: 'Esta é uma avaliação de teste criada automaticamente para verificar o funcionamento do sistema.',
+    photos: [],
+    date: new Date().toISOString(),
+    helpful: 0,
+    edited: false
+  };
+  
+  // Salvar avaliação
+  const success = saveReview(testReview);
+  if (success) {
+    console.log('✅ Avaliação de teste criada com sucesso');
+    alert('Avaliação de teste criada! Clique em "Minhas Avaliações" para visualizar.');
+  } else {
+    console.error('❌ Falha ao criar avaliação de teste');
+    alert('Falha ao criar avaliação de teste');
+  }
+};
 
 // Funções de gerenciamento de pedidos
 window.reviewOrder = reviewOrder;
@@ -6111,6 +6661,12 @@ let profileMenuManager;
 
 // Inicializar quando o DOM estiver pronto
 function initializeProfileMenu() {
+  // Evitar inicialização duplicada
+  if (window.profileMenuManager) {
+    console.log('⚠️ ProfileMenuManager já inicializado, pulando...');
+    return;
+  }
+  
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       profileMenuManager = new ProfileMenuManager();
@@ -6215,8 +6771,7 @@ window.simulateLogoutOnIndex = function() {
   }
 };
 
-// Inicializar imediatamente
-initializeProfileMenu();
+// Inicialização duplicada removida - já foi chamada anteriormente
 
 // Adicionar event listener para o botão de filtros
 document.addEventListener('DOMContentLoaded', function() {
