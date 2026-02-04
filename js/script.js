@@ -581,6 +581,11 @@ function loadProducts() {
       
       allProducts = products;
       console.log('✅', allProducts.length, 'produtos carregados do JSON');
+      
+      // Expor products globalmente após carregamento
+      window.products = products;
+      console.log('📦 Variável products exposta globalmente');
+      
       return products;
     })
     .catch(function(error) {
@@ -893,16 +898,18 @@ let uploadedPhotos = [];
 // Função para obter avaliações de um produto
 function getProductReviews(productId) {
   try {
-    // Tentar localStorage primeiro
-    const storedReviews = localStorage.getItem('productReviews');
+    // Tentar localStorage primeiro - usar a chave correta
+    const storedReviews = localStorage.getItem('primos_reviews');
     let reviews = [];
     
     if (storedReviews) {
       reviews = JSON.parse(storedReviews);
+      console.log(`📋 Carregando ${reviews.length} avaliações do localStorage`);
     }
     
     // Filtrar avaliações do produto específico
     const productReviews = reviews.filter(review => review.productId === productId);
+    console.log(`🎯 Filtrando ${productReviews.length} avaliações para o produto ${productId}`);
     
     return productReviews;
     
@@ -5726,6 +5733,8 @@ function loadUserReviews() {
   
   // Filtrar avaliações do usuário
   console.log('🔍 Filtrando avaliações para o usuário:', usuario.email);
+  console.log('🔍 Nome do usuário:', usuario.nome);
+  
   const userReviews = allReviews.filter(review => {
     const matchEmail = review.userEmail === usuario.email;
     const matchName = review.userName && review.userName.includes(usuario.nome);
@@ -5764,8 +5773,21 @@ function showEmptyReviewsState(message) {
 
 // Função para exibir avaliações do usuário
 function displayUserReviews(reviews, usuario) {
+  console.log('🎨 displayUserReviews() chamada com', reviews.length, 'avaliações');
+  console.log('👤 Usuário:', usuario);
+  console.log('📋 Reviews:', reviews);
+  console.log('📦 Variável products disponível:', typeof products !== 'undefined');
+  if (typeof products !== 'undefined') {
+    console.log('📊 Total de produtos:', products.length);
+  }
+  
   const content = document.querySelector('.reviews-modal-content');
-  if (!content) return;
+  console.log('📦 Container .reviews-modal-content encontrado:', !!content);
+  
+  if (!content) {
+    console.error('❌ Container .reviews-modal-content não encontrado');
+    return;
+  }
   
   console.log('🎨 Exibindo', reviews.length, 'avaliações do usuário');
   
@@ -5783,6 +5805,12 @@ function displayUserReviews(reviews, usuario) {
   `;
   
   reviews.forEach(review => {
+    // Verificar se products está disponível globalmente
+    if (typeof products === 'undefined') {
+      console.error('❌ Variável products não está definida');
+      return;
+    }
+    
     const product = products.find(p => p.codigo === review.productId);
     const productName = product ? product.nome : `Produto ${review.productId}`;
     const productImage = product ? `images/products/thumbnail/${product.imagem || product.codigo + '.webp'}` : 'images/products/thumbnail/placeholder.webp';
@@ -5844,6 +5872,8 @@ function displayUserReviews(reviews, usuario) {
   
   content.innerHTML = reviewsHTML;
   console.log('✅ Avaliações exibidas com sucesso');
+  console.log('📋 HTML inserido:', reviewsHTML.length, 'caracteres');
+  console.log('📦 Conteúdo final do container:', content.innerHTML.length, 'caracteres');
 }
 
 // Função para gerar estrelas
@@ -6177,6 +6207,100 @@ window.createTestReview = function() {
   }
 };
 
+// Função de teste para depurar avaliações
+window.debugReviews = function() {
+  console.log('🔍 DEPURANDO AVALIAÇÕES...');
+  
+  // Verificar usuário logado
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  console.log('👤 Usuário logado:', usuarioLogado);
+  
+  // Verificar avaliações no localStorage
+  const stored = localStorage.getItem('primos_reviews');
+  console.log('📋 Dados brutos no localStorage:', stored);
+  
+  if (stored) {
+    try {
+      const allReviews = JSON.parse(stored);
+      console.log('📊 Total de avaliações:', allReviews.length);
+      console.log('📝 Todas as avaliações:', allReviews);
+      
+      if (usuarioLogado) {
+        const usuario = JSON.parse(usuarioLogado);
+        const userReviews = allReviews.filter(review => 
+          review.userEmail === usuario.email || 
+          (review.userName && review.userName.includes(usuario.nome))
+        );
+        console.log('🎯 Avaliações do usuário:', userReviews);
+      }
+    } catch (e) {
+      console.error('❌ Erro ao parsear avaliações:', e);
+    }
+  } else {
+    console.log('📋 Nenhuma avaliação encontrada no localStorage');
+  }
+};
+
+// Função para redirecionar para política de devolução
+window.viewReturnPolicy = function() {
+  console.log('📄 Redirecionando para política de devolução...');
+  window.location.href = 'politica-devolucao.html';
+};
+
+// Expor função globalmente
+window.viewReturnPolicy = viewReturnPolicy;
+console.log('✅ viewReturnPolicy() exposta globalmente');
+
+// Verificar se o botão existe no DOM
+console.log('⏰ Iniciando verificação do botão em 2 segundos...');
+
+// Verificação imediata
+console.log('🔍 Verificação imediata do botão...');
+const policyBtnImmediate = document.getElementById('policyReturnBtn');
+console.log('🔍 Botão Política de Devolução encontrado (imediato):', !!policyBtnImmediate);
+
+if (policyBtnImmediate) {
+  console.log('🎨 Estilos computados do botão:');
+  console.log('📋 display:', window.getComputedStyle(policyBtnImmediate).display);
+  console.log('📋 visibility:', window.getComputedStyle(policyBtnImmediate).visibility);
+  console.log('📋 opacity:', window.getComputedStyle(policyBtnImmediate).opacity);
+  console.log('📋 height:', window.getComputedStyle(policyBtnImmediate).height);
+  console.log('📋 width:', window.getComputedStyle(policyBtnImmediate).width);
+  console.log('📋 position:', window.getComputedStyle(policyBtnImmediate).position);
+  console.log('📋 z-index:', window.getComputedStyle(policyBtnImmediate).zIndex);
+  console.log('📋 Pai do botão:', policyBtnImmediate.parentElement);
+  console.log('📋 Visível no viewport:', policyBtnImmediate.getBoundingClientRect());
+  
+  // Verificar se o modal do perfil está visível
+  const profileModal = document.getElementById('profileModalOverlay');
+  if (profileModal) {
+    console.log('🔍 Modal do perfil encontrado:', !!profileModal);
+    console.log('📋 Modal display:', window.getComputedStyle(profileModal).display);
+    console.log('📋 Modal visibility:', window.getComputedStyle(profileModal).visibility);
+    console.log('📋 Modal opacity:', window.getComputedStyle(profileModal).opacity);
+    console.log('📋 Modal classes:', profileModal.className);
+  }
+}
+
+setTimeout(() => {
+  console.log('⏰ Verificando botão agora...');
+  const policyBtn = document.getElementById('policyReturnBtn');
+  console.log('🔍 Botão Política de Devolução encontrado:', !!policyBtn);
+  if (policyBtn) {
+    console.log('✅ Botão está no DOM e pronto para uso');
+    console.log('📋 Texto do botão:', policyBtn.textContent.trim());
+    console.log('🎯 onclick do botão:', policyBtn.onclick);
+  } else {
+    console.error('❌ Botão não encontrado no DOM - verifique o HTML');
+    // Verificar se existe algum botão com texto similar
+    const allButtons = document.querySelectorAll('.profile-action-btn');
+    console.log('📋 Todos os botões de perfil encontrados:', allButtons.length);
+    allButtons.forEach((btn, index) => {
+      console.log(`Botão ${index}:`, btn.textContent.trim());
+    });
+  }
+}, 2000);
+
 // Funções de gerenciamento de pedidos
 window.reviewOrder = reviewOrder;
 window.reorderOrder = reorderOrder;
@@ -6188,6 +6312,8 @@ window.logout = logout;
 window.viewOrders = viewOrders;
 window.backToMainPage = backToMainPage;
 window.navigateToOrdersPage = navigateToOrdersPage;
+
+// Expor variáveis globais importantes (após carregamento)
 window.goToHomePage = goToHomePage;
 window.resetNavigation = resetNavigation;
 window.navigateToCheckout = navigateToCheckout;

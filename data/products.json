@@ -1924,6 +1924,127 @@
     "marca": "Hayom",
     "promocao": false,
     "imagem": "gabinete-hayom-gb1789.webp"
+  },
+  {
+    "codigo": "1419",
+    "nome": "GABINETE ATX HAYOM 171023",
+    "categoria": "gabinete",
+    "preco": 172,
+    "qt": 3,
+    "descricao": "Gabinete ATX HAYOM 171023",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "gabinete-hayom-171023.webp"
+  },
+  {
+    "codigo": "402663",
+    "nome": "GABINETE ATX HAYOM 171050",
+    "categoria": "gabinete",
+    "preco": 172,
+    "qt": 1,
+    "descricao": "Gabinete ATX HAYOM 171050",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "gabinete-hayom-171050.webp"
+  },
+  {
+    "codigo": "1553",
+    "nome": "GABINETE GAMER BRANCO HAYOM 1791",
+    "categoria": "gabinete",
+    "preco": 329,
+    "qt": 7,
+    "descricao": "Gabinete Gamer Branco HAYOM 1791",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "gabinete-gamer-branco-hayom-1791.webp"
+  },
+  {
+    "codigo": "402664",
+    "nome": "GABINETE GAMER HAYOM GB171049",
+    "categoria": "gabinete",
+    "preco": 238,
+    "qt": 5,
+    "descricao": "Gabinete Gamer HAYOM GB171049",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "gabinete-gamer-hayom-gb171049.webp"
+  },
+  {
+    "codigo": "1868",
+    "nome": "GABINETE GAMER HAYOM AQUARIO 3 FANS GB1787",
+    "categoria": "gabinete",
+    "preco": 172,
+    "qt": 8,
+    "descricao": "Gabinete Gamer HAYOM Aquario 3 Fans GB1787",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "gabinete-gamer-hayom-aquario-gb1787.webp"
+  },
+  {
+    "codigo": "1927",
+    "nome": "GABINETE GAMER HAYOM BRANCO GB1799",
+    "categoria": "gabinete",
+    "preco": 390,
+    "qt": 2,
+    "descricao": "Gabinete Gamer HAYOM Branco GB1799",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "gabinete-gamer-hayom-branco-gb1799.webp"
+  },
+  {
+    "codigo": "1555",
+    "nome": "GABINETE GAMER HAYOM C 3 FANS GB1769",
+    "categoria": "gabinete",
+    "preco": 272,
+    "qt": 1,
+    "descricao": "Gabinete Gamer HAYOM C 3 Fans GB1769",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "gabinete-gamer-hayom-c-3fans-gb1769.webp"
+  },
+  {
+    "codigo": "1947",
+    "nome": "GABINETE GAMER HAYOM PRETO GB1798 3 COOLER",
+    "categoria": "gabinete",
+    "preco": 272,
+    "qt": 4,
+    "descricao": "Gabinete Gamer HAYOM Preto GB1798 3 Cooler",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "gabinete-gamer-hayom-preto-gb1798-3cooler.webp"
+  },
+  {
+    "codigo": "401821",
+    "nome": "GABINETE GAMER HAYOM VIDRO GB1701",
+    "categoria": "gabinete",
+    "preco": 440,
+    "qt": 2,
+    "descricao": "Gabinete Gamer HAYOM Vidro GB1701",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "gabinete-gamer-hayom-vidro-gb1701.webp"
+  },
+  {
+    "codigo": "402665",
+    "nome": "GABINETE GAMER PRETO HAYOM 171090",
+    "categoria": "gabinete",
+    "preco": 345,
+    "qt": 2,
+    "descricao": "Gabinete Gamer Preto HAYOM 171090",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "gabinete-gamer-preto-hayom-171090.webp"
+  },
+  {
+    "codigo": "1742",
+    "nome": "GABINETE HAYOM FONTE S/CABO GB1751",
+    "categoria": "gabinete",
+    "preco": 135,
+    "qt": 59,
+    "descricao": "Gabinete HAYOM Fonte s/cabo GB1751",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "gabinete-hayom-fonte-scabo-gb1751.webp"
   }
 
 ]
