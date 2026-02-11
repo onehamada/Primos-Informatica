@@ -1533,7 +1533,7 @@
     "codigo": "1046",
     "nome": "PLACA DE VÍDEO AMD RX570 8GB DDR5 PCYES",
     "categoria": "placa de vídeo",
-    "preco": 1190,
+    "preco": 964.6,
     "qt": 2,
     "descricao": "RX570 8GB DDR5 256 bits PCYes",
     "marca": "AMD",
@@ -1928,7 +1928,7 @@
   {
     "codigo": "1419",
     "nome": "GABINETE ATX HAYOM 171023",
-    "categoria": "gabinetes",
+    "categoria": "gabinete",
     "preco": 172,
     "qt": 3,
     "descricao": "Gabinete ATX HAYOM 171023",
@@ -1939,7 +1939,7 @@
   {
     "codigo": "402663",
     "nome": "GABINETE ATX HAYOM 171050",
-    "categoria": "gabinetes",
+    "categoria": "gabinete",
     "preco": 172,
     "qt": 1,
     "descricao": "Gabinete ATX HAYOM 171050",
@@ -1950,7 +1950,7 @@
   {
     "codigo": "1553",
     "nome": "GABINETE GAMER BRANCO HAYOM 1791",
-    "categoria": "gabinetes",
+    "categoria": "gabinete",
     "preco": 329,
     "qt": 7,
     "descricao": "Gabinete Gamer Branco HAYOM 1791",
@@ -1961,7 +1961,7 @@
   {
     "codigo": "402664",
     "nome": "GABINETE GAMER HAYOM GB171049",
-    "categoria": "gabinetes",
+    "categoria": "gabinete",
     "preco": 238,
     "qt": 5,
     "descricao": "Gabinete Gamer HAYOM GB171049",
@@ -1972,7 +1972,7 @@
   {
     "codigo": "1868",
     "nome": "GABINETE GAMER HAYOM AQUARIO 3 FANS GB1787",
-    "categoria": "gabinetes",
+    "categoria": "gabinete",
     "preco": 172,
     "qt": 8,
     "descricao": "Gabinete Gamer HAYOM Aquario 3 Fans GB1787",
@@ -1983,7 +1983,7 @@
   {
     "codigo": "1927",
     "nome": "GABINETE GAMER HAYOM BRANCO GB1799",
-    "categoria": "gabinetes",
+    "categoria": "gabinete",
     "preco": 390,
     "qt": 2,
     "descricao": "Gabinete Gamer HAYOM Branco GB1799",
@@ -1994,7 +1994,7 @@
   {
     "codigo": "1555",
     "nome": "GABINETE GAMER HAYOM C 3 FANS GB1769",
-    "categoria": "gabinetes",
+    "categoria": "gabinete",
     "preco": 272,
     "qt": 1,
     "descricao": "Gabinete Gamer HAYOM C 3 Fans GB1769",
@@ -2005,7 +2005,7 @@
   {
     "codigo": "1947",
     "nome": "GABINETE GAMER HAYOM PRETO GB1798 3 COOLER",
-    "categoria": "gabinetes",
+    "categoria": "gabinete",
     "preco": 272,
     "qt": 4,
     "descricao": "Gabinete Gamer HAYOM Preto GB1798 3 Cooler",
@@ -2016,7 +2016,7 @@
   {
     "codigo": "401821",
     "nome": "GABINETE GAMER HAYOM VIDRO GB1701",
-    "categoria": "gabinetes",
+    "categoria": "gabinete",
     "preco": 440,
     "qt": 2,
     "descricao": "Gabinete Gamer HAYOM Vidro GB1701",
@@ -2027,7 +2027,7 @@
   {
     "codigo": "402665",
     "nome": "GABINETE GAMER PRETO HAYOM 171090",
-    "categoria": "gabinetes",
+    "categoria": "gabinete",
     "preco": 345,
     "qt": 2,
     "descricao": "Gabinete Gamer Preto HAYOM 171090",
@@ -2038,89 +2038,13 @@
   {
     "codigo": "1742",
     "nome": "GABINETE HAYOM FONTE S/CABO GB1751",
-    "categoria": "gabinetes",
+    "categoria": "gabinete",
     "preco": 135,
     "qt": 59,
     "descricao": "Gabinete HAYOM Fonte s/cabo GB1751",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "gabinete-hayom-fonte-scabo-gb1751.webp"
-  },
-  {
-    "codigo": "3001",
-    "nome": "BATERIA UNIPOWER 6V 4,5AH UP645SEG",
-    "categoria": "bateria",
-    "preco": 51,
-    "qt": 3,
-    "descricao": "Bateria Unipower 6V 4,5Ah UP645SEG",
-    "marca": "Unipower",
-    "promocao": false,
-    "imagem": "unipower-up645seg.webp"
-  },
-  {
-    "codigo": "3002",
-    "nome": "BATERIA UNIPOWER P/ NOBREAK 12V 5AH UP1250",
-    "categoria": "bateria",
-    "preco": 86,
-    "qt": 3,
-    "descricao": "Bateria Unipower p/ Nobreak 12V 5Ah UP1250",
-    "marca": "Unipower",
-    "promocao": false,
-    "imagem": "unipower-up1250.webp"
-  },
-  {
-    "codigo": "3003",
-    "nome": "BATERIA UNIPOWER P/ NOBREAK 12V 9AH F187 UP1290",
-    "categoria": "bateria",
-    "preco": 143,
-    "qt": 3,
-    "descricao": "Bateria Unipower p/ Nobreak 12V 9Ah F187 UP1290",
-    "marca": "Unipower",
-    "promocao": false,
-    "imagem": "unipower-up1290.webp"
-  },
-  {
-    "codigo": "3004",
-    "nome": "BATERIA UNIPOWER P/ NOBREAK 12V 7AH UP1270E",
-    "categoria": "bateria",
-    "preco": 111,
-    "qt": 3,
-    "descricao": "Bateria Unipower p/ Nobreak 12V 7Ah UP1270E",
-    "marca": "Unipower",
-    "promocao": false,
-    "imagem": "unipower-up1270e.webp"
-  },
-  {
-    "codigo": "3005",
-    "nome": "BATERIA UNIPOWER P/ NOBREAK 12V 7AH UP1270SEG",
-    "categoria": "bateria",
-    "preco": 101,
-    "qt": 3,
-    "descricao": "Bateria Unipower p/ Nobreak 12V 7Ah UP1270SEG",
-    "marca": "Unipower",
-    "promocao": false,
-    "imagem": "unipower-up1270seg.webp"
-  },
-  {
-    "codigo": "3006",
-    "nome": "BATERIA MULTILASER P/ NOBREAK 12V 5AH BC125",
-    "categoria": "bateria",
-    "preco": 80,
-    "qt": 3,
-    "descricao": "Bateria Multilaser p/ Nobreak 12V 5Ah BC125",
-    "marca": "Multilaser",
-    "promocao": false,
-    "imagem": "multilaser-bc125.webp"
-  },
-  {
-    "codigo": "3007",
-    "nome": "BATERIA MULTILASER P/ NOBREAK 12V 7AH BC127",
-    "categoria": "bateria",
-    "preco": 95.51,
-    "qt": 3,
-    "descricao": "Bateria Multilaser p/ Nobreak 12V 7Ah BC127",
-    "marca": "Multilaser",
-    "promocao": false,
-    "imagem": "multilaser-bc127.webp"
   }
+
 ]
