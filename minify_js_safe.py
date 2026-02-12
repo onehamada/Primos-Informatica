@@ -6,6 +6,8 @@ with open('js/script.js', 'r', encoding='utf-8') as f:
 
 # Minificação mais segura - preservando quebras de linha importantes
 minified = js_content
+# Remover linhas de DEBUG console.log
+minified = re.sub(r'^\s*DEBUG && console\.log.*;\s*\n?', '', minified, flags=re.MULTILINE)
 # Remover comentários de uma linha (mas preservar URLs)
 minified = re.sub(r'(?<!http:|https:)//.*$', '', minified, flags=re.MULTILINE)
 # Remover comentários de múltiplas linhas

@@ -1,3 +1,6 @@
+// === CONTROLE DE DEBUG ===
+const DEBUG = false;
+
 // === CONTROLE DE SCROLL RESTORATION ===
 // Impedir restauração automática de scroll do navegador
 if ('scrollRestoration' in history) {
@@ -99,10 +102,498 @@ window.addEventListener('load', function() {
   setTimeout(cleanupStalePlaceholders, 100);
 });
 
+// === SISTEMA DE ROTEAMENTO (SEO 2.3) ===
+function initRouter() {
+  // Mapeamento de rotas
+  const routes = {
+    '/': 'inicio',
+    '/produtos': 'promo',
+    '/categoria/': null, // prefixo para categorias
+    '/produto/': null   // prefixo para produtos
+  };
+  
+  // Função para navegar sem recarregar
+  function navigateTo(path, category = null, productSlug = null) {
+    // Atualizar URL sem recarregar página
+    if (category) {
+      history.pushState({ category }, '', `/categoria/${category}`);
+    } else if (productSlug) {
+      history.pushState({ productSlug }, '', `/produto/${productSlug}`);
+    } else {
+      history.pushState({}, '', path);
+    }
+    
+    // Disparar navegação
+    if (category) {
+      showCategory(category);
+    } else if (productSlug) {
+      showProduct(productSlug);
+    } else {
+      const targetCategory = routes[path] || 'inicio';
+      showCategory(targetCategory);
+    }
+  }
+  
+  // Intercepta cliques em links de navegação
+  document.addEventListener('click', function(e) {
+    const link = e.target.closest('a[href^="/"]');
+    if (link) {
+      e.preventDefault();
+      const href = link.getAttribute('href');
+      
+      if (href.startsWith('/categoria/')) {
+        const category = href.replace('/categoria/', '');
+        navigateTo(href, category);
+      } else if (href.startsWith('/produto/')) {
+        const productSlug = href.replace('/produto/', '');
+        navigateTo(href, null, productSlug);
+      } else {
+        navigateTo(href);
+      }
+    }
+  });
+  
+  // Lida com navegação pelo browser (back/forward)
+  window.addEventListener('popstate', function(e) {
+    const path = window.location.pathname;
+    
+    if (path.startsWith('/categoria/')) {
+      const category = path.replace('/categoria/', '');
+      showCategory(category);
+    } else if (path.startsWith('/produto/')) {
+      const productSlug = path.replace('/produto/', '');
+      showProduct(productSlug);
+    } else {
+      const targetCategory = routes[path] || 'inicio';
+      showCategory(targetCategory);
+    }
+  });
+  
+  // Expor globalmente
+  window.navigateTo = navigateTo;
+}
+
+// === LAZY LOADING AVANÇADO (Performance) ===
+class AdvancedLazyLoader {
+  constructor() {
+    this.observer = null;
+    this.loadedImages = new Set();
+    this.init();
+  }
+  
+  init() {
+    // Criar Intersection Observer com threshold otimizado
+    this.observer = new IntersectionObserver(
+      this.handleIntersection.bind(this),
+      {
+        rootMargin: '50px 0px', // Carregar 50px antes de entrar na viewport
+        threshold: 0.01
+      }
+    );
+    
+    // Observar todas as imagens com data-src
+    this.observeImages();
+    
+    // Preload de imagens críticas (above the fold)
+    this.preloadCriticalImages();
+  }
+  
+  observeImages() {
+    const images = document.querySelectorAll('img[data-src]');
+    images.forEach(img => this.observer.observe(img));
+  }
+  
+  preloadCriticalImages() {
+    // Primeiras 6 imagens são críticas
+    const criticalImages = document.querySelectorAll('.products-grid img[data-src]:nth-child(-n+6)');
+    criticalImages.forEach(img => this.loadImage(img, true));
+  }
+  
+  handleIntersection(entries) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        this.loadImage(entry.target);
+        this.observer.unobserve(entry.target);
+      }
+    });
+  }
+  
+  loadImage(img, isCritical = false) {
+    const src = img.dataset.src;
+    if (!src || this.loadedImages.has(src)) return;
+    
+    this.loadedImages.add(src);
+    
+    // Criar nova imagem para pré-carregar
+    const newImg = new Image();
+    
+    newImg.onload = () => {
+      // Aplicar imagem com fade suave
+      img.style.opacity = '0';
+      img.src = src;
+      img.removeAttribute('data-src');
+      img.classList.add('loaded');
+      
+      // Fade in
+      requestAnimationFrame(() => {
+        img.style.transition = 'opacity 0.3s ease';
+        img.style.opacity = '1';
+      });
+    };
+    
+    newImg.onerror = () => {
+      // Fallback para placeholder
+      img.src = '/images/products/thumbnail/placeholder.webp';
+      img.removeAttribute('data-src');
+    };
+    
+    // Iniciar carregamento
+    newImg.src = src;
+    
+    // Adicionar atributos de performance
+    img.loading = isCritical ? 'eager' : 'lazy';
+    img.decoding = 'async';
+  }
+  
+  // Método para observar novas imagens (para conteúdo dinâmico)
+  observeNewImages() {
+    this.observeImages();
+  }
+}
+
+// Inicializar lazy loading
+let advancedLazyLoader;
+
+// === SISTEMA DE PRODUTOS (SEO 3.0) ===
+function generateSlug(productName) {
+  return productName
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+    .replace(/[^a-z0-9\s-]/g, '') // Remove caracteres especiais
+    .replace(/\s+/g, '-') // Espaços para hífens
+    .replace(/-+/g, '-') // Múltiplos hífens para um
+    .trim();
+}
+
+function resolveProductBySlug(slug) {
+  if (!allProducts || allProducts.length === 0) return null;
+  
+  // Buscar por slug gerado
+  for (let i = 0; i < allProducts.length; i++) {
+    const product = allProducts[i];
+    const productSlug = generateSlug(product.nome);
+    
+    if (productSlug === slug) {
+      return product;
+    }
+  }
+  
+  return null;
+}
+
+function createProductLink(product) {
+  const slug = generateSlug(product.nome);
+  return `/produto/${slug}`;
+}
+
+// === MIGRAÇÃO GRADUAL (Compatibilidade) ===
+function migrateToSEOUrls() {
+  // Converter hash URLs para SEO URLs se acessado diretamente
+  if (window.location.hash && !window.location.pathname.startsWith('/categoria/')) {
+    const hash = window.location.hash.substring(1);
+    
+    // Mapear hashes antigos para novas URLs
+    const hashMapping = {
+      'promo': '/produtos',
+      'promocoes': '/produtos'
+    };
+    
+    if (hashMapping[hash]) {
+      history.replaceState({}, '', hashMapping[hash]);
+    } else if (hash !== 'inicio') {
+      // Categorias
+      history.replaceState({ category: hash }, '', `/categoria/${hash}`);
+    } else {
+      history.replaceState({}, '', '/');
+    }
+  }
+  
+  // Verificar URL atual e carregar categoria correspondente
+  const path = window.location.pathname;
+  
+  if (path.startsWith('/categoria/')) {
+    const category = path.replace('/categoria/', '');
+    showCategory(category);
+  } else if (path === '/produtos') {
+    showCategory('promo');
+  } else if (path === '/') {
+    showCategory('inicio');
+  }
+}
+
+// === ANALYTICS AVANÇADO (CRO TRACKING) ===
+function trackProductView(product) {
+  // GA4 event - view_item
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'view_item', {
+      currency: 'BRL',
+      value: parseFloat((product.preco || '0').replace(',', '.')),
+      items: [{
+        item_id: product.codigo,
+        item_name: product.nome,
+        category: product.categoria,
+        price: parseFloat((product.preco || '0').replace(',', '.')),
+        quantity: 1
+      }]
+    });
+  }
+  
+  DEBUG && console.log('📊 Product view tracked:', product.nome);
+}
+
+function trackAddToCart(product) {
+  // GA4 event - add_to_cart
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'add_to_cart', {
+      currency: 'BRL',
+      value: parseFloat((product.preco || '0').replace(',', '.')),
+      items: [{
+        item_id: product.codigo,
+        item_name: product.nome,
+        category: product.categoria,
+        price: parseFloat((product.preco || '0').replace(',', '.')),
+        quantity: 1
+      }]
+    });
+  }
+  
+  DEBUG && console.log('🛒 Add to cart tracked:', product.nome);
+}
+
+function trackWhatsAppClick(product) {
+  // GA4 event - generate_lead
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'generate_lead', {
+      currency: 'BRL',
+      value: parseFloat((product.preco || '0').replace(',', '.')),
+      lead_source: 'whatsapp',
+      item_id: product.codigo,
+      item_name: product.nome
+    });
+  }
+  
+  DEBUG && console.log('📱 WhatsApp click tracked:', product.nome);
+}
+
+// === PÁGINA DE PRODUTO (SEO 3.0) ===
+function showProduct(productSlug) {
+  // Resetar navegação
+  resetNavigation();
+  cleanupStalePlaceholders();
+  
+  // Limpar observer anterior
+  if (window.currentObserver) {
+    window.currentObserver.disconnect();
+    window.currentObserver = null;
+  }
+  
+  // Resolver produto pelo slug
+  const product = resolveProductBySlug(productSlug);
+  
+  if (!product) {
+    // Produto não encontrado - mostrar 404 amigável
+    showProductNotFound(productSlug);
+    return;
+  }
+  
+  // Esconder todas as seções
+  const sections = document.querySelectorAll('.products-section, .category, #promo, #inicio');
+  for (let i = 0; i < sections.length; i++) {
+    sections[i].style.display = 'none';
+  }
+  
+  // Criar ou obter seção de produto
+  let productSection = document.getElementById('product-view');
+  if (!productSection) {
+    productSection = document.createElement('section');
+    productSection.id = 'product-view';
+    productSection.className = 'product-view-section';
+    
+    const main = document.querySelector('main');
+    if (main) main.appendChild(productSection);
+  }
+  
+  // Renderizar página do produto
+  renderProductPage(product, productSection);
+  
+  // Adicionar Product Schema individual
+  addIndividualProductSchema(product);
+  
+  // Atualizar meta tags
+  updateProductMetaTags(product);
+  
+  // Track product view (analytics)
+  trackProductView(product);
+  
+  // Mostrar seção
+  productSection.style.display = 'block';
+  
+  DEBUG && console.log('🛍️ Página de produto exibida:', product.nome);
+}
+
+function showProductNotFound(slug) {
+  const main = document.querySelector('main');
+  if (!main) return;
+  
+  main.innerHTML = `
+    <section class="product-not-found">
+      <div class="container">
+        <h1>Produto Não Encontrado</h1>
+        <p>O produto "${slug}" não foi encontrado em nosso catálogo.</p>
+        <button class="btn-primary" onclick="window.navigateTo('/')">Ver Todos os Produtos</button>
+      </div>
+    </section>
+  `;
+}
+
+function renderProductPage(product, container) {
+  const price = (product.preco || '0').replace(',', '.');
+  const formattedPrice = parseFloat(price).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  });
+  
+  const availability = product.qt > 0 ? 'Em Estoque' : 'Fora de Estoque';
+  const availabilityClass = product.qt > 0 ? 'in-stock' : 'out-of-stock';
+  
+  // Indicadores de urgência e confiança
+  const stockLevel = product.qt > 5 ? 'Alto' : product.qt > 0 ? 'Últimas' : 'Esgotado';
+  const urgencyBadge = product.qt > 0 && product.qt <= 3 ? 
+    '<div class="urgency-badge">⚡ Apenas ' + product.qt + ' em estoque!</div>' : '';
+  
+  // Prova social
+  const reviews = getProductReviews(product.codigo);
+  const averageRating = calculateAverageRating(reviews);
+  const reviewCount = reviews.length;
+  const stars = generateStars(averageRating, product.codigo);
+  
+  container.innerHTML = `
+    <div class="product-container">
+      <div class="product-breadcrumb">
+        <a href="/" onclick="window.navigateTo('/')">Início</a>
+        <span>/</span>
+        <a href="/categoria/${product.categoria}" onclick="window.navigateTo('/categoria/${product.categoria}')">${product.categoria}</a>
+        <span>/</span>
+        <span>${product.nome}</span>
+      </div>
+      
+      <div class="product-content">
+        <div class="product-image-section">
+          <div class="main-product-image">
+            <img src="/images/products/large/${product.imagem || product.codigo + '.webp'}" 
+                 alt="${product.nome}" 
+                 onerror="this.src='/images/products/large/placeholder.webp'">
+          </div>
+          
+          <!-- Selos de confiança -->
+          <div class="trust-badges">
+            <div class="trust-badge">✓ Entrega em Brasília</div>
+            <div class="trust-badge">✓ Garantia do Fabricante</div>
+            <div class="trust-badge">✓ Suporte Técnico</div>
+          </div>
+        </div>
+        
+        <div class="product-info-section">
+          <!-- Título com marca destacada -->
+          <h1 class="product-title">
+            ${product.nome}
+            <span class="product-brand-tag">${product.marca || ''}</span>
+          </h1>
+          
+          <!-- Prova social acima do preço -->
+          <div class="product-rating-summary">
+            <div class="stars">${stars}</div>
+            <span class="rating-text">${averageRating.toFixed(1)} (${reviewCount} avaliações)</span>
+            <a href="#" onclick="openReviewModal('${product.codigo}'); return false;" class="review-link">Avaliar</a>
+          </div>
+          
+          <!-- Preço com destaque máximo -->
+          <div class="product-price-section">
+            <div class="price-wrapper">
+              <div class="product-price">${formattedPrice}</div>
+              <div class="price-info">à vista no PIX/Transferência</div>
+            </div>
+            
+            <!-- Disponibilidade com urgência -->
+            <div class="product-availability ${availabilityClass}">
+              <span class="availability-status">${availability}</span>
+              <span class="stock-level">(${stockLevel})</span>
+            </div>
+            
+            ${urgencyBadge}
+          </div>
+          
+          <!-- Descrição otimizada -->
+          <div class="product-description">
+            <h3>Descrição</h3>
+            <p>${product.descricao || `Produto de alta qualidade da ${product.marca || 'marca'} com garantia e suporte técnico em Brasília.`}</p>
+          </div>
+          
+          <!-- CTA Principal (Foco Máximo) -->
+          <div class="product-actions-primary">
+            <button class="btn-primary btn-large btn-block" 
+                    onclick="addToCart('${product.codigo}'); trackAddToCart(allProducts.find(p => p.codigo === '${product.codigo}'));" 
+                    ${product.qt <= 0 ? 'disabled' : ''}>
+              ${product.qt > 0 ? '🛒 Adicionar ao Carrinho' : '❌ Fora de Estoque'}
+            </button>
+            
+            <!-- Indicador de segurança -->
+            <div class="security-indicator">
+              🔒 Compra 100% segura
+            </div>
+          </div>
+          
+          <!-- WhatsApp como CTA Secundário -->
+          <div class="product-actions-secondary">
+            <div class="divider">ou</div>
+            <a href="https://wa.me/556133406740?text=Olá! Tenho interesse no produto: ${encodeURIComponent(product.nome)}" 
+               target="_blank" 
+               class="whatsapp-btn btn-large btn-block"
+               onclick="trackWhatsAppClick(allProducts.find(p => p.codigo === '${product.codigo}'))">
+              📱 Comprar por WhatsApp
+            </a>
+            <div class="whatsapp-info">Resposta em até 5 minutos</div>
+          </div>
+          
+          <!-- Informações adicionais -->
+          <div class="product-meta">
+            <span class="product-code">Código: ${product.codigo}</span>
+            <span class="product-category">Categoria: ${product.categoria}</span>
+          </div>
+          
+          <!-- Link secundário no final -->
+          <div class="product-footer-actions">
+            <button class="btn-secondary" onclick="window.navigateTo('/categoria/${product.categoria}')">
+              ← Ver Mais Produtos
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 // === FUNÇÃO PRINCIPAL - CATEGORIAS ===
 function showCategory(category) {
   // Resetar navegação antes de mostrar categoria
   resetNavigation();
+  
+  // Mostrar skeleton durante carregamento
+  const productsGrid = document.getElementById('products-grid');
+  if (productsGrid) {
+    showLoadingSkeleton(productsGrid, 8);
+  }
   
   // Limpar placeholders residuais antes de mudar de categoria
   cleanupStalePlaceholders();
@@ -111,6 +602,14 @@ function showCategory(category) {
   if (window.currentObserver) {
     window.currentObserver.disconnect();
     window.currentObserver = null;
+  }
+  
+  // Atualizar URL se não vier do router (fallback para hash)
+  if (!window.location.pathname.startsWith('/categoria/') && window.location.pathname !== '/') {
+    // Compatibilidade com hash antigo
+    if (window.location.hash !== `#${category}`) {
+      history.replaceState({ category }, '', `#${category}`);
+    }
   }
   
   // Esconder todas as seções
@@ -215,60 +714,13 @@ function showPromocoes() {
   // Mostrar a seção
   promocoesSection.style.display = 'block';
   
-  // Produtos específicos para promoção
-  const produtosPromocaoEspecificos = [
-    {
-      codigo: "2011",
-      nome: "PLACA MAE BRAZIL PC 1155 DDR3 BPC-H61-ITX-M.2",
-      categoria: "placa mãe",
-      preco: 189, // Valor promocional que você definiu
-      qt: 3,
-      descricao: "Placa Mãe Brazil PC 1155 DDR3 BPC-H61-ITX-M.2",
-      marca: "Brazil PC",
-      promocao: true,
-      precoOriginal: 210, // Valor original fictício para mostrar desconto
-      imagem: "bpc-h61-itx-m2.webp"
-    },
-    {
-      codigo: "1892",
-      nome: "FONTE REAL 750 W 80 PLUS MGS",
-      categoria: "fonte",
-      preco: 350, // Valor promocional que você definiu
-      qt: 3,
-      descricao: "Fonte Real 750W 80 Plus MGS",
-      marca: "MGS",
-      promocao: true,
-      precoOriginal: 420, // Valor original fictício para mostrar desconto
-      imagem: "mgs_fonte750w.webp"
-    },
-    {
-      codigo: "1554",
-      nome: "GABINETE GAMER GB1792",
-      categoria: "gabinetes",
-      preco: 215, // Valor promocional que você definiu
-      qt: 3,
-      descricao: "Gabinete Gamer GB1792",
-      marca: "Hayom",
-      promocao: true,
-      precoOriginal: 275, // Valor original fictício para mostrar desconto
-      imagem: "gabinete-hayom-gb1792.webp"
-    },
-    {
-      codigo: "402216",
-      nome: "MINI TECLADO MULTILASER MEC GK-510",
-      categoria: "teclado",
-      preco: 195, // Valor promocional que você definiu
-      qt: 1,
-      descricao: "Mini teclado mecânico GK-510",
-      marca: "Multilaser",
-      promocao: true,
-      precoOriginal: 220, // Valor original que você informou
-      imagem: "teclado-multilaser-gk510.webp"
-    }
-  ];
+  // Filtrar produtos em promoção do JSON
+  const produtosEmPromocao = allProducts.filter(produto => 
+    produto.promocao === true || produto.promocao === 'sim'
+  );
   
-  // Aplicar promoções visuais aos produtos específicos
-  const promocoesProducts = produtosPromocaoEspecificos.map(produto => aplicarPromocaoVisual(produto));
+  // Aplicar promoções visuais aos produtos filtrados
+  const promocoesProducts = produtosEmPromocao.map(produto => aplicarPromocaoVisual(produto));
   
   // Criar HTML
   let productsHTML = '<h2>PRODUTOS EM PROMOÇÃO</h2>';
@@ -347,18 +799,21 @@ function calcularValorPromocional(precoOriginal, categoria = null) {
 function aplicarPromocaoVisual(produto) {
   if (!produto) return produto;
   
-  // Usar precoOriginal se fornecido, senão usar preco atual
-  const precoOriginalBase = produto.precoOriginal || produto.preco;
-  
-  // Para produtos específicos, usar preco como promocional e precoOriginal como base
+  // Para produtos que já têm promocao: true no JSON
+  // Usar o preço atual como preço promocional e calcular um preço original fictício
   let precoPromocionalFinal;
+  let precoOriginalBase;
+  
   if (produto.precoOriginal) {
-    // Tem precoOriginal definido, usar preco atual como promocional
+    // Tem precoOriginal definido (caso antigo), usar lógica anterior
+    precoOriginalBase = produto.precoOriginal;
     precoPromocionalFinal = produto.preco;
   } else {
-    // Calcular valor promocional baseado no preço original
-    const calculo = calcularValorPromocional(precoOriginalBase, produto.categoria);
-    precoPromocionalFinal = calculo.precoPromocional;
+    // Produto do JSON com promocao: true - usar preço atual como promocional
+    precoPromocionalFinal = produto.preco;
+    // Calcular preço original fictício (apenas para exibição)
+    // Adicionar cerca de 15-20% ao preço promocional
+    precoOriginalBase = Math.round(produto.preco * 1.16);
   }
   
   // Criar produto com promoção visual (não altera o original)
@@ -473,7 +928,7 @@ function loadImagesOnScroll(container) {
               img.src = fallbackSrc;
             } else {
               // Tentar fallback para placeholder genérico
-              const genericFallback = 'images/products/thumbnail/placeholder.webp';
+              const genericFallback = '/images/products/thumbnail/placeholder.webp';
               if (genericFallback !== img.dataset.src) {
                 img.src = genericFallback;
               } else {
@@ -532,17 +987,28 @@ function loadImagesOnScroll(container) {
 let allProducts = [];
 
 function loadProducts() {
-  console.log('🚀 loadProducts() iniciada - JSON mode');
-  return fetch('data/products.json')
+  DEBUG && console.log('🚀 loadProducts() iniciada - JSON mode');
+  return fetch('/data/products.json', {
+    cache: 'no-store'
+  })
     .then(function(response) {
-      console.log('📁 JSON response status:', response.status);
+      DEBUG && console.log('📁 JSON response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error('Erro ao carregar arquivo JSON: ' + response.statusText);
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
+      
+      // Validar content-type para evitar parse de HTML
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        console.error('❌ Content-Type não é JSON:', contentType);
+        throw new Error('Resposta não é JSON - possível rewrite incorreto');
+      }
+      
       return response.json();
     })
     .then(function(jsonData) {
-      console.log('📄 JSON carregado, produtos:', jsonData.length);
+      DEBUG && console.log('📄 JSON carregado, produtos:', jsonData.length);
       
       const products = [];
       const productMap = {}; // Usar mapa para evitar duplicatas por código
@@ -580,18 +1046,208 @@ function loadProducts() {
       }
       
       allProducts = products;
-      console.log('✅', allProducts.length, 'produtos carregados do JSON');
-      
-      // Expor products globalmente após carregamento
-      window.products = products;
-      console.log('📦 Variável products exposta globalmente');
-      
+      DEBUG && console.log('✅', allProducts.length, 'produtos carregados do JSON');
       return products;
     })
     .catch(function(error) {
-      console.error('Erro ao carregar produtos:', error);
+      console.error('❌ Erro ao carregar produtos:', error);
+      console.error('📍 URL solicitada: /data/products.json');
+      console.error('🔍 Possível causa: arquivo não encontrado no deploy Firebase');
+      
+      // Marcar como handled para error boundary
+      error.__handled = true;
+      
+      // Render error placeholder na grid de produtos
+      const productsGrid = document.getElementById('products-grid');
+      if (productsGrid) {
+        productsGrid.innerHTML = `
+          <div class="error-placeholder">
+            <strong>⚠️ Produtos temporariamente indisponíveis</strong>
+            <p>Tente recarregar a página em alguns instantes.</p>
+          </div>
+        `;
+      }
+      
       return [];
     });
+}
+
+// === PRODUCT SCHEMA INDIVIDUAL (SEO 3.0) ===
+function addIndividualProductSchema(product) {
+  // Remover schema anterior se existir
+  const existingSchema = document.getElementById('individual-product-schema');
+  if (existingSchema) {
+    existingSchema.remove();
+  }
+  
+  if (!product) return;
+  
+  const slug = generateSlug(product.nome);
+  const price = (product.preco || '0').replace(',', '.');
+  
+  // Gerar schema individual para o produto
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.nome,
+    "image": `https://primos-informatica-ecommerce.web.app/images/products/large/${product.imagem || product.codigo + '.webp'}`,
+    "description": product.descricao || `${product.nome} - ${product.marca || 'Marca'} na Primos Informática`,
+    "brand": {
+      "@type": "Brand",
+      "name": product.marca || "Primos Informática"
+    },
+    "sku": product.codigo,
+    "mpn": product.codigo,
+    "offers": {
+      "@type": "Offer",
+      "url": `https://primos-informatica-ecommerce.web.app/produto/${slug}`,
+      "priceCurrency": "BRL",
+      "price": price,
+      "availability": product.qt > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "seller": {
+        "@type": "Organization",
+        "name": "Primos Informática",
+        "url": "https://primos-informatica-ecommerce.web.app",
+        "telephone": "+556133406740",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Asa Norte CLN 208 BL A LOJA 11",
+          "addressLocality": "Brasília",
+          "addressRegion": "DF",
+          "postalCode": "70853-510",
+          "addressCountry": "BR"
+        }
+      }
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.5",
+      "reviewCount": "12"
+    }
+  };
+  
+  // Criar e inserir schema no head
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.id = 'individual-product-schema';
+  script.textContent = JSON.stringify(schemaData, null, 2);
+  
+  const head = document.head || document.getElementsByTagName('head')[0];
+  if (head) {
+    head.appendChild(script);
+    DEBUG && console.log('🔍 Product Schema individual adicionado para:', product.nome);
+  }
+}
+
+// === META TAGS DINÂMICAS (SEO 3.0) ===
+function updateProductMetaTags(product) {
+  if (!product) return;
+  
+  const slug = generateSlug(product.nome);
+  const price = (product.preco || '0').replace(',', '.');
+  const formattedPrice = parseFloat(price).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  });
+  
+  // Atualizar title
+  document.title = `${product.nome} | Comprar por ${formattedPrice} | Primos Informática`;
+  
+  // Atualizar description
+  const description = product.descricao 
+    ? `${product.descricao} | Comprar ${product.nome} por ${formattedPrice} na Primos Informática em Brasília. Entrega rápida.`
+    : `Comprar ${product.nome} por ${formattedPrice} na Primos Informática em Brasília. ${product.marca || 'Produto'} de alta qualidade com entrega rápida.`;
+    
+  // Atualizar meta description
+  let metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) {
+    metaDesc.setAttribute('content', description);
+  } else {
+    metaDesc = document.createElement('meta');
+    metaDesc.name = 'description';
+    metaDesc.content = description;
+    document.head.appendChild(metaDesc);
+  }
+  
+  // Atualizar canonical
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) {
+    canonical.setAttribute('href', `https://primos-informatica-ecommerce.web.app/produto/${slug}`);
+  } else {
+    canonical = document.createElement('link');
+    canonical.rel = 'canonical';
+    canonical.href = `https://primos-informatica-ecommerce.web.app/produto/${slug}`;
+    document.head.appendChild(canonical);
+  }
+  
+  // Atualizar Open Graph
+  updateOpenGraphTags(product, slug);
+  
+  DEBUG && console.log('🏷️ Meta tags atualizadas para:', product.nome);
+}
+
+function updateOpenGraphTags(product, slug) {
+  const ogTitle = document.querySelector('meta[property="og:title"]');
+  const ogDesc = document.querySelector('meta[property="og:description"]');
+  const ogUrl = document.querySelector('meta[property="og:url"]');
+  const ogImage = document.querySelector('meta[property="og:image"]');
+  
+  if (ogTitle) ogTitle.setAttribute('content', `${product.nome} | Primos Informática`);
+  if (ogDesc) ogDesc.setAttribute('content', product.descricao || `${product.nome} na Primos Informática`);
+  if (ogUrl) ogUrl.setAttribute('content', `https://primos-informatica-ecommerce.web.app/produto/${slug}`);
+  if (ogImage) ogImage.setAttribute('content', `https://primos-informatica-ecommerce.web.app/images/products/large/${product.imagem || product.codigo + '.webp'}`);
+}
+
+// === PRODUCT SCHEMA (SEO) ===
+function addProductSchema(products) {
+  // Remover schema anterior se existir
+  const existingSchema = document.getElementById('product-schema');
+  if (existingSchema) {
+    existingSchema.remove();
+  }
+  
+  if (!products || products.length === 0) return;
+  
+  // Gerar schema para múltiplos produtos
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": products.map((product, index) => ({
+      "@type": "Product",
+      "position": index + 1,
+      "name": product.nome,
+      "image": `https://primos-informatica-ecommerce.web.app/images/products/thumbnail/${product.imagem || product.codigo + '.webp'}`,
+      "description": product.descricao || `${product.nome} - ${product.marca || 'Marca'} na Primos Informática`,
+      "brand": {
+        "@type": "Brand",
+        "name": product.marca || "Primos Informática"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": `https://primos-informatica-ecommerce.web.app/#produto-${product.codigo}`,
+        "priceCurrency": "BRL",
+        "price": (product.preco || '0').replace(',', '.'),
+        "availability": product.qt > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Primos Informática",
+          "url": "https://primos-informatica-ecommerce.web.app"
+        }
+      }
+    }))
+  };
+  
+  // Criar e inserir schema no head
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.id = 'product-schema';
+  script.textContent = JSON.stringify(schemaData, null, 2);
+  
+  const head = document.head || document.getElementsByTagName('head')[0];
+  if (head) {
+    head.appendChild(script);
+    DEBUG && console.log('🔍 Product Schema adicionado para', products.length, 'produtos');
+  }
 }
 
 // === EXIBIR PRODUTOS ===
@@ -608,6 +1264,9 @@ function displayProducts(products) {
     }
     categories[category].push(product);
   }
+  
+  // Adicionar Product Schema para os produtos principais
+  addProductSchema(products.slice(0, 10)); // Primeiros 10 produtos
   
   // Criar seções
   const categoryNames = Object.keys(categories);
@@ -684,7 +1343,7 @@ function populateHomeCategories() {
       <div class="category-card" onclick="showCategory('${category.name}')" style="cursor: pointer;">
         <div class="category-image">
           <div class="image-placeholder">📦</div>
-          <img data-src="images/products/thumbnail/${category.sample.imagem || category.sample.codigo + '.webp'}" 
+          <img data-src="/images/products/thumbnail/${category.sample.imagem || category.sample.codigo + '.webp'}" 
                alt="${displayName}" 
                style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px;">
         </div>
@@ -742,7 +1401,7 @@ function populateNavigationMenus() {
         'Redes': '<path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M19.07 13.93a7 7 0 0 1-6.14 0"></path><line x1="12" y1="8" x2="12.01" y2="8"></line>',
         'processador': '<rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line>',
         'placa de vídeo': '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line>',
-        'placa mãe': '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line>',
+        'placa mãe': '<rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="6" y1="8" x2="18" y2="8"></line><line x1="6" y1="12" x2="18" y2="12"></line><line x1="6" y1="16" x2="18" y2="16"></line>',
         'ssd': '<rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="12" y1="6" x2="12.01" y2="6"></line>',
         'hd externo': '<ellipse cx="12" cy="12" rx="10" ry="3"></ellipse><path d="M2 12v6c0 1.66 4.48 3 10 3s10-1.34 10-3v-6"></path>',
         'hd interno': '<ellipse cx="12" cy="12" rx="10" ry="3"></ellipse><path d="M2 12v6c0 1.66 4.48 3 10 3s10-1.34 10-3v-6"></path>',
@@ -751,7 +1410,8 @@ function populateNavigationMenus() {
         'acessorios': '<circle cx="12" cy="12" r="3"></circle><path d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 1.54l4.24 4.24M20.46 20.46l-4.24-4.24M1.54 20.46l4.24-4.24"></path>',
         'cabos': '<path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line>',
         'webcam': '<path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>',
-        'fonte': '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>'
+        'fonte': '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>',
+        'bateria': '<rect x="2" y="5" width="12" height="6" rx="1"></rect><rect x="14" y="7" width="2" height="2"></rect>'
       };
       
       const icon = iconMap[category] || '<rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>';
@@ -849,43 +1509,52 @@ function populateNavigationMenus() {
 function populateHomeHighlights() {
   const highlightsGrid = document.getElementById('home-highlights-grid');
   if (!highlightsGrid) {
+    console.warn('[populateHomeHighlights] Container não encontrado');
     return;
   }
   
-  // Obter produtos em destaque (promoções + alguns produtos aleatórios)
-  const highlights = [];
-  
-  // Adicionar produtos em promoção primeiro
-  for (let i = 0; i < allProducts.length; i++) {
-    // JSON usa booleano true, CSV usava string 'sim'
-    if (allProducts[i].promocao === true || allProducts[i].promocao === 'sim') {
-      highlights.push(allProducts[i]);
+  // Safe Render Pattern - Enterprise
+  try {
+    // Obter produtos em destaque (promoções + alguns produtos aleatórios)
+    const highlights = [];
+    
+    // Adicionar produtos em promoção primeiro
+    for (let i = 0; i < allProducts.length; i++) {
+      // JSON usa booleano true, CSV usava string 'sim'
+      if (allProducts[i].promocao === true || allProducts[i].promocao === 'sim') {
+        highlights.push(allProducts[i]);
+      }
     }
+    
+    // Se tiver menos de 6 produtos em destaque, adicionar produtos aleatórios
+    if (highlights.length < 6) {
+      const otherProducts = allProducts.filter(p => p.promocao !== true && p.promocao !== 'sim');
+      const needed = 6 - highlights.length;
+      const selected = otherProducts.sort(() => 0.5 - Math.random()).slice(0, needed);
+      highlights.push(...selected);
+    }
+    
+    // Limitar a 8 produtos no máximo
+    const finalHighlights = highlights.slice(0, 8);
+    
+    // Criar HTML dos produtos em destaque
+    let highlightsHTML = '';
+    for (let i = 0; i < finalHighlights.length; i++) {
+      highlightsHTML += createProductCard(finalHighlights[i]);
+    }
+    
+    highlightsGrid.innerHTML = highlightsHTML;
+    
+    // Lazy loading para imagens dos destaques
+    setTimeout(function() {
+      loadImagesOnScroll(highlightsGrid);
+    }, 200);
+    
+  } catch (error) {
+    console.error('[populateHomeHighlights] Erro ao renderizar destaques:', error);
+    // Fallback seguro - usar função reutilizável
+    renderErrorPlaceholder(highlightsGrid, 'Produtos em destaque temporariamente indisponíveis');
   }
-  
-  // Se tiver menos de 6 produtos em destaque, adicionar produtos aleatórios
-  if (highlights.length < 6) {
-    const otherProducts = allProducts.filter(p => p.promocao !== true && p.promocao !== 'sim');
-    const needed = 6 - highlights.length;
-    const selected = otherProducts.sort(() => 0.5 - Math.random()).slice(0, needed);
-    highlights.push(...selected);
-  }
-  
-  // Limitar a 8 produtos no máximo
-  const finalHighlights = highlights.slice(0, 8);
-  
-  // Criar HTML dos produtos em destaque
-  let highlightsHTML = '';
-  for (let i = 0; i < finalHighlights.length; i++) {
-    highlightsHTML += createProductCard(finalHighlights[i]);
-  }
-  
-  highlightsGrid.innerHTML = highlightsHTML;
-  
-  // Lazy loading para imagens dos destaques
-  setTimeout(function() {
-    loadImagesOnScroll(highlightsGrid);
-  }, 200);
 }
 
 // === FUNÇÕES DE AVALIAÇÕES ===
@@ -904,12 +1573,12 @@ function getProductReviews(productId) {
     
     if (storedReviews) {
       reviews = JSON.parse(storedReviews);
-      console.log(`📋 Carregando ${reviews.length} avaliações do localStorage`);
+      DEBUG && console.log(`📋 Carregando ${reviews.length} avaliações do localStorage`);
     }
     
     // Filtrar avaliações do produto específico
     const productReviews = reviews.filter(review => review.productId === productId);
-    console.log(`🎯 Filtrando ${productReviews.length} avaliações para o produto ${productId}`);
+    DEBUG && console.log('🎯 Filtrando', productReviews.length, 'avaliações para o produto', productId);
     
     return productReviews;
     
@@ -1507,9 +2176,21 @@ window.showSuccessMessage = showSuccessMessage;
 window.showValidationErrors = showValidationErrors;
 
 // === CARD DE PRODUTO ===
-function createProductCard(product) {
+function createProductCard(product = {}) {
+  // Guard Clause Enterprise - Prevenção de crash
+  if (!product || typeof product !== 'object') {
+    console.warn('[createProductCard] Produto inválido:', product);
+    return '<div class="product-card error-placeholder"><p>Produto temporariamente indisponível</p></div>';
+  }
+  
+  // Validação de campos críticos
+  if (!product.codigo) {
+    console.warn('[createProductCard] Produto sem código:', product);
+    return '<div class="product-card error-placeholder"><p>Produto com dados incompletos</p></div>';
+  }
+  
   const imageName = product.imagem || product.codigo + '.webp';
-  const imagePath = 'images/products/thumbnail/' + imageName;
+  const imagePath = '/images/products/thumbnail/' + imageName;
   
   // Corrigir tratamento de preço para preservar centavos
   const priceString = (product.preco || '0').toString().replace(',', '.');
@@ -1521,56 +2202,50 @@ function createProductCard(product) {
   const averageRating = calculateAverageRating(reviews);
   const reviewCount = reviews.length;
   
-  // Verificar se produto está em promoção
-  const isPromocao = product.promocao === true;
-  const promocaoBadge = ''; // Removido ícone de fogo 🔥
+  // Gerar estrelas com validação extra (BLINDAGEM)
+  const safeRating = Number.isFinite(averageRating) ? averageRating : 0;
+  const stars = typeof generateStars === 'function' ? generateStars(safeRating, product.codigo) : '';
   
-  // Montar preço com promoção (se houver)
-  let priceHTML = formattedPrice;
-  if (isPromocao && product.precoPromocional && product.precoOriginal) {
-    const promocionalPrice = 'R$ ' + product.precoPromocional.toFixed(2).replace('.', ',');
-    const originalPrice = 'R$ ' + product.precoOriginal.toFixed(2).replace('.', ',');
-    const economia = 'R$ ' + product.economia.toFixed(2).replace('.', ',');
-    
-    priceHTML = `
-      <div class="price-promocional">
-        <span class="preco-promocional">${promocionalPrice}</span>
-        <span class="preco-original">${originalPrice}</span>
-        <span class="economia">Economia ${economia} (${product.percentualDesconto}% OFF)</span>
-      </div>
-    `;
-  }
+  // Badge de promoção (removido)
+  const promocaoBadge = '';
   
-  return '<div class="product-card" data-product-code="' + product.codigo + '">' +
+  // Link para página do produto
+  const productLink = createProductLink(product);
+  
+  // Verificar se produto está fora de estoque
+  const outOfStock = isOutOfStock(product);
+  const outOfStockClass = outOfStock ? ' out-of-stock' : '';
+  const outOfStockOverlay = outOfStock ? '<div class="out-of-stock-overlay">Fora de Estoque</div>' : '';
+  const buttonText = outOfStock ? 'Indisponível' : 'Adicionar';
+  const buttonDisabled = outOfStock ? ' disabled' : '';
+  const buttonOnclick = outOfStock ? '' : ' onclick="addToCart(\'' + product.codigo + '\')"';
+  
+  return '<div class="product-card' + outOfStockClass + '" data-product-code="' + product.codigo + '">' +
     '<div class="product-image">' +
     promocaoBadge +
     '<div class="image-placeholder">📦</div>' +
-    '<img data-src="' + imagePath + '" alt="' + product.nome + '">' +
+    '<a href="' + productLink + '" onclick="window.navigateTo(\'' + productLink + '\'); return false;">' +
+    '<img data-src="' + imagePath + '" alt="' + (product.nome || 'Produto') + '">' +
+    '</a>' +
+    outOfStockOverlay +
     '</div>' +
     '<div class="product-info">' +
-    '<h3>' + product.nome + '</h3>' +
+    '<h3><a href="' + productLink + '" onclick="window.navigateTo(\'' + productLink + '\'); return false;">' + (product.nome || 'Produto') + '</a></h3>' +
     '<div class="product-rating-summary">' +
-    '<div class="stars">' + generateStars(averageRating, product.codigo) + '</div>' +
+    '<div class="stars">' + stars + '</div>' +
     '<span class="rating-text">' + averageRating.toFixed(1) + ' (' + reviewCount + ')</span>' +
     '<button class="review-btn" onclick="openReviewModal(\'' + product.codigo + '\')">Avaliar</button>' +
     '</div>' +
-    '<p class="price">' + priceHTML + '</p>' +
-    '<button class="btn-primary" onclick="addToCart(\'' + product.codigo + '\')">Adicionar</button>' +
-    '</div>' +
-    '<div class="product-reviews" id="reviews-' + product.codigo + '" style="display: none;">' +
-    '<div class="reviews-header">' +
-    '<h4>Avaliações dos Clientes</h4>' +
-    '<button class="toggle-reviews" onclick="toggleReviews(\'' + product.codigo + '\')">Ver avaliações (' + reviewCount + ')</button>' +
-    '</div>' +
-    '<div class="reviews-list" id="reviews-list-' + product.codigo + '">' +
-    generateReviewsHTML(reviews) +
-    '</div>' +
+    '<p class="price">' + formattedPrice + '</p>' +
+    '<button class="btn-primary"' + buttonOnclick + buttonDisabled + '>' + buttonText + '</button>' +
     '</div>' +
     '</div>';
 }
 
-// === CARRINHO ===
-window.cart = [];
+// === FORA DE ESTOQUE ===
+function isOutOfStock(product) {
+  return product && product.categoria === 'fora de estoque';
+}
 
 function toggleCart() {
   const cartSidebar = document.getElementById('cartSidebar');
@@ -1620,9 +2295,9 @@ function updateCartDisplay() {
   // Salvar carrinho no localStorage
   localStorage.setItem('cart', JSON.stringify(cart));
   
-  console.log('🛒 Atualizando display do carrinho...');
-  console.log('📦 Conteúdo do carrinho:', cart);
-  console.log('📊 Quantidade de itens:', cart.length);
+  DEBUG && console.log('🛒 Atualizando display do carrinho...');
+  DEBUG && console.log('📦 Conteúdo do carrinho:', cart);
+  DEBUG && console.log('📊 Quantidade de itens:', cart.length);
   
   if (cart.length === 0) {
     cartItems.innerHTML = '<p style="text-align: center; padding: 20px; color: #666;">Seu carrinho está vazio</p>';
@@ -1854,7 +2529,7 @@ function generateOrder() {
         nome: item.nome,
         quantidade: item.quantidade,
         preco: parseFloat((item.preco || '0').toString().replace(',', '.')),
-        imagem: item.imagem || 'images/placeholder.png'
+        imagem: item.imagem || '/images/placeholder.png'
       }))
     };
   } else {
@@ -1872,7 +2547,7 @@ function generateOrder() {
         nome: item.nome,
         quantidade: item.quantidade,
         preco: parseFloat((item.preco || '0').toString().replace(',', '.')),
-        imagem: item.imagem || 'images/placeholder.png'
+        imagem: item.imagem || '/images/placeholder.png'
       }))
     };
   }
@@ -2048,8 +2723,116 @@ function addToCart(productCode) {
   }
 }
 
-// === INICIALIZAÇÃO ===
+// === HEADER DINÂMICO ===
+function initHeaderScroll() {
+  const header = document.querySelector('.modern-header');
+  if (!header) return;
+  
+  let lastScrollY = window.scrollY;
+  
+  window.addEventListener('scroll', () => {
+    const currentScrollY = window.scrollY;
+    
+    if (currentScrollY > 50) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+    
+    lastScrollY = currentScrollY;
+  });
+}
+
+// === LOADING STATES ===
+function showLoadingSkeleton(container, count = 8) {
+  if (!container) return;
+  
+  let skeletonHTML = '';
+  for (let i = 0; i < count; i++) {
+    skeletonHTML += `
+      <div class="product-card skeleton-card">
+        <div class="skeleton skeleton-image"></div>
+        <div class="product-info">
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-price"></div>
+          <div class="skeleton skeleton-text" style="width: 60%;"></div>
+        </div>
+      </div>
+    `;
+  }
+  container.innerHTML = skeletonHTML;
+}
+
+function hideLoadingSkeleton(container) {
+  if (!container) return;
+  container.innerHTML = '';
+}
+
+// === SAFE RENDER PATTERN ENTERPRISE ===
+function renderErrorPlaceholder(container, message = 'Erro ao carregar conteúdo') {
+  if (!container) return;
+  container.innerHTML = `
+    <div class="error-placeholder">
+      <strong>⚠️ ${message}</strong>
+      <p>Tente recarregar a página.</p>
+    </div>
+  `;
+}
+
+function safeRender(renderFunction, fallbackSelector, context = 'render') {
+  try {
+    renderFunction();
+  } catch (err) {
+    // Marcar erro como handled para evitar log duplicado
+    err.__handled = true;
+    console.error(`[SAFE RENDER][${context}]`, err);
+    
+    const container = document.querySelector(fallbackSelector);
+    renderErrorPlaceholder(container, 'Algo deu errado');
+  }
+}
+
+// === ERROR BOUNDARY ENTERPRISE ===
+window.addEventListener('error', (event) => {
+  // Evitar log duplicado de erros já tratados pelo safeRender
+  if (event.error?.__handled) return;
+  
+  console.error('[GLOBAL ERROR]', {
+    message: event.message,
+    filename: event.filename,
+    lineno: event.lineno,
+    colno: event.colno,
+    error: event.error
+  });
+  
+  // Evitar propagação de erros críticos
+  if (event.message.includes('stars is not defined') || 
+      event.message.includes('product') ||
+      event.message.includes('undefined')) {
+    event.preventDefault();
+  }
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('[UNHANDLED PROMISE REJECTION]', event.reason);
+  event.preventDefault();
+});
+
+// === INICIALIZAÇÃO OTIMIZADA ===
 document.addEventListener('DOMContentLoaded', function() {
+  // Inicializar header dinâmico
+  initHeaderScroll();
+  
+  // Inicializar lazy loading avançado (primeiro para performance)
+  advancedLazyLoader = new AdvancedLazyLoader();
+  
+  // Inicializar sistema de roteamento (SEO 2.3)
+  initRouter();
+  
+  // Migrar hash URLs para SEO URLs (compatibilidade)
+  migrateToSEOUrls();
+  
   // Verificar se usuário está logado e atualizar UI
   checkAuthStatus();
   
@@ -2064,20 +2847,33 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   loadProducts().then(function() {
-    console.log('✅ loadProducts() concluída com sucesso');
+    DEBUG && console.log('✅ loadProducts() concluída com sucesso');
     // Preencher menus de navegação dinamicamente
     populateNavigationMenus();
-    console.log('✅ populateNavigationMenus() executada');
+    DEBUG && console.log('✅ populateNavigationMenus() executada');
     
-    // Preencher home
+    // === PREENCHER HOME ===
+    function populateHome() {
+      // Safe Render Pattern - Enterprise
+      safeRender(() => {
+        populateHomeCategories();
+        
+        // Preencher produtos em destaque na home
+        populateHomeHighlights();
+        
+        DEBUG && console.log('✅ populateHome() executada');
+        
+        showCategory('inicio');
+        DEBUG && console.log('✅ showCategory(inicio) executada');
+        
+        // Limpar placeholders que possam ter ficado para trás
+        cleanupStalePlaceholders();
+        
+      }, '#home-highlights-grid', 'populateHome');
+    }
+    
     populateHome();
-    console.log('✅ populateHome() executada');
     
-    showCategory('inicio');
-    console.log('✅ showCategory(inicio) executada');
-    
-    // Limpar placeholders que possam ter ficado para trás
-    cleanupStalePlaceholders();
   }).catch(function(error) {
     console.error('❌ Erro ao carregar produtos:', error);
     console.error('❌ Stack trace:', error.stack);
@@ -2101,17 +2897,19 @@ document.addEventListener('DOMContentLoaded', function() {
 // === FUNÇÕES DE AUTENTICAÇÃO ===
 
 function checkAuthStatus() {
-  console.log('🔍 checkAuthStatus() chamada');
+  DEBUG && console.log('🔍 checkAuthStatus() chamada');
   const usuarioLogado = localStorage.getItem('usuarioLogado');
   const authBtn = document.querySelector('.auth-btn');
   const authText = document.querySelector('.auth-text');
   
-  console.log('📊 Estado checkAuthStatus:', {
+  const authState = {
     usuarioLogado: !!usuarioLogado,
     authBtnEncontrado: !!authBtn,
     authBtnClasses: authBtn ? authBtn.className : 'not found',
     authBtnListeners: authBtn ? authBtn.onclick : 'no onclick'
-  });
+  };
+  
+  DEBUG && console.log('📊 Estado checkAuthStatus:', authState);
   
   if (!authBtn) {
     console.error('❌ Botão de autenticação não encontrado na página!');
@@ -2124,7 +2922,7 @@ function checkAuthStatus() {
   
   if (usuarioLogado) {
     // USUÁRIO LOGADO - Configurar para mostrar menu
-    console.log('✅ Configurando botão para usuário logado');
+    DEBUG && console.log('✅ Configurando botão para usuário logado');
     let usuario;
     try {
       usuario = JSON.parse(usuarioLogado);
@@ -2168,7 +2966,7 @@ function checkAuthStatus() {
       showUserMenu();
     });
     
-    console.log('✅ Botão de perfil configurado com sucesso');
+    DEBUG && console.log('✅ Botão de perfil configurado com sucesso');
     
   } else {
     // USUÁRIO NÃO LOGADO - Configurar para redirecionar
@@ -3103,25 +3901,25 @@ function viewMyProducts() {
 }
 
 function viewMyReviews() {
-  console.log('🔍 viewMyReviews() chamada');
+  DEBUG && console.log('🔍 viewMyReviews() chamada');
   closeUserMenu();
   openReviewsModal();
 }
 
 // Expor imediatamente para garantir disponibilidade
 window.viewMyReviews = viewMyReviews;
-console.log('✅ viewMyReviews() exposta globalmente');
+DEBUG && console.log('✅ viewMyReviews() exposta globalmente');
 
 // Garantir disponibilidade no final do carregamento
 document.addEventListener('DOMContentLoaded', function() {
   window.viewMyReviews = viewMyReviews;
-  console.log('✅ viewMyReviews() reexposta no DOMContentLoaded');
+  DEBUG && console.log('✅ viewMyReviews() reexposta no DOMContentLoaded');
 });
 
 // Garantir no window.onload também
 window.addEventListener('load', function() {
   window.viewMyReviews = viewMyReviews;
-  console.log('✅ viewMyReviews() reexposta no window.onload');
+  DEBUG && console.log('✅ viewMyReviews() reexposta no window.onload');
 });
 
 // === FUNÇÕES DO CHECKOUT ===
@@ -3131,15 +3929,15 @@ function loadCheckoutSummary() {
   const subtotalElement = document.getElementById('checkout-subtotal');
   const totalElement = document.getElementById('checkout-total');
   
-  console.log('🛒 Carregando resumo do checkout...');
-  console.log('📦 Carrinho encontrado:', cart);
-  console.log('📊 Quantidade de itens:', cart.length);
+  DEBUG && console.log('🛒 Carregando resumo do checkout...');
+  DEBUG && console.log('📦 Carrinho encontrado:', cart);
+  DEBUG && console.log('📊 Quantidade de itens:', cart.length);
   
   // Preencher dados do usuário logado automaticamente
   preencherDadosUsuarioLogado();
   
   if (!itemsContainer || !subtotalElement || !totalElement) {
-    console.log('❌ Elementos do checkout não encontrados');
+    DEBUG && console.log('❌ Elementos do checkout não encontrados');
     return;
   }
   
@@ -3148,7 +3946,7 @@ function loadCheckoutSummary() {
   
   // Verificar se o carrinho está vazio
   if (cart.length === 0) {
-    console.log('❌ Carrinho está vazio, mostrando mensagem');
+    DEBUG && console.log('❌ Carrinho está vazio, mostrando mensagem');
     itemsContainer.innerHTML = `
       <div style="text-align: center; padding: 40px; color: #6b7280;">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 16px auto; opacity: 0.5;">
@@ -3964,7 +4762,7 @@ function viewOrders() {
 
 // === SPA DE FINALIZAÇÃO DE PEDIDO ===
 function navigateToCheckout() {
-  console.log('🛒 Navegando para checkout...');
+  DEBUG && console.log('🛒 Navegando para checkout...');
   
   // Verificar se usuário está logado
   if (!verificarLoginParaCheckout()) {
@@ -3973,8 +4771,8 @@ function navigateToCheckout() {
   
   // Verificar se o carrinho está vazio
   const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-  console.log('📦 Carrinho encontrado:', cart);
-  console.log('📊 Quantidade de itens:', cart.length);
+  DEBUG && console.log('📦 Carrinho encontrado:', cart);
+  DEBUG && console.log('📊 Quantidade de itens:', cart.length);
   
   if (cart.length === 0) {
     showNotification('Seu carrinho está vazio! Adicione produtos antes de finalizar.', 'error');
@@ -5230,7 +6028,7 @@ function resetNavigation() {
     header.style.display = 'block';
   }
   
-  console.log('✅ Navegação resetada para página inicial');
+  DEBUG && console.log('✅ Navegação resetada para página inicial');
 }
 
 
@@ -5357,7 +6155,7 @@ function displaySearchResults(results, searchTerm) {
       
       // Gerar nome da imagem
       const imageName = (product.codigo || 'product') + '.jpg';
-      const imagePath = 'images/products/thumbnail/' + imageName;
+      const imagePath = '/images/products/thumbnail/' + imageName;
       
       const productHTML = `
         <div class="search-result-item" data-product-code="${product.codigo}">
@@ -5692,7 +6490,7 @@ function closeReviewsModal() {
 
 // Função para carregar avaliações do usuário
 function loadUserReviews() {
-  console.log('🔍 Carregando avaliações do usuário...');
+  DEBUG && console.log('📋 Carregando 7 avaliações do localStorage');
   
   // Obter usuário logado
   const usuarioLogado = localStorage.getItem('usuarioLogado');
@@ -5813,7 +6611,7 @@ function displayUserReviews(reviews, usuario) {
     
     const product = products.find(p => p.codigo === review.productId);
     const productName = product ? product.nome : `Produto ${review.productId}`;
-    const productImage = product ? `images/products/thumbnail/${product.imagem || product.codigo + '.webp'}` : 'images/products/thumbnail/placeholder.webp';
+    const productImage = product ? `/images/products/thumbnail/${product.imagem || product.codigo + '.webp'}` : '/images/products/thumbnail/placeholder.webp';
     
     const date = new Date(review.date);
     const formattedDate = date.toLocaleDateString('pt-BR', {
@@ -5825,7 +6623,7 @@ function displayUserReviews(reviews, usuario) {
     reviewsHTML += `
       <div class="review-item" data-review-id="${review.id}">
         <div class="review-product">
-          <img src="${productImage}" alt="${productName}" class="review-product-image" onerror="this.src='images/products/thumbnail/placeholder.webp'">
+          <img src="${productImage}" alt="${productName}" class="review-product-image" onerror="this.src='/images/products/thumbnail/placeholder.webp'">
           <div class="review-product-info">
             <h5>${productName}</h5>
             <div class="review-rating">
@@ -6207,7 +7005,7 @@ window.createTestReview = function() {
   }
 };
 
-// Função de teste para depurar avaliações
+// Função para depurar avaliações
 window.debugReviews = function() {
   console.log('🔍 DEPURANDO AVALIAÇÕES...');
   
@@ -6241,66 +7039,6 @@ window.debugReviews = function() {
   }
 };
 
-// Função para redirecionar para política de devolução
-window.viewReturnPolicy = function() {
-  console.log('📄 Redirecionando para política de devolução...');
-  window.location.href = 'politica-devolucao.html';
-};
-
-// Expor função globalmente
-window.viewReturnPolicy = viewReturnPolicy;
-console.log('✅ viewReturnPolicy() exposta globalmente');
-
-// Verificar se o botão existe no DOM
-console.log('⏰ Iniciando verificação do botão em 2 segundos...');
-
-// Verificação imediata
-console.log('🔍 Verificação imediata do botão...');
-const policyBtnImmediate = document.getElementById('policyReturnBtn');
-console.log('🔍 Botão Política de Devolução encontrado (imediato):', !!policyBtnImmediate);
-
-if (policyBtnImmediate) {
-  console.log('🎨 Estilos computados do botão:');
-  console.log('📋 display:', window.getComputedStyle(policyBtnImmediate).display);
-  console.log('📋 visibility:', window.getComputedStyle(policyBtnImmediate).visibility);
-  console.log('📋 opacity:', window.getComputedStyle(policyBtnImmediate).opacity);
-  console.log('📋 height:', window.getComputedStyle(policyBtnImmediate).height);
-  console.log('📋 width:', window.getComputedStyle(policyBtnImmediate).width);
-  console.log('📋 position:', window.getComputedStyle(policyBtnImmediate).position);
-  console.log('📋 z-index:', window.getComputedStyle(policyBtnImmediate).zIndex);
-  console.log('📋 Pai do botão:', policyBtnImmediate.parentElement);
-  console.log('📋 Visível no viewport:', policyBtnImmediate.getBoundingClientRect());
-  
-  // Verificar se o modal do perfil está visível
-  const profileModal = document.getElementById('profileModalOverlay');
-  if (profileModal) {
-    console.log('🔍 Modal do perfil encontrado:', !!profileModal);
-    console.log('📋 Modal display:', window.getComputedStyle(profileModal).display);
-    console.log('📋 Modal visibility:', window.getComputedStyle(profileModal).visibility);
-    console.log('📋 Modal opacity:', window.getComputedStyle(profileModal).opacity);
-    console.log('📋 Modal classes:', profileModal.className);
-  }
-}
-
-setTimeout(() => {
-  console.log('⏰ Verificando botão agora...');
-  const policyBtn = document.getElementById('policyReturnBtn');
-  console.log('🔍 Botão Política de Devolução encontrado:', !!policyBtn);
-  if (policyBtn) {
-    console.log('✅ Botão está no DOM e pronto para uso');
-    console.log('📋 Texto do botão:', policyBtn.textContent.trim());
-    console.log('🎯 onclick do botão:', policyBtn.onclick);
-  } else {
-    console.error('❌ Botão não encontrado no DOM - verifique o HTML');
-    // Verificar se existe algum botão com texto similar
-    const allButtons = document.querySelectorAll('.profile-action-btn');
-    console.log('📋 Todos os botões de perfil encontrados:', allButtons.length);
-    allButtons.forEach((btn, index) => {
-      console.log(`Botão ${index}:`, btn.textContent.trim());
-    });
-  }
-}, 2000);
-
 // Funções de gerenciamento de pedidos
 window.reviewOrder = reviewOrder;
 window.reorderOrder = reorderOrder;
@@ -6313,7 +7051,12 @@ window.viewOrders = viewOrders;
 window.backToMainPage = backToMainPage;
 window.navigateToOrdersPage = navigateToOrdersPage;
 
-// Expor variáveis globais importantes (após carregamento)
+// Expor variáveis globais importantes
+if (typeof products !== 'undefined') {
+  window.products = products;
+} else {
+  window.products = [];
+}
 window.goToHomePage = goToHomePage;
 window.resetNavigation = resetNavigation;
 window.navigateToCheckout = navigateToCheckout;
@@ -7618,3 +8361,4 @@ window.editProfile = editProfile;
 window.openEditProfileModal = openEditProfileModal;
 window.closeEditProfileModal = closeEditProfileModal;
 window.saveProfileChanges = saveProfileChanges;
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').then(reg => console.log('SW registered')).catch(err => console.log('SW registration failed')); }

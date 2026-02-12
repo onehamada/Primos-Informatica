@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://onehamada.github.io/Primos-Informatica/sitemap.xml
+Sitemap: https://primos-informatica-ecommerce.web.app/sitemap.xml
 
 # Allow specific directories
 Allow: /css/

@@ -1,99 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Home - Prioridade máxima -->
   <url>
     <loc>https://primos-informatica-ecommerce.web.app/</loc>
-    <lastmod>2026-01-23</lastmod>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+  
+  <!-- Produtos - Alta prioridade (conversão) -->
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/#inicio</loc>
-    <lastmod>2026-01-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://primos-informatica-ecommerce.web.app/#promocoes</loc>
-    <lastmod>2026-01-23</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/produtos</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+  
+  <!-- Categorias Principais - URLs amigáveis (SEO 2.3) -->
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/#computadores</loc>
-    <lastmod>2026-01-23</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/categoria/monitor</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/#monitores</loc>
-    <lastmod>2026-01-23</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/categoria/gabinete</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/#perifericos</loc>
-    <lastmod>2026-01-23</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/categoria/mouse</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/#redes</loc>
-    <lastmod>2026-01-23</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/categoria/teclado</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/#gabinetes</loc>
-    <lastmod>2026-01-23</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/categoria/redes</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/#processadores</loc>
-    <lastmod>2026-01-23</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/categoria/fonte</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/#placas-mae</loc>
-    <lastmod>2026-01-23</lastmod>
+    <loc>https://primos-informatica-ecommerce.web.app/categoria/ssd</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  
+  <!-- Produtos Individuais (SEO 3.0) - Prioridade alta para long-tail -->
+  <!-- Exemplos - gerar dinamicamente em produção -->
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/#memorias</loc>
-    <lastmod>2026-01-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://primos-informatica-ecommerce.web.app/produto/monitor-19-hayom-mo6001</loc>
+    <lastmod>2026-02-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
+  
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/#armazenamento</loc>
-    <lastmod>2026-01-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://primos-informatica-ecommerce.web.app/produto/monitor-215-philips-led-full-hd</loc>
+    <lastmod>2026-02-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
+  
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/#fontes</loc>
-    <lastmod>2026-01-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://primos-informatica-ecommerce.web.app/produto/gabinete-atx-hayom-171023</loc>
+    <lastmod>2026-02-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
+  
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/#coolers</loc>
-    <lastmod>2026-01-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://primos-informatica-ecommerce.web.app/produto/mouse-multilaser-sem-fio-preto-mo307</loc>
+    <lastmod>2026-02-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
+  
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/#acessorios</loc>
-    <lastmod>2026-01-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://primos-informatica-ecommerce.web.app/produto/roteador-wr-tp-link-mesh-ac1200-ec220-g5</loc>
+    <lastmod>2026-02-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
+  
+  <!-- Páginas de Suporte - Baixa prioridade -->
   <url>
     <loc>https://primos-informatica-ecommerce.web.app/admin.html</loc>
-    <lastmod>2026-01-23</lastmod>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.3</priority>
+  </url>
+  
+  <url>
+    <loc>https://primos-informatica-ecommerce.web.app/auth.html</loc>
+    <lastmod>2026-02-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  <url>
+    <loc>https://primos-informatica-ecommerce.web.app/pagamento.html</loc>
+    <lastmod>2026-02-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
   </url>
 </urlset>

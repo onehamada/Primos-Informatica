@@ -262,6 +262,11 @@
             color: #065f46;
         }
         
+        .status-cancelado {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
         .loading {
             text-align: center;
             padding: 40px;
@@ -275,7 +280,7 @@
         }
     </style>
 </head>
-<body>
+<body class="needs-firebase">
     <!-- Login Screen -->
     <div id="loginScreen" class="login-container">
         <div class="login-card">
@@ -361,36 +366,53 @@
         </div>
     </div>
 
-    <!-- Firebase SDK (Compat Mode) -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    
-    <!-- Firebase Configuration -->
+    <!-- Firebase Condicional (carrega apenas em páginas que realmente precisam) -->
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAvJUdjnY7xjnlTSYJAQZ6safylKXKlzLc",
-            authDomain: "primos-informatica-ecommerce.firebaseapp.com",
-            projectId: "primos-informatica-ecommerce",
-            storageBucket: "primos-informatica-ecommerce.firebasestorage.app",
-            messagingSenderId: "989269165415",
-            appId: "1:989269165415:web:e372a9915f616f9cae9bc2",
-            measurementId: "G-J6KVL50YGQ"
+    // Verifica se a página atual precisa de Firebase
+    if (document.body.classList.contains('needs-firebase')) {
+        const firebaseApp = document.createElement('script');
+        firebaseApp.src = 'https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js';
+        firebaseApp.defer = true;
+
+        const firestore = document.createElement('script');
+        firestore.src = 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js';
+        firestore.defer = true;
+
+        firebaseApp.onload = () => {
+            firestore.onload = () => {
+                // Firebase Configuration
+                const firebaseConfig = {
+                    apiKey: "AIzaSyAvJUdjnY7xjnlTSYJAQZ6safylKXKlzLc",
+                    authDomain: "primos-informatica-ecommerce.firebaseapp.com",
+                    projectId: "primos-informatica-ecommerce",
+                    storageBucket: "primos-informatica-ecommerce.firebasestorage.app",
+                    messagingSenderId: "989269165415",
+                    appId: "1:989269165415:web:e372a9915f616f9cae9bc2",
+                    measurementId: "G-J6KVL50YGQ"
+                };
+
+                // Initialize Firebase
+                firebase.initializeApp(firebaseConfig);
+                const db = firebase.firestore();
+                
+                // Exportar para uso global ANTES de carregar o firebase-orders.js
+                window.firebaseDB = db;
+                window.firebaseApp = firebase.app();
+                
+                console.log('🔥 Firebase inicializado sob demanda!');
+                
+                // Carrega script de orders após Firebase estar pronto
+                const ordersScript = document.createElement('script');
+                ordersScript.src = 'js/firebase-orders.js';
+                ordersScript.defer = true;
+                document.body.appendChild(ordersScript);
+            };
         };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        
-        // Exportar para uso global ANTES de carregar o firebase-orders.js
-        window.firebaseDB = db;
-        window.firebaseApp = firebase.app();
-        
-        console.log('🔥 Firebase inicializado com sucesso!');
+        document.head.appendChild(firebaseApp);
+        document.head.appendChild(firestore);
+    }
     </script>
-    
-    <!-- Firebase Orders (depois que Firebase estiver disponível) -->
-    <script src="js/firebase-orders.js"></script>
     
     <script>
         // Admin credentials
@@ -489,10 +511,15 @@
             const total = allOrders.length;
             const pending = allOrders.filter(o => (o.status || 'pendente') === 'pendente').length;
             const confirmed = allOrders.filter(o => o.status === 'confirmado').length;
-            const revenue = allOrders.reduce((sum, order) => {
-                const total = parseFloat(order.total?.toString().replace(',', '.') || 0);
-                return sum + total;
-            }, 0);
+            const canceled = allOrders.filter(o => o.status === 'cancelado').length;
+            
+            // Calcula faturamento excluindo pedidos cancelados
+            const revenue = allOrders
+                .filter(o => o.status !== 'cancelado')
+                .reduce((sum, order) => {
+                    const total = parseFloat(order.total?.toString().replace(',', '.') || 0);
+                    return sum + total;
+                }, 0);
             
             document.getElementById('totalOrders').textContent = total;
             document.getElementById('pendingOrders').textContent = pending;
