@@ -62,7 +62,11 @@ function cleanupStalePlaceholders() {
     const container = placeholder.parentElement;
     if (container) {
       const img = container.querySelector('img');
-      if (img && img.complete && img.naturalHeight !== 0 && img.src) {
+      if (img && (
+        img.complete && img.naturalHeight !== 0 && img.src && img.src !== window.location.href ||
+        img.classList.contains('loaded') ||
+        img.hasAttribute('src') && !img.hasAttribute('data-src')
+      )) {
         // Imagem está carregada, remover placeholder
         placeholder.classList.add('hiding');
         setTimeout(function() {
@@ -79,6 +83,36 @@ function cleanupStalePlaceholders() {
           }
         }, 100);
       }
+    }
+  });
+}
+
+// Função agressiva para limpar placeholders presos
+function aggressivePlaceholderCleanup() {
+  const placeholders = document.querySelectorAll('.image-placeholder');
+  
+  placeholders.forEach(function(placeholder) {
+    const container = placeholder.parentElement;
+    if (!container) return;
+    
+    const img = container.querySelector('img');
+    if (!img) return;
+    
+    // Verificar múltiplas condições para imagem carregada
+    const isImageLoaded = (
+      img.complete && img.naturalHeight > 0 ||
+      img.classList.contains('loaded') ||
+      (img.src && img.src !== window.location.href && !img.hasAttribute('data-src')) ||
+      img.offsetWidth > 0 && img.offsetHeight > 0
+    );
+    
+    if (isImageLoaded) {
+      placeholder.classList.add('hiding');
+      setTimeout(() => {
+        if (placeholder.parentNode) {
+          placeholder.remove();
+        }
+      }, 50);
     }
   });
 }
@@ -100,7 +134,12 @@ window.addEventListener('load', function() {
   forceScrollToTop();
   // Limpar placeholders após carregamento completo da página
   setTimeout(cleanupStalePlaceholders, 100);
+  setTimeout(aggressivePlaceholderCleanup, 500);
+  setTimeout(aggressivePlaceholderCleanup, 2000);
 });
+
+// Executar limpeza agressiva periodicamente
+setInterval(aggressivePlaceholderCleanup, 5000);
 
 // === SISTEMA DE ROTEAMENTO (SEO 2.3) ===
 function initRouter() {
@@ -111,6 +150,19 @@ function initRouter() {
     '/categoria/': null, // prefixo para categorias
     '/produto/': null   // prefixo para produtos
   };
+  
+  // CORREÇÃO: Forçar página inicial no carregamento inicial
+  if (performance.getEntriesByType('navigation')[0] && 
+      performance.getEntriesByType('navigation')[0].type === 'navigate') {
+    // É um carregamento inicial da página (não navegação interna)
+    setTimeout(() => {
+      if (window.location.pathname !== '/' || window.location.hash) {
+        history.replaceState({}, '', '/');
+        showCategory('inicio');
+        console.log('🔄 FORÇADO: Carregamento inicial redirecionado para página inicial');
+      }
+    }, 100);
+  }
   
   // Função para navegar sem recarregar
   function navigateTo(path, category = null, productSlug = null) {
@@ -391,6 +443,7 @@ function showProduct(productSlug) {
   // Resetar navegação
   resetNavigation();
   cleanupStalePlaceholders();
+  aggressivePlaceholderCleanup();
   
   // Limpar observer anterior
   if (window.currentObserver) {
@@ -597,6 +650,7 @@ function showCategory(category) {
   
   // Limpar placeholders residuais antes de mudar de categoria
   cleanupStalePlaceholders();
+  aggressivePlaceholderCleanup();
   
   // Limpar observer anterior
   if (window.currentObserver) {
@@ -662,7 +716,8 @@ function showCategory(category) {
       
       // Preencher com produtos da categoria
       const categoryProducts = allProducts.filter(p => 
-        p.categoria && p.categoria.toLowerCase() === category.toLowerCase()
+        p.categoria && 
+        p.categoria.toLowerCase() === category.toLowerCase()
       );
       
       if (categoryProducts.length > 0) {
@@ -918,7 +973,33 @@ function loadImagesOnScroll(container) {
           img.classList.remove('loading');
           img.classList.add('loaded');
           img.removeAttribute('data-src');
+        } else if (img.src && img.src !== window.location.href && !img.hasAttribute('data-src')) {
+          // Imagem já tem src mas não tem data-src, provavelmente já foi processada
+          if (placeholder) {
+            placeholder.classList.add('hiding');
+            setTimeout(function() {
+              if (placeholder.parentNode) {
+                placeholder.remove();
+              }
+            }, 100);
+          }
+          img.classList.add('loaded');
         }
+        
+        // Adicionar verificação adicional como fallback
+        setTimeout(() => {
+          if (placeholder && placeholder.parentNode) {
+            const isImgLoaded = img.complete && img.naturalHeight > 0 || img.classList.contains('loaded');
+            if (isImgLoaded) {
+              placeholder.classList.add('hiding');
+              setTimeout(() => {
+                if (placeholder.parentNode) {
+                  placeholder.remove();
+                }
+              }, 50);
+            }
+          }
+        }, 1000); // Verificação após 1 segundo
         
         img.onerror = function() {
           // Tentar carregar imagem fallback
@@ -1272,6 +1353,12 @@ function displayProducts(products) {
   const categoryNames = Object.keys(categories);
   for (let i = 0; i < categoryNames.length; i++) {
     const category = categoryNames[i];
+    
+    // Pular categoria "fora de estoque" - não deve criar seção
+    if (category === 'fora de estoque') {
+      continue;
+    }
+    
     let section = document.getElementById(category);
     
     if (!section) {
@@ -1314,6 +1401,7 @@ function populateHome() {
 function populateHomeCategories() {
   const categoriesGrid = document.getElementById('home-categories-grid');
   if (!categoriesGrid) {
+    console.warn('[populateHomeCategories] Container #home-categories-grid não encontrado');
     return;
   }
   
@@ -1321,6 +1409,12 @@ function populateHomeCategories() {
   const categories = {};
   for (let i = 0; i < allProducts.length; i++) {
     const category = allProducts[i].categoria;
+    
+    // Ignorar categorias vazias, undefined, null ou apenas espaços em branco
+    if (!category || category.trim() === '' || category === 'undefined' || category === 'null') {
+      continue;
+    }
+    
     if (!categories[category]) {
       categories[category] = {
         name: category,
@@ -1337,14 +1431,24 @@ function populateHomeCategories() {
   
   for (let i = 0; i < categoryNames.length; i++) {
     const category = categories[categoryNames[i]];
+    
+    // Pular categoria "fora de estoque" - não deve aparecer como categoria
+    if (category.name === 'fora de estoque') {
+      continue;
+    }
+    
     const displayName = category.name.charAt(0).toUpperCase() + category.name.slice(1);
+    const imagePath = `/images/products/thumbnail/${category.sample.imagem || category.sample.codigo + '.webp'}`;
+    
+    console.log(`[populateHomeCategories] Categoria: ${category.name}, Imagem: ${imagePath}`);
     
     categoriesHTML += `
       <div class="category-card" onclick="showCategory('${category.name}')" style="cursor: pointer;">
         <div class="category-image">
           <div class="image-placeholder">📦</div>
-          <img data-src="/images/products/thumbnail/${category.sample.imagem || category.sample.codigo + '.webp'}" 
+          <img data-src="${imagePath}" 
                alt="${displayName}" 
+               onerror="this.src='/images/products/thumbnail/default.webp'; this.onerror=null;"
                style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px;">
         </div>
         <div class="category-info">
@@ -1360,7 +1464,42 @@ function populateHomeCategories() {
   
   // Lazy loading para imagens das categorias
   setTimeout(function() {
+    console.log('[populateHomeCategories] Iniciando lazy loading para categorias');
     loadImagesOnScroll(categoriesGrid);
+    
+    // Verificação adicional para garantir que as imagens das categorias carreguem
+    const categoryImages = categoriesGrid.querySelectorAll('img[data-src]');
+    console.log(`[populateHomeCategories] Encontradas ${categoryImages.length} imagens com data-src`);
+    
+    categoryImages.forEach(function(img, index) {
+      // Forçar carregamento imediato para imagens de categorias
+      if (img.dataset.src) {
+        const src = img.dataset.src;
+        console.log(`[populateHomeCategories] Carregando imagem ${index}: ${src}`);
+        
+        // Criar objeto Image para verificar se a imagem existe antes de carregar
+        const testImg = new Image();
+        testImg.onload = function() {
+          img.src = src;
+          img.removeAttribute('data-src');
+          img.classList.add('loaded');
+          console.log(`[populateHomeCategories] Imagem carregada com sucesso: ${src}`);
+        };
+        testImg.onerror = function() {
+          img.src = '/images/products/thumbnail/default.webp';
+          img.removeAttribute('data-src');
+          img.classList.add('loaded');
+          console.log(`[populateHomeCategories] Imagem falhou, usando fallback: ${src}`);
+        };
+        testImg.src = src;
+      }
+    });
+    
+    // Limpar placeholders após carregamento
+    setTimeout(function() {
+      cleanupStalePlaceholders();
+      aggressivePlaceholderCleanup();
+    }, 1000);
   }, 200);
 }
 
@@ -1389,8 +1528,14 @@ function populateNavigationMenus() {
     let html = '';
     for (let i = 0; i < categoryNames.length; i++) {
       const category = categoryNames[i];
+      
+      // Pular categoria "fora de estoque" - não deve aparecer na navegação
+      if (category === 'fora de estoque') {
+        continue;
+      }
+      
       const displayName = category.charAt(0).toUpperCase() + category.slice(1);
-      const closeMenuAction = closeMenu ? '; toggleMobileMenu()' : '';
+      const closeMenuAction = closeMenu ? '; closeMobileMenu()' : '';
       const buttonClass = isDesktop ? 'nav-tab' : 'mobile-nav-tab';
       
       // Mapear categorias para ícones apropriados
@@ -1409,6 +1554,16 @@ function populateNavigationMenus() {
         'audio': '<path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>',
         'acessorios': '<circle cx="12" cy="12" r="3"></circle><path d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 1.54l4.24 4.24M20.46 20.46l-4.24-4.24M1.54 20.46l4.24-4.24"></path>',
         'cabos': '<path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line>',
+        'webcam': '<path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>',
+        'fonte': '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>',
+        'bateria': '<rect x="2" y="5" width="12" height="6" rx="1"></rect><rect x="14" y="7" width="2" height="2"></rect>',
+        'memória': '<rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="8" y1="10" x2="16" y2="10"></line><line x1="8" y1="14" x2="16" y2="14"></line><line x1="8" y1="18" x2="16" y2="18"></line><circle cx="6" cy="6" r="1"></circle><circle cx="18" cy="6" r="1"></circle><circle cx="6" cy="18" r="1"></circle><circle cx="18" cy="18" r="1"></circle>',
+        'gabinetes': '<rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><rect x="9" y="6" width="6" height="4"></rect><rect x="9" y="12" width="6" height="4"></rect>',
+        'cooler': '<path d="M12 2v6m0 4v6m0 4v2M8 12h8m-6-6l4 4 4-4m-4 8l4 4-4 4"></path><circle cx="12" cy="12" r="8"></circle>',
+        'conectividade': '<path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M19.07 13.93a7 7 0 0 1-6.14 0"></path><line x1="12" y1="8" x2="12.01" y2="8"></line>',
+        'cabos': '<path d="M4 6h16M4 12h16M4 18h16"></path><circle cx="2" cy="6" r="1"></circle><circle cx="22" cy="6" r="1"></circle><circle cx="2" cy="12" r="1"></circle><circle cx="22" cy="12" r="1"></circle><circle cx="2" cy="18" r="1"></circle><circle cx="22" cy="18" r="1"></circle>',
+        'adaptadores': '<rect x="2" y="9" width="4" height="6"></rect><rect x="18" y="9" width="4" height="6"></rect><path d="M6 12h12"></path><circle cx="12" cy="12" r="2"></circle>',
+        'acessórios': '<rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect><circle cx="8" cy="12" r="2"></circle><circle cx="16" cy="12" r="2"></circle>',
         'webcam': '<path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>',
         'fonte': '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>',
         'bateria': '<rect x="2" y="5" width="12" height="6" rx="1"></rect><rect x="14" y="7" width="2" height="2"></rect>'
@@ -1485,7 +1640,7 @@ function populateNavigationMenus() {
   if (mobileNavTabs) {
     // Manter apenas Início e Promoções
     const staticHTML = `
-      <button type="button" class="mobile-nav-tab" data-target="inicio" onclick="showCategory('inicio'); toggleMobileMenu()">
+      <button type="button" class="mobile-nav-tab" data-target="inicio" onclick="showCategory('inicio'); closeMobileMenu()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
           <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -1493,7 +1648,7 @@ function populateNavigationMenus() {
         <span>Início</span>
       </button>
       
-      <button type="button" class="mobile-nav-tab" data-target="promo" onclick="showCategory('promo'); toggleMobileMenu()">
+      <button type="button" class="mobile-nav-tab" data-target="promo" onclick="showCategory('promo'); closeMobileMenu()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
         </svg>
@@ -1528,7 +1683,9 @@ function populateHomeHighlights() {
     
     // Se tiver menos de 6 produtos em destaque, adicionar produtos aleatórios
     if (highlights.length < 6) {
-      const otherProducts = allProducts.filter(p => p.promocao !== true && p.promocao !== 'sim');
+      const otherProducts = allProducts.filter(p => 
+        p.promocao !== true && p.promocao !== 'sim'
+      );
       const needed = 6 - highlights.length;
       const selected = otherProducts.sort(() => 0.5 - Math.random()).slice(0, needed);
       highlights.push(...selected);
@@ -2197,6 +2354,21 @@ function createProductCard(product = {}) {
   const price = parseFloat(priceString);
   const formattedPrice = 'R$ ' + price.toFixed(2).replace('.', ',');
   
+  // Calcular desconto para produtos em promoção (7%)
+  let promoInfo = '';
+  if (product.promocao === true || product.promocao === 'sim') {
+    const originalPrice = price / 0.93; // Preço original (7% a mais)
+    const discountPercent = 7;
+    const formattedOriginalPrice = 'R$ ' + originalPrice.toFixed(2).replace('.', ',');
+    
+    promoInfo = `
+      <div class="promo-discount-info">
+        <span class="original-price">${formattedOriginalPrice}</span>
+        <span class="discount-badge">-${discountPercent}%</span>
+      </div>
+    `;
+  }
+  
   // Carregar avaliações do produto
   const reviews = getProductReviews(product.codigo);
   const averageRating = calculateAverageRating(reviews);
@@ -2230,13 +2402,16 @@ function createProductCard(product = {}) {
     outOfStockOverlay +
     '</div>' +
     '<div class="product-info">' +
+    '<div class="product-content">' +
     '<h3><a href="' + productLink + '" onclick="window.navigateTo(\'' + productLink + '\'); return false;">' + (product.nome || 'Produto') + '</a></h3>' +
     '<div class="product-rating-summary">' +
     '<div class="stars">' + stars + '</div>' +
     '<span class="rating-text">' + averageRating.toFixed(1) + ' (' + reviewCount + ')</span>' +
     '<button class="review-btn" onclick="openReviewModal(\'' + product.codigo + '\')">Avaliar</button>' +
     '</div>' +
+    promoInfo +
     '<p class="price">' + formattedPrice + '</p>' +
+    '</div>' +
     '<button class="btn-primary"' + buttonOnclick + buttonDisabled + '>' + buttonText + '</button>' +
     '</div>' +
     '</div>';
@@ -2244,7 +2419,7 @@ function createProductCard(product = {}) {
 
 // === FORA DE ESTOQUE ===
 function isOutOfStock(product) {
-  return product && product.categoria === 'fora de estoque';
+  return product && (product.qt <= 0 || product.qt === '0');
 }
 
 function toggleCart() {
@@ -2852,6 +3027,13 @@ document.addEventListener('DOMContentLoaded', function() {
     populateNavigationMenus();
     DEBUG && console.log('✅ populateNavigationMenus() executada');
     
+    // === CORREÇÃO: FORÇAR SEMPRE A PÁGINA INICIAL NO CARREGAMENTO ===
+    setTimeout(() => {
+      history.replaceState({}, '', '/');
+      showCategory('inicio');
+      console.log('🏠 FORÇADO: Sempre redirecionar para página inicial no carregamento');
+    }, 200);
+    
     // === PREENCHER HOME ===
     function populateHome() {
       // Safe Render Pattern - Enterprise
@@ -2863,11 +3045,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         DEBUG && console.log('✅ populateHome() executada');
         
-        showCategory('inicio');
-        DEBUG && console.log('✅ showCategory(inicio) executada');
+        // Página inicial já foi forçada acima
         
         // Limpar placeholders que possam ter ficado para trás
         cleanupStalePlaceholders();
+        aggressivePlaceholderCleanup();
         
       }, '#home-highlights-grid', 'populateHome');
     }
@@ -6893,6 +7075,11 @@ function displayFilteredProducts(filteredProducts) {
     
     // Atualizar cada seção de categoria
     Object.keys(categories).forEach(category => {
+      // Pular categoria "fora de estoque" - não deve atualizar seção
+      if (category === 'fora de estoque') {
+        return;
+      }
+      
       const section = document.getElementById(category);
       if (section) {
         const productsGrid = section.querySelector('.products-grid');

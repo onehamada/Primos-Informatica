@@ -116,7 +116,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1618;MONITOR 23.5 GBT LED HDMI VGA GBT-M218;monitor;410,88;1;Monitor 23.5 GBT-M218 HDMI VGA;GBT;nao;monitor-gbt-235-hdmi-vga-m218.webp
 1932;MONITOR 32 SAMSUNG GAMER QHD LS32CG55 ODYSSEY;monitor;1650,00;1;Monitor gamer 32 QHD LS32CG55 Odyssey;Samsung;nao;monitor-samsung-32-gamer-qhd-odyssey.webp
 1633;MONITOR 24 DX 1K 165HZ CURVO ALTO-FALANTE 3W HDMI;monitor;955,00;1;Monitor curvo 24 1K 165Hz alto-falante;DX;nao;monitor-dx-24-curvo-165hz-speaker.webp
-1634;MONITOR 27 DX 165HZ SPEAKER ALTO-FALANTE IPS BOX;monitor;1050,00;1;Monitor 27 IPS 165Hz alto-falante;DX;nao;monitor-dx-27-ips-165hz-speaker.webp
+1634;MONITOR 27 DX 165HZ SPEAKER ALTO-FALANTE IPS BOX;monitor;1050,00;0;Monitor 27 IPS 165Hz alto-falante;DX;nao;monitor-dx-27-ips-165hz-speaker.webp
 401115;MONITOR 18.5 AOC LED E970SWNHL HDMI;monitor;563,00;1;Monitor 18.5 E970SWNHL HDMI;AOC;nao;monitor-aoc-185-led-e970swnhl.webp
 400759;MONITOR 21.5 LED SAMSUNG LS22F350FHLMZD;monitor;1168,00;1;Monitor 21.5 LS22F350FHLMZD;Samsung;nao;monitor-samsung-215-led-ls22f350fhlmzd.webp
 1888;PROCESSADOR INTEL CELERON 1151 LGA1200 G5905 4MB;processador;225,00;23;Intel Celeron G5905 LGA1200 4MB;Intel;nao;g5905.webp
@@ -154,7 +154,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1046;PLACA DE VÍDEO AMD RX570 8GB DDR5 PCYES;placa de vídeo;1190,00;2;RX570 8GB DDR5 256 bits PCYes;AMD;nao;rx570.webp
 1899;PLACA DE VÍDEO NVIDIA GTX1050 4GB DDR5 GALAX;placa de vídeo;1190,00;2;GTX 1050 4GB DDR5 128 bits Galax;NVIDIA;nao;gtx1050.webp
 402270;PLACA DE VÍDEO NVIDIA GTX1050 TI 4GB DDR5 ASUS;placa de vídeo;1530,00;2;GTX 1050 Ti 4GB DDR5 128 bits ASUS;NVIDIA;nao;gtx1050ti.webp
-401807;PLACA DE VÍDEO NVIDIA GTX1660 6GB DDR5 GALAX;fora de estoque;1534,50;0;GTX 1660 6GB DDR5 192 bits Galax;NVIDIA;nao;gtx1660.webp
+401807;PLACA DE VÍDEO NVIDIA GTX1660 6GB DDR5 GALAX;placa de vídeo;1534,50;0;GTX 1660 6GB DDR5 192 bits Galax;NVIDIA;nao;gtx1660.webp
 1933;HD SSD 120GB 2.5 GET;ssd;190,00;1;SSD 120GB 2.5 polegadas GET;GET;nao;ssd120get.webp
 1548;HD SSD 240GB 2.5 SANDISK 530MB/S G26;ssd;425,00;1;SSD 240GB 2.5 SANDISK 530MB/s G26;SANDISK;nao;ssd240sandisk.webp
 1866;HD SSD 240GB SSD1901 HAYOM;ssd;315,00;1;SSD 240GB modelo SSD1901;HAYOM;nao;ssd240hayom.webp
@@ -177,7 +177,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1887;FONTE REAL 500W CORSAIR VS500 80 PLUS CP9020223BR;fonte;492,00;3;Fonte Real 500W Corsair VS500 80 Plus CP9020223BR;Corsair;nao;corsair_fonte500w.webp
 1888;FONTE HAYOM HX-200W;fonte;60,00;6;Fonte Hayom HX-200W;Hayom;nao;hayom_fonte200w.webp
 1889;FONTE REAL 500WR ATX MGS;fonte;148,00;4;Fonte Real 500WR ATX MGS;MGS;nao;mgs_fonte500w.webp
-1892;FONTE REAL 750 W 80 PLUS MGS;fonte;390,00;3;Fonte Real 750W 80 Plus MGS;MGS;nao;mgs_fonte750w.webp
+1892;FONTE REAL 750 W 80 PLUS MGS;fonte;390,00;3;Fonte Real 750W 80 Plus MGS;MGS;sim;mgs_fonte750w.webp
 2011;PLACA MAE BRAZIL PC 1155 DDR3 BPC-H61-ITX-M.2;placa mãe;168,00;3;Placa Mãe Brazil PC 1155 DDR3 BPC-H61-ITX-M.2;Brazil PC;nao;bpc-h61-itx-m2.webp
 2012;PLACA MAE GIGABYTE 1151 8ª/9ªG H310M-H DDR4;placa mãe;548,00;3;Placa Mãe Gigabyte 1151 8ª/9ªG H310M-H DDR4;Gigabyte;nao;gigabyte-h310mh.webp
 2013;PLACA MAE GIGABYTE-H610M.K 1700 HDMI ATX;placa mãe;700,00;3;Placa Mãe Gigabyte H610M.K 1700 HDMI ATX;Gigabyte;nao;gigabyte-h610mk.webp
@@ -192,3 +192,10 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 3005;BATERIA UNIPOWER P/ NOBREAK 12V 7AH UP1270SEG;bateria;101,00;3;Bateria Unipower p/ Nobreak 12V 7Ah UP1270SEG;Unipower;nao;unipower-up1270seg.webp
 3006;BATERIA MULTILASER P/ NOBREAK 12V 5AH BC125;bateria;80,00;3;Bateria Multilaser p/ Nobreak 12V 5Ah BC125;Multilaser;nao;multilaser-bc125.webp
 3007;BATERIA MULTILASER P/ NOBREAK 12V 7AH BC127;bateria;95,51;3;Bateria Multilaser p/ Nobreak 12V 7Ah BC127;Multilaser;nao;multilaser-bc127.webp
+3008;MEMORIA NOTE DDR3 8GB 1600 1.35v KINGSTON CL11;memória;163,00;0;Memória Note DDR3 8GB 1600 1.35v Kingston CL11;Kingston;nao;memoria-note-ddr3-8gb-1600-kingston.webp
+3009;MEMORIA DDR3 8GB 1600MHZ KINGSTON CL11;memória;198,00;0;Memória DDR3 8GB 1600MHz Kingston CL11;Kingston;nao;memoria-ddr3-8gb-1600-kingston.webp
+3010;MEMORIA DDR5 16GB 5600MHZ KINGSTON FURY;memória;1750,00;0;Memória DDR5 16GB 5600MHz Kingston Fury;Kingston;nao;memoria-ddr5-16gb-5600-fury.webp
+3011;MEMORIA DDR4 16GB 3200MHZ KINGSTON CL22;memória;1187,00;0;Memória DDR4 16GB 3200MHz Kingston CL22;Kingston;nao;memoria-ddr4-16gb-3200-kingston.webp
+3012;MEMORIA DDR4 8GB 3200MHZ KINGSTON CL22;memória;625,00;0;Memória DDR4 8GB 3200MHz Kingston CL22;Kingston;nao;memoria-ddr4-8gb-3200-kingston.webp
+3013;PASTA P/ NOTEBOOK 15.6 SKY LONA POLIESTER 600;acessórios;53,00;10;Pasta p/ Notebook 15.6 Sky Lona Poliéster 600;Sky;nao;pasta-notebook-156-sky-lona.webp
+3014;PASTA P/ NOTEBOOK 15.6 SKY POLIPROPILENO CORES;acessórios;90,00;8;Pasta p/ Notebook 15.6 Sky Polipropileno Cores;Sky;nao;pasta-notebook-156-sky-pp.webp

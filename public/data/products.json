@@ -1565,7 +1565,7 @@
   {
     "codigo": "401807",
     "nome": "PLACA DE VÍDEO NVIDIA GTX1660 6GB DDR5 GALAX",
-    "categoria": "fora de estoque",
+    "categoria": "placa de vídeo",
     "preco": 1534.5,
     "qt": 0,
     "descricao": "GTX 1660 6GB DDR5 192 bits Galax",
@@ -1823,7 +1823,7 @@
     "qt": 3,
     "descricao": "Fonte Real 750W 80 Plus MGS",
     "marca": "MGS",
-    "promocao": false,
+    "promocao": true,
     "imagem": "mgs_fonte750w.webp"
   },
   {
@@ -2045,6 +2045,82 @@
     "marca": "Hayom",
     "promocao": false,
     "imagem": "gabinete-hayom-fonte-scabo-gb1751.webp"
+  },
+  {
+    "codigo": "3008",
+    "nome": "MEMORIA NOTE DDR3 8GB 1600 1.35v KINGSTON CL11",
+    "categoria": "memória",
+    "preco": 163,
+    "qt": 0,
+    "descricao": "Memória Note DDR3 8GB 1600 1.35v Kingston CL11",
+    "marca": "Kingston",
+    "promocao": false,
+    "imagem": "memoria-note-ddr3-8gb-1600-kingston.webp"
+  },
+  {
+    "codigo": "3009",
+    "nome": "MEMORIA DDR3 8GB 1600MHZ KINGSTON CL11",
+    "categoria": "memória",
+    "preco": 198,
+    "qt": 0,
+    "descricao": "Memória DDR3 8GB 1600MHz Kingston CL11",
+    "marca": "Kingston",
+    "promocao": false,
+    "imagem": "memoria-ddr3-8gb-1600-kingston.webp"
+  },
+  {
+    "codigo": "3010",
+    "nome": "MEMORIA DDR5 16GB 5600MHZ KINGSTON FURY",
+    "categoria": "memória",
+    "preco": 1750,
+    "qt": 0,
+    "descricao": "Memória DDR5 16GB 5600MHz Kingston Fury",
+    "marca": "Kingston",
+    "promocao": false,
+    "imagem": "memoria-ddr5-16gb-5600-fury.webp"
+  },
+  {
+    "codigo": "3011",
+    "nome": "MEMORIA DDR4 16GB 3200MHZ KINGSTON CL22",
+    "categoria": "memória",
+    "preco": 1187,
+    "qt": 0,
+    "descricao": "Memória DDR4 16GB 3200MHz Kingston CL22",
+    "marca": "Kingston",
+    "promocao": false,
+    "imagem": "memoria-ddr4-16gb-3200-kingston.webp"
+  },
+  {
+    "codigo": "3012",
+    "nome": "MEMORIA DDR4 8GB 3200MHZ KINGSTON CL22",
+    "categoria": "memória",
+    "preco": 625,
+    "qt": 0,
+    "descricao": "Memória DDR4 8GB 3200MHz Kingston CL22",
+    "marca": "Kingston",
+    "promocao": false,
+    "imagem": "memoria-ddr4-8gb-3200-kingston.webp"
+  },
+  {
+    "codigo": "3013",
+    "nome": "PASTA P/ NOTEBOOK 15.6 SKY LONA POLIESTER 600",
+    "categoria": "acessórios",
+    "preco": 53,
+    "qt": 10,
+    "descricao": "Pasta p/ Notebook 15.6 Sky Lona Poliéster 600",
+    "marca": "Sky",
+    "promocao": false,
+    "imagem": "pasta-notebook-156-sky-lona.webp"
+  },
+  {
+    "codigo": "3014",
+    "nome": "PASTA P/ NOTEBOOK 15.6 SKY POLIPROPILENO CORES",
+    "categoria": "acessórios",
+    "preco": 90,
+    "qt": 8,
+    "descricao": "Pasta p/ Notebook 15.6 Sky Polipropileno Cores",
+    "marca": "Sky",
+    "promocao": false,
+    "imagem": "pasta-notebook-156-sky-pp.webp"
   }
-
 ]
