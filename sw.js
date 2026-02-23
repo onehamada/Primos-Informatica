@@ -97,7 +97,7 @@ function cacheFirst(request) {
       return fetch(request)
         .then(response => {
           // Verificar se resposta é válida
-          if (!response || response.status !== 200 || response.type !== 'basic') {
+          if (!response || response.status !== 200 || response.type === 'error') {
             return response;
           }
           
@@ -107,9 +107,16 @@ function cacheFirst(request) {
           caches.open(RUNTIME_CACHE)
             .then(cache => {
               cache.put(request, responseToCache);
+            })
+            .catch(error => {
+              console.warn('SW: Erro ao cachear:', error);
             });
           
           return response;
+        })
+        .catch(error => {
+          console.warn('SW: Erro no fetch:', error);
+          return null;
         });
     });
 }
@@ -119,7 +126,7 @@ function networkFirst(request) {
   return fetch(request)
     .then(response => {
       // Verificar se resposta é válida
-      if (!response || response.status !== 200) {
+      if (!response || response.status !== 200 || response.type === 'error') {
         return caches.match(request);
       }
       
@@ -129,11 +136,15 @@ function networkFirst(request) {
       caches.open(RUNTIME_CACHE)
         .then(cache => {
           cache.put(request, responseToCache);
+        })
+        .catch(error => {
+          console.warn('SW: Erro ao cachear:', error);
         });
       
       return response;
     })
-    .catch(() => {
+    .catch(error => {
+      console.warn('SW: Erro no fetch network first:', error);
       // Fallback para cache
       return caches.match(request);
     });
@@ -141,26 +152,35 @@ function networkFirst(request) {
 
 // Estratégia: Stale While Revalidate
 function staleWhileRevalidate(request) {
-  const cachedResponse = caches.match(request);
+  const cachedResponsePromise = caches.match(request);
   
   const fetchPromise = fetch(request)
     .then(response => {
-      if (response && response.status === 200) {
+      if (response && response.status === 200 && response.type !== 'error') {
         const responseToCache = response.clone();
         caches.open(RUNTIME_CACHE)
           .then(cache => {
             cache.put(request, responseToCache);
+          })
+          .catch(error => {
+            console.warn('SW: Erro ao cachear resposta:', error);
           });
       }
       return response;
     })
-    .catch(() => {
-      // Se falhar, retornar cache
-      return cachedResponse;
+    .catch(error => {
+      console.warn('SW: Erro na requisição:', error);
+      return null;
     });
   
   // Retornar cache imediatamente, depois atualizar
-  return cachedResponse || fetchPromise;
+  return cachedResponsePromise
+    .then(cachedResponse => {
+      return cachedResponse || fetchPromise;
+    })
+    .catch(() => {
+      return fetchPromise;
+    });
 }
 
 // Funções auxiliares

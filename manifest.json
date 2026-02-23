@@ -2,7 +2,7 @@
   "name": "Primos Informática",
   "short_name": "Primos Info",
   "description": "Loja de informática em Brasília. Hardware, processadores, placas, SSDs e mais.",
-  "start_url": "https://onehamada.github.io/Primos-Informatica/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
