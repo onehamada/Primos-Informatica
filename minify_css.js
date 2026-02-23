@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Ler o arquivo CSS
-const cssPath = path.join(__dirname, '..', 'css', 'styles.css');
+const cssPath = path.join(__dirname, 'css', 'styles.css');
 const cssContent = fs.readFileSync(cssPath, 'utf8');
 
 // Minificar CSS
@@ -17,7 +17,7 @@ let minified = cssContent
   .trim();
 
 // Salvar arquivo minificado
-const minPath = path.join(__dirname, '..', 'css', 'styles.min.css');
+const minPath = path.join(__dirname, 'css', 'styles.min.css');
 fs.writeFileSync(minPath, minified, 'utf8');
 
 console.log('CSS minificado com sucesso!');

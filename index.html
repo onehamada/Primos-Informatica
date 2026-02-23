@@ -24,6 +24,16 @@
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
   
+  <!-- DNS Prefetch para recursos externos -->
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <link rel="dns-prefetch" href="//fonts.gstatic.com">
+  <link rel="dns-prefetch" href="//firebaseio.com">
+  <link rel="dns-prefetch" href="//firestore.googleapis.com">
+  
+  <!-- Preload para recursos críticos -->
+  <link rel="preload" href="/css/styles.css" as="style">
+  <link rel="preload" href="/js/script.js" as="script">
+  
   <!-- Critical CSS Inline -->
   <style>
     /* Critical Above-the-Fold Styles */
@@ -33,6 +43,46 @@
       line-height: 1.6;
       background: #f8fafc;
       color: #1e293b;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    
+    body.loaded {
+      opacity: 1;
+    }
+    
+    /* Loading State */
+    .initial-loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.3s ease-out;
+    }
+    
+    .initial-loading.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e2e8f0;
+      border-top: 4px solid #2563eb;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     
     .header {
@@ -54,10 +104,9 @@
     }
     
     .logo {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #3b82f6;
-      text-decoration: none;
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
     }
     
     .loading {
@@ -112,6 +161,16 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+    
+    /* Hide main content initially */
+    main {
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    
+    main.loaded {
+      opacity: 1;
     }
   </style>
   
@@ -181,15 +240,20 @@
   <!-- Manifest para Android -->
   <link rel="manifest" href="/manifest.json">
   
-  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/styles.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="/css/styles.css"></noscript>
   
   <!-- Lazy Loading Script -->
-  <script src="/js/lazy-loading.js"></script>
+  <script src="/js/lazy-loading.js" defer></script>
   
   <!-- Funções Compartilhadas -->
-  <script src="/js/common.js"></script>
+  <script src="/js/common.js" defer></script>
 </head>
 <body>
+  <!-- Loading Overlay -->
+  <div class="initial-loading" id="initialLoading">
+    <div class="loading-spinner"></div>
+  </div>
 
 <header class="modern-header">
   <div class="header-top">
@@ -1076,6 +1140,52 @@
 
 <!-- Scripts Otimizados para Performance -->
   <script src="/js/script.js" defer></script>
+  
+  <!-- Loading Management Script -->
+  <script>
+    // Prevenir flash de conteúdo não estilizado
+    document.addEventListener('DOMContentLoaded', function() {
+      // Esconder loading overlay quando tudo estiver carregado
+      setTimeout(function() {
+        const loadingOverlay = document.getElementById('initialLoading');
+        const body = document.body;
+        const main = document.querySelector('main');
+        
+        if (loadingOverlay) {
+          loadingOverlay.classList.add('hidden');
+          setTimeout(() => {
+            loadingOverlay.style.display = 'none';
+          }, 300);
+        }
+        
+        body.classList.add('loaded');
+        if (main) {
+          main.classList.add('loaded');
+        }
+      }, 500);
+    });
+    
+    // Fallback para garantir que o loading seja removido
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        const loadingOverlay = document.getElementById('initialLoading');
+        const body = document.body;
+        const main = document.querySelector('main');
+        
+        if (loadingOverlay && loadingOverlay.style.display !== 'none') {
+          loadingOverlay.classList.add('hidden');
+          setTimeout(() => {
+            loadingOverlay.style.display = 'none';
+          }, 300);
+        }
+        
+        body.classList.add('loaded');
+        if (main) {
+          main.classList.add('loaded');
+        }
+      }, 100);
+    });
+  </script>
   
   <!-- Firebase Condicional (carrega apenas se necessário) -->
   <script>

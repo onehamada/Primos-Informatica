@@ -50,14 +50,14 @@ function convertCSVToJSON(csvText) {
 function regenerateJSON() {
     try {
         console.log('📁 Lendo arquivo products.csv...');
-        const csvPath = path.join(__dirname, '..', 'data', 'products.csv');
+        const csvPath = path.join(__dirname, 'data', 'products.csv');
         const csvContent = fs.readFileSync(csvPath, 'utf8');
 
         console.log('🔄 Convertendo CSV para JSON...');
         const jsonResult = convertCSVToJSON(csvContent);
 
         console.log('💾 Salvando products.json...');
-        const jsonPath = path.join(__dirname, '..', 'data', 'products.json');
+        const jsonPath = path.join(__dirname, 'data', 'products.json');
         const jsonString = JSON.stringify(jsonResult, null, 2);
         fs.writeFileSync(jsonPath, jsonString, 'utf8');
 

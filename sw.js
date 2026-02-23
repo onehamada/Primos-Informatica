@@ -1,13 +1,17 @@
 // SERVICE WORKER OTIMIZADO PARA PRIMOS INFORMÁTICA
-const CACHE_NAME = 'primos-informatica-v1.2.0';
-const RUNTIME_CACHE = 'primos-runtime-v1.2.0';
+const CACHE_NAME = 'primos-informatica-v1.3.0';
+const RUNTIME_CACHE = 'primos-runtime-v1.3.0';
 
 // Arquivos essenciais para cache inicial
 const STATIC_CACHE_URLS = [
   '/',
   '/index.html',
-  '/css/styles.css',
-  '/js/script.js',
+  '/css/styles.min.css',
+  '/js/script.min.js',
+  '/js/common.min.js',
+  '/js/core.min.js',
+  '/js/products.min.js',
+  '/js/cart.min.js',
   '/images/logo.webp',
   '/images/favicon.ico',
   '/images/favicon-32x32.png',

@@ -6045,13 +6045,26 @@ main {
   text-align: center;
   gap: 0.5rem;
   min-height: 120px;
+  /* Garantir espaço consistente para o botão */
+  contain: layout;
+  /* Limitar altura do título para não comprimir o botão */
+  max-height: 60px;
 }
 
 .category-info h3 {
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 700;
   margin-bottom: 4px;
   color: var(--brand-700);
+  line-height: 1.2;
+  /* Manter em uma única linha */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Altura fixa para uniformidade */
+  height: auto;
+  min-height: 20px;
+  text-align: center;
 }
 
 .category-info p {
@@ -6077,6 +6090,9 @@ main {
   justify-content: center;
   min-height: 44px;
   flex-shrink: 0;
+  height: 44px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   margin-top: auto;
 }
 

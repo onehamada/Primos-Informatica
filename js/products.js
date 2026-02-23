@@ -123,7 +123,10 @@ function populateHomeCategories() {
   for (const categoryKey in categories) {
     const category = categories[categoryKey];
 
-    const displayName = category.name.charAt(0).toUpperCase() + category.name.slice(1);
+    const displayName = category.name
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
     const imagePath = `/images/products/thumbnail/${category.sample.imagem || category.sample.codigo + '.webp'}`;
 
     debugLog(`[populateHomeCategories] Categoria: ${category.name}, Imagem: ${imagePath}`);

@@ -103,11 +103,13 @@ function minifyJSFile(inputPath, outputPath) {
 // Função para minificar todos os arquivos JS do projeto
 function minifyAllJS() {
   const jsFiles = [
-    { input: '../js/script.js', output: '../js/script.min.js' },
-    { input: '../js/core.js', output: '../js/core.min.js' },
-    { input: '../js/products.js', output: '../js/products.min.js' },
-    { input: '../js/cart.js', output: '../js/cart.min.js' },
-    { input: '../js/common.js', output: '../js/common.min.js' }
+    { input: 'js/main.js', output: 'js/main.min.js' },
+    { input: 'js/core.js', output: 'js/core.min.js' },
+    { input: 'js/router.js', output: 'js/router.min.js' },
+    { input: 'js/products.js', output: 'js/products.min.js' },
+    { input: 'js/cart.js', output: 'js/cart.min.js' },
+    { input: 'js/reviews.js', output: 'js/reviews.min.js' },
+    { input: 'js/ui.js', output: 'js/ui.min.js' }
   ];
 
   let totalOriginal = 0;
