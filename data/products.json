@@ -1782,17 +1782,6 @@
     "imagem": "ssd-sandisk-240gb-g26.webp"
   },
   {
-    "codigo": "1866",
-    "nome": "HD SSD 480 GB SSD1901 HAYOM",
-    "categoria": "ssd",
-    "preco": 290,
-    "qt": 6,
-    "descricao": "SSD 480GB SSD1901",
-    "marca": "Hayom",
-    "promocao": false,
-    "imagem": "ssd-hayom-ssd1901-480gb.webp"
-  },
-  {
     "codigo": "1482",
     "nome": "HD SSD 240GB KINGSTON A400 SA400537/240G",
     "categoria": "ssd",
