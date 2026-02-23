@@ -1796,11 +1796,11 @@
     "codigo": "1483",
     "nome": "HD SSD 480 GB 2.5 KINGSTON SA400S37",
     "categoria": "ssd",
-    "preco": 520,
+    "preco": 544,
     "qt": 1,
     "descricao": "SSD 480GB KINGSTON SA400S37",
     "marca": "KINGSTON",
-    "promocao": false,
+    "promocao": true,
     "imagem": "ssd480kingston.webp"
   },
   {
