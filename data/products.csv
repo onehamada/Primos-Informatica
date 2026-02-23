@@ -170,7 +170,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1062;NVME SSD M.2 2280 KINGSTON 1 TB NVME;ssd;1451,00;1;SSD NVME M.2 2280 1TB;KINGSTON;nao;ssd1tbnvme.webp
 1033;NVME SSD M.2 2280 KINGSTON 500GB 2.5;ssd;520,00;1;SSD NVME M.2 2280 500GB 2.5 polegadas;KINGSTON;nao;ssd500nvme.webp
 1853;SSD M.2 2280 SATA3 MACROVIP SWB 256GB;ssd;190,00;1;SSD M.2 2280 SATA3 SWB 256GB;MACROVIP;nao;ssd256macrovip.webp
-1054;HD SSD 256GB 2.5 FNX GAMER;ssd;290,00;27;SSD 256GB Gamer;FNX;nao;ssd-fnx-gamer-256gb.webp
+1054;HD SSD 256GB 2.5 FNX GAMER;ssd;260,00;27;SSD 256GB Gamer;FNX;nao;ssd-fnx-gamer-256gb.webp
 1485;HD EXTERNO 1TB SEAGATE EXPANSION USB 3.0;hd externo;490,00;1;HD externo 1TB Seagate Expansion USB 3.0;Seagate;nao;hd1tb_sea.webp
 1486;HD EXTERNO 2TB SEAGATE PORTÁTIL EXPANSION USB 3.0;hd externo;620,00;1;HD externo portátil 2TB Seagate Expansion USB 3.0;Seagate;nao;hd2tb_sea.webp
 1779;HD EXTERNO 4TB SEAGATE USB 3.0 EXPANSION;hd externo;1110,00;1;HD externo 4TB Seagate Expansion USB 3.0;Seagate;nao;hd4tb_sea.webp
