@@ -2013,6 +2013,17 @@
     "imagem": "mgs_fonte750w.webp"
   },
   {
+    "codigo": "1893",
+    "nome": "FONTE PCYES SHOCKER 600W FULL MODULAR FM600WBV",
+    "categoria": "fonte",
+    "preco": 310,
+    "qt": 1,
+    "descricao": "Fonte Gamer PCYes Shocker Full Modular 600W 80 Plus White Black Vulcan FM600WBV",
+    "marca": "PCYes",
+    "promocao": false,
+    "imagem": "pcyes-fonte-shocker-fm600wbv.webp"
+  },
+  {
     "codigo": "2011",
     "nome": "PLACA MAE BRAZIL PC 1155 DDR3 BPC-H61-ITX-M.2",
     "categoria": "placa mãe",

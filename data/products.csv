@@ -182,6 +182,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1888;FONTE HAYOM HX-200W;fonte;60,00;6;Fonte Hayom HX-200W;Hayom;nao;hayom_fonte200w.webp
 1889;FONTE REAL 500WR ATX MGS;fonte;148,00;4;Fonte Real 500WR ATX MGS;MGS;nao;mgs_fonte500w.webp
 1892;FONTE REAL 750 W 80 PLUS MGS;fonte;390,00;3;Fonte Real 750W 80 Plus MGS;MGS;sim;mgs_fonte750w.webp
+1893;FONTE PCYES SHOCKER 600W FULL MODULAR FM600WBV;fonte;310,00;1;Fonte Gamer PCYes Shocker Full Modular 600W 80 Plus White Black Vulcan FM600WBV;PCYes;nao;pcyes-fonte-shocker-fm600wbv.webp
 2011;PLACA MAE BRAZIL PC 1155 DDR3 BPC-H61-ITX-M.2;placa mãe;168,00;3;Placa Mãe Brazil PC 1155 DDR3 BPC-H61-ITX-M.2;Brazil PC;nao;bpc-h61-itx-m2.webp
 2012;PLACA MAE GIGABYTE 1151 8ª/9ªG H310M-H DDR4;placa mãe;548,00;3;Placa Mãe Gigabyte 1151 8ª/9ªG H310M-H DDR4;Gigabyte;nao;gigabyte-h310mh.webp
 2013;PLACA MAE GIGABYTE-H610M.K 1700 HDMI ATX;placa mãe;700,00;3;Placa Mãe Gigabyte H610M.K 1700 HDMI ATX;Gigabyte;nao;gigabyte-h610mk.webp
