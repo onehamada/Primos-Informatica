@@ -3,7 +3,21 @@
     "public": ".",
     "ignore": [
       "firebase.json",
+      ".firebaserc",
+      ".gitignore",
+      "README.md",
+      "netlify.toml",
+      "firebase-debug.log",
+      "*.log",
+      "**/*.log",
       "**/.*",
+      ".firebase/**",
+      ".publish-temp/**",
+      ".publish-temp-*/**",
+      "**/.publish-temp/**",
+      "**/.publish-temp-*/**",
+      ".git/**",
+      ".github/**",
       "**/node_modules/**",
       "**/*.exe",
       "**/*.bat",
@@ -39,6 +53,15 @@
           {
             "key": "Cache-Control",
             "value": "public, max-age=31536000, immutable"
+          }
+        ]
+      },
+      {
+        "source": "/images/products/thumbnail/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=0, must-revalidate"
           }
         ]
       },

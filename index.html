@@ -31,8 +31,8 @@
   <link rel="dns-prefetch" href="//firestore.googleapis.com">
   
   <!-- Preload para recursos críticos -->
-  <link rel="preload" href="/css/styles.css" as="style">
-  <link rel="preload" href="/js/script.js" as="script">
+  <link rel="preload" href="/css/styles.css?v=20260316-1835" as="style">
+  <link rel="preload" href="/js/script.js?v=20260317-1405" as="script">
   
   <!-- Critical CSS Inline -->
   <style>
@@ -196,7 +196,7 @@
     "telephone": "+556133406740",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Asa Norte CLN 208 BL A LOJA 11",
+      "streetAddress": "CLN 208 Bloco A Loja 11, Asa Norte",
       "addressLocality": "Brasília",
       "addressRegion": "DF",
       "postalCode": "70853-510",
@@ -240,16 +240,15 @@
   <!-- Manifest para Android -->
   <link rel="manifest" href="/manifest.json">
   
-  <link rel="stylesheet" href="/css/styles.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="/css/styles.css"></noscript>
+  <link rel="stylesheet" href="/css/styles.css?v=20260316-1835" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="/css/styles.css?v=20260316-1835"></noscript>
   
   <!-- Lazy Loading Script -->
-  <script src="/js/lazy-loading.js" defer></script>
+  <script src="/js/lazy-loading.js?v=20260316-1835" defer></script>
   
   <!-- Funções Compartilhadas -->
-  <script src="/js/common.js" defer></script>
 </head>
-<body>
+<body class="needs-firebase">
   <!-- Loading Overlay -->
   <div class="initial-loading" id="initialLoading">
     <div class="loading-spinner"></div>
@@ -260,7 +259,7 @@
     <div class="header-container">
       <!-- Logo e Nome -->
       <div class="header-brand">
-        <img src="/images/logo.png" alt="Primos Informática" onclick="goToHomePage()" />
+        <img src="/images/logo.png" alt="Primos Informática" onclick="goToHomePage()" width="40" height="40" decoding="async" fetchpriority="high" />
         <div class="brand-info">
           <h1 onclick="goToHomePage()">Primos Informática</h1>
           <span class="brand-tagline">Hardware em Brasília</span>
@@ -280,7 +279,7 @@
               autocomplete="off"
               oninput="handleSearchInput(event)"
               onfocus="showSearchResults()"
-              onkeypress="if(event.key === 'Enter') searchProducts(this.value)"
+              onkeypress="if(event.key === 'Enter') submitSearchFromField(this.value)"
             >
             <div class="search-results" id="searchResults"></div>
           </div>
@@ -874,20 +873,65 @@
 
 <main>
   <div id="inicio" class="category">
-    <div class="home-hero">
+    <section class="home-hero">
       <div class="hero-content animate-fadeInUp">
-        <h1>Primos Informática - Hardware em Brasília</h1>
-        <p>Loja especializada em processadores, placas mãe, placas de vídeo, SSDs, HDs e fontes. Melhores preços da Asa Norte, Brasília. Retirada na loja ou enviamos para todo Brasil.</p>
-        <div class="hero-buttons">
-          <button type="button" class="btn-primary" onclick="showCategory('promo')">Ver Promoções</button>
-          <a href="https://wa.me/556133406740" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">Falar no WhatsApp</a>
-          <a href="https://www.olx.com.br/perfil/primos-informatica-dd755dba" target="_blank" rel="noopener noreferrer" class="btn-olx">Ver OLX</a>
-          <a href="https://www.instagram.com/primosinformaticadf/" target="_blank" rel="noopener noreferrer" class="btn-instagram">Instagram</a>
-          <a href="https://www.facebook.com/profile.php?id=61573835540802" target="_blank" rel="noopener noreferrer" class="btn-facebook">Facebook</a>
-          <a href="https://share.google/fw8RnykGYOGizyf74" target="_blank" rel="noopener noreferrer" class="btn-maps">Google Maps</a>
+        <div class="hero-eyebrow">
+          <span>Loja fisica em Brasilia</span>
+          <span>Retirada na CLN 208</span>
+          <span>Nota fiscal e garantia</span>
+        </div>
+        <div class="hero-layout">
+          <div class="hero-copy">
+            <p class="hero-kicker">Hardware, upgrades e PCs com atendimento de loja fisica</p>
+            <h1>Seu setup pronto para comprar com mais seguranca e menos atrito</h1>
+            <p>Escolha processadores, placas de video, SSDs, fontes e computadores montados com estoque local, retirada rapida na Asa Norte e envio para todo o Brasil.</p>
+            <div class="hero-buttons">
+              <button type="button" class="btn-primary hero-primary-btn" onclick="showCategory('promo')">Ver ofertas em destaque</button>
+              <a href="https://wa.me/556133406740" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">Falar com um especialista</a>
+              <a href="#home-como-comprar" class="btn-outline hero-link">Como comprar e retirar</a>
+            </div>
+            <p class="hero-microcopy">Pix, cartao, retirada na loja e suporte para montagem e upgrade.</p>
+          </div>
+          <aside class="hero-panel" aria-label="Diferenciais da loja">
+            <div class="hero-panel-item">
+              <span class="hero-panel-label">Retirada local</span>
+              <strong>CLN 208 Bloco A Loja 11</strong>
+              <p>Confirme o estoque e retire na loja fisica em Brasilia.</p>
+            </div>
+            <div class="hero-panel-item">
+              <span class="hero-panel-label">Pagamento</span>
+              <strong>Pix e parcelamento</strong>
+              <p>Mostre o produto, confirme a condicao e finalize pelo canal que preferir.</p>
+            </div>
+            <div class="hero-panel-item">
+              <span class="hero-panel-label">Atendimento</span>
+              <strong>WhatsApp, loja e suporte tecnico</strong>
+              <p>Ajuda para upgrade, compatibilidade de pecas e pos-venda.</p>
+            </div>
+          </aside>
         </div>
       </div>
-    </div>
+    </section>
+
+    <section class="home-section home-trust-section" id="home-como-comprar">
+      <div class="trust-strip">
+        <article class="trust-strip-item">
+          <span class="trust-strip-label">Compra local</span>
+          <h2>Loja fisica com retirada em Brasilia</h2>
+          <p>Compre online e retire na CLN 208 Bloco A Loja 11, Asa Norte, com confirmacao de estoque.</p>
+        </article>
+        <article class="trust-strip-item">
+          <span class="trust-strip-label">Entrega</span>
+          <h2>Envio em Brasilia e para todo o Brasil</h2>
+          <p>Estimativa de entrega, retirada e atendimento comercial ficam mais proximos da decisao de compra.</p>
+        </article>
+        <article class="trust-strip-item">
+          <span class="trust-strip-label">Confianca</span>
+          <h2>Garantia, FAQ e politicas claras</h2>
+          <p>Rodape institucional com paginas reais para garantia, devolucao, privacidade e termos de uso.</p>
+        </article>
+      </div>
+    </section>
 
     <section class="home-section">
       <h2>Nossas Categorias de Produtos</h2>
@@ -910,45 +954,24 @@
       <h2>Por que comprar na Primos Informática?</h2>
       <div class="features-grid">
         <div class="feature-item">
-          <h3>🏪 Loja Física em Brasília</h3>
-          <p>Estamos localizados na Asa Norte, CLN 208 BL A LOJA 11. Venha nos visitar!</p>
+          <h3>Estoque confirmado e retirada local</h3>
+          <p>Atendimento em loja fisica na CLN 208 Bloco A Loja 11, Asa Norte, com apoio para compatibilidade e upgrade.</p>
         </div>
         <div class="feature-item">
-          <h3>📦 Enviamos para Todo Brasil</h3>
-          <p>Com segurança e confiabilidade. Entrega rápida para sua região.</p>
+          <h3>Entrega para Brasilia e envio nacional</h3>
+          <p>Mostramos opcoes de entrega e retirada para reduzir duvidas antes de fechar o pedido.</p>
         </div>
         <div class="feature-item">
-          <h3>💳 Formas de Pagamento</h3>
-          <p>Aceitamos Pix, Cartão de Crédito e Débito. Compre como preferir.</p>
+          <h3>Pix, parcelamento e atendimento humano</h3>
+          <p>Negociacao comercial mais clara, com contato rapido pelo WhatsApp e suporte na loja.</p>
         </div>
         <div class="feature-item">
-          <h3>🔧 Especialistas em Hardware</h3>
-          <p>Atendimento especializado para montagem e upgrade de PCs.</p>
+          <h3>FAQ, garantia e politicas visiveis</h3>
+          <p>Informacoes institucionais agora ficam acessiveis no rodape para passar mais confianca comercial.</p>
         </div>
       </div>
     </section>
 
-    <section class="home-section">
-      <h2>Contato</h2>
-      <div class="contact-info">
-        <div class="contact-item">
-          <strong>WhatsApp:</strong>
-          <a href="https://wa.me/556133406740" target="_blank" rel="noopener noreferrer">55 61 3340-6740</a>
-        </div>
-        <div class="contact-item">
-          <strong>Endereço:</strong>
-          <span>Asa Norte CLN 208 BL A LOJA 11 - Asa Norte, Brasília - DF, 70853-510</span>
-        </div>
-        <div class="contact-item">
-          <strong>Horário:</strong>
-          <span>Seg-Sex: 9h-18h | Sáb 9h-13h</span>
-        </div>
-        <div class="contact-item">
-          <strong>Formas de pagamento:</strong>
-          <span>Pix, Cartão de Crédito, Débito</span>
-        </div>
-      </div>
-    </section>
   </div>
 
   <div id="promo" class="category" style="display:none;">
@@ -1059,19 +1082,58 @@
   </div>
 </main>
 
-<footer>
-  <button type="button" onclick="showCategory('inicio')">Início</button>
-  <button type="button" onclick="showCategory('promo')">Promoções</button>
-  <button type="button" onclick="showCategory('processador')">Processadores</button>
-  <button type="button" onclick="showCategory('placa de vídeo')">Placas de Vídeo</button>
-  <button type="button" onclick="showCategory('placa mãe')">Placas Mãe</button>
-  <button type="button" onclick="showCategory('monitor')">Monitores</button>
-  <button type="button" onclick="showCategory('ssd')">SSDs</button>
-  <button type="button" onclick="showCategory('hd externo')">HDs Externos</button>
-  <button type="button" onclick="showCategory('hd interno')">HDs Internos</button>
-  <button type="button" onclick="showCategory('fonte')">Fontes</button>
-  <button type="button" onclick="showCategory('gabinetes')">Gabinetes</button>
-  <button type="button" onclick="showCategory('teclado')">Teclados</button>
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-grid">
+      <section class="site-footer-brand">
+        <img src="/images/logo.png" alt="Primos Informatica" width="48" height="48" loading="lazy">
+        <h2>Primos Informatica</h2>
+        <p>Loja de hardware em Brasilia com foco em conversao, atendimento consultivo e retirada na loja fisica.</p>
+        <div class="site-footer-badges">
+          <span>Loja fisica</span>
+          <span>Retirada local</span>
+          <span>Garantia</span>
+        </div>
+      </section>
+
+      <section class="site-footer-column">
+        <h3>Comprar</h3>
+        <div class="site-footer-links">
+          <button type="button" onclick="showCategory('promo')">Ofertas do dia</button>
+          <button type="button" onclick="showCategory('processador')">Processadores</button>
+          <button type="button" onclick="showCategory('placa de vídeo')">Placas de video</button>
+          <button type="button" onclick="showCategory('ssd')">SSDs</button>
+          <button type="button" onclick="showCategory('gabinetes')">Gabinetes</button>
+        </div>
+      </section>
+
+      <section class="site-footer-column">
+        <h3>Atendimento</h3>
+        <div class="site-footer-links">
+          <a href="faq.html">Perguntas frequentes</a>
+          <a href="garantia.html">Garantia</a>
+          <a href="politica-devolucao.html">Trocas e devolucoes</a>
+          <a href="termos-de-uso.html">Termos de uso</a>
+          <a href="politica-privacidade.html">Politica de privacidade</a>
+        </div>
+      </section>
+
+      <section class="site-footer-column">
+        <h3>Contato</h3>
+        <div class="site-footer-contact">
+          <p><strong>WhatsApp:</strong> <a href="https://wa.me/556133406740" target="_blank" rel="noopener noreferrer">(61) 3340-6740</a></p>
+          <p><strong>E-mail:</strong> <a href="mailto:marketing.primosinfo@gmail.com">marketing.primosinfo@gmail.com</a></p>
+          <p><strong>Endereco:</strong> CLN 208 Bloco A Loja 11, Asa Norte, Brasilia - DF</p>
+          <p><strong>Horario:</strong> Seg-Sex: 9h-18h | Sab 9h-13h</p>
+        </div>
+      </section>
+    </div>
+
+    <div class="site-footer-bottom">
+      <span>&copy; 2026 Primos Informatica. Todos os direitos reservados.</span>
+      <a href="https://share.google/fw8RnykGYOGizyf74" target="_blank" rel="noopener noreferrer">Ver localizacao no Google Maps</a>
+    </div>
+  </div>
 </footer>
 
 <!-- Botão Flutuante WhatsApp -->
@@ -1139,7 +1201,7 @@
 </div>
 
 <!-- Scripts Otimizados para Performance -->
-  <script src="/js/script.js" defer></script>
+  <script src="/js/script.js?v=20260317-1405" defer></script>
   
   <!-- Loading Management Script -->
   <script>
@@ -1193,27 +1255,36 @@
     if (document.body.classList.contains('needs-firebase')) {
       const firebaseScript = document.createElement('script');
       firebaseScript.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js';
-      firebaseScript.async = true;
+      firebaseScript.async = false; // Mudar para false para garantir ordem
       document.head.appendChild(firebaseScript);
       
       const firestoreScript = document.createElement('script');
       firestoreScript.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js';
-      firestoreScript.async = true;
+      firestoreScript.async = false; // Mudar para false para garantir ordem
       document.head.appendChild(firestoreScript);
       
       // Carregar configuração e scripts de Firebase após os SDKs
       firebaseScript.onload = () => {
-        const configScript = document.createElement('script');
-        configScript.src = '/js/firebase-config.js';
-        configScript.async = true;
-        document.head.appendChild(configScript);
-        
-        if (window.location.pathname.includes('admin.html')) {
-          const ordersScript = document.createElement('script');
-          ordersScript.src = '/js/firebase-orders.js';
-          ordersScript.async = true;
-          document.head.appendChild(ordersScript);
-        }
+        // Aguardar um pouco para garantir que firestore foi carregado
+        setTimeout(() => {
+          const configScript = document.createElement('script');
+          configScript.src = '/js/firebase-config.js?v=20260317-1405';
+          configScript.async = false;
+          document.head.appendChild(configScript);
+          
+          // Carregar firebase-orders.js após a configuração
+          setTimeout(() => {
+            const ordersScript = document.createElement('script');
+            ordersScript.src = '/js/firebase-orders.js?v=20260317-1405';
+            ordersScript.async = false;
+            document.head.appendChild(ordersScript);
+
+            const productsScript = document.createElement('script');
+            productsScript.src = '/js/firebase-products.js?v=20260326-1730';
+            productsScript.async = false;
+            document.head.appendChild(productsScript);
+          }, 100);
+        }, 100);
       };
     }
   </script>
@@ -1301,6 +1372,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- Sistema de Notificações -->
-<script src="/js/notifications.js"></script>
+<script src="/js/notifications.js?v=20260313-1945" defer></script>
 </body>
 </html>

@@ -1,150 +1,109 @@
-# 🏪 Primos Informatica - E-commerce
+# Primos Informatica - Minha Loja
 
-## 📁 Estrutura de Pastas Organizada
+Loja virtual estatica da Primos Informatica, publicada a partir da raiz do projeto e mantida com HTML, CSS e JavaScript vanilla.
 
-```
+## Estrutura atual
+
+```text
 minha-loja/
-├── 📄 index.html                 # Página principal
-├── 📄 auth.html                 # Autenticação
-├── 📄 admin.html                # Administração
-├── 📄 reviews.html              # Avaliações
-├── 📄 pagamento.html            # Pagamento
-├── 📄 politica-devolucao.html   # Política de devolução
-├── 📄 manifest.json             # PWA Manifest
-├── 📄 robots.txt               # SEO Robots
-├── 📄 sitemap.xml              # SEO Sitemap
-├── 📄 sw.js                    # Service Worker
-├── 📄 firebase.json            # Firebase Config
-├── 📄 .firebaserc             # Firebase Project
-├── 📄 .gitignore              # Git Ignore
-├── 📄 .nojekyll               # Netlify Config
-│
-├── 📁 css/                     # Estilos CSS
-│   ├── styles.css              # Estilos principais
-│   └── styles.min.css          # Estilos minificados
-│
-├── 📁 js/                      # JavaScript
-│   ├── script.js               # Script principal
-│   ├── cart.js                 # Carrinho
-│   ├── core.js                 # Core functions
-│   ├── products.js             # Sistema de produtos
-│   ├── reviews.js              # Sistema de avaliações
-│   ├── router.js               # Router SPA
-│   ├── ui.js                   # UI components
-│   └── [outros arquivos]
-│
-├── 📁 data/                    # Dados do site
-│   ├── products.csv            # Produtos (CSV)
-│   ├── products.json           # Produtos (JSON)
-│   └── google_merchant_feed.csv # Feed Google
-│
-├── 📁 images/                  # Imagens
-│   ├── favicons/              # Favicones
-│   ├── products/              # Produtos
-│   │   ├── large/           # Imagens grandes
-│   │   ├── medium/          # Imagens médias
-│   │   └── thumbnail/       # Miniaturas
-│   └── logo.png               # Logo
-│
-├── 📁 public/                  # Arquivos públicos (deploy)
-│   └── data/                 # Cópia dos dados
-│
-├── 📁 tools/                   # Ferramentas
-│   ├── organizar_arquivos.js  # Organização
-│   ├── organizar_final.js     # Organização final
-│   ├── image_optimizer.py     # Otimizador de imagens
-│   ├── [scripts Python/Batch]
-│   └── README.md              # Docs das ferramentas
-│
-├── 📁 docs/                    # Documentação
-│   ├── ESTRUTURA_ORGANIZACAO.md # Estrutura
-│   ├── README.md              # Docs principal
-│   └── [outros arquivos .md]
-│
-├── 📁 servers/                 # Servidores de desenvolvimento
-│   ├── server.js              # Node.js
-│   ├── server.py              # Python
-│   └── simple_server.py       # Python Simple
-│
-├── 📁 dev/                     # Desenvolvimento
-│   ├── convert_csv_to_json.js # Conversor CSV→JSON
-│   ├── minify_css.js          # Minificador CSS
-│   ├── minify_js.js           # Minificador JS
-│   └── [arquivos de dev]
-│
-├── 📁 backups/                 # Backups
-│   ├── script.js.backup       # Backup principal
-│   └── [outros backups]
-│
-├── 📁 tests/                   # Testes
-│   ├── test-converter.html    # Teste conversor
-│   ├── test-orders.html       # Teste pedidos
-│   └── [arquivos de teste]
-│
-├── 📁 deprecated/              # Arquivos obsoletos
-│   ├── index-backup.html      # Backup index
-│   └── [arquivos obsoletos]
-│
-├── 📁 temp/                    # Arquivos temporários
-│   └── [arquivos temporários]
-│
-└── 📁 .git/                   # Controle de versão
-    └── [arquivos Git]
+|-- index.html
+|-- admin.html
+|-- auth.html
+|-- pagamento.html
+|-- politica-devolucao.html
+|-- reviews.html
+|-- manifest.json
+|-- robots.txt
+|-- sitemap.xml
+|-- sw.js
+|-- firebase.json
+|-- netlify.toml
+|-- .firebaserc
+|-- .gitignore
+|-- css/
+|   `-- styles.css
+|-- data/
+|   |-- products.json
+|   |-- products.csv
+|   |-- products.csv.backup
+|   |-- produtos_exemplo.csv
+|   `-- google_merchant_feed.csv
+|-- images/
+|   |-- logo.png
+|   |-- placeholder.png
+|   |-- favicons/
+|   `-- products/
+|       `-- thumbnail/
+|-- js/
+|   |-- script.js
+|   |-- lazy-loading.js
+|   |-- notifications.js
+|   |-- firebase-config.js
+|   `-- firebase-orders.js
+`-- .github/
+    `-- workflows/
+        `-- pages.yml
 ```
 
-## 🚀 Deploy
+## Paginas
+
+- `index.html`: pagina principal da loja
+- `admin.html`: painel administrativo
+- `auth.html`: autenticacao
+- `pagamento.html`: checkout
+- `politica-devolucao.html`: politica comercial
+- `reviews.html`: pagina auxiliar de avaliacoes
+
+## Dados
+
+Os produtos usados pelo site ficam em `data/products.json`.
+
+Arquivos complementares:
+
+- `data/products.csv`: base fonte para atualizacao
+- `data/products.csv.backup`: backup local do CSV
+- `data/produtos_exemplo.csv`: exemplo de importacao
+- `data/google_merchant_feed.csv`: feed para integracoes externas
+
+## JavaScript em uso
+
+- `js/script.js`: logica principal da loja
+- `js/lazy-loading.js`: carregamento otimizado de imagens
+- `js/notifications.js`: notificacoes da interface
+- `js/firebase-config.js`: inicializacao do Firebase
+- `js/firebase-orders.js`: operacoes de pedidos no Firebase
+
+## Executar localmente
+
+Nao existe etapa de build. Para abrir localmente:
+
+```bash
+python -m http.server 8000
+```
+
+Depois acesse:
+
+```text
+http://localhost:8000
+```
+
+## Deploy
 
 ### Firebase Hosting
+
 ```bash
 firebase deploy --only hosting
 ```
 
-### Atualizar Produtos
-```bash
-# Converter CSV para JSON
-node dev/convert_csv_to_json.js
+O `firebase.json` publica a raiz do projeto e faz rewrite para `index.html`.
 
-# Deploy
-firebase deploy --only hosting
-```
+### Netlify
 
-## 📝 Scripts Úteis
+O `netlify.toml` tambem publica a raiz e redireciona qualquer rota para `index.html`.
 
-### Organizar Arquivos
-```bash
-node tools/organizar_arquivos.js
-node tools/organizar_final.js
-```
+## Limpeza aplicada
 
-### Otimizar Imagens
-```bash
-python tools/image_optimizer.py
-```
-
-## 🛠️ Desenvolvimento
-
-### Estrutura Limpada
-- ✅ Backups organizados em `backups/`
-- ✅ Testes em `tests/`
-- ✅ Obsoletos em `deprecated/`
-- ✅ Temporários em `temp/`
-- ✅ Desenvolvimento em `dev/`
-- ✅ Produção na raiz
-
-### Benefícios
-- 🎯 Manutenção mais fácil
-- ⚡ Deploy mais rápido
-- 🧹 Código mais limpo
-- 📈 Melhor performance
-- 🔍 Facilidade para encontrar arquivos
-
-## 📊 Estatísticas
-
-- **Arquivos movidos**: 25+
-- **Pastas criadas**: 5
-- **Estrutura otimizada**: 100%
-- **Performance**: Melhorada
-
----
-
-**Status**: ✅ Organizado e Otimizado
+- removidos modulos JS que nao eram carregados por nenhuma pagina
+- removidos servidores locais redundantes
+- removidas pastas de imagens `large/` e `medium/`, que nao eram usadas pelo site atual
+- removidos arquivos internos de documentacao de pasta e cache local do Firebase

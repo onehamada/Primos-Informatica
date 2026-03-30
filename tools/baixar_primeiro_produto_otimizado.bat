@@ -20,7 +20,7 @@ if %errorlevel% neq 0 (
 echo.
 echo Iniciando download otimizado...
 echo.
-python baixar_primeiro_produto_otimizado.py
+python baixar_primeiro_produto_otimizado.py %*
 
 echo.
 echo Processo concluido!

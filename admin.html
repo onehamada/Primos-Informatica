@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo - Primos Informática</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css?v=20260316-1835">
     <style>
         body {
             margin: 0;
@@ -125,6 +125,29 @@
         .admin-header p {
             margin: 5px 0 0 0;
             color: #6b7280;
+        }
+
+        .admin-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .primary-admin-btn {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            box-shadow: 0 10px 24px rgba(37, 99, 235, 0.18);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .primary-admin-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 28px rgba(37, 99, 235, 0.24);
         }
         
         .logout-btn {
@@ -273,10 +296,248 @@
             color: #6b7280;
         }
         
-        /* Remove loading class when orders are loaded */
-        #ordersList:not(.loading) {
+        /* Estilo base para ordersList */
+        #ordersList {
             visibility: visible !important;
             opacity: 1 !important;
+        }
+
+        .product-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.72);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            z-index: 9999;
+        }
+
+        .product-overlay.active {
+            display: flex;
+        }
+
+        .product-modal {
+            width: min(780px, 100%);
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 24px 70px rgba(15, 23, 42, 0.28);
+            padding: 28px;
+            box-sizing: border-box;
+        }
+
+        .product-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .product-modal-header h2 {
+            margin: 0 0 6px 0;
+            color: #0f172a;
+        }
+
+        .product-modal-header p {
+            margin: 0;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .product-modal-close {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 999px;
+            background: #f1f5f9;
+            color: #0f172a;
+            font-size: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .product-modal-close:hover {
+            background: #e2e8f0;
+        }
+
+        .product-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .product-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .product-form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .product-form-group label {
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .product-form-group input,
+        .product-form-group textarea,
+        .product-form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .product-form-group input:focus,
+        .product-form-group textarea:focus,
+        .product-form-group select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+        }
+
+        .product-form-group textarea {
+            min-height: 132px;
+            resize: vertical;
+        }
+
+        .field-hint {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .product-form-status {
+            margin-top: 18px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .product-form-status[hidden] {
+            display: none !important;
+        }
+
+        .product-form-status.status-info {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+        }
+
+        .product-form-status.status-success {
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+
+        .product-form-status.status-error {
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        .product-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .secondary-admin-btn {
+            background: #e2e8f0;
+            color: #1e293b;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .secondary-admin-btn:hover {
+            background: #cbd5e1;
+        }
+
+        .admin-toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            min-width: 280px;
+            max-width: 420px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            color: white;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.24);
+            transform: translateY(16px);
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 10001;
+        }
+
+        .admin-toast.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .admin-toast-success {
+            background: #059669;
+        }
+
+        .admin-toast-error {
+            background: #dc2626;
+        }
+
+        .admin-toast-info {
+            background: #2563eb;
+        }
+
+        .admin-toast-warning {
+            background: #d97706;
+        }
+
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .admin-actions {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .product-overlay {
+                padding: 12px;
+            }
+
+            .product-modal {
+                max-height: calc(100vh - 24px);
+                padding: 20px;
+            }
+
+            .product-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-modal-actions {
+                flex-direction: column-reverse;
+            }
+
+            .primary-admin-btn,
+            .secondary-admin-btn,
+            .logout-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -318,7 +579,10 @@
                 <h1>🔥 Painel Administrativo</h1>
                 <p>Primos Informática - Gestão de Pedidos</p>
             </div>
-            <button class="logout-btn" onclick="logout()">Sair</button>
+            <div class="admin-actions">
+                <button class="primary-admin-btn" type="button" onclick="openProductOverlay()">+ Cadastrar Produto</button>
+                <button class="logout-btn" onclick="logout()">Sair</button>
+            </div>
         </div>
         
         <div class="stats-grid">
@@ -366,47 +630,115 @@
         </div>
     </div>
 
+    <div id="productOverlay" class="product-overlay" aria-hidden="true">
+        <div class="product-modal" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
+            <div class="product-modal-header">
+                <div>
+                    <h2 id="productModalTitle">Cadastrar Produto</h2>
+                    <p>O produto será salvo no Firebase e passará a aparecer na vitrine pública junto com o catálogo atual.</p>
+                </div>
+                <button type="button" class="product-modal-close" aria-label="Fechar cadastro de produto" onclick="closeProductOverlay()">&times;</button>
+            </div>
+
+            <form id="productForm">
+                <div class="product-form-grid">
+                    <div class="product-form-group">
+                        <label for="productName">Nome</label>
+                        <input type="text" id="productName" name="nome" required placeholder="Ex.: Placa de Vídeo RX 6600">
+                    </div>
+
+                    <div class="product-form-group">
+                        <label for="productCategory">Categoria</label>
+                        <input type="text" id="productCategory" name="categoria" list="productCategories" required placeholder="Ex.: placa de vídeo">
+                        <datalist id="productCategories">
+                            <option value="placa de vídeo"></option>
+                            <option value="processador"></option>
+                            <option value="placa mãe"></option>
+                            <option value="ssd"></option>
+                            <option value="fonte"></option>
+                            <option value="memória"></option>
+                            <option value="monitor"></option>
+                            <option value="gabinete"></option>
+                            <option value="mouse"></option>
+                            <option value="teclado"></option>
+                            <option value="acessórios"></option>
+                            <option value="notebook"></option>
+                        </datalist>
+                    </div>
+
+                    <div class="product-form-group">
+                        <label for="productModel">Modelo</label>
+                        <input type="text" id="productModel" name="modelo" required placeholder="Ex.: MONARCH DRAGON">
+                    </div>
+
+                    <div class="product-form-group">
+                        <label for="productBrand">Marca</label>
+                        <input type="text" id="productBrand" name="marca" required placeholder="Ex.: AMD">
+                    </div>
+
+                    <div class="product-form-group">
+                        <label for="productValue">Valor</label>
+                        <input type="text" id="productValue" name="valor" inputmode="decimal" required placeholder="Ex.: 1100,00">
+                        <span class="field-hint">Informe o valor base do produto. O sistema calcula o preço final quando houver desconto.</span>
+                    </div>
+
+                    <div class="product-form-group">
+                        <label for="productDiscount">Desconto (%)</label>
+                        <input type="number" id="productDiscount" name="desconto" min="0" max="100" step="0.01" value="0" required placeholder="0">
+                        <span class="field-hint">Use `0` se não houver promoção.</span>
+                    </div>
+
+                    <div class="product-form-group full-width">
+                        <label for="productDescription">Descrição</label>
+                        <textarea id="productDescription" name="descricao" required placeholder="Descreva os principais detalhes do produto, compatibilidade e diferenciais."></textarea>
+                    </div>
+                </div>
+
+                <div id="productFormStatus" class="product-form-status status-info" hidden></div>
+
+                <div class="product-modal-actions">
+                    <button type="button" class="secondary-admin-btn" onclick="closeProductOverlay()">Cancelar</button>
+                    <button type="submit" class="primary-admin-btn" id="saveProductBtn">Salvar Produto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Firebase Condicional (carrega apenas em páginas que realmente precisam) -->
     <script>
     // Verifica se a página atual precisa de Firebase
     if (document.body.classList.contains('needs-firebase')) {
+        // Carregar os mesmos scripts do index.html
         const firebaseApp = document.createElement('script');
-        firebaseApp.src = 'https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js';
-        firebaseApp.defer = true;
+        firebaseApp.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js';
+        firebaseApp.async = false;
 
         const firestore = document.createElement('script');
-        firestore.src = 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js';
-        firestore.defer = true;
+        firestore.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js';
+        firestore.async = false;
 
         firebaseApp.onload = () => {
-            firestore.onload = () => {
-                // Firebase Configuration
-                const firebaseConfig = {
-                    apiKey: "AIzaSyAvJUdjnY7xjnlTSYJAQZ6safylKXKlzLc",
-                    authDomain: "primos-informatica-ecommerce.firebaseapp.com",
-                    projectId: "primos-informatica-ecommerce",
-                    storageBucket: "primos-informatica-ecommerce.firebasestorage.app",
-                    messagingSenderId: "989269165415",
-                    appId: "1:989269165415:web:e372a9915f616f9cae9bc2",
-                    measurementId: "G-J6KVL50YGQ"
-                };
+            // Aguardar um pouco para garantir que firestore foi carregado
+            setTimeout(() => {
+                // Carregar configuração do Firebase (mesmo do index.html)
+                const configScript = document.createElement('script');
+                configScript.src = '/js/firebase-config.js?v=20260317-1405';
+                configScript.async = false;
+                document.head.appendChild(configScript);
+                
+                // Carregar firebase-orders.js após a configuração
+                setTimeout(() => {
+                    const ordersScript = document.createElement('script');
+                    ordersScript.src = '/js/firebase-orders.js?v=20260317-1405';
+                    ordersScript.async = false;
+                    document.head.appendChild(ordersScript);
 
-                // Initialize Firebase
-                firebase.initializeApp(firebaseConfig);
-                const db = firebase.firestore();
-                
-                // Exportar para uso global ANTES de carregar o firebase-orders.js
-                window.firebaseDB = db;
-                window.firebaseApp = firebase.app();
-                
-                console.log('🔥 Firebase inicializado sob demanda!');
-                
-                // Carrega script de orders após Firebase estar pronto
-                const ordersScript = document.createElement('script');
-                ordersScript.src = 'js/firebase-orders.js';
-                ordersScript.defer = true;
-                document.body.appendChild(ordersScript);
-            };
+                    const productsScript = document.createElement('script');
+                    productsScript.src = '/js/firebase-products.js?v=20260326-1730';
+                    productsScript.async = false;
+                    document.head.appendChild(productsScript);
+                }, 100);
+            }, 100);
         };
 
         document.head.appendChild(firebaseApp);
@@ -418,9 +750,243 @@
         // Admin credentials
         const ADMIN_EMAIL = 'teste@primos.com';
         const ADMIN_PASSWORD = 'admin123';
+        const DEFAULT_PRODUCT_IMAGE = 'default.webp';
         
         let allOrders = [];
         let unsubscribe = null;
+
+        function showNotification(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `admin-toast admin-toast-${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.add('visible');
+            });
+
+            setTimeout(() => {
+                toast.classList.remove('visible');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 200);
+            }, 3200);
+        }
+
+        function sanitizeAdminText(value) {
+            return String(value || '').trim();
+        }
+
+        function parseAdminNumber(value, fallback = 0) {
+            if (typeof value === 'number') {
+                return Number.isFinite(value) ? value : fallback;
+            }
+
+            const normalized = String(value ?? '')
+                .replace(/\s/g, '')
+                .replace(/\.(?=\d{3}(?:\D|$))/g, '')
+                .replace(',', '.')
+                .replace(/[^0-9.-]/g, '');
+
+            const parsed = parseFloat(normalized);
+            return Number.isFinite(parsed) ? parsed : fallback;
+        }
+
+        function formatAdminCurrency(value) {
+            return Number(value || 0).toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            });
+        }
+
+        function buildAdminProductCode(name, model) {
+            const rawBase = `${sanitizeAdminText(name)} ${sanitizeAdminText(model)}`.trim();
+            const normalizedBase = rawBase
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-zA-Z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '')
+                .toUpperCase()
+                .slice(0, 18) || 'PRODUTO';
+
+            return `${normalizedBase}-${Date.now().toString().slice(-6)}`;
+        }
+
+        function setProductFormStatus(message, type = 'info') {
+            const statusElement = document.getElementById('productFormStatus');
+            if (!statusElement) {
+                return;
+            }
+
+            statusElement.hidden = false;
+            statusElement.className = `product-form-status status-${type}`;
+            statusElement.textContent = message;
+        }
+
+        function clearProductFormStatus() {
+            const statusElement = document.getElementById('productFormStatus');
+            if (!statusElement) {
+                return;
+            }
+
+            statusElement.hidden = true;
+            statusElement.textContent = '';
+            statusElement.className = 'product-form-status status-info';
+        }
+
+        function openProductOverlay() {
+            const overlay = document.getElementById('productOverlay');
+            if (!overlay) {
+                return;
+            }
+
+            overlay.classList.add('active');
+            overlay.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            clearProductFormStatus();
+
+            const firstField = document.getElementById('productName');
+            if (firstField) {
+                setTimeout(() => firstField.focus(), 50);
+            }
+        }
+
+        function closeProductOverlay() {
+            const overlay = document.getElementById('productOverlay');
+            if (!overlay) {
+                return;
+            }
+
+            overlay.classList.remove('active');
+            overlay.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            clearProductFormStatus();
+        }
+
+        function waitForFirebaseProductsHelper(timeoutMs = 5000) {
+            return new Promise((resolve) => {
+                const startedAt = Date.now();
+
+                const checkHelper = () => {
+                    if (typeof firebaseProducts !== 'undefined') {
+                        resolve(firebaseProducts);
+                        return;
+                    }
+
+                    if (Date.now() - startedAt >= timeoutMs) {
+                        resolve(null);
+                        return;
+                    }
+
+                    setTimeout(checkHelper, 100);
+                };
+
+                checkHelper();
+            });
+        }
+
+        function buildProductPayloadFromForm() {
+            const form = document.getElementById('productForm');
+            const formData = new FormData(form);
+
+            const nome = sanitizeAdminText(formData.get('nome'));
+            const categoria = sanitizeAdminText(formData.get('categoria')).toLowerCase();
+            const descricao = sanitizeAdminText(formData.get('descricao'));
+            const modelo = sanitizeAdminText(formData.get('modelo'));
+            const marca = sanitizeAdminText(formData.get('marca'));
+            const valorBase = parseAdminNumber(formData.get('valor'));
+            const desconto = Math.max(0, Math.min(100, parseAdminNumber(formData.get('desconto'))));
+
+            if (!nome || !categoria || !descricao || !modelo || !marca) {
+                throw new Error('Preencha todos os campos do formulário antes de salvar.');
+            }
+
+            if (valorBase <= 0) {
+                throw new Error('Informe um valor válido maior que zero.');
+            }
+
+            const precoFinal = desconto > 0
+                ? Number((valorBase * (1 - desconto / 100)).toFixed(2))
+                : Number(valorBase.toFixed(2));
+
+            const productPayload = {
+                codigo: buildAdminProductCode(nome, modelo),
+                nome,
+                categoria,
+                descricao,
+                modelo,
+                marca,
+                preco: precoFinal,
+                qt: 1,
+                imagem: DEFAULT_PRODUCT_IMAGE,
+                promocao: desconto > 0,
+                desconto: Number(desconto.toFixed(2)),
+                origem: 'admin-overlay'
+            };
+
+            if (desconto > 0) {
+                productPayload.precoOriginal = Number(valorBase.toFixed(2));
+            }
+
+            return productPayload;
+        }
+
+        async function submitProductForm(event) {
+            event.preventDefault();
+
+            const saveButton = document.getElementById('saveProductBtn');
+
+            try {
+                clearProductFormStatus();
+                setProductFormStatus('Salvando produto no Firebase...', 'info');
+
+                if (saveButton) {
+                    saveButton.disabled = true;
+                    saveButton.textContent = 'Salvando...';
+                }
+
+                const firebaseProductsHelper = await waitForFirebaseProductsHelper();
+                if (!firebaseProductsHelper) {
+                    throw new Error('O módulo de produtos ainda não ficou disponível. Tente novamente em alguns segundos.');
+                }
+
+                const productPayload = buildProductPayloadFromForm();
+                const result = await firebaseProductsHelper.saveProduct(productPayload);
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Não foi possível salvar o produto.');
+                }
+
+                const valorResumo = productPayload.precoOriginal || productPayload.preco;
+                const resumoDesconto = productPayload.desconto > 0
+                    ? `Preço final ${formatAdminCurrency(productPayload.preco)} com ${productPayload.desconto}% de desconto sobre ${formatAdminCurrency(valorResumo)}.`
+                    : `Preço final ${formatAdminCurrency(productPayload.preco)} sem desconto.`;
+
+                setProductFormStatus(`Produto salvo com sucesso. Código gerado: ${productPayload.codigo}. ${resumoDesconto}`, 'success');
+                showNotification(`Produto "${productPayload.nome}" cadastrado com sucesso.`, 'success');
+
+                const form = document.getElementById('productForm');
+                if (form) {
+                    form.reset();
+                }
+
+                const discountField = document.getElementById('productDiscount');
+                if (discountField) {
+                    discountField.value = '0';
+                }
+            } catch (error) {
+                console.error('Erro ao cadastrar produto:', error);
+                setProductFormStatus(error.message || 'Erro inesperado ao cadastrar o produto.', 'error');
+                showNotification(error.message || 'Erro ao cadastrar o produto.', 'error');
+            } finally {
+                if (saveButton) {
+                    saveButton.disabled = false;
+                    saveButton.textContent = 'Salvar Produto';
+                }
+            }
+        }
         
         // Login function
         function login() {
@@ -464,15 +1030,41 @@
             document.getElementById('adminPanel').style.display = 'none';
             document.getElementById('email').value = '';
             document.getElementById('password').value = '';
+            closeProductOverlay();
             if (unsubscribe) {
                 unsubscribe();
             }
+        }
+
+        function getLocalOrders() {
+            const localOrders = JSON.parse(localStorage.getItem('pedidos') || '[]');
+
+            return localOrders.slice().sort((a, b) => {
+                const dateA = new Date(a.createdAt || a.data || 0).getTime();
+                const dateB = new Date(b.createdAt || b.data || 0).getTime();
+                return dateB - dateA;
+            });
+        }
+
+        function loadOrdersFromLocalStorage(reason) {
+            allOrders = getLocalOrders();
+            console.warn('Usando pedidos do localStorage no admin:', reason);
+            displayOrders(allOrders);
+            updateStatistics();
         }
         
         // Load orders - VERSÃO CORRIGIDA
         async function loadOrders() {
             try {
+                if (typeof firebaseOrders === 'undefined') {
+                    loadOrdersFromLocalStorage('firebaseOrders indisponivel');
+                    return;
+                }
+
                 const result = await firebaseOrders.getAllOrders();
+                if (!result.success) {
+                    throw new Error(result.error || 'falha ao carregar do Firebase');
+                }
                 if (result.success) {
                     allOrders = result.orders || [];
                     console.log('📦 Pedidos carregados:', allOrders.length);
@@ -484,15 +1076,17 @@
                 }
             } catch (error) {
                 console.error('Erro ao carregar pedidos:', error);
-                const ordersList = document.getElementById('ordersList');
-                if (ordersList) {
-                    ordersList.innerHTML = '<p>Erro ao carregar pedidos</p>';
-                }
+                loadOrdersFromLocalStorage(error.message);
             }
         }
         
         // Setup real-time listener
         function setupRealTimeListener() {
+            if (!window.firebaseDB) {
+                console.warn('FirebaseDB indisponivel. Listener em tempo real nao foi iniciado.');
+                return;
+            }
+
             if (unsubscribe) {
                 unsubscribe(); // Remove listener anterior
             }
@@ -554,7 +1148,7 @@
                 html += `
                     <div class="order-row">
                         <div class="order-header">
-                            <span class="order-id">#${order.id}</span>
+                            <span class="order-id">#${order.codigo || order.id}</span>
                             <span class="order-status ${statusClass}">${order.status || 'Pendente'}</span>
                         </div>
                         <div><strong>Cliente:</strong> ${order.cliente?.nome || order.nome || 'No informado'}</div>
@@ -605,8 +1199,9 @@
             
             if (searchFilter) {
                 filtered = filtered.filter(order => 
-                    (order.nome || '').toLowerCase().includes(searchFilter) ||
-                    (order.email || '').toLowerCase().includes(searchFilter)
+                    (order.cliente?.nome || order.nome || '').toLowerCase().includes(searchFilter) ||
+                    (order.cliente?.email || order.email || '').toLowerCase().includes(searchFilter) ||
+                    (order.codigo || order.id || '').toLowerCase().includes(searchFilter)
                 );
             }
             
@@ -688,6 +1283,8 @@
         
         // Adicionar ao escopo global
         window.clearAllOrders = clearAllOrders;
+        window.openProductOverlay = openProductOverlay;
+        window.closeProductOverlay = closeProductOverlay;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -713,9 +1310,29 @@
             } else {
                 console.error('Formulário de login não encontrado!');
             }
+
+            safeAddListener('productForm', 'submit', submitProductForm);
             
             safeAddListener('searchFilter', 'input', filterOrders);
             safeAddListener('statusFilter', 'change', filterOrders);
+
+            const productOverlay = document.getElementById('productOverlay');
+            if (productOverlay) {
+                productOverlay.addEventListener('click', function(event) {
+                    if (event.target === productOverlay) {
+                        closeProductOverlay();
+                    }
+                });
+            }
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    const overlay = document.getElementById('productOverlay');
+                    if (overlay && overlay.classList.contains('active')) {
+                        closeProductOverlay();
+                    }
+                }
+            });
 
             // Inicializa o carregamento dos pedidos após o Firebase estar pronto
             const initializeAdmin = () => {

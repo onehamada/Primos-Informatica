@@ -21,7 +21,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   
   <!-- Favicon -->
-  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="images/favicons/favicon.ico" sizes="any">
   <link rel="icon" href="images/favicons/favicon-32x32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="images/favicons/favicon-16x16.png" type="image/png" sizes="16x16">
   <link rel="apple-touch-icon" href="images/favicons/apple-touch-icon.png" sizes="180x180">
@@ -29,7 +29,7 @@
   <link rel="icon" href="images/favicons/android-chrome-512x512.png" type="image/png" sizes="512x512">
   <link rel="manifest" href="manifest.json">
   
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/styles.css?v=20260316-1835" />
   
   <!-- Estilos para remover margin do body -->
   <style>
@@ -40,7 +40,6 @@
   </style>
   
   <!-- Funções Compartilhadas -->
-  <script src="js/common.js"></script>
 </head>
 <body>
 
@@ -226,7 +225,7 @@
       <div class="form-group" style="margin-bottom: 25px; text-align: left;">
         <label class="checkbox" style="display: flex; align-items: flex-start; gap: 8px; color: #666; font-size: 14px;">
           <input type="checkbox" id="cadTermos" required style="margin-top: 2px;">
-          <span>Li e aceito os <a href="#" style="color: #3b82f6; text-decoration: none;">termos de uso</a> e <a href="#" style="color: #3b82f6; text-decoration: none;">política de privacidade</a></span>
+          <span>Li e aceito os <a href="termos-de-uso.html" style="color: #3b82f6; text-decoration: none;">termos de uso</a> e <a href="politica-privacidade.html" style="color: #3b82f6; text-decoration: none;">política de privacidade</a></span>
         </label>
         <div class="error-message" id="cadTermosError" style="color: #ef4444; font-size: 12px; margin-top: 5px; display: none;"></div>
       </div>
@@ -572,7 +571,8 @@ class SimpleAuth {
 
 // Funções globais
 function showForgotPassword() {
-  alert('Funcionalidade em desenvolvimento. Entre em contato pelo WhatsApp para assistência.');
+  const message = encodeURIComponent('Ola! Preciso de ajuda para recuperar minha senha no site.');
+  window.open(`https://wa.me/556133406740?text=${message}`, '_blank');
 }
 function showCadastro() {
   // Usar a instância global do SimpleAuth

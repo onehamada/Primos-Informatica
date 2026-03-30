@@ -1,143 +1,151 @@
-// === LAZY LOADING NATIVO E MELHORADO ===
+// === LAZY LOADING NATIVO E ESTAVEL ===
 
-// Configuração do Intersection Observer para lazy loading
 const lazyLoadingConfig = {
-  root: null, // viewport
-  rootMargin: '50px 0px', // começa a carregar 50px antes de entrar na tela
-  threshold: 0.1 // começa a carregar quando 10% da imagem estiver visível
+  root: null,
+  rootMargin: '120px 0px',
+  threshold: 0.01
 };
 
-// Criar o observer
 let imageObserver;
 
-// Inicializar o lazy loading
-function initLazyLoading() {
-  // Verificar suporte a Intersection Observer
-  if ('IntersectionObserver' in window) {
-    imageObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const img = entry.target;
-          loadImage(img);
-          observer.unobserve(img);
-        }
-      });
-    }, lazyLoadingConfig);
-  } else {
-    // Fallback para navegadores antigos
-    initLegacyLazyLoading();
+function markImageAsLoaded(img) {
+  if (!img) {
+    return;
   }
+
+  img.classList.remove('loading');
+  img.classList.add('loaded');
 }
 
-// Carregar imagem individual
+function markImageAsError(img) {
+  if (!img) {
+    return;
+  }
+
+  img.classList.remove('loading');
+  img.classList.add('error');
+}
+
 function loadImage(img) {
-  // Adicionar classe de loading
+  if (!img || img.classList.contains('loaded') || img.classList.contains('loading')) {
+    return;
+  }
+
+  const nextSrc = img.dataset && img.dataset.src ? img.dataset.src : img.getAttribute('src');
+  if (!nextSrc) {
+    return;
+  }
+
   img.classList.add('loading');
-  
-  // Se tem data-src, usar isso
-  if (img.dataset.src) {
-    img.src = img.dataset.src;
+
+  img.onload = function() {
+    markImageAsLoaded(img);
+  };
+
+  img.onerror = function() {
+    if (img.src && img.src.includes('.webp')) {
+      img.src = img.src.replace(/\.webp(\?.*)?$/i, '.jpg$1');
+      return;
+    }
+
+    img.src = 'images/products/thumbnail/placeholder.webp';
+    markImageAsError(img);
+  };
+
+  if (img.dataset && img.dataset.src) {
+    img.src = nextSrc;
     img.removeAttribute('data-src');
   }
-  
-  // Evento de carregamento
-  img.onload = function() {
-    img.classList.remove('loading');
-    img.classList.add('loaded');
-  };
-  
-  // Evento de erro
-  img.onerror = function() {
-    img.classList.remove('loading');
-    
-    // Tentar fallback para .jpg se .webp falhar
-    if (img.src.includes('.webp')) {
-      const fallbackSrc = img.src.replace(/\.webp$/i, '.jpg');
-      img.src = fallbackSrc;
-    } else {
-      // Placeholder genérico
-      img.src = 'images/products/thumbnail/placeholder.webp';
-      img.classList.add('error');
-    }
-  };
+
+  // Cache hit: garante que a imagem não fique invisivel se o onload vier antes do handler.
+  if (img.complete && img.naturalWidth > 0) {
+    markImageAsLoaded(img);
+  }
 }
 
-// Fallback para navegadores sem Intersection Observer
 function initLegacyLazyLoading() {
   function checkImages() {
-    const images = document.querySelectorAll('img[data-src]');
-    
+    const images = document.querySelectorAll('img[data-src]:not(.loaded):not(.loading)');
+
     images.forEach(img => {
       const rect = img.getBoundingClientRect();
-      const isVisible = (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= window.innerHeight + 50 &&
-        rect.right <= window.innerWidth
-      );
-      
-      if (isVisible) {
+      const isNearViewport = rect.top <= window.innerHeight + 120 && rect.bottom >= -120;
+
+      if (isNearViewport) {
         loadImage(img);
       }
     });
   }
-  
-  // Verificar imagens no scroll
+
   let ticking = false;
   function requestTick() {
     if (!ticking) {
-      requestAnimationFrame(checkImages);
+      window.requestAnimationFrame(() => {
+        checkImages();
+        ticking = false;
+      });
       ticking = true;
-      setTimeout(() => { ticking = false; }, 100);
     }
   }
-  
-  window.addEventListener('scroll', requestTick);
+
+  window.addEventListener('scroll', requestTick, { passive: true });
   window.addEventListener('resize', requestTick);
-  
-  // Verificar imagens iniciais
-  setTimeout(checkImages, 100);
+  setTimeout(checkImages, 80);
 }
 
-// Observar novas imagens adicionadas dinamicamente
+function initLazyLoading() {
+  if ('IntersectionObserver' in window) {
+    imageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) {
+          return;
+        }
+
+        loadImage(entry.target);
+        observer.unobserve(entry.target);
+      });
+    }, lazyLoadingConfig);
+  } else {
+    initLegacyLazyLoading();
+  }
+}
+
 function observeImages(container = document) {
-  const images = container.querySelectorAll('img[data-src], img[loading="lazy"]');
-  
-  images.forEach(img => {
+  const lazyDataImages = container.querySelectorAll('img[data-src]:not(.loaded):not(.loading)');
+  const nativeLazyImages = container.querySelectorAll('img[loading="lazy"]:not([data-src]):not(.loaded)');
+
+  nativeLazyImages.forEach(img => {
+    if (img.complete && img.naturalWidth > 0) {
+      markImageAsLoaded(img);
+      return;
+    }
+
+    img.addEventListener('load', () => markImageAsLoaded(img), { once: true });
+  });
+
+  lazyDataImages.forEach(img => {
     if (imageObserver) {
       imageObserver.observe(img);
-    } else {
-      // Fallback direto
-      if (img.getBoundingClientRect().top < window.innerHeight + 50) {
-        loadImage(img);
-      }
+      return;
+    }
+
+    const rect = img.getBoundingClientRect();
+    if (rect.top <= window.innerHeight + 120) {
+      loadImage(img);
     }
   });
 }
 
-// Inicializar quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', () => {
   initLazyLoading();
-  
-  // Observar imagens existentes
+
   setTimeout(() => {
     observeImages();
-  }, 100);
+  }, 80);
 });
 
-// Re-observar quando novas imagens forem adicionadas (para carregamento dinâmico)
-const originalCreateProductCard = window.createProductCard;
-if (typeof originalCreateProductCard === 'function') {
-  window.createProductCard = function(product) {
-    const result = originalCreateProductCard(product);
-    setTimeout(() => observeImages(), 50);
-    return result;
-  };
-}
-
-// Exportar funções para uso global
 window.lazyLoading = {
   init: initLazyLoading,
   observe: observeImages,
-  loadImage: loadImage
+  loadImage
 };

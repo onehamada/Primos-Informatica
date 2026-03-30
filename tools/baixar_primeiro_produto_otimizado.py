@@ -8,10 +8,15 @@ COM DETECÇÃO E REMOÇÃO DE FUNDO PRETO
 
 import os
 import csv
+import html
+import sys
+import json
+import argparse
+import unicodedata
 import requests
 from PIL import Image, ImageFilter, ImageEnhance
 import io
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 import re
 import time
 import numpy as np
@@ -22,10 +27,19 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+try:
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    if hasattr(sys.stderr, 'reconfigure'):
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+except Exception:
+    pass
+
 class OptimizedPersistentDownloader:
     def __init__(self):
         self.csv_file = '../data/products.csv'
         self.image_folder = '../images/products/thumbnail'
+        self._signature_cache = {}
         
         os.makedirs(self.image_folder, exist_ok=True)
         
@@ -36,6 +50,207 @@ class OptimizedPersistentDownloader:
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'Accept-Language': 'pt-BR,pt;q=0.9,en;q=0.8'
         })
+
+    def encode_query_component(self, value):
+        """Codifica consultas preservando modelos com /, + e caracteres especiais."""
+        return quote(str(value or '').strip(), safe='')
+
+    def normalize_text(self, value):
+        """Normaliza texto para comparacoes mais confiaveis."""
+        text = html.unescape(str(value or ''))
+        text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('ascii')
+        text = text.lower()
+        text = re.sub(r'[^a-z0-9/+\-.]+', ' ', text)
+        return re.sub(r'\s+', ' ', text).strip()
+
+    def split_normalized_tokens(self, value):
+        """Quebra texto normalizado em tokens uteis."""
+        normalized = self.normalize_text(value)
+        return [token for token in normalized.split() if token]
+
+    def unique_preserve_order(self, tokens):
+        """Remove duplicados preservando a ordem."""
+        seen = set()
+        result = []
+        for token in tokens:
+            if token in seen:
+                continue
+            seen.add(token)
+            result.append(token)
+        return result
+
+    def build_product_signature(self, product):
+        """Extrai marca, modelos e tokens importantes para validar resultados."""
+        if isinstance(product, str):
+            product = {'nome': product}
+
+        cache_key = (
+            str(product.get('nome', '')).strip(),
+            str(product.get('marca', '')).strip(),
+            str(product.get('categoria', '')).strip(),
+        )
+        if cache_key in self._signature_cache:
+            return self._signature_cache[cache_key]
+
+        stopwords = {
+            'de', 'da', 'do', 'das', 'dos', 'e', 'com', 'para', 'por', 'sem',
+            'preto', 'preta', 'branco', 'branca', 'azul', 'vermelho', 'vermelha',
+            'cinza', 'grafite', 'wireless', 'bluetooth', 'bivolt', 'real',
+            'universal', 'grande', 'pequeno', 'pequena'
+        }
+        family_tokens_whitelist = {
+            'kcas', 'vx', 'rx', 'rtx', 'gtx', 'ddr3', 'ddr4', 'ddr5', 'ows',
+            'tws', 'dps', 'atx', 'hdmi', 'usb', 'usb-c', 'microusb', 'type-c'
+        }
+        generic_brand_tokens = {'generico', 'generic', 'oem'}
+
+        name = str(product.get('nome', '')).strip()
+        brand = str(product.get('marca', '')).strip()
+        category = str(product.get('categoria', '')).strip()
+
+        name_tokens = []
+        strict_model_tokens = []
+        family_tokens = []
+        spec_tokens = []
+
+        for token in self.split_normalized_tokens(name):
+            token = token.strip('.')
+            core = token.strip('/+-')
+            if not core or core in stopwords:
+                continue
+
+            name_tokens.append(token)
+
+            has_digit = any(char.isdigit() for char in core)
+            has_alpha = any(char.isalpha() for char in core)
+            has_separator = any(char in token for char in ('/', '-', '+'))
+
+            if (has_digit and has_alpha) or has_separator:
+                strict_model_tokens.append(token)
+            elif token in family_tokens_whitelist:
+                family_tokens.append(token)
+            elif has_digit:
+                spec_tokens.append(token)
+
+        brand_tokens = [
+            token for token in self.split_normalized_tokens(brand)
+            if token not in generic_brand_tokens and len(token) >= 2
+        ]
+
+        keyword_tokens = [
+            token for token in name_tokens
+            if token not in brand_tokens and len(token) >= 2
+        ]
+
+        signature = {
+            'normalized_name': self.normalize_text(name),
+            'normalized_brand': self.normalize_text(brand),
+            'normalized_category': self.normalize_text(category),
+            'brand_tokens': self.unique_preserve_order(brand_tokens),
+            'keyword_tokens': self.unique_preserve_order(keyword_tokens),
+            'strict_model_tokens': self.unique_preserve_order(strict_model_tokens),
+            'family_tokens': self.unique_preserve_order(family_tokens),
+            'spec_tokens': self.unique_preserve_order(spec_tokens),
+        }
+        self._signature_cache[cache_key] = signature
+        return signature
+
+    def candidate_text_score(self, product, *parts):
+        """Pontua um candidato com foco em marca e modelo."""
+        signature = self.build_product_signature(product)
+        combined_text = " ".join(str(part or '') for part in parts)
+        normalized_text = self.normalize_text(combined_text)
+        tokens_in_text = set(self.split_normalized_tokens(normalized_text))
+
+        brand_matches = [
+            token for token in signature['brand_tokens']
+            if token in tokens_in_text or token in normalized_text
+        ]
+        strict_model_matches = [
+            token for token in signature['strict_model_tokens']
+            if token in normalized_text
+        ]
+        family_matches = [
+            token for token in signature['family_tokens']
+            if token in normalized_text
+        ]
+        spec_matches = [
+            token for token in signature['spec_tokens']
+            if token in normalized_text
+        ]
+        keyword_matches = [
+            token for token in signature['keyword_tokens']
+            if token in normalized_text
+        ]
+
+        score = 0.0
+        if signature['brand_tokens']:
+            score += 0.40 * (len(brand_matches) / len(signature['brand_tokens']))
+        if signature['strict_model_tokens']:
+            score += 0.35 * (len(strict_model_matches) / len(signature['strict_model_tokens']))
+        if signature['family_tokens']:
+            score += 0.10 * (len(family_matches) / len(signature['family_tokens']))
+        if signature['spec_tokens']:
+            score += 0.05 * min(1.0, len(spec_matches) / max(1, min(len(signature['spec_tokens']), 2)))
+        if signature['keyword_tokens']:
+            score += 0.20 * min(1.0, len(keyword_matches) / max(1, min(len(signature['keyword_tokens']), 5)))
+        if signature['normalized_name'] and signature['normalized_name'] in normalized_text:
+            score += 0.20
+
+        conflicting_brand_tokens = {
+            'philips', 'havit', 'jbl', 'fortrek', 'aerocool', 'kingston',
+            'hayom', 'kimaster', 'peining', 'kaidi', 'kapbom', 'pioneiro',
+            'multilaser', 'unipower', 'segato', 'troyatools', 'startools',
+            'pratic', 'pratik', 'migol', 'mcm', 'feasso', 'corsair', 'pcyes',
+            'asus', 'galax', 'logitech', 'intel', 'amd', 'gigabyte', 'brazil',
+            'brazilpc', 'tplink', 'mercusys', 'ubiquiti', 'xcell', 'x-cell', 'lity'
+        }
+        expected_brand_set = set(signature['brand_tokens'])
+        conflicting_brands = sorted(
+            token for token in conflicting_brand_tokens
+            if token in tokens_in_text and token not in expected_brand_set
+        )
+        if conflicting_brands:
+            score -= 0.45
+
+        min_keyword_matches = 2 if len(signature['keyword_tokens']) >= 4 else 1
+        accepted = True
+        reasons = []
+
+        if signature['brand_tokens'] and not brand_matches:
+            accepted = False
+            reasons.append('marca ausente')
+        if signature['strict_model_tokens'] and not strict_model_matches:
+            accepted = False
+            reasons.append('modelo ausente')
+        if len(keyword_matches) < min_keyword_matches:
+            accepted = False
+            reasons.append('poucos termos do produto')
+        if conflicting_brands:
+            accepted = False
+            reasons.append(f"marca conflitante: {', '.join(conflicting_brands[:2])}")
+
+        minimum_score = 0.52
+        if not signature['brand_tokens'] and signature['strict_model_tokens']:
+            minimum_score = 0.42
+        elif not signature['brand_tokens'] and not signature['strict_model_tokens']:
+            minimum_score = 0.35
+        elif signature['brand_tokens'] and not signature['strict_model_tokens']:
+            minimum_score = 0.46
+
+        return {
+            'score': round(score, 4),
+            'accepted': accepted and score >= minimum_score,
+            'minimum_score': minimum_score,
+            'normalized_text': normalized_text,
+            'brand_matches': brand_matches,
+            'strict_model_matches': strict_model_matches,
+            'family_matches': family_matches,
+            'spec_matches': spec_matches,
+            'keyword_matches': keyword_matches,
+            'reasons': reasons,
+            'conflicting_brands': conflicting_brands,
+        }
     
     def analyze_background(self, img):
         """Analisa o fundo da imagem e retorna informações"""
@@ -206,6 +421,86 @@ class OptimizedPersistentDownloader:
         except Exception as e:
             print(f"    Erro ao melhorar imagem: {e}")
             return img
+
+    def has_watermark_or_logo(self, img):
+        """Heuristica leve para detectar logos ou marcas d'agua dominantes."""
+        try:
+            grayscale = np.array(img.convert('L'))
+            edge_h = max(1, grayscale.shape[0] // 12)
+            edge_w = max(1, grayscale.shape[1] // 12)
+            edge_pixels = np.concatenate([
+                grayscale[:edge_h, :].flatten(),
+                grayscale[-edge_h:, :].flatten(),
+                grayscale[:, :edge_w].flatten(),
+                grayscale[:, -edge_w:].flatten(),
+            ])
+
+            if edge_pixels.size == 0:
+                return False
+
+            bright_ratio = np.mean(edge_pixels > 245)
+            dark_ratio = np.mean(edge_pixels < 10)
+            return bright_ratio > 0.92 or dark_ratio > 0.92
+        except Exception:
+            return False
+
+    def is_cropped_image(self, img):
+        """Detecta cortes muito agressivos nas bordas."""
+        try:
+            rgb = np.array(img.convert('RGB'))
+
+            def border_is_uniform(border):
+                return np.std(border) < 8
+
+            uniform_borders = sum([
+                border_is_uniform(rgb[0, :, :]),
+                border_is_uniform(rgb[-1, :, :]),
+                border_is_uniform(rgb[:, 0, :]),
+                border_is_uniform(rgb[:, -1, :]),
+            ])
+            return uniform_borders >= 3 and min(img.size) < 220
+        except Exception:
+            return False
+
+    def has_text_overlay(self, img):
+        """Heuristica simples para rejeitar imagens com muito texto sobreposto."""
+        try:
+            grayscale = np.array(img.convert('L'))
+            if grayscale.size == 0:
+                return False
+
+            contrast_mask = (grayscale < 40) | (grayscale > 245)
+            contrast_ratio = np.mean(contrast_mask)
+            return 0.18 < contrast_ratio < 0.45 and min(img.size) < 500
+        except Exception:
+            return False
+
+    def is_probable_image_url(self, url):
+        """Evita tentar baixar paginas HTML como se fossem imagens."""
+        try:
+            parsed = urlparse(url)
+            path = parsed.path.lower()
+
+            if parsed.scheme not in ('http', 'https'):
+                return False
+
+            if re.search(r"\.(jpg|jpeg|png|webp|gif|bmp|avif)$", path):
+                return True
+
+            image_hosts = (
+                'mlstatic.com',
+                'kabum.com.br',
+                'images.kabum.com.br',
+                'http2.kabum.com.br',
+                'googleusercontent.com',
+                'gstatic.com',
+                'bing.net',
+                'alicdn.com',
+                'ae01.alicdn.com',
+            )
+            return any(host in parsed.netloc.lower() for host in image_hosts) and '/produto/' not in path
+        except Exception:
+            return False
     
     def is_suitable_product_image(self, img, url=""):
         """Verifica se a imagem é adequada para produto"""
@@ -268,6 +563,171 @@ class OptimizedPersistentDownloader:
             print(f"    Erro ao verificar adequação: {e}")
             return True, "Verificação falhou"
     
+    def analyze_background(self, img):
+        """Analisa o fundo da imagem e retorna informacoes mais detalhadas."""
+        try:
+            alpha_ratio = 0.0
+            if 'A' in img.getbands():
+                alpha_img = img.convert('RGBA')
+                alpha_channel = np.array(alpha_img)[:, :, 3]
+                alpha_ratio = float(np.mean(alpha_channel < 245))
+                if alpha_ratio > 0.08:
+                    return {
+                        'type': 'transparent',
+                        'color': (255, 255, 255),
+                        'confidence': min(100.0, alpha_ratio * 100.0),
+                        'alpha_ratio': alpha_ratio,
+                    }
+
+            if img.mode != 'RGB':
+                img = img.convert('RGB')
+
+            small_img = img.copy()
+            if max(small_img.size) > 200:
+                ratio = 200 / max(small_img.size)
+                new_size = (int(small_img.size[0] * ratio), int(small_img.size[1] * ratio))
+                small_img = small_img.resize(new_size, Image.Resampling.LANCZOS)
+
+            img_array = np.array(small_img)
+            height, width = img_array.shape[:2]
+            border_h = max(2, int(height * 0.08))
+            border_w = max(2, int(width * 0.08))
+
+            border_pixels = np.concatenate([
+                img_array[:border_h, :, :].reshape(-1, 3),
+                img_array[-border_h:, :, :].reshape(-1, 3),
+                img_array[:, :border_w, :].reshape(-1, 3),
+                img_array[:, -border_w:, :].reshape(-1, 3),
+            ], axis=0)
+
+            avg_color = np.mean(border_pixels, axis=0)
+            r, g, b = avg_color
+            border_brightness = np.mean(border_pixels, axis=1)
+            dark_ratio = float(np.mean(border_brightness < 40))
+            very_dark_ratio = float(np.mean(border_brightness < 22))
+            bright_ratio = float(np.mean(border_brightness > 235))
+            border_variation = float(np.std(border_pixels))
+
+            center_y1 = max(0, height // 4)
+            center_y2 = min(height, height - center_y1)
+            center_x1 = max(0, width // 4)
+            center_x2 = min(width, width - center_x1)
+            center_pixels = img_array[center_y1:center_y2, center_x1:center_x2, :].reshape(-1, 3)
+            if center_pixels.size:
+                center_brightness = float(np.mean(np.mean(center_pixels, axis=1)))
+            else:
+                center_brightness = float(np.mean(border_brightness))
+
+            if (
+                (dark_ratio > 0.72 and np.mean(avg_color) < 48 and border_variation < 38) or
+                (very_dark_ratio > 0.55 and center_brightness - np.mean(border_brightness) > 30)
+            ):
+                confidence = min(100.0, 55.0 + dark_ratio * 30.0 + very_dark_ratio * 15.0)
+                return {
+                    'type': 'black',
+                    'color': (int(r), int(g), int(b)),
+                    'confidence': confidence,
+                    'dark_ratio': dark_ratio,
+                    'bright_ratio': bright_ratio,
+                    'border_variation': border_variation,
+                    'center_brightness': center_brightness,
+                }
+
+            if bright_ratio > 0.68 and np.mean(avg_color) > 220:
+                return {
+                    'type': 'white',
+                    'color': (int(r), int(g), int(b)),
+                    'confidence': min(100.0, 55.0 + bright_ratio * 45.0),
+                    'dark_ratio': dark_ratio,
+                    'bright_ratio': bright_ratio,
+                    'border_variation': border_variation,
+                    'center_brightness': center_brightness,
+                }
+
+            return {
+                'type': 'colored',
+                'color': (int(r), int(g), int(b)),
+                'confidence': 50,
+                'dark_ratio': dark_ratio,
+                'bright_ratio': bright_ratio,
+                'border_variation': border_variation,
+                'center_brightness': center_brightness,
+            }
+
+        except Exception as e:
+            print(f"    Erro ao analisar fundo: {e}")
+            return {
+                'type': 'unknown',
+                'color': (128, 128, 128),
+                'confidence': 0
+            }
+
+    def has_watermark_or_logo(self, img):
+        """Heuristica leve para detectar logos ou marcas d'agua dominantes."""
+        try:
+            grayscale = np.array(img.convert('L'))
+            edge_h = max(1, grayscale.shape[0] // 12)
+            edge_w = max(1, grayscale.shape[1] // 12)
+            edge_pixels = np.concatenate([
+                grayscale[:edge_h, :].flatten(),
+                grayscale[-edge_h:, :].flatten(),
+                grayscale[:, :edge_w].flatten(),
+                grayscale[:, -edge_w:].flatten(),
+            ])
+
+            if edge_pixels.size == 0:
+                return False
+
+            bright_ratio = np.mean(edge_pixels > 245)
+            edge_std = np.std(edge_pixels)
+            return bright_ratio > 0.94 and edge_std < 12
+        except Exception:
+            return False
+
+    def is_suitable_product_image(self, img, url=""):
+        """Verifica se a imagem e adequada para produto."""
+        try:
+            width, height = img.size
+            if width < 200 or height < 200:
+                return False, "Imagem muito pequena"
+
+            ratio = width / height if height > 0 else 0
+            if 0.8 < ratio < 1.2 and max(width, height) < 300:
+                return False, "Imagem muito quadrada e pequena (possivel icone)"
+            if ratio > 2.5:
+                return False, f"Imagem muito larga (proporcao {ratio:.2f}:1)"
+            if ratio < 0.4:
+                return False, f"Imagem muito alta (proporcao {ratio:.2f}:1)"
+            if max(width, height) > 1200:
+                return False, f"Imagem muito grande ({width}x{height})"
+
+            area = width * height
+            if area < 40000:
+                return False, f"Area muito pequena ({area} pixels)"
+
+            bg_analysis = self.analyze_background(img)
+            if bg_analysis['type'] == 'black' and bg_analysis['confidence'] > 60:
+                print(f"    Fundo preto detectado (confianca: {bg_analysis['confidence']:.1f}%) - tentando corrigir")
+
+            avg_brightness = float(np.mean(np.array(img.convert('L'))))
+            if avg_brightness < 38 and bg_analysis['type'] != 'black':
+                return False, "Imagem muito escura"
+            if bg_analysis['type'] == 'black' and avg_brightness < 25:
+                return False, "Imagem muito escura mesmo com deteccao de fundo preto"
+
+            if self.has_watermark_or_logo(img):
+                return False, "Marca d'agua ou logomarca detectada"
+            if self.is_cropped_image(img):
+                return False, "Imagem parece cortada"
+            if self.has_text_overlay(img):
+                return False, "Texto sobreposto detectado"
+
+            return True, "Imagem adequada"
+
+        except Exception as e:
+            print(f"    Erro ao verificar adequacao: {e}")
+            return True, "Verificacao falhou"
+
     def resize_product_image(self, img):
         """Redimensiona imagem para proporções adequadas de produto"""
         try:
@@ -401,40 +861,28 @@ class OptimizedPersistentDownloader:
         print("="*60)
         
         product_name = product['nome'].strip()
+        compact_name = self.build_compact_search_query(product_name)
         print(f"  Buscando EXATAMENTE: '{product_name}'")
         
-        # Estratégia de busca em camadas - da mais específica para a mais geral
         search_strategies = [
-            # 1. Busca EXATA (maior prioridade)
             {
                 'name': 'Busca EXATA',
                 'urls': [
-                    f"https://www.kabum.com.br/busca/{quote(product_name)}",
-                    f"https://www.kabum.com.br/busca/{quote(product_name)}?page_number=1",
-                    f"https://www.kabum.com.br/busca/{quote(product_name)}&sort=exact"
+                    f"https://www.kabum.com.br/busca/{self.encode_query_component(product_name)}",
+                    f"https://www.kabum.com.br/busca/{self.encode_query_component(product_name)}?sort=exact"
                 ],
                 'priority': 1
             },
-            # 2. Busca com aspas (força correspondência exata)
             {
-                'name': 'Busca com Aspas',
+                'name': 'Busca Compacta',
                 'urls': [
-                    f"https://www.kabum.com.br/busca/{quote('\"' + product_name + '\"')}",
-                    f"https://www.kabum.com.br/busca/{quote(product_name)}?sort=relevance"
+                    f"https://www.kabum.com.br/busca/{self.encode_query_component(compact_name)}"
                 ],
                 'priority': 2
-            },
-            # 3. Busca por palavras chave (se as anteriores falharem)
-            {
-                'name': 'Busca por Palavras-Chave',
-                'urls': [
-                    f"https://www.kabum.com.br/busca/{quote(product_name)}?sort=price",
-                    f"https://www.kabum.com.br/hardware/{quote(product_name)}",
-                    f"https://www.kabum.com.br/perifericos/{quote(product_name)}"
-                ],
-                'priority': 3
             }
         ]
+
+        exact_match_found = False
         
         for strategy in search_strategies:
             print(f"\n  🎯 {strategy['name']} (Prioridade {strategy['priority']})")
@@ -448,7 +896,7 @@ class OptimizedPersistentDownloader:
                         html = response.text
                         
                         # Verificar se encontrou o produto exato
-                        exact_match_found = self.check_exact_product_match(html, product_name)
+                        exact_match_found = self.check_exact_product_match(html, product)
                         
                         if exact_match_found or strategy['priority'] > 1:
                             # Padrões ESPECÍFICOS da Kabum
@@ -464,9 +912,9 @@ class OptimizedPersistentDownloader:
                                 matches = re.findall(pattern, html)
                                 
                                 # Ordenar por relevância (URLs mais específicas primeiro)
-                                matches = self.sort_kabum_urls_by_relevance(matches, product_name)
+                                matches = self.sort_kabum_urls_by_relevance(matches, product)
                                 
-                                for i, match in enumerate(matches[:8]):  # Primeiras 8 por padrão
+                                for i, match in enumerate(matches[:4]):  # Primeiras 4 por padrão
                                     # Limpar URL
                                     clean_url = match.strip('"').replace('\\', '')
                                     
@@ -475,11 +923,11 @@ class OptimizedPersistentDownloader:
                                         'images.kabum.com.br' in clean_url):
                                         
                                         # Verificar se a URL corresponde ao produto exato
-                                        url_relevance = self.calculate_url_relevance(clean_url, product_name)
+                                        url_relevance = self.calculate_url_relevance(clean_url, product)
                                         
                                         # Filtros específicos para Kabum
                                         if (len(clean_url) > 50 and 
-                                            clean_url.endswith(('.jpg', '.jpeg', '.png', '.webp')) and
+                                            self.is_probable_image_url(clean_url) and
                                             '/produtos/' in clean_url and  # Apenas URLs de produtos
                                             'placeholder' not in clean_url.lower() and
                                             'logo' not in clean_url.lower() and
@@ -497,7 +945,7 @@ class OptimizedPersistentDownloader:
                     else:
                         print(f"      HTTP {response.status_code} na Kabum")
                     
-                    time.sleep(1.5)  # Delay entre requisições Kabum
+                    time.sleep(0.2)
                     
                 except Exception as e:
                     print(f"      Erro na busca Kabum: {e}")
@@ -507,8 +955,14 @@ class OptimizedPersistentDownloader:
             if exact_match_found:
                 break
         
-        print("  ❌ Nenhuma imagem encontrada na Kabum")
-        return False
+        print("  ❌ Nenhuma imagem encontrada na Kabum via busca direta")
+        print("  Tentando Kabum via Bing Images...")
+        return self.search_bing_site_images(
+            product,
+            "Kabum via Bing",
+            "kabum.com.br",
+            allowed_hosts=("images.kabum.com.br", "http2.kabum.com.br")
+        )
     
     def check_exact_product_match(self, html, product_name):
         """Verifica se o HTML contém correspondência exata do produto"""
@@ -608,104 +1062,562 @@ class OptimizedPersistentDownloader:
         except Exception as e:
             print(f"      Erro ao calcular relevância: {e}")
             return 0.0
-        """Método 1: Requests direto no Google - MELHORADO COM FILTRO DE FUNDO"""
-        print("\n" + "="*60)
-        print("MÉTODO 1: Requests direto no Google")
-        print("="*60)
-        
-        # Headers diferentes para evitar bloqueio
-        headers_list = [
-            {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                'Accept-Language': 'pt-BR,pt;q=0.9,en;q=0.8',
-                'Accept-Encoding': 'gzip, deflate',
-                'DNT': '1',
-                'Connection': 'keep-alive',
-                'Upgrade-Insecure-Requests': '1'
-            },
-            {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-                'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'DNT': '1',
-                'Connection': 'keep-alive',
-                'Sec-Fetch-Dest': 'document',
-                'Sec-Fetch-Mode': 'navigate',
-                'Sec-Fetch-Site': 'none'
-            },
-            {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                'Accept-Language': 'pt-BR,pt;q=0.9,en;q=0.8',
-                'Accept-Encoding': 'gzip, deflate',
-                'DNT': '1',
-                'Connection': 'keep-alive'
-            }
-        ]
-        
-        # Tentar com diferentes headers
-        for i, headers in enumerate(headers_list):
-            try:
-                print(f"  Tentando com headers {i+1}/3...")
-                
-                # Criar sessão com headers específicos
-                session = requests.Session()
-                session.headers.update(headers)
-                
-                # Adicionar termos para evitar fundo preto
-                search_terms = [
-                    product['nome'] + " white background",
-                    product['nome'] + " transparent background",
-                    product['nome'] + " png",
-                    product['nome'] + " produto foto"
-                ]
-                
-                for term in search_terms:
-                    url = f"https://www.google.com/search?q={quote(term)}&tbm=isch&hl=pt-BR"
-                    response = session.get(url, timeout=15)
-                    
-                    if response.status_code == 200:
-                        html = response.text
-                        
-                        # Múltiplos padrões de imagem melhorados
-                        patterns = [
-                            r'"https://[^"]*googleusercontent[^"]*\.(?:jpg|jpeg|png|webp)[^"]*"',
-                            r'"https://[^"]*gstatic[^"]*\.(?:jpg|jpeg|png|webp)[^"]*"',
-                            r'data-src="(https://[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
-                            r'src="(https://[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
-                            r'https://[^"]*\.googleusercontent\.com[^"]*\.(?:jpg|jpeg|png|webp)[^"]*',
-                            r'https://[^"]*\.gstatic\.com[^"]*\.(?:jpg|jpeg|png|webp)[^"]*'
-                        ]
-                        
-                        for pattern in patterns:
-                            matches = re.findall(pattern, html)
-                            
-                            for match in matches:
-                                # Limpar URL - remover aspas se existirem
-                                clean_url = match.strip('"').replace('\\u003d', '=').replace('\\', '')
-                                
-                                # Filtros melhorados
-                                if ('ssl.gstatic.com' not in clean_url and 
-                                    'al-icon' not in clean_url and 
-                                    'logo' not in clean_url.lower() and
-                                    'icon' not in clean_url.lower() and
-                                    len(clean_url) > 50):
-                                    
-                                    print(f"  URL encontrada: {clean_url[:80]}...")
-                                    
-                                    if self.download_image_from_url(clean_url, product):
-                                        return True
-                    
-                    time.sleep(1)  # Delay entre termos de busca
-                
-                print(f"  Nenhuma imagem válida com headers {i+1}")
-            except Exception as e:
-                print(f"  Erro com headers {i+1}: {e}")
+
+    def build_compact_search_query(self, product_name, max_tokens=6):
+        """Reduz o nome do produto para uma busca mais rápida e objetiva."""
+        normalized = unicodedata.normalize('NFKD', product_name).encode('ascii', 'ignore').decode('ascii')
+        normalized = re.sub(r'[^a-zA-Z0-9]+', ' ', normalized).strip()
+        stopwords = {'de', 'da', 'do', 'das', 'dos', 'e', 'com', 'para', 'por'}
+        seen = set()
+        tokens = []
+
+        for token in normalized.split():
+            key = token.lower()
+            if key in stopwords or key in seen:
                 continue
-        
-        print("  Nenhuma imagem válida encontrada com nenhum header")
+            seen.add(key)
+            tokens.append(token)
+            if len(tokens) >= max_tokens:
+                break
+
+        return " ".join(tokens) if tokens else product_name
+
+    def get_product_tokens(self, product_name, max_tokens=8):
+        """Quebra o nome em tokens úteis para validar relevância."""
+        compact_name = self.build_compact_search_query(product_name, max_tokens=max_tokens)
+        tokens = []
+        for token in compact_name.lower().split():
+            if len(token) >= 3 or token in {'rx', 'rtx', 'gtx'} or any(char.isdigit() for char in token):
+                tokens.append(token)
+        return tokens
+
+    def url_matches_product_tokens(self, url, product_name):
+        """Exige um mínimo de palavras-chave do produto na URL da imagem."""
+        tokens = self.get_product_tokens(product_name)
+        url_lower = url.lower()
+        matches = sum(1 for token in tokens if token in url_lower)
+        required_matches = 2 if len(tokens) >= 3 else 1
+        return matches >= required_matches
+
+    def extract_bing_image_urls(self, html_content, allowed_hosts=None):
+        """Extrai URLs reais de imagem da busca do Bing Images."""
+        urls = []
+        seen = set()
+        patterns = [
+            r'murl&quot;:&quot;([^&]+)&quot;',
+            r'"murl":"([^"]+)"',
+        ]
+
+        for pattern in patterns:
+            for match in re.findall(pattern, html_content):
+                clean_url = html.unescape(match).replace('\\/', '/').strip()
+
+                if not self.is_probable_image_url(clean_url):
+                    continue
+
+                host = urlparse(clean_url).netloc.lower()
+                if allowed_hosts and not any(allowed_host in host for allowed_host in allowed_hosts):
+                    continue
+
+                if clean_url not in seen:
+                    seen.add(clean_url)
+                    urls.append(clean_url)
+
+        return urls
+
+    def search_bing_site_images(self, product, site_name, domain, allowed_hosts=None):
+        """Busca imagens no Bing limitadas a um domínio específico."""
+        print("\n" + "="*60)
+        print(f"MÉTODO: {site_name} Priority")
+        print("="*60)
+
+        product_name = product['nome'].strip()
+        compact_name = self.build_compact_search_query(product_name)
+        search_terms = [
+            f'site:{domain} "{product_name}"',
+            f'site:{domain} {compact_name}',
+        ]
+
+        for term in search_terms:
+            try:
+                search_url = f"https://www.bing.com/images/search?q={quote(term)}&form=HDRSC3"
+                print(f"  Buscando em {site_name}: {term}")
+                response = self.session.get(search_url, timeout=8)
+
+                if response.status_code != 200:
+                    print(f"    HTTP {response.status_code} em {site_name}")
+                    continue
+
+                matches = self.extract_bing_image_urls(response.text, allowed_hosts=allowed_hosts)
+                matches = sorted(
+                    matches,
+                    key=lambda url: self.calculate_url_relevance(url, product_name),
+                    reverse=True
+                )
+                filtered_matches = [
+                    url for url in matches
+                    if self.url_matches_product_tokens(url, product_name)
+                ]
+                if filtered_matches:
+                    matches = filtered_matches
+
+                if not matches:
+                    print(f"    Nenhuma imagem encontrada em {site_name}")
+                    continue
+
+                for clean_url in matches[:4]:
+                    print(f"    URL: {clean_url[:80]}...")
+                    if self.download_image_from_url(clean_url, product):
+                        print(f"    ✅ SUCESSO com {site_name}")
+                        return True
+
+            except Exception as e:
+                print(f"    Erro em {site_name}: {e}")
+
+        return False
+
+    def method_1_kabum_priority(self, product):
+        """Metodo 1: prioridade para Kabum com validacao mais rigida."""
+        print("\n" + "="*60)
+        print("METODO 1: Kabum Priority (Busca EXATA)")
+        print("="*60)
+
+        product_name = product['nome'].strip()
+        compact_name = self.build_compact_search_query(product_name)
+        print(f"  Buscando EXATAMENTE: '{product_name}'")
+
+        search_strategies = [
+            {
+                'name': 'Busca EXATA',
+                'urls': [
+                    f"https://www.kabum.com.br/busca/{self.encode_query_component(product_name)}",
+                    f"https://www.kabum.com.br/busca/{self.encode_query_component(product_name)}?sort=exact",
+                ],
+                'priority': 1,
+            },
+            {
+                'name': 'Busca Compacta',
+                'urls': [
+                    f"https://www.kabum.com.br/busca/{self.encode_query_component(compact_name)}",
+                ],
+                'priority': 2,
+            },
+        ]
+
+        for strategy in search_strategies:
+            print(f"\n  {strategy['name']} (Prioridade {strategy['priority']})")
+
+            for url in strategy['urls']:
+                try:
+                    print(f"    Buscando: {url}")
+                    response = self.session.get(url, timeout=15)
+
+                    if response.status_code != 200:
+                        print(f"      HTTP {response.status_code} na Kabum")
+                        continue
+
+                    html_content = response.text
+                    exact_match_found = self.check_exact_product_match(html_content, product)
+                    if not exact_match_found and strategy['priority'] == 1:
+                        print("      Resultado muito generico para esta busca exata")
+                        continue
+
+                    kabum_patterns = [
+                        r'"(https://http2\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+                        r'"(https://http2\.kabum\.com\.br/produtos/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+                        r'"(https://images\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+                        r'data-src="(https://http2\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+                        r'src="(https://http2\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+                    ]
+
+                    candidate_urls = []
+                    for pattern in kabum_patterns:
+                        candidate_urls.extend(re.findall(pattern, html_content))
+
+                    candidate_urls = self.sort_kabum_urls_by_relevance(
+                        self.unique_preserve_order(candidate_urls),
+                        product,
+                    )
+
+                    for clean_url in candidate_urls[:6]:
+                        clean_url = clean_url.strip('"').replace('\\', '')
+                        if (
+                            len(clean_url) <= 50 or
+                            not self.is_probable_image_url(clean_url) or
+                            '/produtos/' not in clean_url or
+                            'placeholder' in clean_url.lower() or
+                            'logo' in clean_url.lower() or
+                            'icon' in clean_url.lower() or
+                            'sprite' in clean_url.lower()
+                        ):
+                            continue
+
+                        url_relevance = self.calculate_url_relevance(clean_url, product)
+                        url_score_data = self.candidate_text_score(product, clean_url)
+                        url_slug = urlparse(clean_url).path.lower()
+                        url_has_named_slug = bool(re.search(r'[a-z]{4,}', url_slug))
+                        url_has_blocking_reason = any(
+                            reason.startswith('marca ausente') or
+                            reason.startswith('modelo ausente') or
+                            reason.startswith('marca conflitante')
+                            for reason in url_score_data['reasons']
+                        )
+
+                        if url_has_named_slug and url_has_blocking_reason:
+                            continue
+                        if not exact_match_found and url_relevance < 0.18:
+                            continue
+
+                        print(f"      URL Kabum (relevancia {url_relevance:.2f}): {clean_url[:80]}...")
+                        if self.download_image_from_url(clean_url, product):
+                            print("      SUCESSO com Kabum - Produto validado!")
+                            return True
+
+                    print("      Nenhuma imagem valida encontrada")
+                    time.sleep(0.2)
+
+                except Exception as e:
+                    print(f"      Erro na busca Kabum: {e}")
+
+        print("  Nenhuma imagem encontrada na Kabum via busca direta")
+        print("  Tentando Kabum via Bing Images...")
+        return self.search_bing_site_images(
+            product,
+            "Kabum via Bing",
+            "kabum.com.br",
+            allowed_hosts=("images.kabum.com.br", "http2.kabum.com.br"),
+        )
+
+    def check_exact_product_match(self, html_content, product):
+        """Valida se a pagina realmente contem o produto desejado."""
+        try:
+            text_only = re.sub(r'<[^>]+>', ' ', html_content or '')
+            text_only = html.unescape(text_only)
+            score_data = self.candidate_text_score(product, text_only[:250000])
+            return score_data['accepted'] or score_data['score'] >= max(0.48, score_data['minimum_score'] - 0.05)
+        except Exception as e:
+            print(f"      Erro ao verificar correspondencia: {e}")
+            return False
+
+    def sort_kabum_urls_by_relevance(self, urls, product):
+        """Ordena URLs da Kabum por relevancia com o produto."""
+        try:
+            return sorted(
+                urls,
+                key=lambda current_url: self.calculate_url_relevance(current_url, product),
+                reverse=True
+            )
+        except Exception as e:
+            print(f"      Erro ao ordenar URLs: {e}")
+            return urls
+
+    def calculate_url_relevance(self, url, product):
+        """Calcula relevancia de uma URL especifica para o produto."""
+        try:
+            score_data = self.candidate_text_score(product, url)
+            url_lower = str(url or '').lower()
+            relevance = score_data['score']
+
+            if '/produtos/' in url_lower:
+                relevance += 0.18
+            if '/fotos/' in url_lower or '/photos/' in url_lower:
+                relevance += 0.08
+            if any(term in url_lower for term in ('placeholder', 'logo', 'icon', 'sprite', 'banner')):
+                relevance -= 0.35
+
+            return max(0.0, min(1.0, relevance))
+        except Exception as e:
+            print(f"      Erro ao calcular relevancia: {e}")
+            return 0.0
+
+    def get_product_tokens(self, product, max_tokens=8):
+        """Quebra o produto em tokens uteis para validar relevancia."""
+        signature = self.build_product_signature(product)
+        ordered_tokens = (
+            signature['brand_tokens'] +
+            signature['strict_model_tokens'] +
+            signature['family_tokens'] +
+            signature['keyword_tokens'] +
+            signature['spec_tokens']
+        )
+
+        tokens = []
+        seen = set()
+        for token in ordered_tokens:
+            normalized = self.normalize_text(token)
+            if not normalized or normalized in seen:
+                continue
+            seen.add(normalized)
+            tokens.append(normalized)
+            if len(tokens) >= max_tokens:
+                break
+
+        return tokens
+
+    def url_matches_product_tokens(self, url, product):
+        """Exige um minimo de tokens relevantes na URL."""
+        tokens = self.get_product_tokens(product)
+        url_lower = self.normalize_text(url)
+        matches = sum(1 for token in tokens if token and token in url_lower)
+        required_matches = 2 if len(tokens) >= 3 else 1
+        score_data = self.candidate_text_score(product, url_lower)
+        return matches >= required_matches or score_data['score'] >= max(0.34, score_data['minimum_score'] - 0.08)
+
+    def extract_bing_image_candidates(self, html_content, product, allowed_hosts=None, expected_domain=None):
+        """Extrai candidatos do Bing Images com titulo, descricao e pagina de origem."""
+        candidates = []
+        seen = set()
+
+        raw_meta_entries = re.findall(r'\bm="([^"]+)"', html_content or '')
+        raw_meta_entries.extend(re.findall(r"\bm='([^']+)'", html_content or ''))
+
+        for raw_meta in raw_meta_entries:
+            try:
+                payload = html.unescape(raw_meta).replace('\\/', '/')
+                data = json.loads(payload)
+            except Exception:
+                continue
+
+            image_url = (data.get('murl') or '').strip()
+            page_url = (data.get('purl') or '').strip()
+            title = (data.get('t') or '').strip()
+            desc = (data.get('desc') or '').strip()
+
+            if not image_url or image_url in seen or not self.is_probable_image_url(image_url):
+                continue
+
+            image_host = urlparse(image_url).netloc.lower()
+            page_host = urlparse(page_url).netloc.lower()
+            if allowed_hosts and not any(host in image_host for host in allowed_hosts):
+                continue
+
+            score_data = self.candidate_text_score(product, title, desc, page_url, image_url)
+            final_score = score_data['score']
+            if expected_domain and expected_domain in page_host:
+                final_score += 0.15
+            if allowed_hosts and any(host in image_host for host in allowed_hosts):
+                final_score += 0.08
+
+            blocking_reasons = any(
+                reason.startswith('marca ausente') or
+                reason.startswith('modelo ausente') or
+                reason.startswith('marca conflitante')
+                for reason in score_data['reasons']
+            )
+            accepted = score_data['accepted'] or (
+                not blocking_reasons and
+                final_score >= max(0.45, score_data['minimum_score'] - 0.04)
+            )
+
+            seen.add(image_url)
+            candidates.append({
+                'image_url': image_url,
+                'page_url': page_url,
+                'title': title,
+                'desc': desc,
+                'score': round(final_score, 4),
+                'accepted': accepted,
+                'score_data': score_data,
+            })
+
+        if candidates:
+            return candidates
+
+        for image_url in self.extract_bing_image_urls(html_content, allowed_hosts=allowed_hosts):
+            score_data = self.candidate_text_score(product, image_url)
+            candidates.append({
+                'image_url': image_url,
+                'page_url': '',
+                'title': '',
+                'desc': '',
+                'score': score_data['score'],
+                'accepted': self.url_matches_product_tokens(image_url, product),
+                'score_data': score_data,
+            })
+
+        return candidates
+
+    def search_bing_site_images(self, product, site_name, domain, allowed_hosts=None):
+        """Busca imagens no Bing limitadas a um dominio especifico."""
+        print("\n" + "="*60)
+        print(f"METODO: {site_name} Priority")
+        print("="*60)
+
+        product_name = product['nome'].strip()
+        compact_name = self.build_compact_search_query(product_name)
+        search_terms = [
+            f'site:{domain} "{product_name}"',
+            f'site:{domain} {compact_name}',
+        ]
+
+        for term in search_terms:
+            try:
+                search_url = f"https://www.bing.com/images/search?q={self.encode_query_component(term)}&form=HDRSC3"
+                print(f"  Buscando em {site_name}: {term}")
+                response = self.session.get(search_url, timeout=8)
+
+                if response.status_code != 200:
+                    print(f"    HTTP {response.status_code} em {site_name}")
+                    continue
+
+                candidates = self.extract_bing_image_candidates(
+                    response.text,
+                    product,
+                    allowed_hosts=allowed_hosts,
+                    expected_domain=domain,
+                )
+                candidates = sorted(candidates, key=lambda item: item['score'], reverse=True)
+                strong_candidates = [item for item in candidates if item['accepted']]
+                if not strong_candidates:
+                    print(f"    Nenhuma imagem validada em {site_name} para esse termo")
+                    continue
+                candidates = strong_candidates
+
+                for candidate in candidates[:4]:
+                    details = candidate['score_data']
+                    if details['conflicting_brands']:
+                        continue
+
+                    title_preview = candidate['title'] or candidate['desc'] or candidate['page_url']
+                    print(f"    Score {candidate['score']:.2f}: {title_preview[:90]}")
+                    if self.download_image_from_url(candidate['image_url'], product):
+                        print(f"    SUCESSO com {site_name}")
+                        return True
+
+            except Exception as e:
+                print(f"    Erro em {site_name}: {e}")
+
+        return False
+
+    def method_1_requests_google(self, product):
+        """Metodo 4: Google fallback mais conservador."""
+        print("\n" + "="*60)
+        print("GOOGLE FALLBACK")
+        print("="*60)
+
+        search_terms = [
+            product['nome'],
+            self.build_compact_search_query(product['nome']) + " produto",
+        ]
+        patterns = [
+            r'data-src="(https://[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+            r'src="(https://[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+            r'"(https://[^"]*\.(?:jpg|jpeg|png|webp)[^"]*)"'
+        ]
+
+        for term in search_terms:
+            try:
+                url = f"https://www.google.com/search?q={self.encode_query_component(term)}&tbm=isch&hl=pt-BR"
+                print(f"  Buscando no Google: {term}")
+                response = self.session.get(url, timeout=8)
+
+                if response.status_code != 200:
+                    print(f"    HTTP {response.status_code} no Google")
+                    continue
+
+                tried = set()
+                for pattern in patterns:
+                    for match in re.findall(pattern, response.text):
+                        clean_url = html.unescape(match.strip('"').replace('\\u003d', '=').replace('\\', ''))
+                        if clean_url in tried:
+                            continue
+                        tried.add(clean_url)
+
+                        if (
+                            'ssl.gstatic.com' in clean_url or
+                            'gstatic.com' in clean_url or
+                            'googleusercontent' in clean_url or
+                            'logo' in clean_url.lower() or
+                            'icon' in clean_url.lower() or
+                            not self.is_probable_image_url(clean_url)
+                        ):
+                            continue
+
+                        score_data = self.candidate_text_score(product, clean_url)
+                        if score_data['conflicting_brands']:
+                            continue
+                        if not self.url_matches_product_tokens(clean_url, product):
+                            continue
+
+                        print(f"    URL aprovada: {clean_url[:80]}...")
+                        if self.download_image_from_url(clean_url, product):
+                            return True
+
+            except Exception as e:
+                print(f"    Erro no Google: {e}")
+
+        print("  Nenhuma imagem valida encontrada no Google")
+        return False
+
+    def method_2_terabyte_priority(self, product):
+        """Prioriza resultados da Terabyte via Bing Images."""
+        return self.search_bing_site_images(
+            product,
+            "Terabyte",
+            "terabyteshop.com.br",
+            allowed_hosts=("img.terabyteshop.com.br",)
+        )
+
+    def method_3_pichau_priority(self, product):
+        """Prioriza resultados da Pichau via Bing Images."""
+        return self.search_bing_site_images(
+            product,
+            "Pichau",
+            "pichau.com.br",
+            allowed_hosts=("media.pichau.com.br", "pichau-media.s3.amazonaws.com")
+        )
+
+    def method_1_requests_google(self, product):
+        """Método 4: Google fallback enxuto."""
+        print("\n" + "="*60)
+        print("GOOGLE FALLBACK")
+        print("="*60)
+
+        search_terms = [
+            product['nome'],
+            self.build_compact_search_query(product['nome']) + " produto"
+        ]
+        patterns = [
+            r'data-src="(https://[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+            r'src="(https://[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+            r'"(https://[^"]*\.(?:jpg|jpeg|png|webp)[^"]*)"'
+        ]
+
+        for term in search_terms:
+            try:
+                url = f"https://www.google.com/search?q={quote(term)}&tbm=isch&hl=pt-BR"
+                print(f"  Buscando no Google: {term}")
+                response = self.session.get(url, timeout=8)
+
+                if response.status_code != 200:
+                    print(f"    HTTP {response.status_code} no Google")
+                    continue
+
+                html_content = response.text
+                tried = set()
+                for pattern in patterns:
+                    for match in re.findall(pattern, html_content):
+                        clean_url = html.unescape(match.strip('"').replace('\\u003d', '=').replace('\\', ''))
+                        if clean_url in tried:
+                            continue
+                        tried.add(clean_url)
+
+                        if ('ssl.gstatic.com' in clean_url or
+                            'gstatic.com' in clean_url or
+                            'googleusercontent' in clean_url or
+                            'logo' in clean_url.lower() or
+                            'icon' in clean_url.lower() or
+                            not self.is_probable_image_url(clean_url)):
+                            continue
+
+                        print(f"    URL: {clean_url[:80]}...")
+                        if self.download_image_from_url(clean_url, product):
+                            return True
+
+            except Exception as e:
+                print(f"    Erro no Google: {e}")
+
+        print("  Nenhuma imagem válida encontrada no Google")
         return False
     
     def method_2_selenium_google(self, product):
@@ -832,6 +1744,7 @@ class OptimizedPersistentDownloader:
                             # Filtros otimizados
                             if (len(clean_url) > 30 and 
                                 'http' in clean_url and
+                                self.is_probable_image_url(clean_url) and
                                 'logo' not in clean_url.lower() and
                                 'icon' not in clean_url.lower() and
                                 'sprite' not in clean_url.lower() and
@@ -936,6 +1849,7 @@ class OptimizedPersistentDownloader:
                                 
                                 # Filtros avançados
                                 if (len(clean_url) > 40 and 
+                                    self.is_probable_image_url(clean_url) and
                                     'ssl.gstatic.com' not in clean_url and
                                     'logo' not in clean_url.lower() and
                                     'icon' not in clean_url.lower() and
@@ -966,16 +1880,30 @@ class OptimizedPersistentDownloader:
         try:
             print(f"    Baixando: {url[:80]}...")
             
-            response = self.session.get(url, timeout=15)
+            if not self.is_probable_image_url(url):
+                print("    URL descartada: nao parece ser uma imagem direta")
+                return False
+            
+            response = self.session.get(url, timeout=10)
             
             if response.status_code == 200:
+                content_type = response.headers.get('Content-Type', '').lower()
+                if content_type and not content_type.startswith('image/'):
+                    print(f"    Conteudo ignorado: {content_type}")
+                    return False
+
                 # Verificar tamanho mínimo antes de processar
                 if len(response.content) < 5000:  # Menos de 5KB = provavelmente ícone
                     print(f"    Imagem muito pequena: {len(response.content)} bytes")
                     return False
                 
                 # Tentar abrir como imagem
-                img = Image.open(io.BytesIO(response.content))
+                try:
+                    img = Image.open(io.BytesIO(response.content))
+                    img.load()
+                except Exception as e:
+                    print(f"    Conteudo nao e imagem valida: {e}")
+                    return False
                 
                 # Verificar tamanho mínimo da imagem
                 width, height = img.size
@@ -1052,8 +1980,8 @@ class OptimizedPersistentDownloader:
                 print(f"PROGRESSO: {progress:.1f}% - Sucesso: {successful}, Falhas: {failed}")
                 print(f"{'='*80}")
             
-            # Pequeno delay entre produtos
-            time.sleep(2)  # Aumentado para evitar bloqueio
+            # Delay curto para manter agilidade
+            time.sleep(0.1)
         
         # Resumo final
         print(f"\n{'='*80}")
@@ -1064,15 +1992,230 @@ class OptimizedPersistentDownloader:
         print(f"Taxa de sucesso: {(successful/len(missing_products))*100:.1f}%")
         print(f"{'='*80}")
     
+    def get_all_missing_products(self, force_codes=None, force_all=False):
+        """Pega os produtos sem imagem ou os codigos forcados."""
+        missing_products = []
+        force_codes = {str(code).strip() for code in (force_codes or []) if str(code).strip()}
+        found_force_codes = set()
+
+        if not os.path.exists(self.csv_file):
+            print("ERRO: CSV nao encontrado!")
+            return missing_products
+
+        try:
+            with open(self.csv_file, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f, delimiter=';')
+
+                for row in reader:
+                    if not row.get('codigo') or not row.get('nome'):
+                        continue
+
+                    codigo = row['codigo'].strip()
+                    imagem = row.get('imagem', f"{codigo}.webp").strip()
+                    image_path = os.path.join(self.image_folder, imagem)
+                    should_force = force_all or codigo in force_codes
+
+                    if should_force or not os.path.exists(image_path):
+                        product = dict(row)
+                        product['codigo'] = codigo
+                        product['nome'] = row['nome'].strip()
+                        product['imagem'] = imagem
+                        missing_products.append(product)
+
+                    if codigo in force_codes:
+                        found_force_codes.add(codigo)
+
+        except Exception as e:
+            print(f"ERRO ao ler CSV: {e}")
+
+        missing_force_codes = sorted(force_codes - found_force_codes)
+        if missing_force_codes:
+            print(f"Codigos nao encontrados no CSV: {', '.join(missing_force_codes)}")
+
+        print(f"Encontrados {len(missing_products)} produtos para processar")
+        return missing_products
+
+    def method_1_requests_google(self, product):
+        """Metodo 4: Google fallback mais conservador."""
+        print("\n" + "="*60)
+        print("GOOGLE FALLBACK")
+        print("="*60)
+
+        search_terms = [
+            product['nome'],
+            self.build_compact_search_query(product['nome']) + " produto",
+        ]
+        patterns = [
+            r'data-src="(https://[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+            r'src="(https://[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+            r'"(https://[^"]*\.(?:jpg|jpeg|png|webp)[^"]*)"'
+        ]
+
+        for term in search_terms:
+            try:
+                url = f"https://www.google.com/search?q={self.encode_query_component(term)}&tbm=isch&hl=pt-BR"
+                print(f"  Buscando no Google: {term}")
+                response = self.session.get(url, timeout=8)
+
+                if response.status_code != 200:
+                    print(f"    HTTP {response.status_code} no Google")
+                    continue
+
+                tried = set()
+                for pattern in patterns:
+                    for match in re.findall(pattern, response.text):
+                        clean_url = html.unescape(match.strip('"').replace('\\u003d', '=').replace('\\', ''))
+                        if clean_url in tried:
+                            continue
+                        tried.add(clean_url)
+
+                        if (
+                            'ssl.gstatic.com' in clean_url or
+                            'gstatic.com' in clean_url or
+                            'googleusercontent' in clean_url or
+                            'logo' in clean_url.lower() or
+                            'icon' in clean_url.lower() or
+                            not self.is_probable_image_url(clean_url)
+                        ):
+                            continue
+
+                        score_data = self.candidate_text_score(product, clean_url)
+                        if score_data['conflicting_brands']:
+                            continue
+                        if not self.url_matches_product_tokens(clean_url, product):
+                            continue
+
+                        print(f"    URL aprovada: {clean_url[:80]}...")
+                        if self.download_image_from_url(clean_url, product):
+                            return True
+
+            except Exception as e:
+                print(f"    Erro no Google: {e}")
+
+        print("  Nenhuma imagem valida encontrada no Google")
+        return False
+
+    def download_image_from_url(self, url, product):
+        """Baixa imagem de uma URL especifica usando o nome exato do CSV."""
+        try:
+            print(f"    Baixando: {url[:80]}...")
+
+            if not self.is_probable_image_url(url):
+                print("    URL descartada: nao parece ser uma imagem direta")
+                return False
+
+            response = self.session.get(url, timeout=10)
+            if response.status_code != 200:
+                print(f"    Erro HTTP: {response.status_code}")
+                return False
+
+            content_type = response.headers.get('Content-Type', '').lower()
+            if content_type and not content_type.startswith('image/'):
+                print(f"    Conteudo ignorado: {content_type}")
+                return False
+
+            if len(response.content) < 5000:
+                print(f"    Imagem muito pequena: {len(response.content)} bytes")
+                return False
+
+            try:
+                img = Image.open(io.BytesIO(response.content))
+                img.load()
+            except Exception as e:
+                print(f"    Conteudo nao e imagem valida: {e}")
+                return False
+
+            width, height = img.size
+            if width < 150 or height < 150:
+                print(f"    Imagem muito pequena: {width}x{height}")
+                return False
+
+            is_suitable, reason = self.is_suitable_product_image(img, url)
+            if not is_suitable:
+                print(f"    Imagem inadequada: {reason}")
+                return False
+
+            img = self.process_image_background(img)
+
+            processed_bg = self.analyze_background(img)
+            processed_brightness = float(np.mean(np.array(img.convert('L'))))
+            if processed_bg['type'] == 'black' and processed_bg['confidence'] > 70:
+                print("    Imagem descartada: fundo preto persistiu apos o processamento")
+                return False
+            if processed_brightness < 40:
+                print("    Imagem descartada: ainda ficou escura demais apos o processamento")
+                return False
+
+            filename = product['imagem']
+            if not filename.lower().endswith('.webp'):
+                filename += '.webp'
+
+            filepath = os.path.join(self.image_folder, filename)
+
+            if img.mode in ('RGBA', 'LA', 'P'):
+                img = img.convert('RGB')
+
+            img.save(filepath, 'WEBP', quality=85, optimize=True)
+
+            print(f"    SUCESSO: {filename} ({len(response.content)//1024}KB)")
+            return True
+
+        except Exception as e:
+            print(f"    Erro ao baixar: {e}")
+            return False
+
+    def download_all_missing_images(self, force_codes=None, force_all=False):
+        """Baixa imagens faltantes ou reprocesa os codigos solicitados."""
+        products_to_process = self.get_all_missing_products(force_codes=force_codes, force_all=force_all)
+
+        if not products_to_process:
+            print("Nenhum produto para processar!")
+            return
+
+        print(f"\nINICIANDO DOWNLOAD DE {len(products_to_process)} IMAGENS")
+        print("="*80)
+        print("VERSAO OTIMIZADA COM VALIDACAO DE MARCA/MODELO E FUNDO PRETO")
+        print("="*80)
+
+        successful = 0
+        failed = 0
+
+        for i, product in enumerate(products_to_process, 1):
+            print(f"\n{'='*80}")
+            print(f"PRODUTO {i}/{len(products_to_process)}: {product['nome']}")
+            print(f"CODIGO: {product['codigo']}")
+            print(f"{'='*80}")
+
+            if self.download_single_product_image(product):
+                successful += 1
+                print(f"\nSUCESSO: Imagem baixada para {product['nome']}")
+            else:
+                failed += 1
+                print(f"\nFALHA: Nao foi possivel baixar imagem para {product['nome']}")
+
+            if i % 5 == 0 or i == len(products_to_process):
+                progress = (i / len(products_to_process)) * 100
+                print(f"\n{'='*80}")
+                print(f"PROGRESSO: {progress:.1f}% - Sucesso: {successful}, Falhas: {failed}")
+                print(f"{'='*80}")
+
+            time.sleep(0.1)
+
+        print(f"\n{'='*80}")
+        print("RESUMO FINAL:")
+        print(f"Total processado: {len(products_to_process)}")
+        print(f"Sucessos: {successful}")
+        print(f"Falhas: {failed}")
+        print(f"Taxa de sucesso: {(successful/len(products_to_process))*100:.1f}%")
+        print(f"{'='*80}")
+
     def download_single_product_image(self, product):
-        """Tenta todos os métodos para um único produto - KABUM PRIORITY"""
-        # NOVA ordem: Kabum primeiro, depois os outros
+        """Tenta todos os métodos para um único produto com prioridade em hardware."""
         methods = [
             ("Kabum Priority", lambda: self.method_1_kabum_priority(product)),
-            ("Busca Direta", lambda: self.method_4_direct_product_search(product)),
-            ("Fontes Alternativas", lambda: self.method_3_alternative_sources(product)),
-            ("Requests Google", lambda: self.method_1_requests_google(product)),
-            ("Selenium Google", lambda: self.method_2_selenium_google(product))
+            ("Terabyte Priority", lambda: self.method_2_terabyte_priority(product)),
+            ("Pichau Priority", lambda: self.method_3_pichau_priority(product)),
+            ("Google Fallback", lambda: self.method_1_requests_google(product))
         ]
         
         for method_name, method_func in methods:
@@ -1086,7 +2229,7 @@ class OptimizedPersistentDownloader:
                 print(f"Erro no método {method_name}: {e}")
                 continue
             
-            time.sleep(1)  # Aumentado para mais segurança
+            time.sleep(0.1)
         
         return False
 
@@ -1105,12 +2248,11 @@ def main():
     print("="*80)
     print("MÉTODOS DISPONÍVEIS:")
     print("🥇 MÉTODO 1: Kabum Priority - PRIORIDADE MÁXIMA")
-    print("✅ MÉTODO 2: Busca direta - COM TERMOS ESPECÍFICOS")
-    print("✅ MÉTODO 3: Fontes alternativas - MERCADO LIVRE + ALIEXPRESS")
-    print("✅ MÉTODO 4: Requests Google - COM BUSCA POR FUNDO BRANCO")
-    print("✅ MÉTODO 5: Selenium Google - OTIMIZADO")
-    print("- PRIORIDADE KABUM PARA MELHOR QUALIDADE")
-    print("- EVITA IMAGENS COM FUNDO PRETO")
+    print("✅ MÉTODO 2: Terabyte Priority - VIA BING IMAGES")
+    print("✅ MÉTODO 3: Pichau Priority - VIA BING IMAGES")
+    print("✅ MÉTODO 4: Google Fallback - MAIS RÁPIDO")
+    print("- PRIORIZA LOJAS DE HARDWARE ANTES DO GOOGLE")
+    print("- EVITA FONTES GENÉRICAS E ETAPAS LENTAS")
     print("- REMOVE FUNDO PRETO QUANDO NECESSÁRIO")
     print("- MELHORA QUALIDADE DA IMAGEM")
     print("- REDIMENSIONA PARA TAMANHOS PADRÃO")
@@ -1135,6 +2277,78 @@ def main():
     
     downloader = OptimizedPersistentDownloader()
     downloader.download_all_missing_images()
+
+def parse_code_arguments(raw_values):
+    """Aceita codigos repetidos ou separados por virgula/espaco."""
+    codes = []
+    for raw_value in raw_values or []:
+        for item in re.split(r'[\s,;]+', str(raw_value or '').strip()):
+            if item:
+                codes.append(item)
+    return list(dict.fromkeys(codes))
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Baixa imagens de produtos com validacao mais rigida de marca/modelo."
+    )
+    parser.add_argument(
+        '--codigo',
+        action='append',
+        default=[],
+        help='Reprocessa apenas estes codigos. Pode repetir a flag ou separar por virgula.',
+    )
+    parser.add_argument(
+        '--force-all',
+        action='store_true',
+        help='Reprocessa todos os produtos mesmo se a imagem ja existir.',
+    )
+    args = parser.parse_args()
+    force_codes = parse_code_arguments(args.codigo)
+
+    print("="*80)
+    print("   DOWNLOAD SUPER PERSISTENTE - VERSAO OTIMIZADA V5")
+    print("="*80)
+    print("NOVAS FUNCIONALIDADES:")
+    print("OK KABUM PRIORITY - Busca prioritaria na Kabum")
+    print("OK VALIDACAO DE MARCA E MODELO")
+    print("OK LEITURA DE TITULO/DESCRICAO NO BING")
+    print("OK DETECCAO MELHOR DE FUNDO PRETO")
+    print("OK REPROCESSAMENTO POR CODIGO")
+    print("="*80)
+    print("METODOS DISPONIVEIS:")
+    print("- Metodo 1: Kabum Priority")
+    print("- Metodo 2: Terabyte Priority via Bing Images")
+    print("- Metodo 3: Pichau Priority via Bing Images")
+    print("- Metodo 4: Google Fallback mais conservador")
+    print("="*80)
+    print()
+
+    try:
+        import numpy as np  # noqa: F401
+        print("NumPy encontrado")
+    except ImportError:
+        print("NumPy nao encontrado. Instale com: pip install numpy")
+        return
+
+    try:
+        from scipy import ndimage  # noqa: F401
+        print("SciPy encontrado")
+    except ImportError:
+        print("SciPy nao encontrado. Usando metodo simples de remocao de fundo")
+        print("Para melhor qualidade, instale com: pip install scipy")
+
+    if force_codes:
+        print(f"Codigos solicitados para reprocessar: {', '.join(force_codes)}")
+    if args.force_all:
+        print("Modo force-all ativo: todas as imagens serao reprocessadas.")
+
+    downloader = OptimizedPersistentDownloader()
+    downloader.download_all_missing_images(
+        force_codes=force_codes,
+        force_all=args.force_all,
+    )
+
 
 if __name__ == "__main__":
     main()

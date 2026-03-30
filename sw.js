@@ -1,21 +1,31 @@
 // SERVICE WORKER OTIMIZADO PARA PRIMOS INFORMÁTICA
-const CACHE_NAME = 'primos-informatica-v1.3.0';
-const RUNTIME_CACHE = 'primos-runtime-v1.3.0';
+const APP_VERSION = '20260317-1';
+const ASSET_VERSIONS = {
+  styles: '20260316-1835',
+  script: '20260317-1405',
+  lazyLoading: '20260316-1835',
+  notifications: '20260313-1945',
+  firebaseConfig: '20260317-1405',
+  firebaseOrders: '20260317-1405'
+};
+const CACHE_NAME = `primos-informatica-${APP_VERSION}`;
+const RUNTIME_CACHE = `primos-runtime-${APP_VERSION}`;
 
 // Arquivos essenciais para cache inicial
 const STATIC_CACHE_URLS = [
   '/',
   '/index.html',
-  '/css/styles.min.css',
-  '/js/script.min.js',
-  '/js/common.min.js',
-  '/js/core.min.js',
-  '/js/products.min.js',
-  '/js/cart.min.js',
-  '/images/logo.webp',
-  '/images/favicon.ico',
-  '/images/favicon-32x32.png',
-  '/images/favicon-16x16.png'
+  `/css/styles.css?v=${ASSET_VERSIONS.styles}`,
+  `/js/script.js?v=${ASSET_VERSIONS.script}`,
+  `/js/lazy-loading.js?v=${ASSET_VERSIONS.lazyLoading}`,
+  `/js/notifications.js?v=${ASSET_VERSIONS.notifications}`,
+  `/js/firebase-config.js?v=${ASSET_VERSIONS.firebaseConfig}`,
+  `/js/firebase-orders.js?v=${ASSET_VERSIONS.firebaseOrders}`,
+  '/images/logo.png',
+  '/images/favicons/favicon.ico',
+  '/images/favicons/favicon-32x32.png',
+  '/images/favicons/favicon-16x16.png',
+  '/manifest.json'
 ];
 
 // Instalação - Cache dos arquivos essenciais
@@ -65,6 +75,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const request = event.request;
   const url = new URL(request.url);
+  const isSameOrigin = url.origin === self.location.origin;
   
   // Ignorar requisições de extensões e não-HTTP
   if (request.method !== 'GET' || 
@@ -73,17 +84,21 @@ self.addEventListener('fetch', event => {
       url.pathname.includes('chrome-extension')) {
     return;
   }
+
+  if (!isSameOrigin && !isAPIRequest(request.url)) {
+    return;
+  }
   
   // Estratégias diferentes para diferentes tipos de conteúdo
-  if (isStaticAsset(request.url)) {
+  if (isImageRequest(request.url)) {
+    // Stale While Revalidate para imagens de produto
+    event.respondWith(staleWhileRevalidate(request));
+  } else if (isStaticAsset(request.url)) {
     // Cache First para assets estáticos
     event.respondWith(cacheFirst(request));
   } else if (isAPIRequest(request.url)) {
     // Network First para APIs
     event.respondWith(networkFirst(request));
-  } else if (isImageRequest(request.url)) {
-    // Stale While Revalidate para imagens
-    event.respondWith(staleWhileRevalidate(request));
   } else {
     // Network First para páginas
     event.respondWith(networkFirst(request));
@@ -98,7 +113,7 @@ function cacheFirst(request) {
         return response;
       }
       
-      return fetch(request)
+      return fetch(request, { cache: 'no-cache' })
         .then(response => {
           // Verificar se resposta é válida
           if (!response || response.status !== 200 || response.type === 'error') {
@@ -120,18 +135,18 @@ function cacheFirst(request) {
         })
         .catch(error => {
           console.warn('SW: Erro no fetch:', error);
-          return null;
+          return caches.match(request).then(cached => cached || fallbackResponse(request));
         });
     });
 }
 
 // Estratégia: Network First
 function networkFirst(request) {
-  return fetch(request)
+  return fetch(request, { cache: 'no-cache' })
     .then(response => {
       // Verificar se resposta é válida
       if (!response || response.status !== 200 || response.type === 'error') {
-        return caches.match(request);
+        return caches.match(request).then(cached => cached || fallbackResponse(request));
       }
       
       // Clonar resposta para cache
@@ -150,7 +165,7 @@ function networkFirst(request) {
     .catch(error => {
       console.warn('SW: Erro no fetch network first:', error);
       // Fallback para cache
-      return caches.match(request);
+      return caches.match(request).then(cached => cached || fallbackResponse(request));
     });
 }
 
@@ -158,8 +173,12 @@ function networkFirst(request) {
 function staleWhileRevalidate(request) {
   const cachedResponsePromise = caches.match(request);
   
-  const fetchPromise = fetch(request)
+  const fetchPromise = fetch(request, { cache: 'no-cache' })
     .then(response => {
+      if (!response || response.status !== 200 || response.type === 'error') {
+        return caches.match(request).then(cached => cached || fallbackResponse(request));
+      }
+
       if (response && response.status === 200 && response.type !== 'error') {
         const responseToCache = response.clone();
         caches.open(RUNTIME_CACHE)
@@ -174,7 +193,7 @@ function staleWhileRevalidate(request) {
     })
     .catch(error => {
       console.warn('SW: Erro na requisição:', error);
-      return null;
+      return caches.match(request).then(cached => cached || fallbackResponse(request));
     });
   
   // Retornar cache imediatamente, depois atualizar
@@ -191,7 +210,6 @@ function staleWhileRevalidate(request) {
 function isStaticAsset(url) {
   return url.includes('/css/') || 
          url.includes('/js/') || 
-         url.includes('/images/') ||
          url.endsWith('.css') ||
          url.endsWith('.js') ||
          url.endsWith('.woff') ||
@@ -211,6 +229,20 @@ function isImageRequest(url) {
          url.includes('.webp') ||
          url.includes('.gif') ||
          url.includes('/images/');
+}
+
+function fallbackResponse(request) {
+  if (request.mode === 'navigate') {
+    return caches.match('/index.html').then(response => {
+      if (response) {
+        return response;
+      }
+
+      return caches.match('/').then(rootResponse => rootResponse || Response.error());
+    });
+  }
+
+  return Promise.resolve(Response.error());
 }
 
 // Limpeza periódica do cache runtime

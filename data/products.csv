@@ -1,7 +1,7 @@
 codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1006;MONITOR 19 HAYOM MO6001;monitor;285,00;1;Monitor 19 MO6001;Hayom;nao;monitor-hayom-19-mo6001.webp
 400772;MONITOR 21.5 PHILIPS LED FULL HD 221V8 WVA HDMI;monitor;825,00;1;Monitor 21.5 Full HD 221V8 WVA HDMI;Philips;nao;monitor-philips-215-fullhd-221v8.webp
-1117;MONITOR 15.4 HAYOM MO 6006;monitor;300,00;1;Monitor 15.4 MO6006;Hayom;nao;monitor-hayom-154-mo6006.webp
+1117;MONITOR 15.4 HAYOM MO 6006;monitor;300,00;0;Monitor 15.4 MO6006;Hayom;nao;monitor-hayom-154-mo6006.webp
 1115;MONITOR 17.1 HAYOM MO6004;monitor;330,00;1;Monitor 17.1 MO6004;Hayom;nao;monitor-hayom-171-mo6004.webp
 1419;GABINETE ATX HAYOM 171023;gabinetes;172,00;3;Gabinete ATX HAYOM 171023;Hayom;nao;gabinete-hayom-171023.webp
 402663;GABINETE ATX HAYOM 171050;gabinetes;172,00;1;Gabinete ATX HAYOM 171050;Hayom;nao;gabinete-hayom-171050.webp
@@ -56,7 +56,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1950;PLACA MAE BRAZILPC H510 1200 DDR4;placa mãe;605,00;1;Placa-mãe H510 socket LGA1200 DDR4;BrazilPC;nao;placa-mae-brazilpc-h510.webp
 1659;CAIXA DE SOM JBL BOOMBOX 3 BLACK;audio;3102,45;1;Caixa de som bluetooth JBL Boombox 3 IPX7;JBL;nao;jbl-boombox-3-black.webp
 1967;KVM 2 PORTAS SWITCH USB;Redes;155,00;1;Switch KVM USB com 2 portas;Generico;nao;kvm-2-portas-usb.webp
-1499;SPLITTER HDMI 8 PORTAS KNUK PK-SW100;acessorios;180,00;1;Splitter HDMI com 8 portas;Knuk;nao;splitter-hdmi-8-portas.webp
+1499;SPLITTER HDMI 8 PORTAS KNUK PK-SW100;Switch;180,00;1;Splitter HDMI com 8 portas;Knuk;nao;splitter-hdmi-8-portas.webp
 1951;CABO DE REDE CAT6 305M LAN MAX;cabos;860,00;1;Cabo de rede CAT6 caixa 305 metros;Lan Max;nao;cabo-rede-cat6-305m-lanmax.webp
 1948;CABO DE REDE CAT6 100M AZUL MPT;cabos;261,00;1;Cabo de rede CAT6 azul caixa 100 metros;MPT;nao;cabo-rede-cat6-100m-mpt.webp
 1592;CABO DE REDE CAT6 305M SOHPLUS AZUL;cabos;1333,00;1;Cabo de rede CAT6 azul caixa 305 metros;Sohplus;nao;cabo-rede-cat6-305m-sohplus.webp
@@ -91,7 +91,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1841;TECLADO LOGITECH GAMER G413SE;teclado;585,00;1;Teclado gamer G413SE;Logitech;nao;teclado-logitech-g413se.webp
 402216;MINI TECLADO MULTILASER MEC GK-510;teclado;195,00;1;Mini teclado mecânico GK-510;Multilaser;sim;teclado-multilaser-gk510.webp
 1243;MINI TECLADO TOUCHPAD WIRELESS KEYBOARD KNUP VERDE;teclado;45,00;1;Mini teclado touchpad wireless verde;Knup;nao;mini-teclado-knup-verde.webp
-2133;KIT TECLADO E MOUSE WIRELESS FATSC40 FEASSO 495;kit-teclado-mouse;250,00;1;Kit teclado e mouse FATSC40;Feasso;nao;kit-feasso-fatsc40.webp
+3017;KIT TECLADO E MOUSE WIRELESS FATSC40 FEASSO 495;kit-teclado-mouse;250,00;1;Kit teclado e mouse FATSC40;Feasso;nao;kit-feasso-fatsc40.webp
 1146;TECLADO USB PRETO BPC-8236 BRAZIL;teclado;25,00;1;Teclado USB preto BPC-8236;BPC;nao;teclado-bpc-8236.webp
 1231;TECLADO NUMERICO KNUP;teclado;40,00;1;Teclado numérico Knup;Knup;nao;teclado-numerico-knup.webp
 1696;KIT TECLADO E MOUSE 5 FIO OFFICER FORTREK CW11;kit-teclado-mouse;76,09;1;Kit teclado e mouse CW11;Fortrek;nao;kit-fortrek-cw11.webp
@@ -151,7 +151,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1572;PLACA DE VÍDEO NVIDIA GT740 2GB DDR3 BLUECASE;placa de vídeo;363,00;1;GT740 2GB DDR3 128 bits BlueCase;NVIDIA;nao;gt740.webp
 1571;PLACA DE VÍDEO NVIDIA GT710 2GB DDR3 HOOPSON;placa de vídeo;435,00;1;GT710 2GB DDR3 64 bits Hoopson;NVIDIA;nao;gt710.webp
 401640;PLACA DE VÍDEO AMD R5 230 2GB DDR3 PCYES;placa de vídeo;240,00;2;Radeon R5 230 2GB DDR3 64 bits PCYes;AMD;nao;r5230.webp
-1046;PLACA DE VÍDEO AMD RX570 8GB DDR5 PCYES;placa de vídeo;1190,00;2;RX570 8GB DDR5 256 bits PCYes;AMD;nao;rx570.webp
+1046;PLACA DE VÍDEO AMD RX570 8GB DDR5 PCYES;placa de vídeo;1099,00;0;RX570 8GB DDR5 256 bits PCYes;AMD;nao;rx570.webp
 1899;PLACA DE VÍDEO NVIDIA GTX1050 4GB DDR5 GALAX;placa de vídeo;1190,00;2;GTX 1050 4GB DDR5 128 bits Galax;NVIDIA;nao;gtx1050.webp
 402270;PLACA DE VÍDEO NVIDIA GTX1050 TI 4GB DDR5 ASUS;placa de vídeo;1530,00;2;GTX 1050 Ti 4GB DDR5 128 bits ASUS;NVIDIA;nao;gtx1050ti.webp
 401807;PLACA DE VÍDEO NVIDIA GTX1660 6GB DDR5 GALAX;placa de vídeo;1534,50;0;GTX 1660 6GB DDR5 192 bits Galax;NVIDIA;nao;gtx1660.webp
@@ -204,3 +204,44 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 3012;MEMORIA DDR4 8GB 3200MHZ KINGSTON CL22;memória;625,00;0;Memória DDR4 8GB 3200MHz Kingston CL22;Kingston;nao;memoria-ddr4-8gb-3200-kingston.webp
 3013;PASTA P/ NOTEBOOK 15.6 SKY LONA POLIESTER 600;acessórios;53,00;10;Pasta p/ Notebook 15.6 Sky Lona Poliéster 600;Sky;nao;pasta-notebook-156-sky-lona.webp
 3014;PASTA P/ NOTEBOOK 15.6 SKY POLIPROPILENO CORES;acessórios;90,00;8;Pasta p/ Notebook 15.6 Sky Polipropileno Cores;Sky;nao;pasta-notebook-156-sky-pp.webp
+3015;PLACA DE VÍDEO AMD RX 580 8GB GDDR5 VINIK;placa de vídeo;1243,00;1;AMD RX 580 8GB GDDR5 Vinik;Vinik;nao;rx580vinik.webp
+3016;PLACA DE VÍDEO AMD RX 590 GME MONARCH DRAGON;placa de vídeo;1100,00;1;AMD RX 590 GME Monarch Dragon;AMD;nao;rx590monarch.webp
+1526;TRANSFORMADOR 1500 VA BIVOLT 220/115V PRATIC;energia;177,00;4;Transformador 1500VA bivolt 220/115V Pratic;Pratic;nao;transformador-1500va-bivolt-pratic.webp
+2152;TRANSFORMADOR 2000 VA BIVOLT 220/115V PRATIK;energia;210,00;2;Transformador 2000VA bivolt 220/115V Pratik;Pratik;nao;transformador-2000va-bivolt-pratik.webp
+2151;BATERIA PIONEIRO NOBREAK 12V 9AH NT12-9F2;bateria;130,00;20;Bateria Pioneiro p/ Nobreak 12V 9Ah NT12-9F2;Pioneiro;nao;bateria-pioneiro-12v-9ah-nt12-9f2.webp
+2150;BATERIA PIONEIRO NOBREAK 12V 7AH NT12-7F2;bateria;96,00;42;Bateria Pioneiro p/ Nobreak 12V 7Ah NT12-7F2;Pioneiro;nao;bateria-pioneiro-12v-7ah-nt12-7f2.webp
+2148;FONE BLUETOOTH OWS-Y7 WIRELESS AJ-D58-H;audio;75,00;2;Fone bluetooth OWS-Y7 wireless AJ-D58-H;Generico;nao;fone-bluetooth-ows-y7-aj-d58-h.webp
+2145;FITA CREPE 25MM 50MTS STARTOOLS;acessórios;10,50;10;Fita crepe 25mm 50mts Startools;Startools;nao;fita-crepe-25mm-50mts-startools.webp
+2143;ADAPTADOR HDMI X MICRO HDMI SEGATO 3157;adaptadores;15,00;5;Adaptador HDMI x Micro HDMI Segato 3157;Segato;nao;adaptador-hdmi-micro-hdmi-segato-3157.webp
+2144;CHAVE DE FENDA 1X1 1/4 X 6;acessórios;17,00;5;Chave de fenda 1x1 1/4 x 6;Generico;nao;chave-de-fenda-1x1-1-4x6.webp
+2146;ABRACADEIRA TRI CM100/150/200 0,25CM TROYATOOLS;acessórios;5,00;4;Abracadeira TRI CM100/150/200 0,25cm Troyatools;Troyatools;nao;abracadeira-tri-cm100-150-200-025cm-troyatools.webp
+1642;ESTABILIZADOR MCM 1500VA BIVOLT;energia;578,00;6;Estabilizador MCM 1500VA bivolt;MCM;nao;estabilizador-mcm-1500va-bivolt.webp
+1407;MEMORIA DDR4 8GB 2666 MHZ KINGSTON KVR26N19S8/8;memória;718,00;3;Memoria DDR4 8GB 2666MHz Kingston KVR26N19S8/8;Kingston;nao;memoria-ddr4-8gb-2666-kingston-kvr26n19s8-8.webp
+2142;PLACA DE VIDEO 8GB MIGOL RX590 DDR5 RADEON 128 BIT;placa de vídeo;1100,00;1;Placa de video RX590 8GB DDR5 Radeon 128 bits Migol;Migol;nao;rx590-migol-8gb-ddr5-128bit.webp
+2057;CARREGADOR PORTATIL 20.000 MAH KIMASTER KR-932;acessórios;150,00;1;Carregador portatil 20000mAh Kimaster KR-932;Kimaster;nao;carregador-portatil-kimaster-kr932-20000mah.webp
+2129;COOLER UNIVERSAL P INTEL E AMD GRANDE HAYOM FC1313;cooler;45,00;5;Cooler universal para Intel e AMD grande Hayom FC1313;Hayom;nao;cooler-universal-hayom-fc1313.webp
+2130;FONTE ATX 500W REAL HAYOM PW1653;fonte;150,00;17;Fonte ATX 500W real Hayom PW1653;Hayom;nao;hayom-fonte-atx-500w-pw1653.webp
+2134;CARREGADOR PORTATIL 10.000 MAH KIMASTER KR-937;acessórios;135,00;1;Carregador portatil 10000mAh Kimaster KR-937;Kimaster;nao;carregador-portatil-kimaster-kr937-10000mah.webp
+2137;CARREGADOR PORTATIL 20.000 MAH PEINING WUP-939;acessórios;93,00;1;Carregador portatil 20000mAh Peining WUP-939;Peining;nao;carregador-portatil-peining-wup-939-20000mah.webp
+2136;CARREGADOR PORTATIL 20.000 MAH PEINING WUP-379;acessórios;115,00;1;Carregador portatil 20000mAh Peining WUP-379;Peining;nao;carregador-portatil-peining-wup-379-20000mah.webp
+1437;CABO HDMI 1.5 MTS HAYOM;cabos;16,00;47;Cabo HDMI 1.5 metros Hayom;Hayom;nao;cabo-hdmi-15m-hayom.webp
+2141;CARREGADOR CELULAR USB X USB C;acessórios;55,00;5;Carregador celular USB x USB-C;Generico;nao;carregador-celular-usb-usbc.webp
+2135;CARREGADOR PORTATIL 10.000MAH PEINING PRETO WUP-653;acessórios;92,00;1;Carregador portatil 10000mAh Peining preto WUP-653;Peining;nao;carregador-portatil-peining-wup-653-10000mah-preto.webp
+2139;CARREGADOR PORTATIL 5.000 MAH KAIDI KD-995;acessórios;80,00;1;Carregador portatil 5000mAh Kaidi KD-995;Kaidi;nao;carregador-portatil-kaidi-kd995-5000mah.webp
+2131;CAIXA DE SOM B-MAX USB BM-S205;audio;25,00;5;Caixa de som B-Max USB BM-S205;B-Max;nao;caixa-som-bmax-usb-bm-s205.webp
+2128;KIT FERRAMENTA 129 PECAS FASTERR FST 129;acessórios;170,00;1;Kit ferramenta 129 pecas Fasterr FST 129;Fasterr;nao;kit-ferramenta-fasterr-fst129-129pecas.webp
+2138;CARREGADOR PORTATIL 20.000MAH KAPBOM PRETO KA-9756;acessórios;95,00;1;Carregador portatil 20000mAh Kapbom preto KA-9756;Kapbom;nao;carregador-portatil-kapbom-ka9756-20000mah-preto.webp
+1704;FONE BLUETOOTH PHILIPS TAH2209BK/00 PRETO;audio;145,00;3;Fone bluetooth Philips TAH2209BK/00 preto;Philips;nao;fone-bluetooth-philips-tah2209bk-00-preto.webp
+2119;FONTE REAL 500W ATX AEROCOOL KCAS 80 PLUS 59765;fonte;320,00;2;Fonte real 500W ATX Aerocool KCAS 80 Plus 59765;Aerocool;nao;aerocool-kcas-500w-59765.webp
+2123;PASTA TERMICA FORTREK 3G FREEZY LIGHT;acessórios;15,00;5;Pasta termica Fortrek 3g Freezy Light;Fortrek;nao;pasta-termica-fortrek-freezy-light-3g.webp
+2124;LIMPA TELA 60ML C/LENCO FORTREK;acessórios;15,00;20;Limpa tela 60ml com lenco Fortrek;Fortrek;nao;limpa-tela-fortrek-60ml-lenco.webp
+2125;AR COMPRIMIDO 200G / 164ML AIR DUSTER IMPLASTEC;acessórios;50,00;13;Ar comprimido 200g / 164ml Air Duster Implastec;Implastec;nao;ar-comprimido-implastec-air-duster-200g.webp
+2121;FONE C/ MICROFONE PHILIPS TAUE101BK PRETO;audio;35,00;6;Fone com microfone Philips TAUE101BK preto;Philips;nao;fone-philips-taue101bk-preto.webp
+1078;FONTE REAL 600W ATX AEROCOOL KCAS 80 PLUS 64802;fonte;355,00;2;Fonte real 600W ATX Aerocool KCAS 80 Plus 64802;Aerocool;nao;aerocool-kcas-600w-64802.webp
+2120;FONTE REAL 400W ATX AEROCOOL KCAS FC 64901;fonte;268,00;4;Fonte real 400W ATX Aerocool KCAS FC 64901;Aerocool;nao;aerocool-kcas-fc-400w-64901.webp
+2118;FONTE REAL 500W ATX AEROCOOL VX 500;fonte;205,00;4;Fonte real 500W ATX Aerocool VX 500;Aerocool;nao;aerocool-vx500.webp
+1256;BATERIA 12V 23A ALKALINE;bateria;8,00;17;Bateria 12V 23A alkaline;Generico;nao;bateria-12v-23a-alkaline.webp
+2127;SUPORTE MOVEL FORTREK TV MONITOR FK441S;acessórios;386,00;3;Suporte movel Fortrek TV/Monitor FK441S;Fortrek;nao;suporte-movel-fortrek-tv-monitor-fk441s.webp
+1563;FONE C/ MICROFONE HEADSET USB FORTREK FK731A;audio;86,00;49;Headset USB Fortrek FK731A com microfone;Fortrek;nao;headset-usb-fortrek-fk731a.webp
+1586;FILTRO DE LINHA DPS 3P ICLAMPER ENERGIA 5 PRETO;energia;86,00;2;Filtro de linha DPS 3P iClamper Energia 5 preto;Clamper;nao;filtro-linha-iclamper-energia-5-preto.webp
+2133;CARREGADOR PORTATIL 10.000MAH PEINING PRETO WUP-832;acessórios;120,00;1;Carregador portatil 10000mAh Peining preto WUP-832;Peining;nao;carregador-portatil-peining-wup-832-10000mah-preto.webp

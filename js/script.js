@@ -1,5 +1,128 @@
 // === CONTROLE DE DEBUG ===
 const DEBUG = false;
+const PRODUCT_IMAGE_VERSION = '20260313-1908';
+const STORE_INFO = Object.freeze({
+  whatsappNumber: '556133406740',
+  whatsappDisplay: '(61) 3340-6740',
+  email: 'marketing.primosinfo@gmail.com',
+  streetAddress: 'CLN 208 Bloco A Loja 11',
+  neighborhood: 'Asa Norte',
+  city: 'Brasilia',
+  region: 'DF',
+  postalCode: '70853-510',
+  businessHours: 'Seg-Sex: 9h-18h | Sab 9h-13h'
+});
+
+function formatCurrencyBRL(value) {
+  return value.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  });
+}
+
+function getInstallmentPlan(value) {
+  const safeValue = Number.isFinite(value) ? value : 0;
+  let count = 1;
+
+  if (safeValue >= 4000) {
+    count = 12;
+  } else if (safeValue >= 1800) {
+    count = 10;
+  } else if (safeValue >= 700) {
+    count = 6;
+  } else if (safeValue >= 300) {
+    count = 3;
+  }
+
+  return {
+    count,
+    value: safeValue / count
+  };
+}
+
+function getStoreAddressLine() {
+  return `${STORE_INFO.streetAddress}, ${STORE_INFO.neighborhood}, ${STORE_INFO.city} - ${STORE_INFO.region}`;
+}
+
+function buildWhatsAppUrl(message) {
+  return `https://wa.me/${STORE_INFO.whatsappNumber}?text=${encodeURIComponent(message)}`;
+}
+
+function parseNumericValue(value, fallback = 0) {
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? value : fallback;
+  }
+
+  const normalized = String(value ?? '')
+    .replace(/\s/g, '')
+    .replace(/\.(?=\d{3}(?:\D|$))/g, '')
+    .replace(',', '.')
+    .replace(/[^0-9.-]/g, '');
+
+  const parsed = parseFloat(normalized);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function getProductPriceMeta(product = {}) {
+  const currentPrice = parseNumericValue(product.preco, 0);
+  const explicitOriginalPrice = parseNumericValue(product.precoOriginal, 0);
+  const explicitDiscount = Math.max(0, Math.min(100, parseNumericValue(product.desconto, 0)));
+  const isMarkedPromo = product.promocao === true || product.promocao === 'sim';
+
+  let originalPrice = explicitOriginalPrice > currentPrice ? explicitOriginalPrice : 0;
+  let discountPercent = explicitDiscount;
+
+  if (!originalPrice && discountPercent > 0 && currentPrice > 0) {
+    const discountFactor = 1 - discountPercent / 100;
+    if (discountFactor > 0) {
+      originalPrice = currentPrice / discountFactor;
+    }
+  }
+
+  if (!originalPrice && isMarkedPromo && currentPrice > 0) {
+    originalPrice = currentPrice / 0.93;
+  }
+
+  if (!discountPercent && originalPrice > currentPrice && originalPrice > 0) {
+    discountPercent = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+  }
+
+  if (!discountPercent && isMarkedPromo) {
+    discountPercent = 7;
+  }
+
+  const hasDiscount = originalPrice > currentPrice && discountPercent > 0;
+  const normalizedOriginalPrice = hasDiscount ? Number(originalPrice.toFixed(2)) : 0;
+  const savings = hasDiscount ? Number((normalizedOriginalPrice - currentPrice).toFixed(2)) : 0;
+
+  return {
+    currentPrice,
+    formattedCurrent: formatCurrencyBRL(currentPrice),
+    originalPrice: normalizedOriginalPrice,
+    formattedOriginal: hasDiscount ? formatCurrencyBRL(normalizedOriginalPrice) : '',
+    discountPercent,
+    hasDiscount,
+    savings,
+    formattedSavings: hasDiscount ? formatCurrencyBRL(savings) : ''
+  };
+}
+
+function getProductImagePath(productOrImage, fallbackImage = 'placeholder.webp') {
+  let imageName = fallbackImage;
+
+  if (typeof productOrImage === 'string' && productOrImage.trim()) {
+    imageName = productOrImage.trim();
+  } else if (productOrImage && typeof productOrImage === 'object') {
+    imageName = productOrImage.imagem || (productOrImage.codigo ? productOrImage.codigo + '.webp' : fallbackImage);
+  }
+
+  const separator = imageName.includes('?') ? '&' : '?';
+  return `/images/products/thumbnail/${imageName}${separator}v=${PRODUCT_IMAGE_VERSION}`;
+}
+
+function getProductImageAbsoluteUrl(productOrImage, fallbackImage = 'placeholder.webp') {
+  return `https://primos-informatica-ecommerce.web.app${getProductImagePath(productOrImage, fallbackImage)}`;
+}
 
 // === CONTROLE DE SCROLL RESTORATION ===
 // Impedir restauração automática de scroll do navegador
@@ -117,6 +240,30 @@ function aggressivePlaceholderCleanup() {
   });
 }
 
+const PLACEHOLDER_CLEANUP_DELAYS = [100, 500, 2000];
+let placeholderCleanupTimers = [];
+
+function runPlaceholderCleanup() {
+  cleanupStalePlaceholders();
+  aggressivePlaceholderCleanup();
+}
+
+function schedulePlaceholderCleanup(delay = 150) {
+  const timerId = window.setTimeout(() => {
+    placeholderCleanupTimers = placeholderCleanupTimers.filter(id => id !== timerId);
+    runPlaceholderCleanup();
+  }, delay);
+
+  placeholderCleanupTimers.push(timerId);
+  return timerId;
+}
+
+function schedulePlaceholderCleanupBurst(delays = PLACEHOLDER_CLEANUP_DELAYS) {
+  placeholderCleanupTimers.forEach(clearTimeout);
+  placeholderCleanupTimers = [];
+  delays.forEach(delay => schedulePlaceholderCleanup(delay));
+}
+
 // === CONTROLE DE SCROLL RESTORATION ===
 // Impedir restauração automática de scroll do navegador
 if ('scrollRestoration' in history) {
@@ -133,13 +280,8 @@ if (document.readyState === 'loading') {
 window.addEventListener('load', function() {
   forceScrollToTop();
   // Limpar placeholders após carregamento completo da página
-  setTimeout(cleanupStalePlaceholders, 100);
-  setTimeout(aggressivePlaceholderCleanup, 500);
-  setTimeout(aggressivePlaceholderCleanup, 2000);
+  schedulePlaceholderCleanupBurst();
 });
-
-// Executar limpeza agressiva periodicamente
-setInterval(aggressivePlaceholderCleanup, 5000);
 
 // === SISTEMA DE ROTEAMENTO (SEO 2.3) ===
 function initRouter() {
@@ -229,11 +371,18 @@ function initRouter() {
 class AdvancedLazyLoader {
   constructor() {
     this.observer = null;
-    this.loadedImages = new Set();
+    this.loadedImages = new WeakSet();
+    this.loadingImages = new WeakSet();
+    this.retryCounts = new WeakMap();
+    this.maxRetries = 1;
     this.init();
   }
   
   init() {
+    if (!('IntersectionObserver' in window)) {
+      return;
+    }
+
     // Criar Intersection Observer com threshold otimizado
     this.observer = new IntersectionObserver(
       this.handleIntersection.bind(this),
@@ -250,8 +399,12 @@ class AdvancedLazyLoader {
     this.preloadCriticalImages();
   }
   
-  observeImages() {
-    const images = document.querySelectorAll('img[data-src]');
+  observeImages(container = document) {
+    if (!this.observer) {
+      return;
+    }
+
+    const images = container.querySelectorAll('img[data-src]:not(.loaded):not(.loading)');
     images.forEach(img => this.observer.observe(img));
   }
   
@@ -271,45 +424,64 @@ class AdvancedLazyLoader {
   }
   
   loadImage(img, isCritical = false) {
-    const src = img.dataset.src;
-    if (!src || this.loadedImages.has(src)) return;
-    
-    this.loadedImages.add(src);
+    const src = img && img.dataset ? img.dataset.src : '';
+    if (!src || this.loadedImages.has(img) || this.loadingImages.has(img)) return;
+
+    this.loadingImages.add(img);
+    img.classList.add('loading');
+    img.loading = isCritical ? 'eager' : 'lazy';
+    img.decoding = 'async';
     
     // Criar nova imagem para pré-carregar
     const newImg = new Image();
-    
+    newImg.decoding = 'async';
+
     newImg.onload = () => {
-      // Aplicar imagem com fade suave
-      img.style.opacity = '0';
+      this.loadingImages.delete(img);
+      this.loadedImages.add(img);
+      this.retryCounts.delete(img);
+
       img.src = src;
       img.removeAttribute('data-src');
+      img.removeAttribute('data-fallback-tried');
+      img.classList.remove('loading');
       img.classList.add('loaded');
-      
-      // Fade in
-      requestAnimationFrame(() => {
-        img.style.transition = 'opacity 0.3s ease';
-        img.style.opacity = '1';
-      });
+      img.style.opacity = '';
+      schedulePlaceholderCleanup(120);
     };
-    
+
     newImg.onerror = () => {
-      // Fallback para placeholder
-      img.src = '/images/products/thumbnail/placeholder.webp';
+      this.loadingImages.delete(img);
+      img.classList.remove('loading');
+
+      const retryCount = this.retryCounts.get(img) || 0;
+      if (retryCount < this.maxRetries) {
+        this.retryCounts.set(img, retryCount + 1);
+        setTimeout(() => this.loadImage(img, isCritical), 350 * (retryCount + 1));
+        return;
+      }
+
+      if (/\.webp(\?.*)?$/i.test(src) && img.dataset.fallbackTried !== '1') {
+        img.dataset.fallbackTried = '1';
+        img.dataset.src = src.replace(/\.webp(\?.*)?$/i, '.jpg$1');
+        setTimeout(() => this.loadImage(img, isCritical), 0);
+        return;
+      }
+
+      this.loadedImages.add(img);
+      img.src = getProductImagePath('placeholder.webp');
       img.removeAttribute('data-src');
+      img.removeAttribute('data-fallback-tried');
+      img.classList.add('loaded');
+      schedulePlaceholderCleanup(120);
     };
-    
-    // Iniciar carregamento
+
     newImg.src = src;
-    
-    // Adicionar atributos de performance
-    img.loading = isCritical ? 'eager' : 'lazy';
-    img.decoding = 'async';
   }
   
   // Método para observar novas imagens (para conteúdo dinâmico)
-  observeNewImages() {
-    this.observeImages();
+  observeNewImages(container = document) {
+    this.observeImages(container);
   }
 }
 
@@ -390,12 +562,12 @@ function trackProductView(product) {
   if (typeof gtag !== 'undefined') {
     gtag('event', 'view_item', {
       currency: 'BRL',
-      value: parseFloat((product.preco || '0').replace(',', '.')),
+      value: parseFloat(String(product.preco || '0').replace(',', '.')),
       items: [{
         item_id: product.codigo,
         item_name: product.nome,
         category: product.categoria,
-        price: parseFloat((product.preco || '0').replace(',', '.')),
+        price: parseFloat(String(product.preco || '0').replace(',', '.')),
         quantity: 1
       }]
     });
@@ -409,12 +581,12 @@ function trackAddToCart(product) {
   if (typeof gtag !== 'undefined') {
     gtag('event', 'add_to_cart', {
       currency: 'BRL',
-      value: parseFloat((product.preco || '0').replace(',', '.')),
+      value: parseFloat(String(product.preco || '0').replace(',', '.')),
       items: [{
         item_id: product.codigo,
         item_name: product.nome,
         category: product.categoria,
-        price: parseFloat((product.preco || '0').replace(',', '.')),
+        price: parseFloat(String(product.preco || '0').replace(',', '.')),
         quantity: 1
       }]
     });
@@ -428,7 +600,7 @@ function trackWhatsAppClick(product) {
   if (typeof gtag !== 'undefined') {
     gtag('event', 'generate_lead', {
       currency: 'BRL',
-      value: parseFloat((product.preco || '0').replace(',', '.')),
+      value: parseFloat(String(product.preco || '0').replace(',', '.')),
       lead_source: 'whatsapp',
       item_id: product.codigo,
       item_name: product.nome
@@ -444,6 +616,9 @@ function showProduct(productSlug) {
   resetNavigation();
   cleanupStalePlaceholders();
   aggressivePlaceholderCleanup();
+  
+  // Resetar flag de categorias para permitir reexecução
+  window._categoriesPopulated = false;
   
   // Limpar observer anterior
   if (window.currentObserver) {
@@ -511,11 +686,21 @@ function showProductNotFound(slug) {
 }
 
 function renderProductPage(product, container) {
-  const price = (product.preco || '0').replace(',', '.');
-  const formattedPrice = parseFloat(price).toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
-  });
+  const priceMeta = getProductPriceMeta(product);
+  const numericPrice = priceMeta.currentPrice;
+  const formattedPrice = priceMeta.formattedCurrent;
+  const installmentPlan = getInstallmentPlan(numericPrice);
+  const formattedInstallmentValue = formatCurrencyBRL(installmentPlan.value);
+  const paymentSummary = installmentPlan.count > 1 ?
+    `ou em ate ${installmentPlan.count}x de ${formattedInstallmentValue} no cartao` :
+    'compre a vista no PIX ou transferencia';
+  const deliverySummary = product.qt > 0 ?
+    'Entrega em Brasilia entre 2h e 24h, conforme CEP.' :
+    'Prazo sob consulta para novo estoque.';
+  const pickupSummary = product.qt > 0 ?
+    'Retirada no mesmo dia apos confirmacao de estoque.' :
+    'Consulte disponibilidade para retirada na loja.';
+  const productWhatsAppUrl = buildWhatsAppUrl(`Ola! Tenho interesse no produto: ${product.nome}`);
   
   const availability = product.qt > 0 ? 'Em Estoque' : 'Fora de Estoque';
   const availabilityClass = product.qt > 0 ? 'in-stock' : 'out-of-stock';
@@ -530,6 +715,19 @@ function renderProductPage(product, container) {
   const averageRating = calculateAverageRating(reviews);
   const reviewCount = reviews.length;
   const stars = generateStars(averageRating, product.codigo);
+  const promoPriceHTML = priceMeta.hasDiscount ? `
+              <div class="promo-discount-info">
+                <span class="original-price">${priceMeta.formattedOriginal}</span>
+                <span class="discount-badge">-${priceMeta.discountPercent}%</span>
+              </div>
+            ` : '';
+  const modelDetailHTML = product.modelo ? `
+                <div class="detail-item">
+                  <span class="detail-label">Modelo:</span>
+                  <span class="detail-value">${product.modelo}</span>
+                </div>
+              ` : '';
+  const modelMetaHTML = product.modelo ? `<span class="product-model">Modelo: ${product.modelo}</span>` : '';
   
   container.innerHTML = `
     <div class="product-container">
@@ -544,16 +742,16 @@ function renderProductPage(product, container) {
       <div class="product-content">
         <div class="product-image-section">
           <div class="main-product-image">
-            <img src="/images/products/large/${product.imagem || product.codigo + '.webp'}" 
+            <img src="${getProductImagePath(product, 'default.webp')}" 
                  alt="${product.nome}" 
-                 onerror="this.src='/images/products/large/placeholder.webp'">
+                 onerror="this.onerror=null;this.src='${getProductImagePath('default.webp', 'default.webp')}';">
           </div>
           
           <!-- Selos de confiança -->
           <div class="trust-badges">
-            <div class="trust-badge">✓ Entrega em Brasília</div>
-            <div class="trust-badge">✓ Garantia do Fabricante</div>
-            <div class="trust-badge">✓ Suporte Técnico</div>
+            <div class="trust-badge">Entrega rápida em Brasília</div>
+            <div class="trust-badge">Nota fiscal e garantia</div>
+            <div class="trust-badge">Retirada na CLN 208</div>
           </div>
         </div>
         
@@ -574,8 +772,28 @@ function renderProductPage(product, container) {
           <!-- Preço com destaque máximo -->
           <div class="product-price-section">
             <div class="price-wrapper">
+              ${promoPriceHTML}
               <div class="product-price">${formattedPrice}</div>
-              <div class="price-info">à vista no PIX/Transferência</div>
+              <div class="price-info">à vista no PIX ou transferência</div>
+              <div class="price-installment">${paymentSummary}</div>
+            </div>
+            
+            <div class="price-benefits-grid">
+              <div class="price-benefit-card">
+                <span class="price-benefit-label">Entrega</span>
+                <strong>${deliverySummary}</strong>
+                <small>Cálculo final no checkout.</small>
+              </div>
+              <div class="price-benefit-card">
+                <span class="price-benefit-label">Retirada</span>
+                <strong>${pickupSummary}</strong>
+                <small>${getStoreAddressLine()}</small>
+              </div>
+              <div class="price-benefit-card">
+                <span class="price-benefit-label">Compra segura</span>
+                <strong>Atendimento humano, loja física e suporte técnico.</strong>
+                <small>${STORE_INFO.businessHours}</small>
+              </div>
             </div>
             
             <!-- Disponibilidade com urgência -->
@@ -585,12 +803,50 @@ function renderProductPage(product, container) {
             </div>
             
             ${urgencyBadge}
+
+            <ul class="purchase-benefits">
+              <li>Parcelamento e retirada aparecem antes do checkout.</li>
+              <li>Atendimento pelo WhatsApp para confirmar compatibilidade e prazo.</li>
+              <li>Produto original com suporte e retirada em loja física.</li>
+            </ul>
           </div>
           
-          <!-- Descrição otimizada -->
+          <!-- Descrição completa e detalhada -->
           <div class="product-description">
-            <h3>Descrição</h3>
-            <p>${product.descricao || `Produto de alta qualidade da ${product.marca || 'marca'} com garantia e suporte técnico em Brasília.`}</p>
+            <h3>Descrição Completa</h3>
+            <div class="description-content">
+              <p class="main-description">${product.descricao || `Produto de alta qualidade da ${product.marca || 'marca'} com garantia e suporte técnico em Brasília.`}</p>
+              
+              <div class="description-details">
+                <div class="detail-item">
+                  <span class="detail-label">Categoria:</span>
+                  <span class="detail-value">${product.categoria || 'Geral'}</span>
+                </div>
+                ${modelDetailHTML}
+                <div class="detail-item">
+                  <span class="detail-label">Marca:</span>
+                  <span class="detail-value">${product.marca || 'Premium'}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Código:</span>
+                  <span class="detail-value">#${product.codigo}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Garantia:</span>
+                  <span class="detail-value">12 meses fabricante</span>
+                </div>
+              </div>
+              
+              <div class="description-features">
+                <h4>✨ Benefícios</h4>
+                <ul>
+                  <li>✅ Entrega rápida em Brasília</li>
+                  <li>✅ Suporte técnico especializado</li>
+                  <li>✅ Garantia do fabricante</li>
+                  <li>✅ Produto original com nota fiscal</li>
+                </ul>
+              </div>
+            </div>
           </div>
           
           <!-- CTA Principal (Foco Máximo) -->
@@ -603,26 +859,27 @@ function renderProductPage(product, container) {
             
             <!-- Indicador de segurança -->
             <div class="security-indicator">
-              🔒 Compra 100% segura
+              Compra com apoio de loja física e atendimento comercial rápido
             </div>
           </div>
           
           <!-- WhatsApp como CTA Secundário -->
           <div class="product-actions-secondary">
             <div class="divider">ou</div>
-            <a href="https://wa.me/556133406740?text=Olá! Tenho interesse no produto: ${encodeURIComponent(product.nome)}" 
+            <a href="${productWhatsAppUrl}" 
                target="_blank" 
                class="whatsapp-btn btn-large btn-block"
                onclick="trackWhatsAppClick(allProducts.find(p => p.codigo === '${product.codigo}'))">
               📱 Comprar por WhatsApp
             </a>
-            <div class="whatsapp-info">Resposta em até 5 minutos</div>
+            <div class="whatsapp-info">Resposta comercial para retirada, entrega e pagamento</div>
           </div>
           
           <!-- Informações adicionais -->
           <div class="product-meta">
             <span class="product-code">Código: ${product.codigo}</span>
             <span class="product-category">Categoria: ${product.categoria}</span>
+            ${modelMetaHTML}
           </div>
           
           <!-- Link secundário no final -->
@@ -639,6 +896,11 @@ function renderProductPage(product, container) {
 
 // === FUNÇÃO PRINCIPAL - CATEGORIAS ===
 function showCategory(category) {
+  // Cancelar carregamentos de imagens pendentes (exceto para home)
+  if (category !== 'inicio' && typeof window._cancelCategoryImageLoaders === 'function') {
+    window._cancelCategoryImageLoaders();
+  }
+  
   // Resetar navegação antes de mostrar categoria
   resetNavigation();
   
@@ -672,16 +934,25 @@ function showCategory(category) {
     sections[i].style.display = 'none';
   }
   
+  // Remover seção de produto se existir (para qualquer categoria)
+  const productSection = document.getElementById('product-view');
+  if (productSection) {
+    productSection.remove();
+  }
+  
   // Mostrar seção alvo
   if (category === 'promo' || category === 'promoções') {
     showPromocoes();
   } else if (category === 'inicio') {
+    
     const homeSection = document.getElementById('inicio');
     if (homeSection) {
       homeSection.style.display = 'block';
       
       // Garantir que a home seja preenchida
       if (allProducts.length > 0) {
+        // Resetar flag para permitir reexecução das categorias
+        window._categoriesPopulated = false;
         populateHome();
       }
       
@@ -853,35 +1124,25 @@ function calcularValorPromocional(precoOriginal, categoria = null) {
 // Função para aplicar promoção a um produto (apenas visual)
 function aplicarPromocaoVisual(produto) {
   if (!produto) return produto;
-  
-  // Para produtos que já têm promocao: true no JSON
-  // Usar o preço atual como preço promocional e calcular um preço original fictício
-  let precoPromocionalFinal;
-  let precoOriginalBase;
-  
-  if (produto.precoOriginal) {
-    // Tem precoOriginal definido (caso antigo), usar lógica anterior
-    precoOriginalBase = produto.precoOriginal;
-    precoPromocionalFinal = produto.preco;
-  } else {
-    // Produto do JSON com promocao: true - usar preço atual como promocional
-    precoPromocionalFinal = produto.preco;
-    // Calcular preço original fictício (apenas para exibição)
-    // Adicionar cerca de 15-20% ao preço promocional
-    precoOriginalBase = Math.round(produto.preco * 1.16);
-  }
-  
-  // Criar produto com promoção visual (não altera o original)
-  const produtoPromocional = {
+
+  const priceMeta = getProductPriceMeta(produto);
+  const precoPromocionalFinal = priceMeta.currentPrice;
+  const precoOriginalBase = priceMeta.hasDiscount
+    ? priceMeta.originalPrice
+    : Math.round(parseNumericValue(produto.preco, 0) * 1.16);
+
+  return {
     ...produto,
-    precoPromocional: precoPromocionalFinal, // Preço promocional final
+    precoPromocional: precoPromocionalFinal,
     promocao: true,
-    percentualDesconto: Math.round(((precoOriginalBase - precoPromocionalFinal) / precoOriginalBase) * 100),
-    economia: precoOriginalBase - precoPromocionalFinal,
-    precoOriginal: precoOriginalBase // Preço original para exibição
+    percentualDesconto: priceMeta.hasDiscount
+      ? priceMeta.discountPercent
+      : Math.round(((precoOriginalBase - precoPromocionalFinal) / precoOriginalBase) * 100),
+    economia: priceMeta.hasDiscount
+      ? priceMeta.savings
+      : Number((precoOriginalBase - precoPromocionalFinal).toFixed(2)),
+    precoOriginal: precoOriginalBase
   };
-  
-  return produtoPromocional;
 }
 
 // Função para gerar promoções automáticas (apenas visual)
@@ -908,7 +1169,17 @@ function gerarPromocoesVisuais(produtos, maxProdutos = 10) {
 
 // === LAZY LOADING MELHORADO ===
 function loadImagesOnScroll(container) {
+  if (!container) return;
+
   const images = container.querySelectorAll('img[data-src]');
+  if (images.length === 0) return;
+
+  if (advancedLazyLoader && advancedLazyLoader.observer) {
+    advancedLazyLoader.observeNewImages(container);
+    schedulePlaceholderCleanup(300);
+    return;
+  }
+
   const loaded = [];
   
   function checkImages() {
@@ -1009,7 +1280,7 @@ function loadImagesOnScroll(container) {
               img.src = fallbackSrc;
             } else {
               // Tentar fallback para placeholder genérico
-              const genericFallback = '/images/products/thumbnail/placeholder.webp';
+              const genericFallback = getProductImagePath('placeholder.webp');
               if (genericFallback !== img.dataset.src) {
                 img.src = genericFallback;
               } else {
@@ -1061,14 +1332,140 @@ function loadImagesOnScroll(container) {
     }
   };
   
-  window.addEventListener('scroll', scrollHandler);
+  window.addEventListener('scroll', scrollHandler, { passive: true });
 }
 
 // === CARREGAR PRODUTOS ===
 let allProducts = [];
 
+function normalizeCatalogProduct(product = {}) {
+  const normalizedProduct = {
+    ...product,
+    codigo: String(product.codigo || '').trim(),
+    nome: String(product.nome || '').trim(),
+    preco: parseNumericValue(product.preco, 0),
+    categoria: String(product.categoria || '').trim(),
+    marca: String(product.marca || '').trim(),
+    descricao: String(product.descricao || '').trim(),
+    imagem: String(product.imagem || '').trim(),
+    modelo: String(product.modelo || '').trim(),
+    qt: Math.max(0, Math.round(parseNumericValue(product.qt, 1))),
+    promocao: product.promocao === true || product.promocao === 'sim'
+  };
+
+  const originalPrice = parseNumericValue(product.precoOriginal, 0);
+  const discount = Math.max(0, Math.min(100, parseNumericValue(product.desconto, 0)));
+
+  if (originalPrice > normalizedProduct.preco) {
+    normalizedProduct.precoOriginal = Number(originalPrice.toFixed(2));
+  } else {
+    delete normalizedProduct.precoOriginal;
+  }
+
+  if (discount > 0) {
+    normalizedProduct.desconto = Number(discount.toFixed(2));
+    normalizedProduct.promocao = true;
+  } else {
+    delete normalizedProduct.desconto;
+  }
+
+  return normalizedProduct;
+}
+
+function buildMergedCatalogProducts(staticProducts = [], remoteProducts = []) {
+  const mergedProducts = [];
+  const productIndexByCode = {};
+
+  function addStaticProduct(rawProduct) {
+    const product = normalizeCatalogProduct(rawProduct);
+    if (!product.codigo) {
+      return;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(productIndexByCode, product.codigo)) {
+      const originalCode = product.codigo;
+      let suffix = 1;
+
+      while (Object.prototype.hasOwnProperty.call(productIndexByCode, `${originalCode}_${suffix}`)) {
+        suffix += 1;
+      }
+
+      product.codigo = `${originalCode}_${suffix}`;
+    }
+
+    productIndexByCode[product.codigo] = mergedProducts.length;
+    mergedProducts.push(product);
+  }
+
+  function upsertRemoteProduct(rawProduct) {
+    const product = normalizeCatalogProduct(rawProduct);
+    if (!product.codigo) {
+      return;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(productIndexByCode, product.codigo)) {
+      const existingIndex = productIndexByCode[product.codigo];
+      mergedProducts[existingIndex] = product;
+      return;
+    }
+
+    productIndexByCode[product.codigo] = mergedProducts.length;
+    mergedProducts.push(product);
+  }
+
+  staticProducts.forEach(addStaticProduct);
+  remoteProducts.forEach(upsertRemoteProduct);
+
+  return mergedProducts;
+}
+
+function waitForFirebaseProductsHelper(timeoutMs = 1500) {
+  return new Promise((resolve) => {
+    const startedAt = Date.now();
+
+    const checkHelper = () => {
+      if (typeof firebaseProducts !== 'undefined') {
+        resolve(firebaseProducts);
+        return;
+      }
+
+      if (Date.now() - startedAt >= timeoutMs) {
+        resolve(null);
+        return;
+      }
+
+      setTimeout(checkHelper, 100);
+    };
+
+    checkHelper();
+  });
+}
+
+async function loadRemoteProductsFromFirebase() {
+  try {
+    const helper = await waitForFirebaseProductsHelper();
+    if (!helper) {
+      DEBUG && console.log('ℹ️ FirebaseProducts indisponível a tempo, seguindo apenas com products.json');
+      return [];
+    }
+
+    const result = await helper.getAllProducts();
+    if (!result.success) {
+      console.warn('⚠️ Falha ao carregar produtos do Firebase:', result.error);
+      return [];
+    }
+
+    return Array.isArray(result.products) ? result.products : [];
+  } catch (error) {
+    console.warn('⚠️ Erro ao carregar produtos remotos:', error);
+    return [];
+  }
+}
+
 function loadProducts() {
   DEBUG && console.log('🚀 loadProducts() iniciada - JSON mode');
+  const firebaseProductsPromise = loadRemoteProductsFromFirebase();
+
   return fetch('/data/products.json', {
     cache: 'no-store'
   })
@@ -1088,45 +1485,13 @@ function loadProducts() {
       
       return response.json();
     })
-    .then(function(jsonData) {
+    .then(async function(jsonData) {
+      const remoteProducts = await firebaseProductsPromise;
       DEBUG && console.log('📄 JSON carregado, produtos:', jsonData.length);
-      
-      const products = [];
-      const productMap = {}; // Usar mapa para evitar duplicatas por código
-      
-      for (let i = 0; i < jsonData.length; i++) {
-        const product = jsonData[i];
-        
-        // Garantir que todos os campos obrigatórios existam
-        product.codigo = product.codigo || '';
-        product.nome = product.nome || '';
-        product.preco = product.preco || 0;
-        product.categoria = product.categoria || '';
-        product.marca = product.marca || '';
-        product.descricao = product.descricao || '';
-        product.imagem = product.imagem || '';
-        
-        // Garantir que o código não seja vazio
-        if (!product.codigo) {
-          continue; // Pular produtos sem código
-        }
-        
-        // Verificar se já existe produto com este código
-        if (productMap[product.codigo]) {
-          // Adicionar sufixo ao código para evitar duplicatas
-          const originalCode = product.codigo;
-          let suffix = 1;
-          while (productMap[product.codigo + '_' + suffix]) {
-            suffix++;
-          }
-          product.codigo = product.codigo + '_' + suffix;
-        }
-        
-        productMap[product.codigo] = product;
-        products.push(product);
-      }
-      
+
+      const products = buildMergedCatalogProducts(jsonData, remoteProducts);
       allProducts = products;
+      window.products = products;
       DEBUG && console.log('✅', allProducts.length, 'produtos carregados do JSON');
       return products;
     })
@@ -1164,14 +1529,14 @@ function addIndividualProductSchema(product) {
   if (!product) return;
   
   const slug = generateSlug(product.nome);
-  const price = (product.preco || '0').replace(',', '.');
+  const price = String(product.preco || '0').replace(',', '.');
   
   // Gerar schema individual para o produto
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "Product",
     "name": product.nome,
-    "image": `https://primos-informatica-ecommerce.web.app/images/products/large/${product.imagem || product.codigo + '.webp'}`,
+    "image": getProductImageAbsoluteUrl(product),
     "description": product.descricao || `${product.nome} - ${product.marca || 'Marca'} na Primos Informática`,
     "brand": {
       "@type": "Brand",
@@ -1189,13 +1554,13 @@ function addIndividualProductSchema(product) {
         "@type": "Organization",
         "name": "Primos Informática",
         "url": "https://primos-informatica-ecommerce.web.app",
-        "telephone": "+556133406740",
+        "telephone": `+${STORE_INFO.whatsappNumber}`,
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": "Asa Norte CLN 208 BL A LOJA 11",
-          "addressLocality": "Brasília",
-          "addressRegion": "DF",
-          "postalCode": "70853-510",
+          "streetAddress": STORE_INFO.streetAddress,
+          "addressLocality": STORE_INFO.city,
+          "addressRegion": STORE_INFO.region,
+          "postalCode": STORE_INFO.postalCode,
           "addressCountry": "BR"
         }
       }
@@ -1225,7 +1590,7 @@ function updateProductMetaTags(product) {
   if (!product) return;
   
   const slug = generateSlug(product.nome);
-  const price = (product.preco || '0').replace(',', '.');
+  const price = String(product.preco || '0').replace(',', '.');
   const formattedPrice = parseFloat(price).toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL'
@@ -1276,7 +1641,7 @@ function updateOpenGraphTags(product, slug) {
   if (ogTitle) ogTitle.setAttribute('content', `${product.nome} | Primos Informática`);
   if (ogDesc) ogDesc.setAttribute('content', product.descricao || `${product.nome} na Primos Informática`);
   if (ogUrl) ogUrl.setAttribute('content', `https://primos-informatica-ecommerce.web.app/produto/${slug}`);
-  if (ogImage) ogImage.setAttribute('content', `https://primos-informatica-ecommerce.web.app/images/products/large/${product.imagem || product.codigo + '.webp'}`);
+  if (ogImage) ogImage.setAttribute('content', getProductImageAbsoluteUrl(product));
 }
 
 // === PRODUCT SCHEMA (SEO) ===
@@ -1297,7 +1662,7 @@ function addProductSchema(products) {
       "@type": "Product",
       "position": index + 1,
       "name": product.nome,
-      "image": `https://primos-informatica-ecommerce.web.app/images/products/thumbnail/${product.imagem || product.codigo + '.webp'}`,
+      "image": getProductImageAbsoluteUrl(product),
       "description": product.descricao || `${product.nome} - ${product.marca || 'Marca'} na Primos Informática`,
       "brand": {
         "@type": "Brand",
@@ -1307,7 +1672,7 @@ function addProductSchema(products) {
         "@type": "Offer",
         "url": `https://primos-informatica-ecommerce.web.app/#produto-${product.codigo}`,
         "priceCurrency": "BRL",
-        "price": (product.preco || '0').replace(',', '.'),
+        "price": String(product.preco || '0').replace(',', '.'),
         "availability": product.qt > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
         "seller": {
           "@type": "Organization",
@@ -1384,8 +1749,6 @@ function displayProducts(products) {
     section.innerHTML = productsHTML;
   }
   
-  // Preencher HOME após carregar produtos
-  populateHome();
 }
 
 // === PREENCHER HOME ===
@@ -1397,13 +1760,93 @@ function populateHome() {
   populateHomeHighlights();
 }
 
+function initHomeCategoryImage(img) {
+  if (!img) return;
+
+  const container = img.parentElement;
+  const placeholder = img.previousElementSibling;
+  const fallbackSrc = img.dataset.fallbackSrc || getProductImagePath('placeholder.webp');
+
+  const revealImage = () => {
+    img.style.display = 'block';
+    img.classList.remove('loading');
+    img.classList.add('loaded');
+
+    if (container) {
+      container.classList.add('has-loaded-image');
+    }
+
+    if (placeholder) {
+      placeholder.classList.add('hiding');
+      setTimeout(() => {
+        if (placeholder.parentNode) {
+          placeholder.remove();
+        }
+      }, 120);
+    }
+  };
+
+  const handleError = () => {
+    if (img.dataset.fallbackApplied === '1') {
+      img.style.display = 'none';
+      img.classList.remove('loading');
+      if (placeholder) {
+        placeholder.textContent = 'Sem imagem';
+        placeholder.style.fontSize = '16px';
+        placeholder.style.opacity = '0.55';
+        placeholder.style.display = 'flex';
+      }
+      return;
+    }
+
+    img.dataset.fallbackApplied = '1';
+    img.src = fallbackSrc;
+  };
+
+  img.classList.add('loading');
+  img.onload = revealImage;
+  img.onerror = handleError;
+
+  if (img.complete) {
+    if (img.naturalWidth > 0) {
+      revealImage();
+    } else {
+      handleError();
+    }
+  }
+}
+
 // === PREENCHER CATEGORIAS DA HOME ===
 function populateHomeCategories() {
-  const categoriesGrid = document.getElementById('home-categories-grid');
-  if (!categoriesGrid) {
-    console.warn('[populateHomeCategories] Container #home-categories-grid não encontrado');
+  if (typeof window._cancelCategoryImageLoaders === 'function') {
+    window._cancelCategoryImageLoaders();
+    window._cancelCategoryImageLoaders = null;
+  }
+
+  // Prevenir execuções múltiplas simultâneas
+  if (window._populateHomeCategoriesRunning) {
+    DEBUG && console.log('[populateHomeCategories] Já está em execução, ignorando...');
     return;
   }
+  
+  // Proteção contra execução duplicada
+  if (window._categoriesPopulated) {
+    DEBUG && console.log('[populateHomeCategories] Já executado, ignorando...');
+    return;
+  }
+
+  const categoriesGrid = document.getElementById('home-categories-grid');
+  if (!categoriesGrid) {
+    DEBUG && console.warn('[populateHomeCategories] Container #home-categories-grid não encontrado');
+    window._populateHomeCategoriesRunning = false;
+    window._categoriesPopulated = false;
+    return;
+  }
+
+  window._populateHomeCategoriesRunning = true;
+  window._categoriesPopulated = true;
+  const renderId = (window._populateHomeCategoriesRenderId || 0) + 1;
+  window._populateHomeCategoriesRenderId = renderId;
   
   // Obter categorias únicas dos produtos
   const categories = {};
@@ -1441,17 +1884,23 @@ function populateHomeCategories() {
       .split('-')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
-    const imagePath = `/images/products/thumbnail/${category.sample.imagem || category.sample.codigo + '.webp'}`;
+    const imagePath = getProductImagePath(category.sample);
     
-    console.log(`[populateHomeCategories] Categoria: ${category.name}, Imagem: ${imagePath}`);
+    DEBUG && console.log(`[populateHomeCategories] Categoria: ${category.name}, Imagem: ${imagePath}`);
     
     categoriesHTML += `
       <div class="category-card" onclick="showCategory('${category.name}')" style="cursor: pointer;">
         <div class="category-image">
-          <div class="image-placeholder">📦</div>
-          <img data-src="${imagePath}" 
+          <div class="image-placeholder" style="width: 100%; height: 120px; display: flex; align-items: center; justify-content: center; background: #f3f4f6; border-radius: 8px; font-size: 48px;">📦</div>
+          <img src="${imagePath}" 
+               data-fallback-src="${getProductImagePath('placeholder.webp')}"
                alt="${displayName}" 
-               onerror="this.src='/images/products/thumbnail/default.webp'; this.onerror=null;"
+               class="category-home-image"
+               loading="${i < 8 ? 'eager' : 'lazy'}"
+               fetchpriority="${i < 4 ? 'high' : 'auto'}"
+               decoding="async"
+               width="320"
+               height="120"
                style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px;">
         </div>
         <div class="category-info">
@@ -1465,45 +1914,205 @@ function populateHomeCategories() {
   
   categoriesGrid.innerHTML = categoriesHTML;
   
-  // Lazy loading para imagens das categorias
-  setTimeout(function() {
-    console.log('[populateHomeCategories] Iniciando lazy loading para categorias');
-    loadImagesOnScroll(categoriesGrid);
-    
-    // Verificação adicional para garantir que as imagens das categorias carreguem
+  requestAnimationFrame(() => {
+    if (renderId !== window._populateHomeCategoriesRenderId || !document.contains(categoriesGrid)) {
+      window._populateHomeCategoriesRunning = false;
+      return;
+    }
+
+    const categoryImages = categoriesGrid.querySelectorAll('.category-home-image');
+    DEBUG && console.log(`[populateHomeCategories] Inicializando ${categoryImages.length} imagens das categorias`);
+
+    categoryImages.forEach(initHomeCategoryImage);
+
+    window._cancelCategoryImageLoaders = null;
+    schedulePlaceholderCleanupBurst([120, 400, 1200]);
+    window._populateHomeCategoriesRunning = false;
+  });
+
+  return;
+  
+  // Lazy loading otimizado para imagens das categorias (sem duplicação)
+  requestAnimationFrame(() => {
+    if (renderId !== window._populateHomeCategoriesRenderId || !document.contains(categoriesGrid)) {
+      window._populateHomeCategoriesRunning = false;
+      return;
+    }
+
     const categoryImages = categoriesGrid.querySelectorAll('img[data-src]');
-    console.log(`[populateHomeCategories] Encontradas ${categoryImages.length} imagens com data-src`);
+    DEBUG && console.log(`[populateHomeCategories] Processando ${categoryImages.length} imagens das categorias`);
+    
+    // Armazenar referências para cancelamento
+    const imageLoaders = new Map();
     
     categoryImages.forEach(function(img, index) {
-      // Forçar carregamento imediato para imagens de categorias
-      if (img.dataset.src) {
-        const src = img.dataset.src;
-        console.log(`[populateHomeCategories] Carregando imagem ${index}: ${src}`);
+      const src = img.dataset.src;
+      if (!src) return;
+      
+      // Forçar carregamento imediato para imagens de categorias com timeout
+      const testImg = new Image();
+      let timeoutId;
+      let retryCount = 0;
+      const maxRetries = 2;
+      
+      // Armazenar referência para cancelamento
+      imageLoaders.set(img, { testImg, timeoutId });
+      
+      const isStale = () => (
+        renderId !== window._populateHomeCategoriesRenderId ||
+        !img ||
+        !img.parentElement ||
+        !document.contains(img)
+      );
+
+      const loadImageWithRetry = () => {
+        // Verificação robusta se o elemento ainda existe no DOM
+        if (isStale()) {
+          cleanup();
+          return;
+        }
         
-        // Criar objeto Image para verificar se a imagem existe antes de carregar
-        const testImg = new Image();
-        testImg.onload = function() {
+        // Verificação adicional do placeholder
+        const placeholder = img.previousElementSibling;
+        if (!placeholder) {
+          DEBUG && console.warn('[populateHomeCategories] Placeholder não encontrado, cancelando carregamento');
+          cleanup();
+          return;
+        }
+        
+        const currentTestImg = new Image();
+        
+        currentTestImg.onload = function() {
+          // Verificação final antes de modificar
+          if (isStale()) {
+            cleanup();
+            return;
+          }
+
+          const currentPlaceholder = img.previousElementSibling;
+          if (!currentPlaceholder) {
+            cleanup();
+            return;
+          }
           img.src = src;
-          img.removeAttribute('data-src');
-          img.classList.add('loaded');
-          console.log(`[populateHomeCategories] Imagem carregada com sucesso: ${src}`);
+          img.style.display = 'block';
+          currentPlaceholder.style.display = 'none';
+          cleanup();
         };
-        testImg.onerror = function() {
-          img.src = '/images/products/thumbnail/default.webp';
-          img.removeAttribute('data-src');
-          img.classList.add('loaded');
-          console.log(`[populateHomeCategories] Imagem falhou, usando fallback: ${src}`);
+        
+        currentTestImg.onerror = function() {
+          retryCount++;
+          if (retryCount <= maxRetries && !isStale()) {
+            DEBUG && console.log(`[populateHomeCategories] Retry ${retryCount}/${maxRetries} para imagem: ${src}`);
+            setTimeout(loadImageWithRetry, 500 * retryCount); // Backoff exponencial
+          } else {
+            // Verificação final antes de modificar
+            if (isStale()) {
+              cleanup();
+              return;
+            }
+
+            const currentPlaceholder = img.previousElementSibling;
+            if (!currentPlaceholder) {
+              cleanup();
+              return;
+            }
+            img.style.display = 'none';
+            currentPlaceholder.style.display = 'flex';
+            DEBUG && console.warn(`[populateHomeCategories] Falha ao carregar imagem após ${maxRetries} tentativas: ${src}`);
+            cleanup();
+          }
         };
-        testImg.src = src;
-      }
+        
+        currentTestImg.src = src;
+        imageLoaders.set(img, { testImg: currentTestImg, timeoutId });
+      };
+      
+      const cleanup = () => {
+        if (timeoutId) clearTimeout(timeoutId);
+        img.removeAttribute('data-src');
+        img.classList.add('loaded');
+        imageLoaders.delete(img);
+      };
+      
+      // Timeout de 5 segundos para evitar imagens presas
+      timeoutId = setTimeout(() => {
+        if (isStale()) {
+          cleanup();
+          return;
+        }
+
+        const currentPlaceholder = img.previousElementSibling;
+        if (!currentPlaceholder) {
+          cleanup();
+          return;
+        }
+        img.style.display = 'none';
+        currentPlaceholder.style.display = 'flex';
+        DEBUG && console.warn(`[populateHomeCategories] Timeout ao carregar imagem: ${src}`);
+        cleanup();
+      }, 5000);
+      
+      // Iniciar carregamento com retry
+      loadImageWithRetry();
     });
     
-    // Limpar placeholders após carregamento
-    setTimeout(function() {
-      cleanupStalePlaceholders();
-      aggressivePlaceholderCleanup();
-    }, 1000);
-  }, 200);
+    // Cancelar carregamentos se a página mudar
+    window._cancelCategoryImageLoaders = () => {
+      imageLoaders.forEach(({ testImg, timeoutId }) => {
+        if (timeoutId) clearTimeout(timeoutId);
+        if (testImg) {
+          testImg.onload = null;
+          testImg.onerror = null;
+          testImg.src = '';
+        }
+      });
+      imageLoaders.clear();
+    };
+  });
+  
+  // Limpar placeholders após carregamento
+  setTimeout(function() {
+    if (renderId !== window._populateHomeCategoriesRenderId || !document.contains(categoriesGrid)) {
+      return;
+    }
+
+    cleanupStalePlaceholders();
+    aggressivePlaceholderCleanup();
+    
+    // Fallback final: tentar carregar imagens que falharam
+    const failedImages = categoriesGrid.querySelectorAll('img[data-src]');
+    if (failedImages.length > 0) {
+      DEBUG && console.log(`[populateHomeCategories] Fallback: tentando carregar ${failedImages.length} imagens restantes`);
+      failedImages.forEach(img => {
+        const src = img.dataset.src;
+        if (src) {
+          const loaderState = imageLoaders.get(img);
+          if (loaderState && loaderState.timeoutId) {
+            clearTimeout(loaderState.timeoutId);
+          }
+          img.src = src;
+          img.onload = () => {
+            img.style.display = 'block';
+            if (img.previousElementSibling) {
+              img.previousElementSibling.style.display = 'none';
+            }
+            img.classList.add('loaded');
+            img.removeAttribute('data-src');
+            imageLoaders.delete(img);
+          };
+          img.onerror = () => {
+            DEBUG && console.warn(`[populateHomeCategories] Fallback falhou para: ${src}`);
+            img.removeAttribute('data-src');
+            imageLoaders.delete(img);
+          };
+        }
+      });
+    }
+  }, 2000);
+  
+  // Resetar flag de execução
+  window._populateHomeCategoriesRunning = false;
 }
 
 // === PREENCHER MENUS DE NAVEGAÇÃO DINAMICAMENTE ===
@@ -1545,12 +2154,13 @@ function populateNavigationMenus() {
       const iconMap = {
         'monitor': '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line>',
         'mouse': '<path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M19.07 13.93a7 7 0 0 1-6.14 0"></path><line x1="12" y1="8" x2="12.01" y2="8"></line>',
-        'teclado': '<rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"></path>',
+        'teclado': '<rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><rect x="4" y="8" width="2" height="2"></rect><rect x="7" y="8" width="2" height="2"></rect><rect x="10" y="8" width="2" height="2"></rect><rect x="13" y="8" width="2" height="2"></rect><rect x="16" y="8" width="2" height="2"></rect><rect x="19" y="8" width="1" height="2"></rect><rect x="3" y="12" width="3" height="2"></rect><rect x="7" y="12" width="3" height="2"></rect><rect x="11" y="12" width="3" height="2"></rect><rect x="15" y="12" width="3" height="2"></rect><rect x="19" y="12" width="1" height="2"></rect><rect x="3" y="16" width="5" height="2"></rect><rect x="9" y="16" width="6" height="2"></rect><rect x="16" y="16" width="5" height="2"></rect>',
         'Redes': '<path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M19.07 13.93a7 7 0 0 1-6.14 0"></path><line x1="12" y1="8" x2="12.01" y2="8"></line>',
         'processador': '<rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line>',
-        'placa de vídeo': '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line>',
+        'placa de vídeo': '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><circle cx="8" cy="10" r="3" fill="none"></circle><path d="M8 7 L8 13 M5 10 L11 10"></path><circle cx="16" cy="10" r="3" fill="none"></circle><path d="M16 7 L16 13 M13 10 L19 10"></path><rect x="8" y="17" width="8" height="4" rx="1"></rect><line x1="8" y1="21" x2="16" y2="21"></line>',
         'placa mãe': '<rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="6" y1="8" x2="18" y2="8"></line><line x1="6" y1="12" x2="18" y2="12"></line><line x1="6" y1="16" x2="18" y2="16"></line>',
-        'ssd': '<rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="12" y1="6" x2="12.01" y2="6"></line>',
+        'ssd': '<rect x="4" y="6" width="16" height="12" rx="2" ry="2"></rect><rect x="2" y="8" width="4" height="8" rx="1"></rect><line x1="3" y1="10" x2="5" y2="10"></line><line x1="3" y1="12" x2="5" y2="12"></line><line x1="3" y1="14" x2="5" y2="14"></line><circle cx="8" cy="8" r="1"></circle><circle cx="16" cy="8" r="1"></circle><circle cx="8" cy="16" r="1"></circle><circle cx="16" cy="16" r="1"></circle><circle cx="20" cy="12" r="2" fill="#10b981"></circle>',
+        'Switch': '<rect x="4" y="6" width="16" height="12" rx="2" ry="2"></rect><rect x="6" y="8" width="2" height="2" rx="0.5"></rect><rect x="10" y="8" width="2" height="2" rx="0.5"></rect><rect x="14" y="8" width="2" height="2" rx="0.5"></rect><rect x="18" y="8" width="2" height="2" rx="0.5"></rect><rect x="6" y="14" width="2" height="2" rx="0.5"></rect><rect x="10" y="14" width="2" height="2" rx="0.5"></rect><rect x="14" y="14" width="2" height="2" rx="0.5"></rect><rect x="18" y="14" width="2" height="2" rx="0.5"></rect><circle cx="8" cy="11" r="1" fill="#10b981"></circle><circle cx="12" cy="11" r="1" fill="#10b981"></circle><circle cx="16" cy="11" r="1" fill="#f59e0b"></circle>',
         'hd externo': '<ellipse cx="12" cy="12" rx="10" ry="3"></ellipse><path d="M2 12v6c0 1.66 4.48 3 10 3s10-1.34 10-3v-6"></path>',
         'hd interno': '<ellipse cx="12" cy="12" rx="10" ry="3"></ellipse><path d="M2 12v6c0 1.66 4.48 3 10 3s10-1.34 10-3v-6"></path>',
         'kit-teclado-mouse': '<rect x="2" y="4" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="6" rx="2" ry="2"></rect>',
@@ -1564,12 +2174,8 @@ function populateNavigationMenus() {
         'gabinetes': '<rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><rect x="9" y="6" width="6" height="4"></rect><rect x="9" y="12" width="6" height="4"></rect>',
         'cooler': '<path d="M12 2v6m0 4v6m0 4v2M8 12h8m-6-6l4 4 4-4m-4 8l4 4-4 4"></path><circle cx="12" cy="12" r="8"></circle>',
         'conectividade': '<path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M19.07 13.93a7 7 0 0 1-6.14 0"></path><line x1="12" y1="8" x2="12.01" y2="8"></line>',
-        'cabos': '<path d="M4 6h16M4 12h16M4 18h16"></path><circle cx="2" cy="6" r="1"></circle><circle cx="22" cy="6" r="1"></circle><circle cx="2" cy="12" r="1"></circle><circle cx="22" cy="12" r="1"></circle><circle cx="2" cy="18" r="1"></circle><circle cx="22" cy="18" r="1"></circle>',
         'adaptadores': '<rect x="2" y="9" width="4" height="6"></rect><rect x="18" y="9" width="4" height="6"></rect><path d="M6 12h12"></path><circle cx="12" cy="12" r="2"></circle>',
-        'acessórios': '<rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect><circle cx="8" cy="12" r="2"></circle><circle cx="16" cy="12" r="2"></circle>',
-        'webcam': '<path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>',
-        'fonte': '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>',
-        'bateria': '<rect x="2" y="5" width="12" height="6" rx="1"></rect><rect x="14" y="7" width="2" height="2"></rect>'
+        'acessórios': '<rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect><circle cx="8" cy="12" r="2"></circle><circle cx="16" cy="12" r="2"></circle>'
       };
       
       const icon = iconMap[category] || '<rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>';
@@ -2350,24 +2956,17 @@ function createProductCard(product = {}) {
   }
   
   const imageName = product.imagem || product.codigo + '.webp';
-  const imagePath = '/images/products/thumbnail/' + imageName;
-  
-  // Corrigir tratamento de preço para preservar centavos
-  const priceString = (product.preco || '0').toString().replace(',', '.');
-  const price = parseFloat(priceString);
-  const formattedPrice = 'R$ ' + price.toFixed(2).replace('.', ',');
-  
-  // Calcular desconto para produtos em promoção (7%)
+  const imagePath = getProductImagePath(imageName);
+
+  const priceMeta = getProductPriceMeta(product);
+  const formattedPrice = priceMeta.formattedCurrent;
+
   let promoInfo = '';
-  if (product.promocao === true || product.promocao === 'sim') {
-    const originalPrice = price / 0.93; // Preço original (7% a mais)
-    const discountPercent = 7;
-    const formattedOriginalPrice = 'R$ ' + originalPrice.toFixed(2).replace('.', ',');
-    
+  if (priceMeta.hasDiscount) {
     promoInfo = `
       <div class="promo-discount-info">
-        <span class="original-price">${formattedOriginalPrice}</span>
-        <span class="discount-badge">-${discountPercent}%</span>
+        <span class="original-price">${priceMeta.formattedOriginal}</span>
+        <span class="discount-badge">-${priceMeta.discountPercent}%</span>
       </div>
     `;
   }
@@ -2400,7 +2999,7 @@ function createProductCard(product = {}) {
     promocaoBadge +
     '<div class="image-placeholder">📦</div>' +
     '<a href="' + productLink + '" onclick="window.navigateTo(\'' + productLink + '\'); return false;">' +
-    '<img data-src="' + imagePath + '" alt="' + (product.nome || 'Produto') + '">' +
+    '<img data-src="' + imagePath + '" alt="' + (product.nome || 'Produto') + '" loading="lazy" decoding="async" width="320" height="320">' +
     '</a>' +
     outOfStockOverlay +
     '</div>' +
@@ -2682,7 +3281,7 @@ function finalizeViaWhatsApp() {
   message += 'Gostaria de finalizar este pedido! 🛍️';
   
   // Abrir WhatsApp com a mensagem
-  const whatsappUrl = `https://wa.me/556133406740?text=${encodeURIComponent(message)}`;
+  const whatsappUrl = buildWhatsAppUrl(message);
   window.open(whatsappUrl, '_blank');
   
   // Fechar carrinho após enviar
@@ -2904,21 +3503,42 @@ function addToCart(productCode) {
 // === HEADER DINÂMICO ===
 function initHeaderScroll() {
   const header = document.querySelector('.modern-header');
-  if (!header) return;
-  
-  let lastScrollY = window.scrollY;
-  
-  window.addEventListener('scroll', () => {
-    const currentScrollY = window.scrollY;
-    
-    if (currentScrollY > 50) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
+  const backToTopButton = document.getElementById('backToTop');
+
+  if (!header && !backToTopButton) return;
+
+  const syncScrollUi = () => {
+    const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+    if (header) {
+      header.classList.toggle('scrolled', currentScrollY > 50);
     }
-    
-    lastScrollY = currentScrollY;
-  });
+
+    if (backToTopButton) {
+      backToTopButton.classList.toggle('visible', currentScrollY > 300);
+    }
+  };
+
+  if (window._scrollUiInitialized) {
+    syncScrollUi();
+    return;
+  }
+
+  window._scrollUiInitialized = true;
+
+  let ticking = false;
+  const handleScroll = () => {
+    if (ticking) return;
+
+    ticking = true;
+    requestAnimationFrame(() => {
+      syncScrollUi();
+      ticking = false;
+    });
+  };
+
+  syncScrollUi();
+  window.addEventListener('scroll', handleScroll, { passive: true });
 }
 
 // === LOADING STATES ===
@@ -2971,29 +3591,29 @@ function safeRender(renderFunction, fallbackSelector, context = 'render') {
   }
 }
 
-// === ERROR BOUNDARY ENTERPRISE ===
+// === ERROR BOUNDARY OTIMIZADO ===
 window.addEventListener('error', (event) => {
-  // Evitar log duplicado de erros já tratados pelo safeRender
-  if (event.error?.__handled) return;
+  // Ignorar erros já tratados ou de terceiros
+  if (event.error?.__handled || !event.filename) return;
   
-  console.error('[GLOBAL ERROR]', {
-    message: event.message,
-    filename: event.filename,
-    lineno: event.lineno,
-    colno: event.colno,
-    error: event.error
-  });
+  // Ignorar erros de extensões do navegador
+  if (event.filename.includes('extension://') || event.filename.includes('chrome-extension://')) return;
   
-  // Evitar propagação de erros críticos
-  if (event.message.includes('stars is not defined') || 
-      event.message.includes('product') ||
-      event.message.includes('undefined')) {
-    event.preventDefault();
+  // Log apenas erros críticos do nosso código
+  if (event.filename.includes('primosinformatica') || event.filename.includes('/js/')) {
+    console.error('[APP ERROR]', {
+      message: event.message,
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno,
+      timestamp: new Date().toISOString()
+    });
   }
 });
 
+// Tratamento específico para promessas rejeitadas
 window.addEventListener('unhandledrejection', (event) => {
-  console.error('[UNHANDLED PROMISE REJECTION]', event.reason);
+  console.warn('[PROMISE REJECTION]', event.reason);
   event.preventDefault();
 });
 
@@ -3034,30 +3654,8 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
       history.replaceState({}, '', '/');
       showCategory('inicio');
-      console.log('🏠 FORÇADO: Sempre redirecionar para página inicial no carregamento');
+      DEBUG && console.log('🏠 FORÇADO: Sempre redirecionar para página inicial no carregamento');
     }, 200);
-    
-    // === PREENCHER HOME ===
-    function populateHome() {
-      // Safe Render Pattern - Enterprise
-      safeRender(() => {
-        populateHomeCategories();
-        
-        // Preencher produtos em destaque na home
-        populateHomeHighlights();
-        
-        DEBUG && console.log('✅ populateHome() executada');
-        
-        // Página inicial já foi forçada acima
-        
-        // Limpar placeholders que possam ter ficado para trás
-        cleanupStalePlaceholders();
-        aggressivePlaceholderCleanup();
-        
-      }, '#home-highlights-grid', 'populateHome');
-    }
-    
-    populateHome();
     
   }).catch(function(error) {
     console.error('❌ Erro ao carregar produtos:', error);
@@ -4644,9 +5242,9 @@ function submitOrder(event) {
     // Informações de retirada
     endereco = {
       tipo: 'retirada',
-      endereco: 'SCLN 113 Bloco A Loja 02, Asa Norte, Brasília - DF',
-      horario: 'Segunda a Sexta, das 9h às 18h',
-      telefone: '(61) 3340-6740'
+      endereco: getStoreAddressLine(),
+      horario: STORE_INFO.businessHours,
+      telefone: STORE_INFO.whatsappDisplay
     };
     freteValor = 0;
   }
@@ -4753,8 +5351,7 @@ function submitOrder(event) {
   // Adicionar botão de WhatsApp na tela de confirmação
   const confirmationDiv = document.querySelector('#confirmation-page > div');
   if (confirmationDiv) {
-    const whatsappNumber = '556133406740';
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+    const whatsappUrl = buildWhatsAppUrl(message.replace(/%0A/g, '\n'));
     
     const whatsappButton = document.createElement('button');
     whatsappButton.innerHTML = `
@@ -5202,9 +5799,9 @@ function createCheckoutPage() {
               <div id="endereco-retirada" style="display: none; margin-top: 20px; background: #f0fdf4; padding: 15px; border-radius: 8px; border: 1px solid #bbf7d0;">
                 <h3 style="margin: 0 0 10px 0; color: #166534; font-size: 16px; font-weight: 600;">Informações para Retirada</h3>
                 <p style="margin: 0; color: #166534; font-size: 14px; line-height: 1.5;">
-                  Endereço: SCLN 113 Bloco A Loja 02, Asa Norte, Brasília - DF<br>
-                  Horário de Funcionamento: Segunda a Sexta, das 9h às 18h<br>
-                  Telefone: (61) 3340-6740
+                  Endereço: ${getStoreAddressLine()}<br>
+                  Horário de Funcionamento: ${STORE_INFO.businessHours}<br>
+                  Telefone: ${STORE_INFO.whatsappDisplay}
                 </p>
               </div>
             </div>
@@ -6183,6 +6780,13 @@ function goToHomePage() {
   
   // Resetar navegação
   resetNavigation();
+  
+  // Voltar ao topo da página
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth'
+  });
 }
 
 function resetNavigation() {
@@ -6236,24 +6840,55 @@ function sanitizeInput(input) {
   return input.trim().replace(/[^a-zA-Z0-9\s]/g, '');
 }
 
+const SEARCH_DEBOUNCE_DELAY = 180;
+let searchDebounceTimer = null;
+
+function submitSearchFromField(inputValue) {
+  const searchTerm = sanitizeInput(inputValue || '');
+
+  if (searchDebounceTimer) {
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = null;
+  }
+
+  if (searchTerm.length < 2) {
+    hideSearchResults();
+
+    if (searchTerm.length === 0) {
+      currentFilters.searchQuery = '';
+      filterProducts();
+    }
+
+    return;
+  }
+
+  searchProducts(searchTerm);
+}
+
 function handleSearchInput(event) {
   const searchTerm = sanitizeInput(event.target.value);
+  
+  if (searchDebounceTimer) {
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = null;
+  }
   
   // Se tiver menos de 2 caracteres, não buscar
   if (searchTerm.length < 2) {
     hideSearchResults();
+
+    if (searchTerm.length === 0) {
+      currentFilters.searchQuery = '';
+      filterProducts();
+    }
+
     return;
   }
   
-  // Buscar em tempo real
-  if (searchTerm.length > 0) {
+  searchDebounceTimer = window.setTimeout(() => {
     searchProducts(searchTerm);
-  } else {
-    hideSearchResults();
-    // Limpar filtros ao apagar busca
-    currentFilters.searchQuery = '';
-    filterProducts();
-  }
+    searchDebounceTimer = null;
+  }, SEARCH_DEBOUNCE_DELAY);
 }
 
 function showSearchResults() {
@@ -6301,10 +6936,14 @@ function searchProducts(searchTerm) {
     const productName = (product.nome || '').toLowerCase();
     const productBrand = (product.marca || '').toLowerCase();
     const productCategory = (product.categoria || '').toLowerCase();
+    const productModel = (product.modelo || '').toLowerCase();
+    const productDescription = (product.descricao || '').toLowerCase();
     
     return productName.includes(term) || 
            productBrand.includes(term) || 
-           productCategory.includes(term);
+           productCategory.includes(term) ||
+           productModel.includes(term) ||
+           productDescription.includes(term);
   });
   
   // Mostrar resultados
@@ -6340,7 +6979,7 @@ function displaySearchResults(results, searchTerm) {
       
       // Gerar nome da imagem
       const imageName = (product.codigo || 'product') + '.jpg';
-      const imagePath = '/images/products/thumbnail/' + imageName;
+      const imagePath = getProductImagePath(imageName);
       
       const productHTML = `
         <div class="search-result-item" data-product-code="${product.codigo}">
@@ -6796,7 +7435,7 @@ function displayUserReviews(reviews, usuario) {
     
     const product = products.find(p => p.codigo === review.productId);
     const productName = product ? product.nome : `Produto ${review.productId}`;
-    const productImage = product ? `/images/products/thumbnail/${product.imagem || product.codigo + '.webp'}` : '/images/products/thumbnail/placeholder.webp';
+    const productImage = product ? getProductImagePath(product) : getProductImagePath('placeholder.webp');
     
     const date = new Date(review.date);
     const formattedDate = date.toLocaleDateString('pt-BR', {
@@ -6808,7 +7447,7 @@ function displayUserReviews(reviews, usuario) {
     reviewsHTML += `
       <div class="review-item" data-review-id="${review.id}">
         <div class="review-product">
-          <img src="${productImage}" alt="${productName}" class="review-product-image" onerror="this.src='/images/products/thumbnail/placeholder.webp'">
+          <img src="${productImage}" alt="${productName}" class="review-product-image" onerror="this.onerror=null;this.src='${getProductImagePath('placeholder.webp')}';">
           <div class="review-product-info">
             <h5>${productName}</h5>
             <div class="review-rating">
@@ -7242,11 +7881,7 @@ window.backToMainPage = backToMainPage;
 window.navigateToOrdersPage = navigateToOrdersPage;
 
 // Expor variáveis globais importantes
-if (typeof products !== 'undefined') {
-  window.products = products;
-} else {
-  window.products = [];
-}
+window.products = Array.isArray(allProducts) ? allProducts : [];
 window.goToHomePage = goToHomePage;
 window.resetNavigation = resetNavigation;
 window.navigateToCheckout = navigateToCheckout;
@@ -7385,6 +8020,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 window.addEventListener('scroll', function() {
   const backToTopButton = document.getElementById('backToTop');
+
+  if (window._scrollUiInitialized) {
+    return;
+  }
   
   if (backToTopButton) {
     // Mostrar botão quando rolar 300px para baixo
@@ -7406,6 +8045,7 @@ window.submitReview = submitReview;
 
 // Funções de busca
 window.handleSearchInput = handleSearchInput;
+window.submitSearchFromField = submitSearchFromField;
 window.searchProducts = searchProducts;
 window.showSearchResults = showSearchResults;
 window.hideSearchResults = hideSearchResults;
@@ -8551,4 +9191,43 @@ window.editProfile = editProfile;
 window.openEditProfileModal = openEditProfileModal;
 window.closeEditProfileModal = closeEditProfileModal;
 window.saveProfileChanges = saveProfileChanges;
-if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').then(reg => console.log('SW registered')).catch(err => console.log('SW registration failed')); }
+if ('serviceWorker' in navigator) {
+  let refreshingServiceWorker = false;
+  const activateWaitingServiceWorker = registration => {
+    if (!registration || !registration.waiting) {
+      return;
+    }
+
+    registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+  };
+
+  navigator.serviceWorker.addEventListener('controllerchange', function() {
+    if (refreshingServiceWorker) {
+      return;
+    }
+    refreshingServiceWorker = true;
+    window.location.reload();
+  });
+
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => {
+      console.log('SW registered');
+      activateWaitingServiceWorker(reg);
+
+      reg.addEventListener('updatefound', function() {
+        const newWorker = reg.installing;
+        if (!newWorker) {
+          return;
+        }
+
+        newWorker.addEventListener('statechange', function() {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            activateWaitingServiceWorker(reg);
+          }
+        });
+      });
+
+      reg.update().catch(() => {});
+    })
+    .catch(err => console.log('SW registration failed', err));
+}

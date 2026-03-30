@@ -103,6 +103,42 @@
     <priority>0.7</priority>
   </url>
   
+  <!-- Páginas institucionais -->
+  <url>
+    <loc>https://primos-informatica-ecommerce.web.app/faq.html</loc>
+    <lastmod>2026-03-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://primos-informatica-ecommerce.web.app/garantia.html</loc>
+    <lastmod>2026-03-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://primos-informatica-ecommerce.web.app/politica-devolucao.html</loc>
+    <lastmod>2026-03-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://primos-informatica-ecommerce.web.app/termos-de-uso.html</loc>
+    <lastmod>2026-03-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://primos-informatica-ecommerce.web.app/politica-privacidade.html</loc>
+    <lastmod>2026-03-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
   <!-- Páginas de Suporte - Baixa prioridade -->
   <url>
     <loc>https://primos-informatica-ecommerce.web.app/admin.html</loc>
