@@ -129,7 +129,7 @@
     "descricao": "Gabinete Gamer HAYOM Preto GB1798 3 Cooler",
     "marca": "Hayom",
     "promocao": false,
-    "imagem": "gabinete-gamer-hayom-preto-gb1798-3cooler.webp"
+    "imagem": "gabinete-hayom-gb1789.webp"
   },
   {
     "codigo": "401821",
@@ -308,17 +308,6 @@
     "imagem": "ap-ubiquiti-u6pro.webp"
   },
   {
-    "codigo": "1072",
-    "nome": "UBIQUITI AP UNIFI UAP-AC-LITE-BR",
-    "categoria": "Redes",
-    "preco": 890,
-    "qt": 1,
-    "descricao": "Access Point UniFi UAP-AC-Lite",
-    "marca": "Ubiquiti",
-    "promocao": false,
-    "imagem": "ap-ubiquiti-uapaclite.webp"
-  },
-  {
     "codigo": "1559",
     "nome": "REPETIDOR WIRELESS TPLINK DUAL BAND AC750 RE200",
     "categoria": "Redes",
@@ -383,17 +372,6 @@
     "marca": "TP-Link",
     "promocao": false,
     "imagem": "adaptador-tplink-t4u.webp"
-  },
-  {
-    "codigo": "1557",
-    "nome": "ADAPTADOR USB WIRELESS TX20U PLUS TP-LINK WIFI 6",
-    "categoria": "Redes",
-    "preco": 225,
-    "qt": 1,
-    "descricao": "Adaptador USB TX20U Plus WiFi 6",
-    "marca": "TP-Link",
-    "promocao": false,
-    "imagem": "adaptador-tplink-tx20u.webp"
   },
   {
     "codigo": "1871",
@@ -1210,17 +1188,6 @@
     "imagem": "ap-ubiquiti-u6pro.webp"
   },
   {
-    "codigo": "1072",
-    "nome": "UBIQUITI AP UNIFI UAP-AC-LITE-BR",
-    "categoria": "Redes",
-    "preco": 890,
-    "qt": 1,
-    "descricao": "accessAccess Point UniFi UAP-AC-Lite",
-    "marca": "Ubiquiti",
-    "promocao": false,
-    "imagem": "ap-ubiquiti-uap-ac-lite.webp"
-  },
-  {
     "codigo": "1559",
     "nome": "REPETIDOR WIRELES TP LINK DUAL BAND AC750 RE200",
     "categoria": "Redes",
@@ -1230,17 +1197,6 @@
     "marca": "TP-Link",
     "promocao": false,
     "imagem": "repetidor-tplink-re200.webp"
-  },
-  {
-    "codigo": "1557",
-    "nome": "ADAPTADOR USB WIRELESS TX20U PLUS TP-LINK WI-FI 6",
-    "categoria": "Redes",
-    "preco": 225,
-    "qt": 1,
-    "descricao": "Adaptador USB TX20U Plus WiFi 6",
-    "marca": "TP-Link",
-    "promocao": false,
-    "imagem": "adaptador-tplink-tx20u-plus.webp"
   },
   {
     "codigo": "1617",
@@ -1939,7 +1895,7 @@
     "codigo": "1884",
     "nome": "FONTE REAL 500W ATX AEROCOOL KCAS 500",
     "categoria": "fonte",
-    "preco": 375,
+    "preco": 320,
     "qt": 3,
     "descricao": "Fonte Real 500W ATX Aerocool KCAS 500",
     "marca": "Aerocool",
@@ -1950,7 +1906,7 @@
     "codigo": "1885",
     "nome": "FONTE AEROCOOL VX PLUS 700W 80 PLUS BRONZE",
     "categoria": "fonte",
-    "preco": 398,
+    "preco": 383,
     "qt": 3,
     "descricao": "Fonte Aerocool VX Plus 700W 80 Plus Bronze",
     "marca": "Aerocool",
@@ -2103,7 +2059,7 @@
   {
     "codigo": "3001",
     "nome": "BATERIA UNIPOWER 6V 4,5AH UP645SEG",
-    "categoria": "bateria",
+    "categoria": "energia",
     "preco": 51,
     "qt": 3,
     "descricao": "Bateria Unipower 6V 4,5Ah UP645SEG",
@@ -2114,7 +2070,7 @@
   {
     "codigo": "3002",
     "nome": "BATERIA UNIPOWER P/ NOBREAK 12V 5AH UP1250",
-    "categoria": "bateria",
+    "categoria": "energia",
     "preco": 86,
     "qt": 3,
     "descricao": "Bateria Unipower p/ Nobreak 12V 5Ah UP1250",
@@ -2125,7 +2081,7 @@
   {
     "codigo": "3003",
     "nome": "BATERIA UNIPOWER P/ NOBREAK 12V 9AH F187 UP1290",
-    "categoria": "bateria",
+    "categoria": "energia",
     "preco": 143,
     "qt": 3,
     "descricao": "Bateria Unipower p/ Nobreak 12V 9Ah F187 UP1290",
@@ -2136,7 +2092,7 @@
   {
     "codigo": "3004",
     "nome": "BATERIA UNIPOWER P/ NOBREAK 12V 7AH UP1270E",
-    "categoria": "bateria",
+    "categoria": "energia",
     "preco": 111,
     "qt": 3,
     "descricao": "Bateria Unipower p/ Nobreak 12V 7Ah UP1270E",
@@ -2147,7 +2103,7 @@
   {
     "codigo": "3005",
     "nome": "BATERIA UNIPOWER P/ NOBREAK 12V 7AH UP1270SEG",
-    "categoria": "bateria",
+    "categoria": "energia",
     "preco": 101,
     "qt": 3,
     "descricao": "Bateria Unipower p/ Nobreak 12V 7Ah UP1270SEG",
@@ -2158,7 +2114,7 @@
   {
     "codigo": "3006",
     "nome": "BATERIA MULTILASER P/ NOBREAK 12V 5AH BC125",
-    "categoria": "bateria",
+    "categoria": "energia",
     "preco": 80,
     "qt": 3,
     "descricao": "Bateria Multilaser p/ Nobreak 12V 5Ah BC125",
@@ -2169,7 +2125,7 @@
   {
     "codigo": "3007",
     "nome": "BATERIA MULTILASER P/ NOBREAK 12V 7AH BC127",
-    "categoria": "bateria",
+    "categoria": "energia",
     "preco": 95.51,
     "qt": 3,
     "descricao": "Bateria Multilaser p/ Nobreak 12V 7Ah BC127",
@@ -2301,7 +2257,7 @@
   {
     "codigo": "2151",
     "nome": "BATERIA PIONEIRO NOBREAK 12V 9AH NT12-9F2",
-    "categoria": "bateria",
+    "categoria": "energia",
     "preco": 130,
     "qt": 20,
     "descricao": "Bateria Pioneiro p/ Nobreak 12V 9Ah NT12-9F2",
@@ -2312,7 +2268,7 @@
   {
     "codigo": "2150",
     "nome": "BATERIA PIONEIRO NOBREAK 12V 7AH NT12-7F2",
-    "categoria": "bateria",
+    "categoria": "energia",
     "preco": 96,
     "qt": 42,
     "descricao": "Bateria Pioneiro p/ Nobreak 12V 7Ah NT12-7F2",
@@ -2385,17 +2341,6 @@
     "marca": "MCM",
     "promocao": false,
     "imagem": "estabilizador-mcm-1500va-bivolt.webp"
-  },
-  {
-    "codigo": "1407",
-    "nome": "MEMORIA DDR4 8GB 2666 MHZ KINGSTON KVR26N19S8/8",
-    "categoria": "memória",
-    "preco": 718,
-    "qt": 3,
-    "descricao": "Memoria DDR4 8GB 2666MHz Kingston KVR26N19S8/8",
-    "marca": "Kingston",
-    "promocao": false,
-    "imagem": "memoria-ddr4-8gb-2666-kingston-kvr26n19s8-8.webp"
   },
   {
     "codigo": "2142",
@@ -2563,17 +2508,6 @@
     "imagem": "fone-bluetooth-philips-tah2209bk-00-preto.webp"
   },
   {
-    "codigo": "2119",
-    "nome": "FONTE REAL 500W ATX AEROCOOL KCAS 80 PLUS 59765",
-    "categoria": "fonte",
-    "preco": 320,
-    "qt": 2,
-    "descricao": "Fonte real 500W ATX Aerocool KCAS 80 Plus 59765",
-    "marca": "Aerocool",
-    "promocao": false,
-    "imagem": "aerocool-kcas-500w-59765.webp"
-  },
-  {
     "codigo": "2123",
     "nome": "PASTA TERMICA FORTREK 3G FREEZY LIGHT",
     "categoria": "acessórios",
@@ -2653,7 +2587,7 @@
   {
     "codigo": "1256",
     "nome": "BATERIA 12V 23A ALKALINE",
-    "categoria": "bateria",
+    "categoria": "energia",
     "preco": 8,
     "qt": 17,
     "descricao": "Bateria 12V 23A alkaline",
@@ -2704,5 +2638,38 @@
     "marca": "Peining",
     "promocao": false,
     "imagem": "carregador-portatil-peining-wup-832-10000mah-preto.webp"
+  },
+  {
+    "codigo": "1812",
+    "nome": "NOTEBOOK DELL LAT 3450 I7 32G MEM SSD 1TB WIN11",
+    "categoria": "notebook",
+    "preco": 6200,
+    "qt": 1,
+    "descricao": "Notebook Dell Latitude 3450 i7 32GB memoria SSD 1TB Win11",
+    "marca": "Dell",
+    "promocao": false,
+    "imagem": "latitude3450.webp"
+  },
+  {
+    "codigo": "1573",
+    "nome": "NOBREAK SMS 600V PRETO BIV LITE",
+    "categoria": "energia",
+    "preco": 520,
+    "qt": 4,
+    "descricao": "Nobreak SMS 600VA preto bivolt Lite",
+    "marca": "SMS",
+    "promocao": false,
+    "imagem": "nobreak-sms-600v-preto-biv-lite.webp"
+  },
+  {
+    "codigo": "1908",
+    "nome": "ESTABILIZADOR SMS 300VA PRETO BIV",
+    "categoria": "energia",
+    "preco": 267,
+    "qt": 1,
+    "descricao": "Estabilizador SMS 300VA preto bivolt",
+    "marca": "SMS",
+    "promocao": false,
+    "imagem": "estabilizador-sms-300va-preto-biv.webp"
   }
 ]

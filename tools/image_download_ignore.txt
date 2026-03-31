@@ -1,0 +1,2 @@
+# Produtos que nao devem ter imagem baixada automaticamente.
+# Pode usar codigo do produto ou nome exato do arquivo de imagem.

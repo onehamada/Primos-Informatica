@@ -1,11 +1,15 @@
 @echo off
+setlocal
+title Baixador de Imagens de Produtos
 cd /d "%~dp0"
 echo ====================================
 echo DOWNLOAD OTIMIZADO DE IMAGENS
-echo COM DETECAO E REMOCAO DE FUNDO PRETO
+echo PRIORIDADE PARA LOJAS DE HARDWARE
 echo ====================================
 echo.
 echo Diretorio atual: %CD%
+echo.
+echo Dica: use este arquivo .bat para abrir o script.
 echo.
 
 echo Verificando dependencias...
@@ -21,6 +25,13 @@ echo.
 echo Iniciando download otimizado...
 echo.
 python baixar_primeiro_produto_otimizado.py %*
+if %errorlevel% neq 0 (
+    echo.
+    echo O script terminou com erro.
+) else (
+    echo.
+    echo O script terminou normalmente.
+)
 
 echo.
 echo Processo concluido!

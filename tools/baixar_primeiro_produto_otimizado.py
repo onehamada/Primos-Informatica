@@ -19,6 +19,8 @@ import io
 from urllib.parse import quote, urlparse
 import re
 import time
+import traceback
+import subprocess
 import numpy as np
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -35,12 +37,54 @@ try:
 except Exception:
     pass
 
+
+def launched_from_windows_explorer():
+    """Detecta quando o script foi aberto por duplo clique no Explorer."""
+    if os.name != 'nt':
+        return False
+
+    try:
+        parent_pid = os.getppid()
+        result = subprocess.run(
+            [
+                'powershell',
+                '-NoProfile',
+                '-Command',
+                f"(Get-Process -Id {parent_pid} -ErrorAction SilentlyContinue).ProcessName"
+            ],
+            capture_output=True,
+            text=True,
+            timeout=3,
+        )
+        parent_name = (result.stdout or '').strip().lower()
+        return parent_name == 'explorer'
+    except Exception:
+        return False
+
+
+def pause_if_opened_from_explorer():
+    """Evita que a janela feche instantaneamente apos duplo clique."""
+    if not launched_from_windows_explorer():
+        return
+
+    try:
+        print()
+        input("Pressione Enter para fechar...")
+    except EOFError:
+        pass
+
 class OptimizedPersistentDownloader:
     def __init__(self):
-        self.csv_file = '../data/products.csv'
-        self.image_folder = '../images/products/thumbnail'
+        self.tools_dir = os.path.dirname(os.path.abspath(__file__))
+        self.project_dir = os.path.dirname(self.tools_dir)
+        self.csv_file = os.path.join(self.project_dir, 'data', 'products.csv')
+        self.json_file = os.path.join(self.project_dir, 'data', 'products.json')
+        self.google_feed_file = os.path.join(self.project_dir, 'data', 'google_merchant_feed.csv')
+        self.image_folder = os.path.join(self.project_dir, 'images', 'products', 'thumbnail')
+        self.ignore_file = os.path.join(self.tools_dir, 'image_download_ignore.txt')
         self._signature_cache = {}
-        
+        self.strict_sites_only = False
+
         os.makedirs(self.image_folder, exist_ok=True)
         
         # Headers realistas
@@ -50,6 +94,104 @@ class OptimizedPersistentDownloader:
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'Accept-Language': 'pt-BR,pt;q=0.9,en;q=0.8'
         })
+
+    def slugify_filename(self, value):
+        """Converte texto em um nome de arquivo previsivel."""
+        text = unicodedata.normalize('NFKD', str(value or '')).encode('ascii', 'ignore').decode('ascii')
+        text = re.sub(r'[^a-zA-Z0-9]+', '-', text.lower()).strip('-')
+        text = re.sub(r'-{2,}', '-', text)
+        return text or 'produto'
+
+    def build_product_image_filename(self, product):
+        """Gera um nome proprio quando o produto ainda usa placeholder."""
+        base_name = str(product.get('nome') or product.get('descricao') or product.get('codigo') or 'produto').strip()
+        filename = self.slugify_filename(base_name)
+        return f"{filename}.webp"
+
+    def resolve_output_filename(self, product):
+        """Define o arquivo final da imagem evitando sobrescrever placeholder."""
+        current_name = str(product.get('imagem') or '').strip()
+        if not current_name or current_name.lower() in {'placeholder.webp', 'placeholder.png'}:
+            return self.build_product_image_filename(product)
+        if not current_name.lower().endswith('.webp'):
+            return f"{current_name}.webp"
+        return current_name
+
+    def load_ignored_entries(self):
+        """Carrega codigos ou nomes de imagem que nao devem ser rebaixados."""
+        ignored = set()
+        if not os.path.exists(self.ignore_file):
+            return ignored
+
+        try:
+            with open(self.ignore_file, 'r', encoding='utf-8') as ignore_file:
+                for raw_line in ignore_file:
+                    line = raw_line.strip()
+                    if not line or line.startswith('#'):
+                        continue
+                    ignored.add(line.lower())
+        except Exception as e:
+            print(f"Aviso: nao foi possivel ler a lista de bloqueio: {e}")
+
+        return ignored
+
+    def is_ignored_product(self, product, ignored_entries):
+        """Verifica se o produto foi marcado para nunca baixar imagem automaticamente."""
+        if not ignored_entries:
+            return False
+
+        code = str(product.get('codigo') or '').strip().lower()
+        image_name = str(product.get('imagem') or '').strip().lower()
+        name = str(product.get('nome') or '').strip().lower()
+        return code in ignored_entries or image_name in ignored_entries or name in ignored_entries
+
+    def update_product_image_references(self, product, filename):
+        """Atualiza os arquivos de catalogo com a imagem nova do produto."""
+        code = str(product.get('codigo') or '').strip()
+        if not code or not filename:
+            return
+
+        csv_changed = False
+        with open(self.csv_file, 'r', encoding='utf-8', newline='') as csv_file:
+            csv_rows = list(csv.reader(csv_file, delimiter=';'))
+
+        for row in csv_rows[1:]:
+            if row and row[0].strip() == code and len(row) >= 9 and row[8] != filename:
+                row[8] = filename
+                csv_changed = True
+
+        if csv_changed:
+            with open(self.csv_file, 'w', encoding='utf-8', newline='') as csv_file:
+                writer = csv.writer(csv_file, delimiter=';')
+                writer.writerows(csv_rows)
+
+        json_changed = False
+        with open(self.json_file, 'r', encoding='utf-8') as json_file:
+            json_data = json.load(json_file)
+
+        for item in json_data:
+            if str(item.get('codigo', '')).strip() == code and item.get('imagem') != filename:
+                item['imagem'] = filename
+                json_changed = True
+
+        if json_changed:
+            with open(self.json_file, 'w', encoding='utf-8') as json_file:
+                json.dump(json_data, json_file, ensure_ascii=False, indent=2)
+
+        feed_changed = False
+        with open(self.google_feed_file, 'r', encoding='utf-8', newline='') as feed_file:
+            feed_rows = list(csv.reader(feed_file))
+
+        image_url = f"https://www.primosinformatica.com.br/images/products/thumbnail/{filename}"
+        for row in feed_rows[1:]:
+            if row and row[0].strip() == code and len(row) >= 8 and row[7] != image_url:
+                row[7] = image_url
+                feed_changed = True
+
+        if feed_changed:
+            with open(self.google_feed_file, 'w', encoding='utf-8', newline='') as feed_file:
+                writer = csv.writer(feed_file)
+                writer.writerows(feed_rows)
 
     def encode_query_component(self, value):
         """Codifica consultas preservando modelos com /, + e caracteres especiais."""
@@ -492,9 +634,18 @@ class OptimizedPersistentDownloader:
                 'kabum.com.br',
                 'images.kabum.com.br',
                 'http2.kabum.com.br',
+                'img.terabyteshop.com.br',
+                'terabyteshop.com.br',
+                'media.pichau.com.br',
+                'pichau.com.br',
+                'pcyes.com.br',
+                'images.tcdn.com.br',
+                'cdn.awsli.com.br',
                 'googleusercontent.com',
                 'gstatic.com',
+                'bing.com',
                 'bing.net',
+                'yimg.com',
                 'alicdn.com',
                 'ae01.alicdn.com',
             )
@@ -1082,6 +1233,56 @@ class OptimizedPersistentDownloader:
 
         return " ".join(tokens) if tokens else product_name
 
+    def build_generic_fallback_queries(self, product, max_queries=7):
+        """Monta buscas genericas com foco em modelo, familia e nome compacto."""
+        name = str(product.get('nome') or '').strip()
+        compact_name = self.build_compact_search_query(name)
+        signature = self.build_product_signature(product)
+
+        brand = " ".join(signature['brand_tokens'][:2]).strip()
+        model = " ".join(signature['strict_model_tokens'][:2]).strip()
+        family = " ".join(signature['family_tokens'][:2]).strip()
+        specs = " ".join(signature['spec_tokens'][:2]).strip()
+        keywords = " ".join(signature['keyword_tokens'][:3]).strip()
+        model_parts = []
+        for token in signature['strict_model_tokens']:
+            for part in re.split(r'[-+/._\s]+', token):
+                part = part.strip()
+                if not part:
+                    continue
+                if len(part) >= 3 or any(char.isdigit() for char in part):
+                    model_parts.append(part)
+        split_model = " ".join(self.unique_preserve_order(model_parts)[:3]).strip()
+        queries = []
+
+        def add(query):
+            query = re.sub(r'\s+', ' ', str(query or '')).strip()
+            if query and query not in queries:
+                queries.append(query)
+
+        add(name)
+        if keywords and model:
+            add(f"{keywords} {model}")
+        if keywords and split_model:
+            add(f"{keywords} {split_model}")
+        if brand and model:
+            add(f"{brand} {model}")
+            add(f"{brand} {model} produto")
+        if brand and split_model:
+            add(f"{brand} {split_model}")
+        if keywords and brand and model:
+            add(f"{keywords} {brand} {model}")
+        if keywords and split_model:
+            add(f"{keywords} {split_model} produto")
+        if brand and family:
+            add(f"{brand} {family} {specs}".strip())
+        if compact_name:
+            add(f"{compact_name} produto hardware")
+            add(f"{compact_name} foto produto")
+            add(f"{compact_name} kabum terabyte pichau pcyes")
+
+        return queries[:max_queries]
+
     def get_product_tokens(self, product_name, max_tokens=8):
         """Quebra o nome em tokens úteis para validar relevância."""
         compact_name = self.build_compact_search_query(product_name, max_tokens=max_tokens)
@@ -1222,6 +1423,20 @@ class OptimizedPersistentDownloader:
                         print("      Resultado muito generico para esta busca exata")
                         continue
 
+                    product_page_urls = re.findall(
+                        r'https://www\.kabum\.com\.br/produto/\d+/[^"\'<>\s]+',
+                        html_content,
+                    )
+                    product_page_urls = self.sort_kabum_urls_by_relevance(
+                        self.unique_preserve_order(product_page_urls),
+                        product,
+                    )
+                    closest_kabum_page = None
+                    closest_kabum_score = None
+                    if product_page_urls:
+                        closest_kabum_page = product_page_urls[0]
+                        closest_kabum_score = self.candidate_text_score(product, closest_kabum_page)
+
                     kabum_patterns = [
                         r'"(https://http2\.kabum\.com\.br/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
                         r'"(https://http2\.kabum\.com\.br/produtos/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
@@ -1273,6 +1488,17 @@ class OptimizedPersistentDownloader:
                             print("      SUCESSO com Kabum - Produto validado!")
                             return True
 
+                    if closest_kabum_page and closest_kabum_score:
+                        blocking_reasons = [
+                            reason for reason in closest_kabum_score['reasons']
+                            if reason.startswith('marca ausente') or
+                            reason.startswith('modelo ausente') or
+                            reason.startswith('marca conflitante')
+                        ]
+                        if blocking_reasons:
+                            print(f"      Kabum retornou item parecido, mas diferente: {closest_kabum_page}")
+                            print(f"      Motivo do bloqueio: {', '.join(blocking_reasons)}")
+
                     print("      Nenhuma imagem valida encontrada")
                     time.sleep(0.2)
 
@@ -1280,10 +1506,10 @@ class OptimizedPersistentDownloader:
                     print(f"      Erro na busca Kabum: {e}")
 
         print("  Nenhuma imagem encontrada na Kabum via busca direta")
-        print("  Tentando Kabum via Bing Images...")
-        return self.search_bing_site_images(
+        print("  Tentando Kabum via Google e Bing Images...")
+        return self.search_priority_site_images(
             product,
-            "Kabum via Bing",
+            "Kabum",
             "kabum.com.br",
             allowed_hosts=("images.kabum.com.br", "http2.kabum.com.br"),
         )
@@ -1550,21 +1776,21 @@ class OptimizedPersistentDownloader:
         return False
 
     def method_2_terabyte_priority(self, product):
-        """Prioriza resultados da Terabyte via Bing Images."""
-        return self.search_bing_site_images(
+        """Prioriza resultados da Terabyte via Google e Bing."""
+        return self.search_priority_site_images(
             product,
             "Terabyte",
             "terabyteshop.com.br",
-            allowed_hosts=("img.terabyteshop.com.br",)
+            allowed_hosts=("img.terabyteshop.com.br", "images.tcdn.com.br")
         )
 
     def method_3_pichau_priority(self, product):
-        """Prioriza resultados da Pichau via Bing Images."""
-        return self.search_bing_site_images(
+        """Prioriza resultados da Pichau via Google e Bing."""
+        return self.search_priority_site_images(
             product,
             "Pichau",
             "pichau.com.br",
-            allowed_hosts=("media.pichau.com.br", "pichau-media.s3.amazonaws.com")
+            allowed_hosts=("media.pichau.com.br", "pichau-media.s3.amazonaws.com", "images.tcdn.com.br")
         )
 
     def method_1_requests_google(self, product):
@@ -1688,16 +1914,13 @@ class OptimizedPersistentDownloader:
         return False
     
     def method_3_alternative_sources(self, product):
-        """Método 3: Fontes alternativas - OTIMIZADO"""
+        """Fallback final em marketplaces."""
         print("\n" + "="*60)
-        print("MÉTODO 3: Fontes alternativas")
+        print("MARKETPLACE FALLBACK")
         print("="*60)
         
-        # Fontes expandidas com Mercado Livre e AliExpress
+        # Ultimo recurso: marketplaces
         sources = [
-            ("Bing Images", f"https://www.bing.com/images/search?q={quote(product['nome'] + ' white background')}&form=QBLH"),
-            ("Yahoo Images", f"https://images.search.yahoo.com/search/images?p={quote(product['nome'])}"),
-            ("DuckDuckGo Images", f"https://duckduckgo.com/i.js?q={quote(product['nome'])}"),
             ("Mercado Livre", f"https://lista.mercadolivre.com.br/{quote(product['nome'])}"),
             ("AliExpress", f"https://www.aliexpress.com/wholesale?SearchText={quote(product['nome'])}&catId=0&SortType=default")
         ]
@@ -1709,7 +1932,9 @@ class OptimizedPersistentDownloader:
                 response = self.session.get(url, timeout=10)
                 
                 if response.status_code == 200:
-                    html = response.text
+                    page_html = response.text
+                    tried_urls = set()
+                    attempts = 0
                     
                     # Padrões específicos por fonte
                     if source_name == "Mercado Livre":
@@ -1735,11 +1960,16 @@ class OptimizedPersistentDownloader:
                         ]
                     
                     for pattern in patterns:
-                        matches = re.findall(pattern, html)
-                        
-                        for match in matches[:5]:  # Primeiras 5 por padrão
+                        for match in re.finditer(pattern, page_html):
+                            attempts += 1
+                            if attempts > 20:
+                                break
+
                             # Limpar URL - remover aspas se existirem
-                            clean_url = match.strip('"')
+                            clean_url = match.group(1).strip('"')
+                            if clean_url in tried_urls:
+                                continue
+                            tried_urls.add(clean_url)
                             
                             # Filtros otimizados
                             if (len(clean_url) > 30 and 
@@ -1751,10 +1981,32 @@ class OptimizedPersistentDownloader:
                                 'placeholder' not in clean_url.lower() and
                                 'loading' not in clean_url.lower()):
                                 
-                                print(f"    URL: {clean_url[:60]}...")
-                                
+                                context_start = max(0, match.start() - 450)
+                                context_end = min(len(page_html), match.end() + 450)
+                                context_html = page_html[context_start:context_end]
+                                context_text = html.unescape(re.sub(r'<[^>]+>', ' ', context_html))
+                                score_data = self.candidate_text_score(
+                                    product,
+                                    source_name,
+                                    url,
+                                    clean_url,
+                                    context_text,
+                                )
+                                if score_data['conflicting_brands']:
+                                    continue
+                                if not (
+                                    score_data['accepted'] or
+                                    score_data['score'] >= max(0.34, score_data['minimum_score'] - 0.10)
+                                ):
+                                    continue
+
+                                print(f"    Score {score_data['score']:.2f}: {clean_url[:60]}...")
+
                                 if self.download_image_from_url(clean_url, product):
                                     return True
+
+                        if attempts > 20:
+                            break
                     
                     print(f"    Nenhuma imagem válida em {source_name}")
                 else:
@@ -1815,9 +2067,7 @@ class OptimizedPersistentDownloader:
             
             search_engines = [
                 ("Google Images", f"https://www.google.com/search?q={quote(term)}&tbm=isch&hl=pt-BR"),
-                ("Bing Images", f"https://www.bing.com/images/search?q={quote(term)}&form=QBLH"),
-                ("Yahoo Images", f"https://images.search.yahoo.com/search/images?p={quote(term)}"),
-                ("DuckDuckGo Images", f"https://duckduckgo.com/i.js?q={quote(term)}")
+                ("Bing Images", f"https://www.bing.com/images/search?q={quote(term)}&form=QBLH")
             ]
             
             for engine_name, search_url in search_engines:
@@ -1997,6 +2247,8 @@ class OptimizedPersistentDownloader:
         missing_products = []
         force_codes = {str(code).strip() for code in (force_codes or []) if str(code).strip()}
         found_force_codes = set()
+        ignored_entries = self.load_ignored_entries()
+        ignored_count = 0
 
         if not os.path.exists(self.csv_file):
             print("ERRO: CSV nao encontrado!")
@@ -2011,6 +2263,12 @@ class OptimizedPersistentDownloader:
                         continue
 
                     codigo = row['codigo'].strip()
+                    if codigo in force_codes:
+                        found_force_codes.add(codigo)
+
+                    if force_codes and not force_all and codigo not in force_codes:
+                        continue
+
                     imagem = row.get('imagem', f"{codigo}.webp").strip()
                     image_path = os.path.join(self.image_folder, imagem)
                     should_force = force_all or codigo in force_codes
@@ -2020,10 +2278,10 @@ class OptimizedPersistentDownloader:
                         product['codigo'] = codigo
                         product['nome'] = row['nome'].strip()
                         product['imagem'] = imagem
-                        missing_products.append(product)
-
-                    if codigo in force_codes:
-                        found_force_codes.add(codigo)
+                        if self.is_ignored_product(product, ignored_entries):
+                            ignored_count += 1
+                        else:
+                            missing_products.append(product)
 
         except Exception as e:
             print(f"ERRO ao ler CSV: {e}")
@@ -2031,9 +2289,243 @@ class OptimizedPersistentDownloader:
         missing_force_codes = sorted(force_codes - found_force_codes)
         if missing_force_codes:
             print(f"Codigos nao encontrados no CSV: {', '.join(missing_force_codes)}")
+        if ignored_count:
+            print(f"Ignorados pela lista de bloqueio: {ignored_count}")
 
         print(f"Encontrados {len(missing_products)} produtos para processar")
         return missing_products
+
+    def search_priority_site_images(self, product, site_name, domain, allowed_hosts=None):
+        """Tenta Google Images e Bing para um site prioritario."""
+        if self.search_google_site_images(
+            product,
+            f"{site_name} via Google",
+            domain,
+            allowed_hosts=allowed_hosts,
+        ):
+            return True
+
+        print(f"  Tentando {site_name} via Bing Images...")
+        return self.search_bing_site_images(
+            product,
+            f"{site_name} via Bing",
+            domain,
+            allowed_hosts=allowed_hosts,
+        )
+
+    def extract_generic_image_candidates(self, html_content, product, allowed_hosts=None):
+        """Extrai candidatos de mecanismos genericos de busca por imagem."""
+        candidates = []
+        seen = set()
+        patterns = [
+            r'"iurl":"([^"]+)"',
+            r'"imgUrl":"([^"]+)"',
+            r'"thumbnailUrl":"([^"]+)"',
+            r'data-src="(https://[^"]+)"',
+            r'src="(https://[^"]+)"',
+            r'"(https://[^"]+\.(?:jpg|jpeg|png|webp|gif|bmp|avif)[^"]*)"',
+        ]
+
+        for pattern in patterns:
+            for match in re.findall(pattern, html_content or ''):
+                clean_url = html.unescape(str(match)).replace('\\/', '/')
+                clean_url = clean_url.replace('\\u003a', ':').replace('\\u002f', '/')
+                clean_url = clean_url.strip().strip('"').strip("'")
+
+                if clean_url.startswith('//'):
+                    clean_url = f"https:{clean_url}"
+
+                if clean_url in seen or not self.is_probable_image_url(clean_url):
+                    continue
+
+                host = urlparse(clean_url).netloc.lower()
+                if allowed_hosts and not any(allowed_host in host for allowed_host in allowed_hosts):
+                    continue
+
+                if any(blocked in clean_url.lower() for blocked in ('logo', 'icon', 'sprite', 'placeholder', 'avatar')):
+                    continue
+
+                score_data = self.candidate_text_score(product, clean_url)
+                blocking_reasons = any(
+                    reason.startswith('marca ausente') or
+                    reason.startswith('modelo ausente') or
+                    reason.startswith('marca conflitante')
+                    for reason in score_data['reasons']
+                )
+                accepted = self.url_matches_product_tokens(clean_url, product) or (
+                    not blocking_reasons and
+                    score_data['score'] >= max(0.34, score_data['minimum_score'] - 0.08)
+                )
+
+                seen.add(clean_url)
+                candidates.append({
+                    'image_url': clean_url,
+                    'score': score_data['score'],
+                    'accepted': accepted,
+                    'score_data': score_data,
+                })
+
+        return sorted(candidates, key=lambda item: item['score'], reverse=True)
+
+    def search_google_site_images(self, product, site_name, domain, allowed_hosts=None):
+        """Busca imagens no Google limitadas a um dominio especifico."""
+        print("\n" + "="*60)
+        print(f"METODO: {site_name}")
+        print("="*60)
+
+        product_name = product['nome'].strip()
+        compact_name = self.build_compact_search_query(product_name)
+        search_terms = [
+            f'site:{domain} "{product_name}"',
+            f'site:{domain} {compact_name}',
+            f'{compact_name} site:{domain} produto',
+        ]
+
+        patterns = [
+            r'data-src="(https://[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+            r'src="(https://[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
+            r'"(https://[^"]*\.(?:jpg|jpeg|png|webp)[^"]*)"',
+        ]
+
+        for term in search_terms:
+            try:
+                search_url = f"https://www.google.com/search?q={self.encode_query_component(term)}&tbm=isch&hl=pt-BR"
+                print(f"  Buscando no Google: {term}")
+                response = self.session.get(search_url, timeout=8)
+
+                if response.status_code != 200:
+                    print(f"    HTTP {response.status_code} no Google")
+                    continue
+
+                tried = set()
+                candidates = []
+                for pattern in patterns:
+                    for match in re.findall(pattern, response.text):
+                        clean_url = html.unescape(match.strip('"').replace('\\u003d', '=').replace('\\', ''))
+                        if clean_url in tried or not self.is_probable_image_url(clean_url):
+                            continue
+                        tried.add(clean_url)
+
+                        host = urlparse(clean_url).netloc.lower()
+                        if allowed_hosts and not any(allowed_host in host for allowed_host in allowed_hosts):
+                            continue
+                        if any(blocked in clean_url.lower() for blocked in ('logo', 'icon', 'sprite', 'placeholder', 'avatar')):
+                            continue
+
+                        score_data = self.candidate_text_score(product, term, clean_url)
+                        if score_data['conflicting_brands']:
+                            continue
+
+                        accepted = self.url_matches_product_tokens(clean_url, product) or (
+                            score_data['accepted'] or
+                            score_data['score'] >= max(0.34, score_data['minimum_score'] - 0.08)
+                        )
+                        candidates.append({
+                            'image_url': clean_url,
+                            'score': score_data['score'],
+                            'accepted': accepted,
+                            'score_data': score_data,
+                        })
+
+                strong_candidates = sorted(
+                    [item for item in candidates if item['accepted']],
+                    key=lambda item: item['score'],
+                    reverse=True,
+                )
+                if not strong_candidates:
+                    print(f"    Nenhuma imagem validada no Google para {site_name}")
+                    continue
+
+                for candidate in strong_candidates[:4]:
+                    details = candidate['score_data']
+                    if details['conflicting_brands']:
+                        continue
+
+                    print(f"    Score {candidate['score']:.2f}: {candidate['image_url'][:90]}")
+                    if self.download_image_from_url(candidate['image_url'], product):
+                        print(f"    SUCESSO com {site_name}")
+                        return True
+
+            except Exception as e:
+                print(f"    Erro no Google para {site_name}: {e}")
+
+        return False
+
+    def method_4_pcyes_priority(self, product):
+        """Prioriza resultados da PCYes via Google e Bing."""
+        return self.search_priority_site_images(
+            product,
+            "PCYes",
+            "pcyes.com.br",
+            allowed_hosts=("pcyes.com.br", "images.tcdn.com.br", "cdn.awsli.com.br"),
+        )
+
+    def method_5_hardware_sites_priority(self, product):
+        """Tenta outras lojas de hardware antes dos mecanismos genericos."""
+        additional_sites = [
+            ("WAZ", "waz.com.br", None),
+            ("Guerra Digital", "guerradigital.com.br", None),
+            ("Oficina dos Bits", "oficinadosbits.com.br", None),
+            ("HardStore", "hardstore.com.br", None),
+            ("Shopinfo", "shopinfo.com.br", None),
+        ]
+
+        for site_name, domain, allowed_hosts in additional_sites:
+            print(f"\nTentando loja de hardware adicional: {site_name}")
+            if self.search_priority_site_images(
+                product,
+                site_name,
+                domain,
+                allowed_hosts=allowed_hosts,
+            ):
+                return True
+
+        return False
+
+    def method_6_bing_fallback(self, product):
+        """Bing generico com foco em produtos de hardware."""
+        print("\n" + "="*60)
+        print("BING FALLBACK")
+        print("="*60)
+
+        search_terms = self.build_generic_fallback_queries(product)
+
+        for term in search_terms:
+            try:
+                search_url = f"https://www.bing.com/images/search?q={self.encode_query_component(term)}&form=HDRSC3"
+                print(f"  Buscando no Bing: {term}")
+                response = self.session.get(search_url, timeout=8)
+
+                if response.status_code != 200:
+                    print(f"    HTTP {response.status_code} no Bing")
+                    continue
+
+                candidates = self.extract_bing_image_candidates(response.text, product)
+                strong_candidates = sorted(
+                    [item for item in candidates if item['accepted']],
+                    key=lambda item: item['score'],
+                    reverse=True,
+                )
+                if not strong_candidates:
+                    print("    Nenhuma imagem validada no Bing")
+                    continue
+
+                for candidate in strong_candidates[:5]:
+                    details = candidate['score_data']
+                    if details['conflicting_brands']:
+                        continue
+
+                    title_preview = candidate['title'] or candidate['desc'] or candidate['page_url'] or candidate['image_url']
+                    print(f"    Score {candidate['score']:.2f}: {title_preview[:90]}")
+                    if self.download_image_from_url(candidate['image_url'], product):
+                        print("    SUCESSO com Bing")
+                        return True
+
+            except Exception as e:
+                print(f"    Erro no Bing: {e}")
+
+        print("  Nenhuma imagem valida encontrada no Bing")
+        return False
 
     def method_1_requests_google(self, product):
         """Metodo 4: Google fallback mais conservador."""
@@ -2041,10 +2533,7 @@ class OptimizedPersistentDownloader:
         print("GOOGLE FALLBACK")
         print("="*60)
 
-        search_terms = [
-            product['nome'],
-            self.build_compact_search_query(product['nome']) + " produto",
-        ]
+        search_terms = self.build_generic_fallback_queries(product, max_queries=5)
         patterns = [
             r'data-src="(https://[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
             r'src="(https://[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"',
@@ -2146,9 +2635,7 @@ class OptimizedPersistentDownloader:
                 print("    Imagem descartada: ainda ficou escura demais apos o processamento")
                 return False
 
-            filename = product['imagem']
-            if not filename.lower().endswith('.webp'):
-                filename += '.webp'
+            filename = self.resolve_output_filename(product)
 
             filepath = os.path.join(self.image_folder, filename)
 
@@ -2156,6 +2643,8 @@ class OptimizedPersistentDownloader:
                 img = img.convert('RGB')
 
             img.save(filepath, 'WEBP', quality=85, optimize=True)
+            self.update_product_image_references(product, filename)
+            product['imagem'] = filename
 
             print(f"    SUCESSO: {filename} ({len(response.content)//1024}KB)")
             return True
@@ -2211,12 +2700,25 @@ class OptimizedPersistentDownloader:
 
     def download_single_product_image(self, product):
         """Tenta todos os métodos para um único produto com prioridade em hardware."""
-        methods = [
+        priority_methods = [
             ("Kabum Priority", lambda: self.method_1_kabum_priority(product)),
             ("Terabyte Priority", lambda: self.method_2_terabyte_priority(product)),
             ("Pichau Priority", lambda: self.method_3_pichau_priority(product)),
-            ("Google Fallback", lambda: self.method_1_requests_google(product))
+            ("PCYes Priority", lambda: self.method_4_pcyes_priority(product)),
+            ("Hardware Stores Priority", lambda: self.method_5_hardware_sites_priority(product)),
         ]
+        fallback_methods = [
+            ("Google Fallback", lambda: self.method_1_requests_google(product)),
+            ("Bing Fallback", lambda: self.method_6_bing_fallback(product)),
+            ("Marketplace Fallback", lambda: self.method_3_alternative_sources(product)),
+        ]
+
+        methods = priority_methods if self.strict_sites_only else priority_methods + fallback_methods
+
+        if self.strict_sites_only:
+            print("Modo estrito ativo: somente lojas de hardware confiaveis serao usadas.")
+        else:
+            print("Modo padrao ativo: lojas de hardware primeiro, depois Google/Bing com validacao.")
         
         for method_name, method_func in methods:
             print(f"\n{'='*20} {method_name} {'='*20}")
@@ -2303,6 +2805,17 @@ def main():
         action='store_true',
         help='Reprocessa todos os produtos mesmo se a imagem ja existir.',
     )
+    mode_group = parser.add_mutually_exclusive_group()
+    mode_group.add_argument(
+        '--strict-sites-only',
+        action='store_true',
+        help='Usa apenas lojas de hardware confiaveis e nao tenta fallbacks genericos.',
+    )
+    mode_group.add_argument(
+        '--allow-generic-fallbacks',
+        action='store_true',
+        help='Mantido por compatibilidade. O comportamento padrao ja tenta fallbacks genericos validados.',
+    )
     args = parser.parse_args()
     force_codes = parse_code_arguments(args.codigo)
 
@@ -2311,16 +2824,23 @@ def main():
     print("="*80)
     print("NOVAS FUNCIONALIDADES:")
     print("OK KABUM PRIORITY - Busca prioritaria na Kabum")
+    print("OK PRIORIDADE PARA TERABYTE, PICHAU, PCYES E OUTRAS LOJAS DE HARDWARE")
     print("OK VALIDACAO DE MARCA E MODELO")
     print("OK LEITURA DE TITULO/DESCRICAO NO BING")
+    print("OK BUSCA VIA GOOGLE IMAGES")
+    print("OK LOJAS DE HARDWARE PRIMEIRO + FALLBACK GENERICO VALIDADO")
     print("OK DETECCAO MELHOR DE FUNDO PRETO")
     print("OK REPROCESSAMENTO POR CODIGO")
     print("="*80)
     print("METODOS DISPONIVEIS:")
     print("- Metodo 1: Kabum Priority")
-    print("- Metodo 2: Terabyte Priority via Bing Images")
-    print("- Metodo 3: Pichau Priority via Bing Images")
-    print("- Metodo 4: Google Fallback mais conservador")
+    print("- Metodo 2: Terabyte Priority via Google e Bing")
+    print("- Metodo 3: Pichau Priority via Google e Bing")
+    print("- Metodo 4: PCYes Priority via Google e Bing")
+    print("- Metodo 5: Outras lojas de hardware")
+    print("- Metodo 6: Google Fallback mais conservador")
+    print("- Metodo 7: Bing Fallback")
+    print("- Metodo 8: Marketplace Fallback (Mercado Livre / AliExpress)")
     print("="*80)
     print()
 
@@ -2344,11 +2864,28 @@ def main():
         print("Modo force-all ativo: todas as imagens serao reprocessadas.")
 
     downloader = OptimizedPersistentDownloader()
+    downloader.strict_sites_only = args.strict_sites_only
+    if downloader.strict_sites_only:
+        print("Modo estrito ativo: apenas lojas de hardware confiaveis.")
+    else:
+        print("Modo padrao ativo: lojas de hardware primeiro, depois Google/Bing com validacao forte.")
     downloader.download_all_missing_images(
         force_codes=force_codes,
         force_all=args.force_all,
     )
 
-
 if __name__ == "__main__":
-    main()
+    exit_code = 0
+    try:
+        main()
+    except KeyboardInterrupt:
+        exit_code = 1
+        print("\nProcesso interrompido pelo usuario.")
+    except Exception as exc:
+        exit_code = 1
+        print(f"\nERRO inesperado: {exc}")
+        traceback.print_exc()
+    finally:
+        pause_if_opened_from_explorer()
+
+    raise SystemExit(exit_code)

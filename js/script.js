@@ -63,6 +63,15 @@ function parseNumericValue(value, fallback = 0) {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
+function normalizeCategoryName(category) {
+  const normalized = String(category || '').trim();
+  if (!normalized) {
+    return '';
+  }
+
+  return normalized.toLowerCase() === 'bateria' ? 'energia' : normalized;
+}
+
 function getProductPriceMeta(product = {}) {
   const currentPrice = parseNumericValue(product.preco, 0);
   const explicitOriginalPrice = parseNumericValue(product.precoOriginal, 0);
@@ -307,10 +316,12 @@ function initRouter() {
   }
   
   // Função para navegar sem recarregar
-  function navigateTo(path, category = null, productSlug = null) {
+function navigateTo(path, category = null, productSlug = null) {
+    const normalizedCategory = category ? normalizeCategoryName(category) : null;
+
     // Atualizar URL sem recarregar página
-    if (category) {
-      history.pushState({ category }, '', `/categoria/${category}`);
+    if (normalizedCategory) {
+      history.pushState({ category: normalizedCategory }, '', `/categoria/${normalizedCategory}`);
     } else if (productSlug) {
       history.pushState({ productSlug }, '', `/produto/${productSlug}`);
     } else {
@@ -318,8 +329,8 @@ function initRouter() {
     }
     
     // Disparar navegação
-    if (category) {
-      showCategory(category);
+    if (normalizedCategory) {
+      showCategory(normalizedCategory);
     } else if (productSlug) {
       showProduct(productSlug);
     } else {
@@ -537,7 +548,8 @@ function migrateToSEOUrls() {
       history.replaceState({}, '', hashMapping[hash]);
     } else if (hash !== 'inicio') {
       // Categorias
-      history.replaceState({ category: hash }, '', `/categoria/${hash}`);
+      const normalizedCategory = normalizeCategoryName(hash);
+      history.replaceState({ category: normalizedCategory }, '', `/categoria/${normalizedCategory}`);
     } else {
       history.replaceState({}, '', '/');
     }
@@ -896,6 +908,8 @@ function renderProductPage(product, container) {
 
 // === FUNÇÃO PRINCIPAL - CATEGORIAS ===
 function showCategory(category) {
+  category = normalizeCategoryName(category);
+
   // Cancelar carregamentos de imagens pendentes (exceto para home)
   if (category !== 'inicio' && typeof window._cancelCategoryImageLoaders === 'function') {
     window._cancelCategoryImageLoaders();
@@ -2169,6 +2183,7 @@ function populateNavigationMenus() {
         'cabos': '<path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line>',
         'webcam': '<path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>',
         'fonte': '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>',
+        'energia': '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>',
         'bateria': '<rect x="2" y="5" width="12" height="6" rx="1"></rect><rect x="14" y="7" width="2" height="2"></rect>',
         'memória': '<rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="8" y1="10" x2="16" y2="10"></line><line x1="8" y1="14" x2="16" y2="14"></line><line x1="8" y1="18" x2="16" y2="18"></line><circle cx="6" cy="6" r="1"></circle><circle cx="18" cy="6" r="1"></circle><circle cx="6" cy="18" r="1"></circle><circle cx="18" cy="18" r="1"></circle>',
         'gabinetes': '<rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><rect x="9" y="6" width="6" height="4"></rect><rect x="9" y="12" width="6" height="4"></rect>',

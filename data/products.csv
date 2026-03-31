@@ -10,7 +10,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1868;GABINETE GAMER HAYOM AQUARIO 3 FANS GB1787;gabinetes;172,00;8;Gabinete Gamer HAYOM Aquario 3 Fans GB1787;Hayom;sim;gabinete-gamer-hayom-aquario-gb1787.webp
 1927;GABINETE GAMER HAYOM BRANCO GB1799;gabinetes;390,00;2;Gabinete Gamer HAYOM Branco GB1799;Hayom;nao;gabinete-gamer-hayom-branco-gb1799.webp
 1555;GABINETE GAMER HAYOM C 3 FANS GB1769;gabinetes;272,00;1;Gabinete Gamer HAYOM C 3 Fans GB1769;Hayom;nao;gabinete-gamer-hayom-c-3fans-gb1769.webp
-1947;GABINETE GAMER HAYOM PRETO GB1798 3 COOLER;gabinetes;272,00;4;Gabinete Gamer HAYOM Preto GB1798 3 Cooler;Hayom;nao;gabinete-gamer-hayom-preto-gb1798-3cooler.webp
+1947;GABINETE GAMER HAYOM PRETO GB1798 3 COOLER;gabinetes;272,00;4;Gabinete Gamer HAYOM Preto GB1798 3 Cooler;Hayom;nao;gabinete-hayom-gb1789.webp
 401821;GABINETE GAMER HAYOM VIDRO GB1701;gabinetes;440,00;2;Gabinete Gamer HAYOM Vidro GB1701;Hayom;nao;gabinete-gamer-hayom-vidro-gb1701.webp
 402665;GABINETE GAMER PRETO HAYOM 171090;gabinetes;345,00;2;Gabinete Gamer Preto HAYOM 171090;Hayom;nao;gabinete-gamer-preto-hayom-171090.webp
 1742;GABINETE HAYOM FONTE S/CABO GB1751;gabinetes;135,00;59;Gabinete HAYOM Fonte s/cabo GB1751;Hayom;nao;gabinete-hayom-fonte-scabo-gb1751.webp
@@ -27,14 +27,12 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1088;ROTEADOR WR TP LINK AX1500 DUAL BAND AX12 WIFI 6;Redes;280,00;1;Roteador AX1500 Dual Band AX12 WiFi 6;TP-Link;nao;roteador-tplink-ax12.webp
 402579;ROTEADOR WR TP LINK AX1800 DUAL BAND AX23 WIFI 6;Redes;470,00;1;Roteador AX1800 Dual Band AX23 WiFi 6;TP-Link;nao;roteador-tplink-ax23.webp
 1562;UBIQUITI AP UNIFI AC U6-PRO 4X4 S/FONTE;Redes;1775,00;1;Access Point UniFi AC U6-Pro 4x4;Ubiquiti;nao;ap-ubiquiti-u6pro.webp
-1072;UBIQUITI AP UNIFI UAP-AC-LITE-BR;Redes;890,00;1;Access Point UniFi UAP-AC-Lite;Ubiquiti;nao;ap-ubiquiti-uapaclite.webp
 1559;REPETIDOR WIRELESS TPLINK DUAL BAND AC750 RE200;Redes;189,00;1;Repetidor Dual Band AC750 RE200;TP-Link;nao;repetidor-tplink-re200.webp
 1291;ADAPTADOR USB REDE RJ45 3.0;Redes;145,00;1;Adaptador USB RJ45 2.0;Generico;nao;adaptador-usb-rj45-empree.webp
 1532;ADAPTADOR USB WIRELESS 600MBPS 5G;Redes;105,00;1;Adaptador USB Wireless 600Mbps 5G;Generico;nao;adaptador-usb-600mbps-5g.webp
 1296;ADAPTADOR USB WIRELESS AC1300 TENDA U12;Redes;150,00;1;Adaptador USB Wireless AC1300 U12;Tenda;nao;adaptador-tenda-u12.webp
 1558;ADAPTADOR USB WIRELESS AC1300 TP-LINK ARCHER T3U;Redes;165,00;1;Adaptador USB Wireless AC1300 T3U;TP-Link;nao;adaptador-tplink-t3u.webp
 1560;ADAPTADOR USB WIRELESS AC1300 TP-LINK ARCHER T4U;Redes;210,00;1;Adaptador USB Wireless AC1300 T4U;TP-Link;nao;adaptador-tplink-t4u.webp
-1557;ADAPTADOR USB WIRELESS TX20U PLUS TP-LINK WIFI 6;Redes;225,00;1;Adaptador USB TX20U Plus WiFi 6;TP-Link;nao;adaptador-tplink-tx20u.webp
 1871;TECLADO BRIGHT PRETO USB 0014;teclado;19,90;1;Teclado USB preto 0014;Bright;nao;teclado-bright-usb-0014.webp
 1867;MOUSE HAYOM OFFICER USB MU2904;mouse;5,90;1;Mouse USB Officer MU2904;Hayom;nao;mouse-hayom-mu2904.webp
 1698;MOUSE GAMER FORTREX RGB CRUSADER 70526;mouse;87,25;1;Mouse gamer RGB Crusader 70526;Fortrex;nao;mouse-fortrex-crusader-70526.webp
@@ -109,9 +107,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1938;MOUSE MULTILASER SEM FIO RECARREGAVEL 2.4 GHZ MO277;mouse;75,00;1;Mouse Multilaser recarregável MO277 2.4GHz;Multilaser;nao;mouse-multilaser-mo277-v2.webp
 1938;MOUSE MULTILASER S/FIO BLUETOOTH M5750 MO403;mouse;90,00;1;Mouse Multilaser Bluetooth M5750 MO403;Multilaser;nao;mouse-multilaser-mo403-v2.webp
 1562;UBIQUITI AP UNIFI AC U6-PRO 4X4 S/FONTE;Redes;1775,00;1;Access Point UniFi AC U6-Pro 4x4 sem fonte;Ubiquiti;nao;ap-ubiquiti-u6pro.webp
-1072;UBIQUITI AP UNIFI UAP-AC-LITE-BR;Redes;890,00;1;accessAccess Point UniFi UAP-AC-Lite;Ubiquiti;nao;ap-ubiquiti-uap-ac-lite.webp
 1559;REPETIDOR WIRELES TP LINK DUAL BAND AC750 RE200;Redes;189,00;1;Repetidor Dual Band AC750 RE200;TP-Link;nao;repetidor-tplink-re200.webp
-1557;ADAPTADOR USB WIRELESS TX20U PLUS TP-LINK WI-FI 6;Redes;225,00;1;Adaptador USB TX20U Plus WiFi 6;TP-Link;nao;adaptador-tplink-tx20u-plus.webp
 1617;MONITOR 21.5 GBT LED HDMI E VGA GBT-M218;monitor;312,00;1;Monitor 21.5 GBT-M218 HDMI VGA;GBT;nao;monitor-gbt-215-hdmi-vga-m218.webp
 1618;MONITOR 23.5 GBT LED HDMI VGA GBT-M218;monitor;410,88;1;Monitor 23.5 GBT-M218 HDMI VGA;GBT;nao;monitor-gbt-235-hdmi-vga-m218.webp
 1932;MONITOR 32 SAMSUNG GAMER QHD LS32CG55 ODYSSEY;monitor;1650,00;1;Monitor gamer 32 QHD LS32CG55 Odyssey;Samsung;nao;monitor-samsung-32-gamer-qhd-odyssey.webp
@@ -175,8 +171,8 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1486;HD EXTERNO 2TB SEAGATE PORTÁTIL EXPANSION USB 3.0;hd externo;620,00;1;HD externo portátil 2TB Seagate Expansion USB 3.0;Seagate;nao;hd2tb_sea.webp
 1779;HD EXTERNO 4TB SEAGATE USB 3.0 EXPANSION;hd externo;1110,00;1;HD externo 4TB Seagate Expansion USB 3.0;Seagate;nao;hd4tb_sea.webp
 1598;HD INTERNO 3TB SATA3 SEAGATE CONSTELLATION 7200;hd interno;710,45;1;HD interno 3TB Seagate Constellation SATA3 7200 RPM;Seagate;nao;hd3tb_sea.webp
-1884;FONTE REAL 500W ATX AEROCOOL KCAS 500;fonte;375,00;3;Fonte Real 500W ATX Aerocool KCAS 500;Aerocool;nao;aerocool_fonte500w.webp
-1885;FONTE AEROCOOL VX PLUS 700W 80 PLUS BRONZE;fonte;398,00;3;Fonte Aerocool VX Plus 700W 80 Plus Bronze;Aerocool;nao;aerocool_fonte700w.webp
+1884;FONTE REAL 500W ATX AEROCOOL KCAS 500;fonte;320,00;3;Fonte Real 500W ATX Aerocool KCAS 500;Aerocool;nao;aerocool_fonte500w.webp
+1885;FONTE AEROCOOL VX PLUS 700W 80 PLUS BRONZE;fonte;383,00;3;Fonte Aerocool VX Plus 700W 80 Plus Bronze;Aerocool;nao;aerocool_fonte700w.webp
 1886;FONTE REAL 1000W ATX AEROCOOL KCAS 80 PLUS GOLD;fonte;945,00;4;Fonte Real 1000W ATX Aerocool KCAS PFC Ativo;Aerocool;nao;aerocool_fonte1000w.webp
 1887;FONTE REAL 500W CORSAIR VS500 80 PLUS CP9020223BR;fonte;492,00;3;Fonte Real 500W Corsair VS500 80 Plus CP9020223BR;Corsair;nao;corsair_fonte500w.webp
 1888;FONTE HAYOM HX-200W;fonte;60,00;6;Fonte Hayom HX-200W;Hayom;nao;hayom_fonte200w.webp
@@ -190,13 +186,13 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 2015;PLACA MAE HAYOM 1155 H61M EL DDR3 PLM2300;placa mãe;160,00;3;Placa Mãe Hayom 1155 H61M EL DDR3 PLM2300;Hayom;nao;hayom-1155-h61m.webp
 2016;PLACA MAE PCWARE 1151 8ª IPMB360 PRO-GAMING DDR4;placa mãe;828,00;3;Placa Mãe PCWARE 1151 8ª IPMB360 PRO-GAMING DDR4;PCWARE;nao;pcware-1151-ipmb360.webp
 1906;AMD RYZEN 5 5600GT;processador;1208,00;1;Processador AMD Ryzen 5 5600GT - 6 núcleos, 12 threads, clock até 4.6GHz;AMD;nao;amd-ryzen5-5600gt.webp
-3001;BATERIA UNIPOWER 6V 4,5AH UP645SEG;bateria;51,00;3;Bateria Unipower 6V 4,5Ah UP645SEG;Unipower;nao;unipower-up645seg.webp
-3002;BATERIA UNIPOWER P/ NOBREAK 12V 5AH UP1250;bateria;86,00;3;Bateria Unipower p/ Nobreak 12V 5Ah UP1250;Unipower;nao;unipower-up1250.webp
-3003;BATERIA UNIPOWER P/ NOBREAK 12V 9AH F187 UP1290;bateria;143,00;3;Bateria Unipower p/ Nobreak 12V 9Ah F187 UP1290;Unipower;nao;unipower-up1290.webp
-3004;BATERIA UNIPOWER P/ NOBREAK 12V 7AH UP1270E;bateria;111,00;3;Bateria Unipower p/ Nobreak 12V 7Ah UP1270E;Unipower;nao;unipower-up1270e.webp
-3005;BATERIA UNIPOWER P/ NOBREAK 12V 7AH UP1270SEG;bateria;101,00;3;Bateria Unipower p/ Nobreak 12V 7Ah UP1270SEG;Unipower;nao;unipower-up1270seg.webp
-3006;BATERIA MULTILASER P/ NOBREAK 12V 5AH BC125;bateria;80,00;3;Bateria Multilaser p/ Nobreak 12V 5Ah BC125;Multilaser;nao;multilaser-bc125.webp
-3007;BATERIA MULTILASER P/ NOBREAK 12V 7AH BC127;bateria;95,51;3;Bateria Multilaser p/ Nobreak 12V 7Ah BC127;Multilaser;nao;multilaser-bc127.webp
+3001;BATERIA UNIPOWER 6V 4,5AH UP645SEG;energia;51,00;3;Bateria Unipower 6V 4,5Ah UP645SEG;Unipower;nao;unipower-up645seg.webp
+3002;BATERIA UNIPOWER P/ NOBREAK 12V 5AH UP1250;energia;86,00;3;Bateria Unipower p/ Nobreak 12V 5Ah UP1250;Unipower;nao;unipower-up1250.webp
+3003;BATERIA UNIPOWER P/ NOBREAK 12V 9AH F187 UP1290;energia;143,00;3;Bateria Unipower p/ Nobreak 12V 9Ah F187 UP1290;Unipower;nao;unipower-up1290.webp
+3004;BATERIA UNIPOWER P/ NOBREAK 12V 7AH UP1270E;energia;111,00;3;Bateria Unipower p/ Nobreak 12V 7Ah UP1270E;Unipower;nao;unipower-up1270e.webp
+3005;BATERIA UNIPOWER P/ NOBREAK 12V 7AH UP1270SEG;energia;101,00;3;Bateria Unipower p/ Nobreak 12V 7Ah UP1270SEG;Unipower;nao;unipower-up1270seg.webp
+3006;BATERIA MULTILASER P/ NOBREAK 12V 5AH BC125;energia;80,00;3;Bateria Multilaser p/ Nobreak 12V 5Ah BC125;Multilaser;nao;multilaser-bc125.webp
+3007;BATERIA MULTILASER P/ NOBREAK 12V 7AH BC127;energia;95,51;3;Bateria Multilaser p/ Nobreak 12V 7Ah BC127;Multilaser;nao;multilaser-bc127.webp
 3008;MEMORIA NOTE DDR3 8GB 1600 1.35v KINGSTON CL11;memória;163,00;0;Memória Note DDR3 8GB 1600 1.35v Kingston CL11;Kingston;nao;memoria-note-ddr3-8gb-1600-kingston.webp
 3009;MEMORIA DDR3 8GB 1600MHZ KINGSTON CL11;memória;198,00;0;Memória DDR3 8GB 1600MHz Kingston CL11;Kingston;nao;memoria-ddr3-8gb-1600-kingston.webp
 3010;MEMORIA DDR5 16GB 5600MHZ KINGSTON FURY;memória;1750,00;0;Memória DDR5 16GB 5600MHz Kingston Fury;Kingston;nao;memoria-ddr5-16gb-5600-fury.webp
@@ -208,15 +204,14 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 3016;PLACA DE VÍDEO AMD RX 590 GME MONARCH DRAGON;placa de vídeo;1100,00;1;AMD RX 590 GME Monarch Dragon;AMD;nao;rx590monarch.webp
 1526;TRANSFORMADOR 1500 VA BIVOLT 220/115V PRATIC;energia;177,00;4;Transformador 1500VA bivolt 220/115V Pratic;Pratic;nao;transformador-1500va-bivolt-pratic.webp
 2152;TRANSFORMADOR 2000 VA BIVOLT 220/115V PRATIK;energia;210,00;2;Transformador 2000VA bivolt 220/115V Pratik;Pratik;nao;transformador-2000va-bivolt-pratik.webp
-2151;BATERIA PIONEIRO NOBREAK 12V 9AH NT12-9F2;bateria;130,00;20;Bateria Pioneiro p/ Nobreak 12V 9Ah NT12-9F2;Pioneiro;nao;bateria-pioneiro-12v-9ah-nt12-9f2.webp
-2150;BATERIA PIONEIRO NOBREAK 12V 7AH NT12-7F2;bateria;96,00;42;Bateria Pioneiro p/ Nobreak 12V 7Ah NT12-7F2;Pioneiro;nao;bateria-pioneiro-12v-7ah-nt12-7f2.webp
+2151;BATERIA PIONEIRO NOBREAK 12V 9AH NT12-9F2;energia;130,00;20;Bateria Pioneiro p/ Nobreak 12V 9Ah NT12-9F2;Pioneiro;nao;bateria-pioneiro-12v-9ah-nt12-9f2.webp
+2150;BATERIA PIONEIRO NOBREAK 12V 7AH NT12-7F2;energia;96,00;42;Bateria Pioneiro p/ Nobreak 12V 7Ah NT12-7F2;Pioneiro;nao;bateria-pioneiro-12v-7ah-nt12-7f2.webp
 2148;FONE BLUETOOTH OWS-Y7 WIRELESS AJ-D58-H;audio;75,00;2;Fone bluetooth OWS-Y7 wireless AJ-D58-H;Generico;nao;fone-bluetooth-ows-y7-aj-d58-h.webp
 2145;FITA CREPE 25MM 50MTS STARTOOLS;acessórios;10,50;10;Fita crepe 25mm 50mts Startools;Startools;nao;fita-crepe-25mm-50mts-startools.webp
 2143;ADAPTADOR HDMI X MICRO HDMI SEGATO 3157;adaptadores;15,00;5;Adaptador HDMI x Micro HDMI Segato 3157;Segato;nao;adaptador-hdmi-micro-hdmi-segato-3157.webp
 2144;CHAVE DE FENDA 1X1 1/4 X 6;acessórios;17,00;5;Chave de fenda 1x1 1/4 x 6;Generico;nao;chave-de-fenda-1x1-1-4x6.webp
 2146;ABRACADEIRA TRI CM100/150/200 0,25CM TROYATOOLS;acessórios;5,00;4;Abracadeira TRI CM100/150/200 0,25cm Troyatools;Troyatools;nao;abracadeira-tri-cm100-150-200-025cm-troyatools.webp
 1642;ESTABILIZADOR MCM 1500VA BIVOLT;energia;578,00;6;Estabilizador MCM 1500VA bivolt;MCM;nao;estabilizador-mcm-1500va-bivolt.webp
-1407;MEMORIA DDR4 8GB 2666 MHZ KINGSTON KVR26N19S8/8;memória;718,00;3;Memoria DDR4 8GB 2666MHz Kingston KVR26N19S8/8;Kingston;nao;memoria-ddr4-8gb-2666-kingston-kvr26n19s8-8.webp
 2142;PLACA DE VIDEO 8GB MIGOL RX590 DDR5 RADEON 128 BIT;placa de vídeo;1100,00;1;Placa de video RX590 8GB DDR5 Radeon 128 bits Migol;Migol;nao;rx590-migol-8gb-ddr5-128bit.webp
 2057;CARREGADOR PORTATIL 20.000 MAH KIMASTER KR-932;acessórios;150,00;1;Carregador portatil 20000mAh Kimaster KR-932;Kimaster;nao;carregador-portatil-kimaster-kr932-20000mah.webp
 2129;COOLER UNIVERSAL P INTEL E AMD GRANDE HAYOM FC1313;cooler;45,00;5;Cooler universal para Intel e AMD grande Hayom FC1313;Hayom;nao;cooler-universal-hayom-fc1313.webp
@@ -232,7 +227,6 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 2128;KIT FERRAMENTA 129 PECAS FASTERR FST 129;acessórios;170,00;1;Kit ferramenta 129 pecas Fasterr FST 129;Fasterr;nao;kit-ferramenta-fasterr-fst129-129pecas.webp
 2138;CARREGADOR PORTATIL 20.000MAH KAPBOM PRETO KA-9756;acessórios;95,00;1;Carregador portatil 20000mAh Kapbom preto KA-9756;Kapbom;nao;carregador-portatil-kapbom-ka9756-20000mah-preto.webp
 1704;FONE BLUETOOTH PHILIPS TAH2209BK/00 PRETO;audio;145,00;3;Fone bluetooth Philips TAH2209BK/00 preto;Philips;nao;fone-bluetooth-philips-tah2209bk-00-preto.webp
-2119;FONTE REAL 500W ATX AEROCOOL KCAS 80 PLUS 59765;fonte;320,00;2;Fonte real 500W ATX Aerocool KCAS 80 Plus 59765;Aerocool;nao;aerocool-kcas-500w-59765.webp
 2123;PASTA TERMICA FORTREK 3G FREEZY LIGHT;acessórios;15,00;5;Pasta termica Fortrek 3g Freezy Light;Fortrek;nao;pasta-termica-fortrek-freezy-light-3g.webp
 2124;LIMPA TELA 60ML C/LENCO FORTREK;acessórios;15,00;20;Limpa tela 60ml com lenco Fortrek;Fortrek;nao;limpa-tela-fortrek-60ml-lenco.webp
 2125;AR COMPRIMIDO 200G / 164ML AIR DUSTER IMPLASTEC;acessórios;50,00;13;Ar comprimido 200g / 164ml Air Duster Implastec;Implastec;nao;ar-comprimido-implastec-air-duster-200g.webp
@@ -240,8 +234,11 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1078;FONTE REAL 600W ATX AEROCOOL KCAS 80 PLUS 64802;fonte;355,00;2;Fonte real 600W ATX Aerocool KCAS 80 Plus 64802;Aerocool;nao;aerocool-kcas-600w-64802.webp
 2120;FONTE REAL 400W ATX AEROCOOL KCAS FC 64901;fonte;268,00;4;Fonte real 400W ATX Aerocool KCAS FC 64901;Aerocool;nao;aerocool-kcas-fc-400w-64901.webp
 2118;FONTE REAL 500W ATX AEROCOOL VX 500;fonte;205,00;4;Fonte real 500W ATX Aerocool VX 500;Aerocool;nao;aerocool-vx500.webp
-1256;BATERIA 12V 23A ALKALINE;bateria;8,00;17;Bateria 12V 23A alkaline;Generico;nao;bateria-12v-23a-alkaline.webp
+1256;BATERIA 12V 23A ALKALINE;energia;8,00;17;Bateria 12V 23A alkaline;Generico;nao;bateria-12v-23a-alkaline.webp
 2127;SUPORTE MOVEL FORTREK TV MONITOR FK441S;acessórios;386,00;3;Suporte movel Fortrek TV/Monitor FK441S;Fortrek;nao;suporte-movel-fortrek-tv-monitor-fk441s.webp
 1563;FONE C/ MICROFONE HEADSET USB FORTREK FK731A;audio;86,00;49;Headset USB Fortrek FK731A com microfone;Fortrek;nao;headset-usb-fortrek-fk731a.webp
 1586;FILTRO DE LINHA DPS 3P ICLAMPER ENERGIA 5 PRETO;energia;86,00;2;Filtro de linha DPS 3P iClamper Energia 5 preto;Clamper;nao;filtro-linha-iclamper-energia-5-preto.webp
 2133;CARREGADOR PORTATIL 10.000MAH PEINING PRETO WUP-832;acessórios;120,00;1;Carregador portatil 10000mAh Peining preto WUP-832;Peining;nao;carregador-portatil-peining-wup-832-10000mah-preto.webp
+1812;NOTEBOOK DELL LAT 3450 I7 32G MEM SSD 1TB WIN11;notebook;6200,00;1;Notebook Dell Latitude 3450 i7 32GB memoria SSD 1TB Win11;Dell;nao;placeholder.webp
+1573;NOBREAK SMS 600V PRETO BIV LITE;energia;520,00;4;Nobreak SMS 600VA preto bivolt Lite;SMS;nao;nobreak-sms-600v-preto-biv-lite.webp
+1908;ESTABILIZADOR SMS 300VA PRETO BIV;energia;267,00;1;Estabilizador SMS 300VA preto bivolt;SMS;nao;estabilizador-sms-300va-preto-biv.webp

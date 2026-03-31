@@ -1,58 +1,48 @@
-# Ferramentas do Projeto
+# Tools
 
-## Scripts disponíveis:
+Esta pasta foi reduzida para manter apenas o fluxo atual de download automatico
+de imagens dos produtos.
 
-### 1. upload-images.bat
-Verifica quais imagens faltam para os produtos e ajuda a organizá-las.
+## Arquivos mantidos
 
-### 2. test-images.bat
-Testa se todas as imagens dos produtos estão presentes.
+- `baixar_primeiro_produto_otimizado.py`
+  Script principal. Busca imagens, valida marca e modelo, trata fundo quando
+  necessario e salva em `images/products/thumbnail`.
+  Prioriza Kabum, Terabyte, Pichau, PCYes e outras lojas de hardware, usando
+  Google e Bing antes do fallback geral.
+- `baixar_primeiro_produto_otimizado.bat`
+  Atalho para executar o script no Windows.
+- `instalar_dependencias.bat`
+  Instala as bibliotecas do fluxo.
+- `requirements.txt`
+  Lista de dependencias usadas pelo script.
 
-### 3. validate_html.py
-Valida o HTML do site em busca de erros.
+## Como usar
 
-### 4. crop_logo.py
-Recorta e otimiza o logo da loja.
+1. Execute `tools\instalar_dependencias.bat`
+2. Execute `tools\baixar_primeiro_produto_otimizado.bat`
 
-### 5. download_images.py
-Baixa imagens dos produtos automaticamente.
+Por padrao o script tenta primeiro as lojas confiaveis de hardware.
+Se nenhuma loja prioritaria retornar imagem, ele tenta Google e Bing
+como fallback, ainda com validacao de marca, modelo e qualidade.
+Se ainda assim falhar, usa marketplaces como ultimo recurso.
 
-### 6. generate_favicon.py
-Gera favicons a partir do logo.
+Se quiser travar a busca apenas nas lojas confiaveis de hardware, use
+`--strict-sites-only`.
 
-### 7. .env
-Arquivo de configuração com variáveis de ambiente.
+Opcional: se algum produto especifico nunca deve ser baixado automaticamente,
+coloque o codigo ou o nome do arquivo em `tools\image_download_ignore.txt`,
+um por linha. Por padrao esse arquivo fica vazio.
 
-## Como usar:
+## Exemplos
 
-1. **Upload de imagens:**
-   ```
-   Clique duplo em: tools\upload-images.bat
-   ```
-
-2. **Testar imagens:**
-   ```
-   Clique duplo em: tools\test-images.bat
-   ```
-
-3. **Validar HTML:**
-   ```
-   python tools/validate_html.py
-   ```
-
-## Exemplo de saída do upload-images.bat:
-
-```
-FALTA: i513400.webp (Produto: 1042)
-FALTA: rtx3060.webp (Produto: 1828)
-OK: gtx550.webp
-
-Total de produtos: 35
-Imagens faltando: 2
-```
-
-## Dicas:
-- Use imagens 150x150px para melhor performance
-- Formato `.webp` é obrigatório
-- Nomes devem ser exatamente como mostrados
-- Mantenha esta pasta organizada para facilitar manutenção
+- Baixar imagens faltantes:
+  `tools\baixar_primeiro_produto_otimizado.bat`
+- Reprocessar um produto:
+  `tools\baixar_primeiro_produto_otimizado.bat --codigo 1812`
+- Reprocessar varios produtos:
+  `tools\baixar_primeiro_produto_otimizado.bat --codigo 1812,2119`
+- Reprocessar tudo:
+  `tools\baixar_primeiro_produto_otimizado.bat --force-all`
+- Forcar modo estrito:
+  `tools\baixar_primeiro_produto_otimizado.bat --strict-sites-only`
