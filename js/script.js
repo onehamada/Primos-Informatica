@@ -14,6 +14,7 @@ const STORE_INFO = Object.freeze({
 });
 const STORE_ORIGIN = 'https://primos-informatica-ecommerce.web.app';
 const USER_SESSION_STORAGE_KEY = 'usuarioLogado';
+const USER_SESSION_TTL_MS = 1000 * 60 * 60 * 24;
 const ADMIN_SESSION_EMAILS = Object.freeze(['teste@primos.com']);
 let firebaseAuthObserverStarted = false;
 
@@ -59,28 +60,113 @@ function decorateSessionUser(sessionUser) {
   return normalizedUser;
 }
 
-function readStoredLoggedInUser() {
+function getSessionStorageAreas() {
+  const storages = [];
+
   try {
-    const rawValue = localStorage.getItem(USER_SESSION_STORAGE_KEY);
-    return rawValue ? decorateSessionUser(JSON.parse(rawValue)) : null;
+    if (typeof window.sessionStorage !== 'undefined') {
+      storages.push(window.sessionStorage);
+    }
   } catch (error) {
-    localStorage.removeItem(USER_SESSION_STORAGE_KEY);
+    // Ignorar ambientes sem sessionStorage.
+  }
+
+  try {
+    if (typeof window.localStorage !== 'undefined') {
+      storages.push(window.localStorage);
+    }
+  } catch (error) {
+    // Ignorar ambientes sem localStorage.
+  }
+
+  return storages;
+}
+
+function clearStoredUserSessionFromAllStorages() {
+  getSessionStorageAreas().forEach((storageArea) => {
+    try {
+      storageArea.removeItem(USER_SESSION_STORAGE_KEY);
+    } catch (error) {
+      // Ignorar falhas de limpeza para nao travar a pagina.
+    }
+  });
+}
+
+function isStoredUserSessionExpired(sessionUser) {
+  const expiresAt = Date.parse(sessionUser && sessionUser.sessionExpiresAt);
+  return Number.isFinite(expiresAt) && expiresAt <= Date.now();
+}
+
+function buildStoredUserSessionPayload(user) {
+  const normalizedUser = decorateSessionUser(user);
+  if (!normalizedUser) {
     return null;
   }
+
+  return {
+    ...normalizedUser,
+    sessionUpdatedAt: new Date().toISOString(),
+    sessionExpiresAt: new Date(Date.now() + USER_SESSION_TTL_MS).toISOString()
+  };
+}
+
+function readStoredLoggedInUser() {
+  const storageAreas = getSessionStorageAreas();
+
+  for (const storageArea of storageAreas) {
+    try {
+      const rawValue = storageArea.getItem(USER_SESSION_STORAGE_KEY);
+      if (!rawValue) {
+        continue;
+      }
+
+      const parsedValue = JSON.parse(rawValue);
+      if (isStoredUserSessionExpired(parsedValue)) {
+        clearStoredUserSessionFromAllStorages();
+        return null;
+      }
+
+      const sessionUser = decorateSessionUser(parsedValue);
+      if (sessionUser && storageArea !== storageAreas[0]) {
+        writeStoredLoggedInUser(sessionUser);
+      }
+      return sessionUser;
+    } catch (error) {
+      clearStoredUserSessionFromAllStorages();
+      return null;
+    }
+  }
+
+  return null;
 }
 
 function writeStoredLoggedInUser(user) {
   if (!user) {
-    localStorage.removeItem(USER_SESSION_STORAGE_KEY);
+    clearStoredUserSessionFromAllStorages();
     return;
   }
 
-  localStorage.setItem(USER_SESSION_STORAGE_KEY, JSON.stringify(decorateSessionUser(user)));
+  const payload = buildStoredUserSessionPayload(user);
+  if (!payload) {
+    clearStoredUserSessionFromAllStorages();
+    return;
+  }
+
+  getSessionStorageAreas().forEach((storageArea) => {
+    try {
+      storageArea.setItem(USER_SESSION_STORAGE_KEY, JSON.stringify(payload));
+    } catch (error) {
+      // Ignorar falhas pontuais para nao interromper o fluxo.
+    }
+  });
 }
 
 function clearStoredLoggedInUser() {
-  localStorage.removeItem(USER_SESSION_STORAGE_KEY);
+  clearStoredUserSessionFromAllStorages();
 }
+
+// Normaliza a sessao logo no bootstrap para remover dados expirados antes do restante da UI.
+readStoredLoggedInUser();
 
 function buildSessionUserFromAuth(authUser) {
   if (!authUser) {
@@ -4743,7 +4829,7 @@ function checkAuthStatus() {
       usuario = JSON.parse(usuarioLogado);
     } catch (e) {
       console.error('❌ Erro ao parsear usuário:', e);
-      localStorage.removeItem('usuarioLogado');
+      clearStoredLoggedInUser();
       checkAuthStatus(); // Recursivo para mostrar botão de login
       return;
     }
@@ -5188,7 +5274,7 @@ function changePassword() {
 
 // Função de logout
 function logout() {
-  localStorage.removeItem('usuarioLogado');
+  clearStoredLoggedInUser();
   window.location.reload();
 }
 
@@ -5347,7 +5433,7 @@ function closeUserMenuKeyHandler(e) {
 
 // Função de logout (mantida - usada pelo ProfileMenuManager)
 function logout() {
-  localStorage.removeItem('usuarioLogado');
+  clearStoredLoggedInUser();
   window.location.reload();
 }
 
@@ -5386,7 +5472,7 @@ window.simulateLoginOnIndex = function(nome = 'João Silva', email = 'joao@teste
     dataCadastro: new Date().toISOString()
   };
   
-  localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+  writeStoredLoggedInUser(usuario);
   console.log('✅ Usuário salvo no localStorage:', usuario);
   
   // Atualizar a UI
@@ -5398,7 +5484,7 @@ window.simulateLoginOnIndex = function(nome = 'João Silva', email = 'joao@teste
 window.simulateLogoutOnIndex = function() {
   console.log('🧪 Simulando logout na página inicial...');
   
-  localStorage.removeItem('usuarioLogado');
+  clearStoredLoggedInUser();
   console.log('✅ Usuário removido do localStorage');
   
   // Atualizar a UI
@@ -5688,7 +5774,7 @@ window.clearCorruptedAuthData = function() {
       console.log('✅ Dado está válido, não precisa limpar');
     } catch (e) {
       console.log('❌ Dado corrompido detectado, limpando...');
-      localStorage.removeItem('usuarioLogado');
+      clearStoredLoggedInUser();
       console.log('✅ Dado removido. Faça login novamente.');
     }
   } else {
@@ -5718,7 +5804,7 @@ window.repairUserData = function() {
     console.log('✅ Dado válido:', usuario);
     
     // Salvar versão limpa
-    localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+    writeStoredLoggedInUser(usuario);
     console.log('✅ Dado reparado e salvo');
     
   } catch (e) {
@@ -5741,7 +5827,7 @@ window.repairUserData = function() {
     console.log('🔄 Usuário reparado:', usuarioReparado);
     
     // Salvar versão reparada
-    localStorage.setItem('usuarioLogado', JSON.stringify(usuarioReparado));
+    writeStoredLoggedInUser(usuarioReparado);
     console.log('✅ Dado reparado salvo no localStorage');
   }
   
@@ -8414,7 +8500,7 @@ function logout() {
   closeUserMenu(); // Fecha o user-menu-overlay
   
   if (confirm('Tem certeza que deseja sair?')) {
-    localStorage.removeItem('usuarioLogado');
+    clearStoredLoggedInUser();
     window.location.reload();
   }
 }
@@ -8683,85 +8769,6 @@ let currentFilters = {
 };
 
 
-
-function applyFilters() {
-  // Coletar categorias selecionadas
-  const categoryCheckboxes = document.querySelectorAll('.category-filters input[type="checkbox"]:checked');
-  currentFilters.categories = Array.from(categoryCheckboxes).map(cb => cb.value.toLowerCase());
-  
-  // Coletar faixa de preço
-  const minPriceInput = document.getElementById('minPrice');
-  const maxPriceInput = document.getElementById('maxPrice');
-  currentFilters.minPrice = minPriceInput.value ? parseFloat(minPriceInput.value) : null;
-  currentFilters.maxPrice = maxPriceInput.value ? parseFloat(maxPriceInput.value) : null;
-  
-  // Filtrar produtos
-  filterProducts();
-  
-  // Fecha o painel de filtros
-  toggleFilters();
-  
-  // Fechar menu mobile automaticamente ao aplicar filtros
-  closeMobileMenu();
-}
-
-function clearFilters() {
-  console.log('Limpando filtros...');
-  currentFilters = {
-    categories: [],
-    brands: [],
-    priceRange: { min: 0, max: 10000 }
-  };
-  
-  // Limpar seleções na UI
-  const checkboxes = document.querySelectorAll('.filter-checkbox');
-  checkboxes.forEach(cb => cb.checked = false);
-  
-  const minPrice = document.getElementById('minPrice');
-  const maxPrice = document.getElementById('maxPrice');
-  if (minPrice) minPrice.value = '';
-  if (maxPrice) maxPrice.value = '';
-  
-  // Aplicar filtros vazios (mostra tudo)
-  filterProducts();
-  
-  // Fecha o painel
-  toggleFilters();
-}
-
-function toggleFilters() {
-  const filtersPanel = document.getElementById('filtersPanel');
-  const filtersToggle = document.getElementById('filtersToggle');
-  const filtersMenuOverlay = document.getElementById('filtersMenuOverlay');
-  
-  if (filtersPanel && filtersToggle && filtersMenuOverlay) {
-    const isActive = filtersPanel.classList.contains('active');
-    
-    if (isActive) {
-      // Fechar tudo
-      filtersPanel.classList.remove('active');
-      filtersToggle.classList.remove('active');
-      filtersMenuOverlay.classList.remove('active');
-    } else {
-      // Abrir igual ao mobile-menu-sidebar
-      filtersPanel.classList.add('active');
-      filtersToggle.classList.add('active');
-      filtersMenuOverlay.classList.add('active');
-    }
-  }
-}
-
-function toggleFiltersMenu() {
-  console.log('🧪 toggleFiltersMenu() chamada - Verificando se está sendo chamada no desktop');
-  console.log('📊 Estado atual:', {
-    filtersMenuOverlay: !!document.getElementById('filtersMenuOverlay'),
-    filtersToggle: !!document.getElementById('filtersToggle'),
-    filtersPanel: !!document.getElementById('filtersPanel'),
-    isActive: document.getElementById('filtersMenuOverlay')?.classList.contains('active')
-  });
-  
-  toggleFilters();
-}
 
 // === FUNÇÕES DOS MODAIS DO USER-MENU ===
 
@@ -9774,12 +9781,6 @@ function syncFiltersUIFromState() {
   const activeLabels = getCatalogActiveFilterLabels();
   if (filtersSummaryText) {
     filtersSummaryText.textContent = activeLabels.length
-      ? `Ativos agora: ${activeLabels.join(' • ')}`
-      : 'Use filtros rapidos, faixa de preco, marca e categoria para achar mais rapido o que voce quer.';
-  }
-
-  if (filtersSummaryText) {
-    filtersSummaryText.textContent = activeLabels.length
       ? `${activeLabels.length} filtro${activeLabels.length === 1 ? '' : 's'} ativo${activeLabels.length === 1 ? '' : 's'} para deixar a busca mais precisa.`
       : 'Use filtros rapidos, faixa de preco, marca e categoria para achar mais rapido o que voce quer.';
   }
@@ -9816,6 +9817,8 @@ function syncFiltersUIFromState() {
 function populateFiltersPanel() {
   const categoryContainer = document.getElementById('dynamicCategoryFilters');
   const brandContainer = document.getElementById('dynamicBrandFilters');
+  const categoryLabel = document.getElementById('categoryFiltersLabel');
+  const brandLabel = document.getElementById('brandFiltersLabel');
 
   if (!categoryContainer || !brandContainer || !Array.isArray(allProducts) || !allProducts.length) {
     return;
@@ -9849,7 +9852,7 @@ function populateFiltersPanel() {
   });
 
   categoryContainer.innerHTML = Array.from(categoryMap.entries())
-    .sort((a, b) => a[1].label.localeCompare(b[1].label, 'pt-BR'))
+    .sort((a, b) => b[1].count - a[1].count || a[1].label.localeCompare(b[1].label, 'pt-BR'))
     .map(([value, meta]) => `
       <label class="checkbox-label">
         <input type="checkbox" class="filter-checkbox filter-category-checkbox" value="${escapeHtml(value)}">
@@ -9859,6 +9862,7 @@ function populateFiltersPanel() {
     `)
     .join('');
 
+  const highlightedBrandCount = Math.min(20, brandMap.size);
   brandContainer.innerHTML = Array.from(brandMap.entries())
     .sort((a, b) => b[1].count - a[1].count || a[1].label.localeCompare(b[1].label, 'pt-BR'))
     .slice(0, 20)
@@ -9870,6 +9874,14 @@ function populateFiltersPanel() {
       </label>
     `)
     .join('');
+
+  if (categoryLabel) {
+    categoryLabel.textContent = `Categorias (${categoryMap.size})`;
+  }
+
+  if (brandLabel) {
+    brandLabel.textContent = `Marcas em destaque (${highlightedBrandCount})`;
+  }
 
   syncFiltersUIFromState();
 }
@@ -10140,6 +10152,57 @@ function filterProducts() {
   }
 }
 
+let filtersDrawerLastFocusedElement = null;
+
+function getFiltersDrawerFocusableElements() {
+  const filtersDrawer = document.getElementById('filtersDrawer');
+  if (!filtersDrawer) {
+    return [];
+  }
+
+  return Array.from(
+    filtersDrawer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+  ).filter((element) => {
+    return !element.disabled && element.getAttribute('aria-hidden') !== 'true' && element.offsetParent !== null;
+  });
+}
+
+function handleFiltersDrawerKeyboard(event) {
+  const filtersMenuOverlay = document.getElementById('filtersMenuOverlay');
+  if (!filtersMenuOverlay || !filtersMenuOverlay.classList.contains('active')) {
+    return;
+  }
+
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    toggleFiltersMenu(false);
+    return;
+  }
+
+  if (event.key !== 'Tab') {
+    return;
+  }
+
+  const focusableElements = getFiltersDrawerFocusableElements();
+  if (!focusableElements.length) {
+    return;
+  }
+
+  const firstElement = focusableElements[0];
+  const lastElement = focusableElements[focusableElements.length - 1];
+
+  if (event.shiftKey && document.activeElement === firstElement) {
+    event.preventDefault();
+    lastElement.focus();
+    return;
+  }
+
+  if (!event.shiftKey && document.activeElement === lastElement) {
+    event.preventDefault();
+    firstElement.focus();
+  }
+}
+
 function toggleFilters(forceState) {
   const filtersMenuOverlay = document.getElementById('filtersMenuOverlay');
   const filtersToggle = document.getElementById('filtersToggle');
@@ -10160,13 +10223,20 @@ function toggleFilters(forceState) {
   }
 
   if (shouldOpen) {
+    filtersDrawerLastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     syncFiltersUIFromState();
     window.requestAnimationFrame(function() {
-      const closeButton = document.querySelector('#filtersDrawer .mobile-menu-close');
-      if (closeButton && typeof closeButton.focus === 'function') {
-        closeButton.focus({ preventScroll: true });
+      const focusableElements = getFiltersDrawerFocusableElements();
+      const nextFocusTarget = focusableElements[0] || document.querySelector('#filtersDrawer .mobile-menu-close');
+      if (nextFocusTarget && typeof nextFocusTarget.focus === 'function') {
+        nextFocusTarget.focus({ preventScroll: true });
       }
     });
+  } else if (filtersDrawerLastFocusedElement && typeof filtersDrawerLastFocusedElement.focus === 'function') {
+    window.requestAnimationFrame(function() {
+      filtersDrawerLastFocusedElement.focus({ preventScroll: true });
+    });
+    filtersDrawerLastFocusedElement = null;
   } else if (filtersToggle && typeof filtersToggle.focus === 'function') {
     window.requestAnimationFrame(function() {
       filtersToggle.focus({ preventScroll: true });
@@ -10190,6 +10260,8 @@ document.addEventListener('click', function(e) {
     toggleFilters(false);
   }
 });
+
+document.addEventListener('keydown', handleFiltersDrawerKeyboard);
 
 // === SEO DINAMICO E REVIEWS VIA FIREBASE ===
 const DEFAULT_SEO_STATE = {
@@ -11281,7 +11353,7 @@ class ProfileMenuManager {
         this.updateProfileInfo();
       } catch (e) {
         console.error('❌ Erro ao parsear usuário:', e);
-        localStorage.removeItem('usuarioLogado');
+        clearStoredLoggedInUser();
         this.hideProfileButton();
       }
     } else {
@@ -11516,7 +11588,7 @@ class ProfileMenuManager {
     // Menu já foi fechado no evento de clique
     if (confirm('Tem certeza que deseja sair?')) {
       // Remover usuário do localStorage
-      localStorage.removeItem('usuarioLogado');
+      clearStoredLoggedInUser();
       
       console.log('👋 Usuário deslogado');
       
@@ -11621,7 +11693,7 @@ window.simulateLoginOnIndex = function() {
     dataCadastro: new Date().toISOString()
   };
   
-  localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+  writeStoredLoggedInUser(usuario);
   console.log('✅ Usuário salvo no localStorage:', usuario);
   
   // Atualizar a UI
@@ -11635,7 +11707,7 @@ window.simulateLoginOnIndex = function() {
 window.simulateLogoutOnIndex = function() {
   console.log('🧪 SIMULANDO LOGOUT NA PÁGINA INICIAL...');
   
-  localStorage.removeItem('usuarioLogado');
+  clearStoredLoggedInUser();
   console.log('✅ Usuário removido do localStorage');
   
   // Atualizar a UI
@@ -12199,7 +12271,7 @@ function saveProfileChanges(event) {
   };
   
   // Salvar no localStorage
-  localStorage.setItem('usuarioLogado', JSON.stringify(updatedUser));
+  writeStoredLoggedInUser(updatedUser);
   
   // Mostrar sucesso
   showNotification('Perfil atualizado com sucesso!', 'success');

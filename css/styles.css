@@ -8646,7 +8646,20 @@ main {
 
 .filters-toggle-row input {
   margin-top: 0.12rem;
+  width: 1.05rem;
+  height: 1.05rem;
   accent-color: #2563eb;
+}
+
+.filters-toggle-row:has(input:checked) {
+  border-color: rgba(37, 99, 235, 0.28);
+  background: linear-gradient(135deg, #eff6ff 0%, #f8fbff 100%);
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.08);
+}
+
+.filters-toggle-row:has(input:checked) span {
+  color: #1e3a8a;
+  font-weight: 700;
 }
 
 .filters-checkbox-grid {
@@ -8669,6 +8682,12 @@ main {
 .filters-checkbox-grid .checkbox-label:hover {
   border-color: #bfdbfe;
   background: #f8fbff;
+}
+
+.filters-checkbox-grid .checkbox-label:has(input:checked) {
+  border-color: rgba(37, 99, 235, 0.28);
+  background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.08);
 }
 
 .filters-checkbox-grid .checkbox-label span {

@@ -1,8 +1,8 @@
 // SERVICE WORKER OTIMIZADO PARA PRIMOS INFORMÁTICA
-const APP_VERSION = '20260406-13';
+const APP_VERSION = '20260406-14';
 const ASSET_VERSIONS = {
-  styles: '20260406-2022',
-  script: '20260406-2022',
+  styles: '20260406-2045',
+  script: '20260406-2045',
   lazyLoading: '20260316-1835',
   notifications: '20260313-1945',
   firebaseConfig: '20260402-1805',

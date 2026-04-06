@@ -370,6 +370,7 @@
 
   <script>
     const USER_SESSION_STORAGE_KEY = 'usuarioLogado';
+    const AUTH_SESSION_TTL_MS = 1000 * 60 * 60 * 24;
     const FALLBACK_USERS_STORAGE_KEY = 'usuariosFallback';
     const AUTH_RUNTIME_MODE_STORAGE_KEY = 'primosAuthRuntimeMode';
     const ADMIN_ACCOUNT_EMAIL = 'teste@primos.com';
@@ -488,14 +489,84 @@
         return normalizedUser;
       }
 
-      readStoredSession() {
+      getSessionStorageAreas() {
+        const storages = [];
+
         try {
-          const raw = localStorage.getItem(USER_SESSION_STORAGE_KEY);
-          return raw ? JSON.parse(raw) : null;
+          if (typeof window.sessionStorage !== 'undefined') {
+            storages.push(window.sessionStorage);
+          }
         } catch (error) {
-          localStorage.removeItem(USER_SESSION_STORAGE_KEY);
+          // Ignorar ambientes sem sessionStorage.
+        }
+
+        try {
+          if (typeof window.localStorage !== 'undefined') {
+            storages.push(window.localStorage);
+          }
+        } catch (error) {
+          // Ignorar ambientes sem localStorage.
+        }
+
+        return storages;
+      }
+
+      clearStoredSession() {
+        this.getSessionStorageAreas().forEach((storageArea) => {
+          try {
+            storageArea.removeItem(USER_SESSION_STORAGE_KEY);
+          } catch (error) {
+            // Ignorar falhas de limpeza para nao travar o login.
+          }
+        });
+      }
+
+      isStoredSessionExpired(user) {
+        const expiresAt = Date.parse(user && user.sessionExpiresAt);
+        return Number.isFinite(expiresAt) && expiresAt <= Date.now();
+      }
+
+      buildStoredSessionPayload(user) {
+        const normalizedUser = this.buildSessionUser(user);
+        if (!normalizedUser) {
           return null;
         }
+
+        return {
+          ...normalizedUser,
+          sessionUpdatedAt: new Date().toISOString(),
+          sessionExpiresAt: new Date(Date.now() + AUTH_SESSION_TTL_MS).toISOString()
+        };
+      }
+
+      readStoredSession() {
+        const storageAreas = this.getSessionStorageAreas();
+
+        for (const storageArea of storageAreas) {
+          try {
+            const raw = storageArea.getItem(USER_SESSION_STORAGE_KEY);
+            if (!raw) {
+              continue;
+            }
+
+            const parsed = JSON.parse(raw);
+            if (this.isStoredSessionExpired(parsed)) {
+              this.clearStoredSession();
+              return null;
+            }
+
+            const normalizedUser = this.decorateSessionUser(parsed);
+            if (normalizedUser && storageArea !== storageAreas[0]) {
+              this.persistSession(normalizedUser);
+            }
+            return normalizedUser;
+          } catch (error) {
+            this.clearStoredSession();
+            return null;
+          }
+        }
+
+        return null;
       }
 
       readFallbackUsers() {
@@ -653,7 +724,19 @@
       }
 
       persistSession(user) {
-        localStorage.setItem(USER_SESSION_STORAGE_KEY, JSON.stringify(this.buildSessionUser(user)));
+        const payload = this.buildStoredSessionPayload(user);
+        if (!payload) {
+          this.clearStoredSession();
+          return;
+        }
+
+        this.getSessionStorageAreas().forEach((storageArea) => {
+          try {
+            storageArea.setItem(USER_SESSION_STORAGE_KEY, JSON.stringify(payload));
+          } catch (error) {
+            // Ignorar falhas pontuais de persistencia.
+          }
+        });
       }
 
       clearErrors() {
@@ -798,8 +881,14 @@
 
       async initialize() {
         const auth = await this.waitForAuth();
+        const storedSession = this.readStoredSession();
 
         if (!auth) {
+          if (storedSession) {
+            this.redirectAfterAuth();
+            return;
+          }
+
           if (!this.shouldUseFallbackAuth()) {
             this.showNotification('Nao foi possivel carregar a autenticacao agora.', 'error');
           }
@@ -812,13 +901,15 @@
           } else {
             const storedUser = this.readStoredSession();
             if (!storedUser || storedUser.provider === 'firebase') {
-              localStorage.removeItem(USER_SESSION_STORAGE_KEY);
+              this.clearStoredSession();
             }
           }
         });
 
         if (auth.currentUser) {
           this.persistSession(auth.currentUser);
+          this.redirectAfterAuth();
+        } else if (storedSession && storedSession.provider !== 'firebase') {
           this.redirectAfterAuth();
         }
       }
