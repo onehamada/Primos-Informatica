@@ -596,7 +596,7 @@
   {
     "codigo": "1967",
     "nome": "KVM 2 PORTAS SWITCH USB",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 155,
     "qt": 1,
     "descricao": "Switch KVM USB com 2 portas",
@@ -607,7 +607,7 @@
   {
     "codigo": "1499",
     "nome": "SPLITTER HDMI 8 PORTAS KNUK PK-SW100",
-    "categoria": "Switch",
+    "categoria": "adaptadores",
     "preco": 180,
     "qt": 1,
     "descricao": "Splitter HDMI com 8 portas",
@@ -651,7 +651,7 @@
   {
     "codigo": "1561",
     "nome": "SWITCH TP-LINK 16 PORTAS GIGABIT TL-SG1016",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 640,
     "qt": 1,
     "descricao": "Switch Gigabit 16 portas TP-Link",
@@ -662,7 +662,7 @@
   {
     "codigo": "1351",
     "nome": "SWITCH TP-LINK 24 PORTAS GIGABIT SG1024D",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 850,
     "qt": 1,
     "descricao": "Switch Gigabit 24 portas TP-Link",
@@ -673,7 +673,7 @@
   {
     "codigo": "1353",
     "nome": "SWITCH TP-LINK 8 PORTAS GIGABIT LS1008G",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 183,
     "qt": 1,
     "descricao": "Switch Gigabit 8 portas TP-Link",
@@ -684,7 +684,7 @@
   {
     "codigo": "1204",
     "nome": "SWITCH TP-LINK 5 PORTAS GIGABIT LS1005G",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 115,
     "qt": 1,
     "descricao": "Switch Gigabit 5 portas TP-Link",
@@ -695,7 +695,7 @@
   {
     "codigo": "1058",
     "nome": "SWITCH MERCUSYS 8 PORTAS GIGABIT MS108G",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 115,
     "qt": 1,
     "descricao": "Switch Gigabit 8 portas Mercusys",
@@ -706,7 +706,7 @@
   {
     "codigo": "1059",
     "nome": "SWITCH MERCUSYS 5 PORTAS GIGABIT MS105G",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 84.3,
     "qt": 1,
     "descricao": "Switch Gigabit 5 portas Mercusys",
@@ -717,7 +717,7 @@
   {
     "codigo": "400548",
     "nome": "KVM D-LINK 16 PORTAS USB PS2 KVM-450",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 1655,
     "qt": 1,
     "descricao": "Switch KVM 16 portas USB e PS/2",
@@ -796,7 +796,7 @@
     "nome": "TECLADO OEX GAME ZIGGY MECANICO PRETO TC-607",
     "categoria": "teclado",
     "preco": 355,
-    "qt": 2,
+    "qt": 0,
     "descricao": "Teclado mecânico Ziggy TC-607",
     "marca": "OEX",
     "promocao": false,
@@ -1511,7 +1511,7 @@
     "nome": "PLACA MAE ASUS H610M-CS D4 PRIME",
     "categoria": "placa mãe",
     "preco": 702,
-    "qt": 2,
+    "qt": 0,
     "descricao": "Placa Mãe ASUS H610M-CS D4 PRIME",
     "marca": "ASUS",
     "promocao": false,
@@ -1522,7 +1522,7 @@
     "nome": "PLACA MAE ASUS PRIME H610M-K D4 PRIME 12ª GER",
     "categoria": "placa mãe",
     "preco": 702,
-    "qt": 3,
+    "qt": 0,
     "descricao": "Placa Mãe ASUS Prime H610M-K D4 Prime 12ª geração",
     "marca": "ASUS",
     "promocao": false,
@@ -1729,7 +1729,7 @@
   {
     "codigo": "2049",
     "nome": "HD SSD 240GB 2.5 SANDISK 530MB/S G26",
-    "categoria": "fora de estoque",
+    "categoria": "ssd",
     "preco": 240,
     "qt": 7,
     "descricao": "SSD 240GB 530MB/s G26",
@@ -2044,6 +2044,17 @@
     "marca": "PCWARE",
     "promocao": false,
     "imagem": "pcware-1151-ipmb360.webp"
+  },
+  {
+    "codigo": "2017",
+    "nome": "PLACA MAE HAYOM DDR4 H610 PLM2306",
+    "categoria": "placa mãe",
+    "preco": 689,
+    "qt": 2,
+    "descricao": "Placa Mãe Hayom DDR4 H610 LGA1700 PLM2306",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "h610mkprime.webp"
   },
   {
     "codigo": "1906",
@@ -2433,7 +2444,7 @@
   {
     "codigo": "2141",
     "nome": "CARREGADOR CELULAR USB X USB C",
-    "categoria": "acessórios",
+    "categoria": "adaptadores",
     "preco": 55,
     "qt": 5,
     "descricao": "Carregador celular USB x USB-C",
@@ -2648,7 +2659,7 @@
     "descricao": "Notebook Dell Latitude 3450 i7 32GB memoria SSD 1TB Win11",
     "marca": "Dell",
     "promocao": false,
-    "imagem": "latitude3450.webp"
+    "imagem": "notebook-dell-lat-3450-i7-32g-mem-ssd-1tb-win11.webp"
   },
   {
     "codigo": "1573",
@@ -2671,5 +2682,49 @@
     "marca": "SMS",
     "promocao": false,
     "imagem": "estabilizador-sms-300va-preto-biv.webp"
+  },
+  {
+    "codigo": "1778",
+    "nome": "NOBREAK SMS 1500VA PRO ENTRADA BIVOLT",
+    "categoria": "energia",
+    "preco": 1447,
+    "qt": 1,
+    "descricao": "Nobreak SMS 1500VA Pro entrada bivolt",
+    "marca": "SMS",
+    "promocao": false,
+    "imagem": "nobreak-sms-1500va-pro-bivolt.webp"
+  },
+  {
+    "codigo": "2104",
+    "nome": "WEBCAM LOGITECH USB FULL HD 1080P C920E",
+    "categoria": "webcam",
+    "preco": 580,
+    "qt": 3,
+    "descricao": "Webcam Logitech USB Full HD 1080p C920e",
+    "marca": "Logitech",
+    "promocao": false,
+    "imagem": "webcam-logitech-c920e.webp"
+  },
+  {
+    "codigo": "1544",
+    "nome": "MEMORIA NOTE DDR3 8GB 1333MHZ KINGSTON KVR16LS11",
+    "categoria": "memória",
+    "preco": 188,
+    "qt": 1,
+    "descricao": "Memória Note DDR3 8GB 1333MHz Kingston KVR16LS11",
+    "marca": "Kingston",
+    "promocao": false,
+    "imagem": "memoria-note-ddr3-8gb-1333-kingston-kvr16ls11.webp"
+  },
+  {
+    "codigo": "1407",
+    "nome": "MEMORIA DDR4 8GB 2666MHZ KINGSTON KVR26N19S8/8",
+    "categoria": "memória",
+    "preco": 695,
+    "qt": 3,
+    "descricao": "Memória DDR4 8GB 2666MHz Kingston KVR26N19S8/8",
+    "marca": "Kingston",
+    "promocao": false,
+    "imagem": "memoria-ddr4-8gb-2666-kingston-kvr26n19s8-8.webp"
   }
 ]

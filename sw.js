@@ -1,12 +1,14 @@
 // SERVICE WORKER OTIMIZADO PARA PRIMOS INFORMÁTICA
-const APP_VERSION = '20260317-1';
+const APP_VERSION = '20260406-13';
 const ASSET_VERSIONS = {
-  styles: '20260316-1835',
-  script: '20260317-1405',
+  styles: '20260406-2022',
+  script: '20260406-2022',
   lazyLoading: '20260316-1835',
   notifications: '20260313-1945',
-  firebaseConfig: '20260317-1405',
-  firebaseOrders: '20260317-1405'
+  firebaseConfig: '20260402-1805',
+  firebaseOrders: '20260317-1405',
+  firebaseProducts: '20260326-1730',
+  firebaseReviews: '20260401-1820'
 };
 const CACHE_NAME = `primos-informatica-${APP_VERSION}`;
 const RUNTIME_CACHE = `primos-runtime-${APP_VERSION}`;
@@ -15,12 +17,17 @@ const RUNTIME_CACHE = `primos-runtime-${APP_VERSION}`;
 const STATIC_CACHE_URLS = [
   '/',
   '/index.html',
+  '/auth.html',
+  '/admin.html',
+  '/produtos.html',
   `/css/styles.css?v=${ASSET_VERSIONS.styles}`,
   `/js/script.js?v=${ASSET_VERSIONS.script}`,
   `/js/lazy-loading.js?v=${ASSET_VERSIONS.lazyLoading}`,
   `/js/notifications.js?v=${ASSET_VERSIONS.notifications}`,
   `/js/firebase-config.js?v=${ASSET_VERSIONS.firebaseConfig}`,
   `/js/firebase-orders.js?v=${ASSET_VERSIONS.firebaseOrders}`,
+  `/js/firebase-products.js?v=${ASSET_VERSIONS.firebaseProducts}`,
+  `/js/firebase-reviews.js?v=${ASSET_VERSIONS.firebaseReviews}`,
   '/images/logo.png',
   '/images/favicons/favicon.ico',
   '/images/favicons/favicon-32x32.png',

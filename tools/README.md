@@ -10,6 +10,8 @@ de imagens dos produtos.
   necessario e salva em `images/products/thumbnail`.
   Prioriza Kabum, Terabyte, Pichau, PCYes e outras lojas de hardware, usando
   Google e Bing antes do fallback geral.
+  Quando encontra imagem boa com fundo branco ou preto chapado, tenta limpar
+  o fundo e preservar transparencia no `.webp`.
 - `baixar_primeiro_produto_otimizado.bat`
   Atalho para executar o script no Windows.
 - `instalar_dependencias.bat`
@@ -26,6 +28,8 @@ Por padrao o script tenta primeiro as lojas confiaveis de hardware.
 Se nenhuma loja prioritaria retornar imagem, ele tenta Google e Bing
 como fallback, ainda com validacao de marca, modelo e qualidade.
 Se ainda assim falhar, usa marketplaces como ultimo recurso.
+Produtos apontando para `placeholder.webp` ou `placeholder.png` tambem
+entram automaticamente na fila de processamento.
 
 Se quiser travar a busca apenas nas lojas confiaveis de hardware, use
 `--strict-sites-only`.

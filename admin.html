@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo - Primos Informática</title>
+    <meta name="description" content="Painel interno de administracao da Primos Informatica.">
+    <meta name="robots" content="noindex,nofollow">
+    <link rel="canonical" href="https://primos-informatica-ecommerce.web.app/admin.html">
     <link rel="stylesheet" href="css/styles.css?v=20260316-1835">
     <style>
         body {
@@ -72,6 +75,7 @@
         }
         
         .login-btn {
+            display: block;
             width: 100%;
             padding: 12px;
             background: #3b82f6;
@@ -81,11 +85,23 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
             transition: background 0.3s ease;
         }
         
         .login-btn:hover {
             background: #2563eb;
+        }
+
+        .login-btn.secondary {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .login-btn.secondary:hover {
+            background: #cbd5e1;
         }
         
         .error-message {
@@ -96,6 +112,11 @@
             border-radius: 8px;
             margin-bottom: 20px;
             border: 1px solid #fecaca;
+        }
+
+        .login-actions {
+            display: grid;
+            gap: 12px;
         }
         
         /* Admin Panel */
@@ -554,21 +575,10 @@
                 Email ou senha incorretos!
             </div>
             
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" required placeholder="teste@primos.com">
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Senha</label>
-                    <input type="password" id="password" required placeholder="Digite sua senha">
-                </div>
-                
-                <button type="submit" class="login-btn" id="loginBtn">
-                    Entrar
-                </button>
-            </form>
+            <div class="login-actions">
+                <a class="login-btn" id="adminLoginLink" href="/auth.html?redirect=%2Fadmin.html">Fazer login como admin</a>
+                <button type="button" class="login-btn secondary" onclick="window.location.href='/'">Voltar para a loja</button>
+            </div>
         </div>
     </div>
 
@@ -748,12 +758,108 @@
     
     <script>
         // Admin credentials
-        const ADMIN_EMAIL = 'teste@primos.com';
-        const ADMIN_PASSWORD = 'admin123';
+        const USER_SESSION_STORAGE_KEY = 'usuarioLogado';
+        const ADMIN_LOGIN_URL = '/auth.html?redirect=%2Fadmin.html';
         const DEFAULT_PRODUCT_IMAGE = 'default.webp';
         
         let allOrders = [];
         let unsubscribe = null;
+        let adminInitializationStarted = false;
+
+        function normalizeAdminEmail(value) {
+            return String(value || '').trim().toLowerCase();
+        }
+
+        function readAdminSessionUser() {
+            try {
+                const rawUser = localStorage.getItem(USER_SESSION_STORAGE_KEY);
+                return rawUser ? JSON.parse(rawUser) : null;
+            } catch (error) {
+                localStorage.removeItem(USER_SESSION_STORAGE_KEY);
+                return null;
+            }
+        }
+
+        function userHasAdminAccess(user) {
+            return Boolean(
+                user &&
+                (
+                    user.isAdmin === true ||
+                    user.role === 'admin' ||
+                    user.tipo === 'admin' ||
+                    normalizeAdminEmail(user.email) === 'teste@primos.com'
+                )
+            );
+        }
+
+        function updateAdminAccessState(message = '') {
+            const errorMessage = document.getElementById('errorMessage');
+            const subtitle = document.getElementById('loginScreenSubtitle') || document.querySelector('#loginScreen .login-header p');
+            const loginLink = document.getElementById('adminLoginLink');
+
+            if (subtitle) {
+                subtitle.textContent = message || 'Entre com uma conta admin da loja para ver pedidos, atualizar status e cadastrar produtos.';
+            }
+
+            if (errorMessage) {
+                if (message) {
+                    errorMessage.textContent = message;
+                    errorMessage.style.display = 'block';
+                } else {
+                    errorMessage.style.display = 'none';
+                }
+            }
+
+            if (loginLink) {
+                loginLink.href = ADMIN_LOGIN_URL;
+            }
+        }
+
+        function showAdminGate(message = '') {
+            const loginScreen = document.getElementById('loginScreen');
+            const adminPanel = document.getElementById('adminPanel');
+
+            if (loginScreen) {
+                loginScreen.style.display = 'flex';
+            }
+
+            if (adminPanel) {
+                adminPanel.style.display = 'none';
+            }
+
+            updateAdminAccessState(message);
+        }
+
+        function showAdminPanel() {
+            const loginScreen = document.getElementById('loginScreen');
+            const adminPanel = document.getElementById('adminPanel');
+
+            if (loginScreen) {
+                loginScreen.style.display = 'none';
+            }
+
+            if (adminPanel) {
+                adminPanel.style.display = 'block';
+            }
+
+            updateAdminAccessState('');
+        }
+
+        function guardAdminAccess() {
+            const sessionUser = readAdminSessionUser();
+
+            if (userHasAdminAccess(sessionUser)) {
+                showAdminPanel();
+                return true;
+            }
+
+            const message = sessionUser
+                ? 'A conta atual nao tem permissao para abrir o painel administrativo.'
+                : 'Faca login com a conta admin no site para continuar.';
+
+            showAdminGate(message);
+            return false;
+        }
 
         function showNotification(message, type = 'info') {
             const toast = document.createElement('div');
@@ -1036,6 +1142,30 @@
             }
         }
 
+        function login() {
+            window.location.href = ADMIN_LOGIN_URL;
+        }
+
+        async function logout() {
+            localStorage.removeItem(USER_SESSION_STORAGE_KEY);
+            closeProductOverlay();
+
+            if (unsubscribe) {
+                unsubscribe();
+                unsubscribe = null;
+            }
+
+            if (window.firebaseAuth && typeof window.firebaseAuth.signOut === 'function') {
+                try {
+                    await window.firebaseAuth.signOut();
+                } catch (error) {
+                    console.warn('Nao foi possivel encerrar a sessao do Firebase no admin:', error);
+                }
+            }
+
+            showAdminGate('Sessao encerrada. Faca login novamente para continuar.');
+        }
+
         function getLocalOrders() {
             const localOrders = JSON.parse(localStorage.getItem('pedidos') || '[]');
 
@@ -1289,6 +1419,7 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM carregado, inicializando...');
+            guardAdminAccess();
             
             // Adiciona listeners para os filtros
             const safeAddListener = (id, event, callback) => {
@@ -1336,6 +1467,10 @@
 
             // Inicializa o carregamento dos pedidos após o Firebase estar pronto
             const initializeAdmin = () => {
+                if (!guardAdminAccess()) {
+                    return;
+                }
+
                 if (typeof firebaseOrders !== 'undefined' && window.firebaseDB) {
                     console.log('FirebaseOrders e FirebaseDB detectados, carregando pedidos...');
                     loadOrders();

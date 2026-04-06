@@ -53,18 +53,18 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1949;PLACA MAE BRAZILPC A520 AM4 ULTRA;placa mãe;555,00;1;Placa-mãe chipset A520 socket AM4;BrazilPC;nao;placa-mae-brazilpc-a520.webp
 1950;PLACA MAE BRAZILPC H510 1200 DDR4;placa mãe;605,00;1;Placa-mãe H510 socket LGA1200 DDR4;BrazilPC;nao;placa-mae-brazilpc-h510.webp
 1659;CAIXA DE SOM JBL BOOMBOX 3 BLACK;audio;3102,45;1;Caixa de som bluetooth JBL Boombox 3 IPX7;JBL;nao;jbl-boombox-3-black.webp
-1967;KVM 2 PORTAS SWITCH USB;Redes;155,00;1;Switch KVM USB com 2 portas;Generico;nao;kvm-2-portas-usb.webp
-1499;SPLITTER HDMI 8 PORTAS KNUK PK-SW100;Switch;180,00;1;Splitter HDMI com 8 portas;Knuk;nao;splitter-hdmi-8-portas.webp
+1967;KVM 2 PORTAS SWITCH USB;Switch;155,00;1;Switch KVM USB com 2 portas;Generico;nao;kvm-2-portas-usb.webp
+1499;SPLITTER HDMI 8 PORTAS KNUK PK-SW100;adaptadores;180,00;1;Splitter HDMI com 8 portas;Knuk;nao;splitter-hdmi-8-portas.webp
 1951;CABO DE REDE CAT6 305M LAN MAX;cabos;860,00;1;Cabo de rede CAT6 caixa 305 metros;Lan Max;nao;cabo-rede-cat6-305m-lanmax.webp
 1948;CABO DE REDE CAT6 100M AZUL MPT;cabos;261,00;1;Cabo de rede CAT6 azul caixa 100 metros;MPT;nao;cabo-rede-cat6-100m-mpt.webp
 1592;CABO DE REDE CAT6 305M SOHPLUS AZUL;cabos;1333,00;1;Cabo de rede CAT6 azul caixa 305 metros;Sohplus;nao;cabo-rede-cat6-305m-sohplus.webp
-1561;SWITCH TP-LINK 16 PORTAS GIGABIT TL-SG1016;Redes;640,00;1;Switch Gigabit 16 portas TP-Link;TP-Link;nao;switch-tplink-tl-sg1016.webp
-1351;SWITCH TP-LINK 24 PORTAS GIGABIT SG1024D;Redes;850,00;1;Switch Gigabit 24 portas TP-Link;TP-Link;nao;switch-tplink-sg1024d.webp
-1353;SWITCH TP-LINK 8 PORTAS GIGABIT LS1008G;Redes;183,00;1;Switch Gigabit 8 portas TP-Link;TP-Link;nao;switch-tplink-ls1008g.webp
-1204;SWITCH TP-LINK 5 PORTAS GIGABIT LS1005G;Redes;115,00;1;Switch Gigabit 5 portas TP-Link;TP-Link;nao;switch-tplink-ls1005g.webp
-1058;SWITCH MERCUSYS 8 PORTAS GIGABIT MS108G;Redes;115,00;1;Switch Gigabit 8 portas Mercusys;Mercusys;nao;switch-mercusys-ms108g.webp
-1059;SWITCH MERCUSYS 5 PORTAS GIGABIT MS105G;Redes;84,30;1;Switch Gigabit 5 portas Mercusys;Mercusys;nao;switch-mercusys-ms105g.webp
-400548;KVM D-LINK 16 PORTAS USB PS2 KVM-450;Redes;1655,00;1;Switch KVM 16 portas USB e PS/2;D-Link;nao;kvm-dlink-kvm450.webp
+1561;SWITCH TP-LINK 16 PORTAS GIGABIT TL-SG1016;Switch;640,00;1;Switch Gigabit 16 portas TP-Link;TP-Link;nao;switch-tplink-tl-sg1016.webp
+1351;SWITCH TP-LINK 24 PORTAS GIGABIT SG1024D;Switch;850,00;1;Switch Gigabit 24 portas TP-Link;TP-Link;nao;switch-tplink-sg1024d.webp
+1353;SWITCH TP-LINK 8 PORTAS GIGABIT LS1008G;Switch;183,00;1;Switch Gigabit 8 portas TP-Link;TP-Link;nao;switch-tplink-ls1008g.webp
+1204;SWITCH TP-LINK 5 PORTAS GIGABIT LS1005G;Switch;115,00;1;Switch Gigabit 5 portas TP-Link;TP-Link;nao;switch-tplink-ls1005g.webp
+1058;SWITCH MERCUSYS 8 PORTAS GIGABIT MS108G;Switch;115,00;1;Switch Gigabit 8 portas Mercusys;Mercusys;nao;switch-mercusys-ms108g.webp
+1059;SWITCH MERCUSYS 5 PORTAS GIGABIT MS105G;Switch;84,30;1;Switch Gigabit 5 portas Mercusys;Mercusys;nao;switch-mercusys-ms105g.webp
+400548;KVM D-LINK 16 PORTAS USB PS2 KVM-450;Switch;1655,00;1;Switch KVM 16 portas USB e PS/2;D-Link;nao;kvm-dlink-kvm450.webp
 1823;CABO CONSOLE USB RJ45;cabos;70,00;1;Cabo console USB para RJ45;Generico;nao;cabo-console-usb-rj45.webp
 1631;WEB CAMERA USB FULL HD 1080P;webcam;78,00;1;Webcam USB resolução Full HD 1080p;Generico;nao;webcam-usb-fullhd.webp
 401767;WEBCAM LED 1.5MP USB COM MICROFONE;webcam;145,00;1;Webcam USB 1.5MP com microfone;BrazilPC;nao;webcam-led-15mp-brazilpc.webp
@@ -136,8 +136,8 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 2002;PLACA MAE BRASIL PC B1150 H81 BPCH81M;placa mãe;219,00;2;Placa Mãe Brasil PC B1150 H81;Brasil PC;sim;bpch81m.webp
 2003;PLACA MAE ASUS PRIME H310M-E HDMI DDR4;placa mãe;610,00;4;Placa Mãe ASUS Prime H310M-E HDMI DDR4;ASUS;nao;h310meprime.webp
 2004;PLACA MAE ASUS H310M-C / H310M-H;placa mãe;548,00;3;Placa Mãe ASUS H310M-C / H310M-H;ASUS;nao;h310mh.webp
-2005;PLACA MAE ASUS H610M-CS D4 PRIME;placa mãe;702,00;2;Placa Mãe ASUS H610M-CS D4 PRIME;ASUS;nao;h610mcsprime.webp
-2006;PLACA MAE ASUS PRIME H610M-K D4 PRIME 12ª GER;placa mãe;702,00;3;Placa Mãe ASUS Prime H610M-K D4 Prime 12ª geração;ASUS;nao;h610mk.webp
+2005;PLACA MAE ASUS H610M-CS D4 PRIME;placa mãe;702,00;0;Placa Mãe ASUS H610M-CS D4 PRIME;ASUS;nao;h610mcsprime.webp
+2006;PLACA MAE ASUS PRIME H610M-K D4 PRIME 12ª GER;placa mãe;702,00;0;Placa Mãe ASUS Prime H610M-K D4 Prime 12ª geração;ASUS;nao;h610mk.webp
 2009;PLACA MAE PCWARE 1151 8ª/9ª IPMH310G DDR4;placa mãe;530,00;3;Placa Mãe PCWARE 1151 8ª/9ª IPMH310G DDR4;PCWARE;nao;ipmh310g.webp
 2010;PLACA MAE PCWARE 1151 8ª/9ª IPMH310G DDR4 PRO;placa mãe;470,00;2;Placa Mãe PCWARE 1151 8ª/9ª IPMH310G DDR4 PRO;PCWARE;nao;ipmh310gpro.webp
 2011;PLACA MAE HAYOM H155 H61M EL DDR3 PLM2300;placa mãe;199,00;4;Placa Mãe Hayom H155 H61M EL DDR3;Hayom;nao;plm2300.webp
@@ -156,7 +156,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 2062;HD SSD 128 GB LEXAR;ssd;170,00;2;SSD 128GB;Lexar;nao;ssd-lexar-128gb.webp
 2061;HD SSD 240 GB ADATA SU630SS SATA;ssd;279,00;4;SSD 240GB SU630SS SATA;ADATA;nao;ssd-adata-su630ss-240gb.webp
 2063;HD SSD 240GB CRUCIAL MX500;ssd;240,00;4;SSD 240GB MX500;Crucial;nao;ssd-crucial-mx500-240gb.webp
-2049;HD SSD 240GB 2.5 SANDISK 530MB/S G26;fora de estoque;240,00;7;SSD 240GB 530MB/s G26;Sandisk;nao;ssd-sandisk-240gb-g26.webp
+2049;HD SSD 240GB 2.5 SANDISK 530MB/S G26;ssd;240,00;7;SSD 240GB 530MB/s G26;Sandisk;nao;ssd-sandisk-240gb-g26.webp
 1482;HD SSD 240GB KINGSTON A400 SA400537/240G;ssd;340,00;38;SSD 240GB A400 SA400537;Kingston;nao;ssd-kingston-a400-240gb.webp
 1942;HD SSD 480 GB 2.5 HAYOM;ssd;370,00;28;SSD 480GB 2.5;Hayom;nao;ssd-hayom-480gb.webp
 1919;HD SSD 512 GB 2.5 GOTECH;ssd;410,00;15;SSD 512GB 2.5;Gotech;nao;ssd-gotech-512gb.webp
@@ -185,6 +185,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 2014;PLACA MAE HAYOM 1155 B75M S/V/R DDR3 PLM2301;placa mãe;185,00;3;Placa Mãe Hayom 1155 B75M S/V/R DDR3 PLM2301;Hayom;sim;hayom-1155-b75m.webp
 2015;PLACA MAE HAYOM 1155 H61M EL DDR3 PLM2300;placa mãe;160,00;3;Placa Mãe Hayom 1155 H61M EL DDR3 PLM2300;Hayom;nao;hayom-1155-h61m.webp
 2016;PLACA MAE PCWARE 1151 8ª IPMB360 PRO-GAMING DDR4;placa mãe;828,00;3;Placa Mãe PCWARE 1151 8ª IPMB360 PRO-GAMING DDR4;PCWARE;nao;pcware-1151-ipmb360.webp
+2017;PLACA MAE HAYOM DDR4 H610 PLM2306;placa mãe;689,00;2;Placa Mãe Hayom DDR4 H610 LGA1700 PLM2306;Hayom;nao;h610mkprime.webp
 1906;AMD RYZEN 5 5600GT;processador;1208,00;1;Processador AMD Ryzen 5 5600GT - 6 núcleos, 12 threads, clock até 4.6GHz;AMD;nao;amd-ryzen5-5600gt.webp
 3001;BATERIA UNIPOWER 6V 4,5AH UP645SEG;energia;51,00;3;Bateria Unipower 6V 4,5Ah UP645SEG;Unipower;nao;unipower-up645seg.webp
 3002;BATERIA UNIPOWER P/ NOBREAK 12V 5AH UP1250;energia;86,00;3;Bateria Unipower p/ Nobreak 12V 5Ah UP1250;Unipower;nao;unipower-up1250.webp
@@ -220,7 +221,7 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 2137;CARREGADOR PORTATIL 20.000 MAH PEINING WUP-939;acessórios;93,00;1;Carregador portatil 20000mAh Peining WUP-939;Peining;nao;carregador-portatil-peining-wup-939-20000mah.webp
 2136;CARREGADOR PORTATIL 20.000 MAH PEINING WUP-379;acessórios;115,00;1;Carregador portatil 20000mAh Peining WUP-379;Peining;nao;carregador-portatil-peining-wup-379-20000mah.webp
 1437;CABO HDMI 1.5 MTS HAYOM;cabos;16,00;47;Cabo HDMI 1.5 metros Hayom;Hayom;nao;cabo-hdmi-15m-hayom.webp
-2141;CARREGADOR CELULAR USB X USB C;acessórios;55,00;5;Carregador celular USB x USB-C;Generico;nao;carregador-celular-usb-usbc.webp
+2141;CARREGADOR CELULAR USB X USB C;adaptadores;55,00;5;Carregador celular USB x USB-C;Generico;nao;carregador-celular-usb-usbc.webp
 2135;CARREGADOR PORTATIL 10.000MAH PEINING PRETO WUP-653;acessórios;92,00;1;Carregador portatil 10000mAh Peining preto WUP-653;Peining;nao;carregador-portatil-peining-wup-653-10000mah-preto.webp
 2139;CARREGADOR PORTATIL 5.000 MAH KAIDI KD-995;acessórios;80,00;1;Carregador portatil 5000mAh Kaidi KD-995;Kaidi;nao;carregador-portatil-kaidi-kd995-5000mah.webp
 2131;CAIXA DE SOM B-MAX USB BM-S205;audio;25,00;5;Caixa de som B-Max USB BM-S205;B-Max;nao;caixa-som-bmax-usb-bm-s205.webp
@@ -239,6 +240,10 @@ codigo;nome;categoria;preco;qt;descricao;marca;promocao;imagem
 1563;FONE C/ MICROFONE HEADSET USB FORTREK FK731A;audio;86,00;49;Headset USB Fortrek FK731A com microfone;Fortrek;nao;headset-usb-fortrek-fk731a.webp
 1586;FILTRO DE LINHA DPS 3P ICLAMPER ENERGIA 5 PRETO;energia;86,00;2;Filtro de linha DPS 3P iClamper Energia 5 preto;Clamper;nao;filtro-linha-iclamper-energia-5-preto.webp
 2133;CARREGADOR PORTATIL 10.000MAH PEINING PRETO WUP-832;acessórios;120,00;1;Carregador portatil 10000mAh Peining preto WUP-832;Peining;nao;carregador-portatil-peining-wup-832-10000mah-preto.webp
-1812;NOTEBOOK DELL LAT 3450 I7 32G MEM SSD 1TB WIN11;notebook;6200,00;1;Notebook Dell Latitude 3450 i7 32GB memoria SSD 1TB Win11;Dell;nao;placeholder.webp
+1812;NOTEBOOK DELL LAT 3450 I7 32G MEM SSD 1TB WIN11;notebook;6200,00;1;Notebook Dell Latitude 3450 i7 32GB memoria SSD 1TB Win11;Dell;nao;notebook-dell-lat-3450-i7-32g-mem-ssd-1tb-win11.webp
 1573;NOBREAK SMS 600V PRETO BIV LITE;energia;520,00;4;Nobreak SMS 600VA preto bivolt Lite;SMS;nao;nobreak-sms-600v-preto-biv-lite.webp
 1908;ESTABILIZADOR SMS 300VA PRETO BIV;energia;267,00;1;Estabilizador SMS 300VA preto bivolt;SMS;nao;estabilizador-sms-300va-preto-biv.webp
+1778;NOBREAK SMS 1500VA PRO ENTRADA BIVOLT;energia;1447,00;1;Nobreak SMS 1500VA Pro entrada bivolt;SMS;nao;nobreak-sms-1500va-pro-bivolt.webp
+2104;WEBCAM LOGITECH USB FULL HD 1080P C920E;webcam;580,00;3;Webcam Logitech USB Full HD 1080p C920e;Logitech;nao;webcam-logitech-c920e.webp
+1544;MEMORIA NOTE DDR3 8GB 1333MHZ KINGSTON KVR16LS11;memória;188,00;1;Memória Note DDR3 8GB 1333MHz Kingston KVR16LS11;Kingston;nao;memoria-note-ddr3-8gb-1333-kingston-kvr16ls11.webp
+1407;MEMORIA DDR4 8GB 2666MHZ KINGSTON KVR26N19S8/8;memória;695,00;3;Memória DDR4 8GB 2666MHz Kingston KVR26N19S8/8;Kingston;nao;memoria-ddr4-8gb-2666-kingston-kvr26n19s8-8.webp

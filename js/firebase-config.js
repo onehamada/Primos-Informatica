@@ -1,4 +1,4 @@
-// Configuração do Firebase (Compat Mode)
+// Firebase configuration shared by the storefront and auth flows.
 const firebaseConfig = {
   apiKey: "AIzaSyAvJUdjnY7xjnlTSYJAQZ6safylKXKlzLc",
   authDomain: "primos-informatica-ecommerce.firebaseapp.com",
@@ -9,25 +9,29 @@ const firebaseConfig = {
   measurementId: "G-J6KVL50YGQ"
 };
 
-// Aguardar Firebase estar disponível
 function initializeFirebase() {
-  if (typeof firebase !== 'undefined') {
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    
-    // Exportar para uso global
-    window.firebaseDB = db;
-    window.firebaseApp = firebase.app();
-    
-    console.log('🔥 Firebase inicializado com sucesso!');
-    return true;
+  if (typeof firebase === 'undefined') {
+    return false;
   }
-  return false;
+
+  const app = firebase.apps && firebase.apps.length > 0
+    ? firebase.app()
+    : firebase.initializeApp(firebaseConfig);
+
+  window.firebaseApp = app;
+
+  if (typeof firebase.firestore === 'function') {
+    window.firebaseDB = firebase.firestore();
+  }
+
+  if (typeof firebase.auth === 'function') {
+    window.firebaseAuth = firebase.auth();
+  }
+
+  return true;
 }
 
-// Tentar inicializar imediatamente ou aguardar
 if (!initializeFirebase()) {
-  // Se Firebase não estiver disponível, aguardar
   const checkFirebase = setInterval(() => {
     if (initializeFirebase()) {
       clearInterval(checkFirebase);
