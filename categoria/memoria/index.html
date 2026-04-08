@@ -30,8 +30,8 @@
   <link rel="dns-prefetch" href="//firestore.googleapis.com">
   
   <!-- Preload para recursos críticos -->
-  <link rel="preload" href="/css/styles.css?v=20260406-1935" as="style">
-  <link rel="preload" href="/js/script.js?v=20260406-2445" as="script">
+  <link rel="preload" href="/css/styles.css?v=20260406-2045" as="style">
+  <link rel="preload" href="/js/script.js?v=20260406-2045" as="script">
   
   <!-- Critical CSS Inline -->
   <style>
@@ -253,8 +253,8 @@
   <!-- Manifest para Android -->
   <link rel="manifest" href="/manifest.json">
   
-  <link rel="stylesheet" href="/css/styles.css?v=20260406-1935">
-  <noscript><link rel="stylesheet" href="/css/styles.css?v=20260406-1935"></noscript>
+  <link rel="stylesheet" href="/css/styles.css?v=20260406-2045">
+  <noscript><link rel="stylesheet" href="/css/styles.css?v=20260406-2045"></noscript>
   
   <!-- Lazy Loading Script -->
   <script src="/js/lazy-loading.js?v=20260316-1835" defer></script>
@@ -366,7 +366,7 @@
           </button>
           
           <!-- Filtros -->
-          <button class="action-btn filters-btn" id="filtersToggle" title="Filtros" aria-label="Filtros de produtos">
+          <button class="action-btn filters-btn" id="filtersToggle" title="Filtros" aria-label="Filtros de produtos" aria-controls="filtersDrawer" aria-expanded="false" aria-haspopup="dialog">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
@@ -688,15 +688,24 @@
 
 <!-- Menu Mobile Filtros Overlay -->
 <div class="mobile-menu-overlay" id="filtersMenuOverlay" onclick="toggleFiltersMenu()">
-  <div class="mobile-menu-sidebar filters-drawer" id="filtersDrawer" onclick="event.stopPropagation()">
-    <div class="mobile-menu-header">
-      <h3>Filtros do Catalogo</h3>
-      <button class="mobile-menu-close" onclick="toggleFiltersMenu()">×</button>
+  <div class="mobile-menu-sidebar filters-drawer" id="filtersDrawer" role="dialog" aria-modal="true" aria-labelledby="filtersDrawerTitle" onclick="event.stopPropagation()">
+    <div class="mobile-menu-header filters-drawer-header">
+      <div class="filters-drawer-header-copy">
+        <span class="filters-drawer-eyebrow">Busca e refinamento</span>
+        <h3 id="filtersDrawerTitle">Filtros do Catalogo</h3>
+      </div>
+      <button class="mobile-menu-close" type="button" aria-label="Fechar painel de filtros" onclick="toggleFiltersMenu()">×</button>
     </div>
     <div class="mobile-menu-content filters-drawer-content">
       <div class="filters-drawer-intro">
-        <strong>Refine o catalogo da loja</strong>
-        <p id="filtersSummaryText">Use filtros rapidos, faixa de preco, marca e categoria para achar mais rapido o que voce quer.</p>
+        <div class="filters-drawer-intro-top">
+          <div>
+            <strong>Refine o catalogo da loja</strong>
+            <p id="filtersSummaryText">Use filtros rapidos, faixa de preco, marca e categoria para achar mais rapido o que voce quer.</p>
+          </div>
+          <span class="filters-active-count" id="filtersActiveCount">0 ativos</span>
+        </div>
+        <div class="filters-active-chips" id="filtersDrawerActiveChips"></div>
       </div>
 
       <div class="filters-drawer-section">
@@ -761,12 +770,12 @@
       </div>
 
       <div class="filters-drawer-section">
-        <span class="filters-drawer-label">Categorias</span>
+        <span class="filters-drawer-label" id="categoryFiltersLabel">Categorias</span>
         <div id="dynamicCategoryFilters" class="filters-checkbox-grid"></div>
       </div>
 
       <div class="filters-drawer-section">
-        <span class="filters-drawer-label">Marcas</span>
+        <span class="filters-drawer-label" id="brandFiltersLabel">Marcas</span>
         <div id="dynamicBrandFilters" class="filters-checkbox-grid"></div>
       </div>
 
@@ -1281,7 +1290,7 @@
 </div>
 
 <!-- Scripts Otimizados para Performance -->
-  <script src="/js/script.js?v=20260406-2445" defer></script>
+  <script src="/js/script.js?v=20260406-2045" defer></script>
   
   <!-- Loading Management Script -->
   <script>

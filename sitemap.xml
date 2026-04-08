@@ -247,31 +247,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/produto/gabinete-gamer-mid-tower-c3-fans-hayom-gb1789</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://primos-informatica-ecommerce.web.app/produto/mouse-multilaser-sem-fio-preto-mo307</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://primos-informatica-ecommerce.web.app/produto/mouse-multilaser-preto-usb-mo255</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://primos-informatica-ecommerce.web.app/produto/mouse-multilaser-sem-fio-recarregavel-24-ghz-mo277</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://primos-informatica-ecommerce.web.app/produto/mouse-multilaser-sfio-bluetooth-m5750-mo403</loc>
     <lastmod>2026-04-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -440,12 +416,6 @@
   </url>
   <url>
     <loc>https://primos-informatica-ecommerce.web.app/produto/mouse-logitech-wireless-m196-bt-branco</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://primos-informatica-ecommerce.web.app/produto/mouse-logitech-wireless-anywhere-s3-graf</loc>
     <lastmod>2026-04-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -775,24 +745,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/produto/mouse-multilaser-sem-fio-preto-mo307</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://primos-informatica-ecommerce.web.app/produto/mouse-multilaser-sem-fio-recarregavel-24-ghz-mo277</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://primos-informatica-ecommerce.web.app/produto/mouse-multilaser-sfio-bluetooth-m5750-mo403</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://primos-informatica-ecommerce.web.app/produto/ubiquiti-ap-unifi-ac-u6-pro-4x4-sfonte</loc>
     <lastmod>2026-04-08</lastmod>
     <changefreq>monthly</changefreq>
@@ -949,12 +901,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/produto/placa-mae-brazil-pc-h61-itx-m2</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://primos-informatica-ecommerce.web.app/produto/placa-mae-brasil-pc-b1150-h81-bpch81m</loc>
     <lastmod>2026-04-08</lastmod>
     <changefreq>monthly</changefreq>
@@ -992,18 +938,6 @@
   </url>
   <url>
     <loc>https://primos-informatica-ecommerce.web.app/produto/placa-mae-pcware-1151-89-ipmh310g-ddr4-pro</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://primos-informatica-ecommerce.web.app/produto/placa-mae-hayom-h155-h61m-el-ddr3-plm2300</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://primos-informatica-ecommerce.web.app/produto/placa-mae-hayom-h155-b75m-svr-ddr3-plm2301</loc>
     <lastmod>2026-04-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1285,12 +1219,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/produto/bateria-unipower-p-nobreak-12v-5ah-up1250</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://primos-informatica-ecommerce.web.app/produto/bateria-unipower-p-nobreak-12v-9ah-f187-up1290</loc>
     <lastmod>2026-04-08</lastmod>
     <changefreq>monthly</changefreq>
@@ -1429,7 +1357,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://primos-informatica-ecommerce.web.app/produto/placa-de-video-8gb-migol-rx590-ddr5-radeon-128-bit</loc>
+    <loc>https://primos-informatica-ecommerce.web.app/produto/placa-de-video-rx-590-8gb-gddr5-monarch-dragon</loc>
     <lastmod>2026-04-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

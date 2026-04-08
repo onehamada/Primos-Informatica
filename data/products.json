@@ -176,28 +176,6 @@
     "imagem": "gabinete-hayom-gb1792.webp"
   },
   {
-    "codigo": "1947",
-    "nome": "GABINETE GAMER MID TOWER C/3 FANS HAYOM GB1789",
-    "categoria": "gabinetes",
-    "preco": 372,
-    "qt": 5,
-    "descricao": "Gabinete Gamer Mid Tower com 3 Fans Hayom GB1789",
-    "marca": "Hayom",
-    "promocao": false,
-    "imagem": "gabinete-hayom-gb1789.webp"
-  },
-  {
-    "codigo": "400396",
-    "nome": "MOUSE MULTILASER SEM FIO PRETO MO307",
-    "categoria": "mouse",
-    "preco": 22,
-    "qt": 2,
-    "descricao": "Mouse sem fio preto MO307",
-    "marca": "Multilaser",
-    "promocao": false,
-    "imagem": "mouse-multilaser-mo307.webp"
-  },
-  {
     "codigo": "402226",
     "nome": "MOUSE MULTILASER PRETO USB MO255",
     "categoria": "mouse",
@@ -207,28 +185,6 @@
     "marca": "Multilaser",
     "promocao": false,
     "imagem": "mouse-multilaser-mo255.webp"
-  },
-  {
-    "codigo": "1939",
-    "nome": "MOUSE MULTILASER SEM FIO RECARREGÁVEL 2.4 GHZ MO277",
-    "categoria": "mouse",
-    "preco": 70,
-    "qt": 1,
-    "descricao": "Mouse recarregável sem fio MO277",
-    "marca": "Multilaser",
-    "promocao": false,
-    "imagem": "mouse-multilaser-mo277.webp"
-  },
-  {
-    "codigo": "1938",
-    "nome": "MOUSE MULTILASER S/FIO BLUETOOTH M5750 MO403",
-    "categoria": "mouse",
-    "preco": 90,
-    "qt": 1,
-    "descricao": "Mouse Bluetooth sem fio MO403",
-    "marca": "Multilaser",
-    "promocao": false,
-    "imagem": "mouse-multilaser-mo403.webp"
   },
   {
     "codigo": "1536",
@@ -537,17 +493,6 @@
     "marca": "Logitech",
     "promocao": false,
     "imagem": "mouse-logitech-m196-branco.webp"
-  },
-  {
-    "codigo": "1837",
-    "nome": "MOUSE LOGITECH WIRELESS ANYWHERE S3 GRAF",
-    "categoria": "mouse",
-    "preco": 600,
-    "qt": 1,
-    "descricao": "Mouse wireless Anywhere S3 grafite",
-    "marca": "Logitech",
-    "promocao": false,
-    "imagem": "mouse-logitech-anywhere-s3.webp"
   },
   {
     "codigo": "1290",
@@ -1144,39 +1089,6 @@
     "imagem": "mouse-logitech-anywhere-3s.webp"
   },
   {
-    "codigo": "400936",
-    "nome": "MOUSE MULTILASER SEM FIO PRETO MO307",
-    "categoria": "mouse",
-    "preco": 45,
-    "qt": 2,
-    "descricao": "Mouse Multilaser sem fio MO307 preto",
-    "marca": "Multilaser",
-    "promocao": false,
-    "imagem": "mouse-multilaser-mo307-v2.webp"
-  },
-  {
-    "codigo": "1938",
-    "nome": "MOUSE MULTILASER SEM FIO RECARREGAVEL 2.4 GHZ MO277",
-    "categoria": "mouse",
-    "preco": 75,
-    "qt": 1,
-    "descricao": "Mouse Multilaser recarregável MO277 2.4GHz",
-    "marca": "Multilaser",
-    "promocao": false,
-    "imagem": "mouse-multilaser-mo277-v2.webp"
-  },
-  {
-    "codigo": "1938",
-    "nome": "MOUSE MULTILASER S/FIO BLUETOOTH M5750 MO403",
-    "categoria": "mouse",
-    "preco": 90,
-    "qt": 1,
-    "descricao": "Mouse Multilaser Bluetooth M5750 MO403",
-    "marca": "Multilaser",
-    "promocao": false,
-    "imagem": "mouse-multilaser-mo403-v2.webp"
-  },
-  {
     "codigo": "1562",
     "nome": "UBIQUITI AP UNIFI AC U6-PRO 4X4 S/FONTE",
     "categoria": "Redes",
@@ -1463,17 +1375,6 @@
     "imagem": "g5400t.webp"
   },
   {
-    "codigo": "2001",
-    "nome": "PLACA MAE BRAZIL PC H61 ITX M.2",
-    "categoria": "placa mãe",
-    "preco": 189,
-    "qt": 3,
-    "descricao": "Placa Mãe Brazil PC H61 ITX M.2",
-    "marca": "Brazil PC",
-    "promocao": false,
-    "imagem": "bpc-h61-itx.webp"
-  },
-  {
     "codigo": "2002",
     "nome": "PLACA MAE BRASIL PC B1150 H81 BPCH81M",
     "categoria": "placa mãe",
@@ -1549,28 +1450,6 @@
     "marca": "PCWARE",
     "promocao": false,
     "imagem": "ipmh310gpro.webp"
-  },
-  {
-    "codigo": "2011",
-    "nome": "PLACA MAE HAYOM H155 H61M EL DDR3 PLM2300",
-    "categoria": "placa mãe",
-    "preco": 199,
-    "qt": 4,
-    "descricao": "Placa Mãe Hayom H155 H61M EL DDR3",
-    "marca": "Hayom",
-    "promocao": false,
-    "imagem": "plm2300.webp"
-  },
-  {
-    "codigo": "2012",
-    "nome": "PLACA MAE HAYOM H155 B75M S/V/R DDR3 PLM2301",
-    "categoria": "placa mãe",
-    "preco": 209,
-    "qt": 3,
-    "descricao": "Placa Mãe Hayom H155 B75M S/V/R DDR3",
-    "marca": "Hayom",
-    "promocao": false,
-    "imagem": "plm2301.webp"
   },
   {
     "codigo": "1828",
@@ -2079,17 +1958,6 @@
     "imagem": "unipower-up645seg.webp"
   },
   {
-    "codigo": "3002",
-    "nome": "BATERIA UNIPOWER P/ NOBREAK 12V 5AH UP1250",
-    "categoria": "energia",
-    "preco": 86,
-    "qt": 3,
-    "descricao": "Bateria Unipower p/ Nobreak 12V 5Ah UP1250",
-    "marca": "Unipower",
-    "promocao": false,
-    "imagem": "unipower-up1250.webp"
-  },
-  {
     "codigo": "3003",
     "nome": "BATERIA UNIPOWER P/ NOBREAK 12V 9AH F187 UP1290",
     "categoria": "energia",
@@ -2344,12 +2212,12 @@
   },
   {
     "codigo": "2142",
-    "nome": "PLACA DE VIDEO 8GB MIGOL RX590 DDR5 RADEON 128 BIT",
+    "nome": "PLACA DE VIDEO RX 590 8GB GDDR5 MONARCH DRAGON",
     "categoria": "placa de vídeo",
     "preco": 1100,
     "qt": 1,
-    "descricao": "Placa de video RX590 8GB DDR5 Radeon 128 bits Migol",
-    "marca": "Migol",
+    "descricao": "Placa de video RX 590 8GB GDDR5 Monarch Dragon",
+    "marca": "AMD",
     "promocao": false,
     "imagem": "rx590-migol-8gb-ddr5-128bit.webp"
   },
@@ -2697,7 +2565,7 @@
   {
     "codigo": "1076",
     "nome": "MEMORY CARD 128 GB SANDISK ULTRA CLASSE10 100MB",
-    "categoria": "acessorios",
+    "categoria": "acessórios",
     "preco": 180,
     "qt": 3,
     "descricao": "Cartao de memoria 128GB Sandisk Ultra Classe 10 100MB",

@@ -506,7 +506,7 @@ const CATEGORY_VISUALS = Object.freeze({
 });
 
 const CATEGORY_VISUAL_ALIASES = Object.freeze({
-  'acessorios': 'acessÃ³rios',
+  'acessorios': 'acessórios',
   'memoria': 'memÃ³ria',
   'placa de video': 'placa de vÃ­deo',
   'placa mae': 'placa mÃ£e'
@@ -2379,10 +2379,10 @@ function addProductSchema(products) {
 function displayProducts(products) {
   const categories = {};
   
-  // Agrupar por categoria
+  // Agrupar por categoria normalizada para evitar duplicidade por acento/variacao
   for (let i = 0; i < products.length; i++) {
     const product = products[i];
-    const category = product.categoria || 'outros';
+    const category = normalizeCategoryName(product.categoria || 'outros');
     
     if (!categories[category]) {
       categories[category] = [];
@@ -2531,7 +2531,7 @@ function populateHomeCategories() {
   // Obter categorias únicas dos produtos
   const categories = {};
   for (let i = 0; i < allProducts.length; i++) {
-    const category = allProducts[i].categoria;
+    const category = normalizeCategoryName(allProducts[i].categoria);
     
     // Ignorar categorias vazias, undefined, null ou apenas espaços em branco
     if (!category || category.trim() === '' || category === 'undefined' || category === 'null') {
@@ -2799,7 +2799,10 @@ function populateNavigationMenus() {
   // Obter categorias únicas dos produtos
   const categories = {};
   for (let i = 0; i < allProducts.length; i++) {
-    const category = allProducts[i].categoria;
+    const category = normalizeCategoryName(allProducts[i].categoria);
+    if (!category) {
+      continue;
+    }
     if (!categories[category]) {
       categories[category] = {
         name: category,
@@ -3836,7 +3839,7 @@ function formatCategoryLabel(category) {
   }
 
   const labelMap = {
-    'acessorios': 'Acessorios',
+    'acessorios': 'Acessórios',
     'audio': 'Audio',
     'gabinetes': 'Gabinetes',
     'hd externo': 'HD Externo',
@@ -9299,7 +9302,7 @@ function displayFilteredProducts(filteredProducts) {
     
     // Agrupar produtos filtrados por categoria
     filteredProducts.forEach(product => {
-      const category = product.categoria || 'outros';
+      const category = normalizeCategoryName(product.categoria || 'outros');
       if (!categories[category]) {
         categories[category] = [];
       }
