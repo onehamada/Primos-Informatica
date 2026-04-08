@@ -2233,17 +2233,6 @@
     "imagem": "rx580vinik.webp"
   },
   {
-    "codigo": "3016",
-    "nome": "PLACA DE VÍDEO AMD RX 590 GME MONARCH DRAGON",
-    "categoria": "placa de vídeo",
-    "preco": 1100,
-    "qt": 1,
-    "descricao": "AMD RX 590 GME Monarch Dragon",
-    "marca": "AMD",
-    "promocao": false,
-    "imagem": "rx590webp"
-  },
-  {
     "codigo": "1526",
     "nome": "TRANSFORMADOR 1500 VA BIVOLT 220/115V PRATIC",
     "categoria": "energia",
