@@ -2706,6 +2706,83 @@
     "imagem": "webcam-logitech-c920e.webp"
   },
   {
+    "codigo": "1076",
+    "nome": "MEMORY CARD 128 GB SANDISK ULTRA CLASSE10 100MB",
+    "categoria": "acessorios",
+    "preco": 180,
+    "qt": 3,
+    "descricao": "Cartao de memoria 128GB Sandisk Ultra Classe 10 100MB",
+    "marca": "Sandisk",
+    "promocao": false,
+    "imagem": "memory-card-128-gb-sandisk-ultra-classe10-100mb.webp"
+  },
+  {
+    "codigo": "2164",
+    "nome": "PLACA DE REDE 1000 PCI-E X1 DUALPORT LC1000 VINIK",
+    "categoria": "redes",
+    "preco": 205,
+    "qt": 4,
+    "descricao": "Placa de rede Gigabit PCI-E x1 dualport LC1000 Vinik",
+    "marca": "Vinik",
+    "promocao": false,
+    "imagem": "placa-de-rede-1000-pci-e-x1-dualport-lc1000-vinik.webp"
+  },
+  {
+    "codigo": "2162",
+    "nome": "FONTE MIN SFX 230W VS230 VINTK 28866",
+    "categoria": "fonte",
+    "preco": 155,
+    "qt": 10,
+    "descricao": "Fonte mini SFX 230W VS230 Vintk 28866",
+    "marca": "Vintk",
+    "promocao": false,
+    "imagem": "fonte-min-sfx-230w-vs230-vintk-28866.webp"
+  },
+  {
+    "codigo": "2156",
+    "nome": "GABINETE PIXXO GAMER LKS065 S/FONTE 2 BAIA",
+    "categoria": "gabinetes",
+    "preco": 425,
+    "qt": 2,
+    "descricao": "Gabinete gamer Pixxo LKS065 sem fonte 2 baia",
+    "marca": "Pixxo",
+    "promocao": false,
+    "imagem": "gabinete-pixxo-gamer-lks065-s-fonte-2-baia.webp"
+  },
+  {
+    "codigo": "2160",
+    "nome": "COOLER P/ GABINETE 80X80 VINIK CF80",
+    "categoria": "cooler",
+    "preco": 16,
+    "qt": 20,
+    "descricao": "Cooler para gabinete 80x80 Vinik CF80",
+    "marca": "Vinik",
+    "promocao": false,
+    "imagem": "cooler-p-gabinete-80x80-vinik-cf80.webp"
+  },
+  {
+    "codigo": "2157",
+    "nome": "GABINETE C3TECH OFFICE 200W MT-33BK",
+    "categoria": "gabinetes",
+    "preco": 173,
+    "qt": 5,
+    "descricao": "Gabinete C3Tech Office MT-33BK com fonte 200W",
+    "marca": "C3Tech",
+    "promocao": false,
+    "imagem": "gabinete-c3tech-office-200w-mt-33bk.webp"
+  },
+  {
+    "codigo": "2158",
+    "nome": "FONTE VINIK TFX 230W 20+4 PINOS VFT230 28867",
+    "categoria": "fonte",
+    "preco": 155,
+    "qt": 10,
+    "descricao": "Fonte Vinik TFX 230W 20+4 pinos VFT230 28867",
+    "marca": "Vinik",
+    "promocao": false,
+    "imagem": "fonte-vinik-tfx-230w-20-4-pinos-vft230-28867.webp"
+  },
+  {
     "codigo": "1544",
     "nome": "MEMORIA NOTE DDR3 8GB 1333MHZ KINGSTON KVR16LS11",
     "categoria": "memória",
