@@ -11,6 +11,10 @@ Allow: /images/
 Allow: /data/
 
 # Block unnecessary files
+Disallow: /admin.html
+Disallow: /auth.html
+Disallow: /reviews.html
+Disallow: /pagamento.html
 Disallow: /*.bat$
 Disallow: /*.py$
 Disallow: /tools/

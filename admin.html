@@ -302,6 +302,125 @@
             opacity: 1 !important;
         }
 
+        .products-manager {
+            margin-top: 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .products-manager-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .products-manager-header h2 {
+            margin: 0;
+            color: #0f172a;
+            font-size: 22px;
+        }
+
+        .products-manager-tools {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .products-manager-tools input {
+            flex: 1 1 260px;
+            min-width: 220px;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .products-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .admin-product-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px;
+            display: grid;
+            grid-template-columns: 74px 1fr auto;
+            gap: 12px;
+            align-items: center;
+            background: #ffffff;
+        }
+
+        .admin-product-image {
+            width: 74px;
+            height: 74px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid #dbe4ef;
+            background: #f8fafc;
+        }
+
+        .admin-product-info h3 {
+            margin: 0 0 6px 0;
+            color: #0f172a;
+            font-size: 16px;
+            line-height: 1.35;
+        }
+
+        .admin-product-meta {
+            color: #475569;
+            font-size: 13px;
+            line-height: 1.5;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .admin-product-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .small-admin-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .small-admin-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .admin-product-code {
+            color: #64748b;
+            font-size: 12px;
+            word-break: break-all;
+            text-align: right;
+            max-width: 240px;
+        }
+
+        .edit-product-current-image {
+            width: 100%;
+            max-width: 220px;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            object-fit: cover;
+            aspect-ratio: 1 / 1;
+        }
+
         .product-overlay {
             position: fixed;
             inset: 0;
@@ -384,7 +503,7 @@
             font-weight: 600;
         }
 
-        .product-form-group input,
+        .product-form-group input:not([type="checkbox"]),
         .product-form-group textarea,
         .product-form-group select {
             width: 100%;
@@ -397,7 +516,7 @@
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .product-form-group input:focus,
+        .product-form-group input:not([type="checkbox"]):focus,
         .product-form-group textarea:focus,
         .product-form-group select:focus {
             outline: none;
@@ -408,6 +527,61 @@
         .product-form-group textarea {
             min-height: 132px;
             resize: vertical;
+        }
+
+        .product-category-options {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px 12px;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+
+        .product-category-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #334155;
+            cursor: pointer;
+        }
+
+        .product-category-option input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+            accent-color: #2563eb;
+            cursor: pointer;
+        }
+
+        .product-category-option span {
+            line-height: 1.25;
+        }
+
+        .product-inline-flags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 18px;
+            padding: 10px 0 2px;
+        }
+
+        .product-inline-flag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #334155;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .product-inline-flag input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+            accent-color: #2563eb;
+            cursor: pointer;
         }
 
         .field-hint {
@@ -529,8 +703,30 @@
                 grid-template-columns: 1fr;
             }
 
+            .product-category-options {
+                grid-template-columns: 1fr;
+            }
+
             .product-modal-actions {
                 flex-direction: column-reverse;
+            }
+
+            .products-manager-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .admin-product-card {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-product-actions {
+                align-items: flex-start;
+                width: 100%;
+            }
+
+            .admin-product-code {
+                text-align: left;
             }
 
             .primary-admin-btn,
@@ -556,20 +752,21 @@
             
             <form id="loginForm">
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" required placeholder="teste@primos.com">
+                    <label for="adminEmail">Email de Admin</label>
+                    <input type="email" id="adminEmail" required placeholder="exemplo@dominio.com" autocomplete="username" autofocus>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="password">Senha</label>
-                    <input type="password" id="password" required placeholder="Digite sua senha">
+                    <label for="password">Senha de Admin</label>
+                    <input type="password" id="password" required placeholder="Digite a senha" autocomplete="current-password">
                 </div>
                 
-                <button type="submit" class="login-btn" id="loginBtn">
+                <button type="submit" class="login-btn">
                     Entrar
                 </button>
             </form>
         </div>
+
     </div>
 
     <!-- Admin Panel (hidden initially) -->
@@ -628,6 +825,18 @@
                 🔄 Carregando pedidos...
             </div>
         </div>
+        <div class="products-manager">
+            <div class="products-manager-header">
+                <h2>Gerenciar Produtos</h2>
+                <button class="filter-btn" type="button" onclick="loadProductsForAdmin()">Atualizar Produtos</button>
+            </div>
+            <div class="products-manager-tools">
+                <input type="text" id="productSearchFilter" placeholder="Buscar por nome, codigo ou marca...">
+            </div>
+            <div id="productsList" class="products-list loading">
+                Carregando produtos...
+            </div>
+        </div>
     </div>
 
     <div id="productOverlay" class="product-overlay" aria-hidden="true">
@@ -648,22 +857,58 @@
                     </div>
 
                     <div class="product-form-group">
-                        <label for="productCategory">Categoria</label>
-                        <input type="text" id="productCategory" name="categoria" list="productCategories" required placeholder="Ex.: placa de vídeo">
-                        <datalist id="productCategories">
-                            <option value="placa de vídeo"></option>
-                            <option value="processador"></option>
-                            <option value="placa mãe"></option>
-                            <option value="ssd"></option>
-                            <option value="fonte"></option>
-                            <option value="memória"></option>
-                            <option value="monitor"></option>
-                            <option value="gabinete"></option>
-                            <option value="mouse"></option>
-                            <option value="teclado"></option>
-                            <option value="acessórios"></option>
-                            <option value="notebook"></option>
-                        </datalist>
+                        <label id="productCategoryLabel">Categoria</label>
+                        <div class="product-category-options" role="group" aria-labelledby="productCategoryLabel">
+                            <label class="product-category-option">
+                                <input type="checkbox" class="product-category-checkbox" value="placa de vídeo">
+                                <span>Placa de vídeo</span>
+                            </label>
+                            <label class="product-category-option">
+                                <input type="checkbox" class="product-category-checkbox" value="processador">
+                                <span>Processador</span>
+                            </label>
+                            <label class="product-category-option">
+                                <input type="checkbox" class="product-category-checkbox" value="placa mãe">
+                                <span>Placa mãe</span>
+                            </label>
+                            <label class="product-category-option">
+                                <input type="checkbox" class="product-category-checkbox" value="ssd">
+                                <span>SSD</span>
+                            </label>
+                            <label class="product-category-option">
+                                <input type="checkbox" class="product-category-checkbox" value="fonte">
+                                <span>Fonte</span>
+                            </label>
+                            <label class="product-category-option">
+                                <input type="checkbox" class="product-category-checkbox" value="memória">
+                                <span>Memória</span>
+                            </label>
+                            <label class="product-category-option">
+                                <input type="checkbox" class="product-category-checkbox" value="monitor">
+                                <span>Monitor</span>
+                            </label>
+                            <label class="product-category-option">
+                                <input type="checkbox" class="product-category-checkbox" value="gabinetes">
+                                <span>Gabinetes</span>
+                            </label>
+                            <label class="product-category-option">
+                                <input type="checkbox" class="product-category-checkbox" value="mouse">
+                                <span>Mouse</span>
+                            </label>
+                            <label class="product-category-option">
+                                <input type="checkbox" class="product-category-checkbox" value="teclado">
+                                <span>Teclado</span>
+                            </label>
+                            <label class="product-category-option">
+                                <input type="checkbox" class="product-category-checkbox" value="acessórios">
+                                <span>Acessórios</span>
+                            </label>
+                            <label class="product-category-option">
+                                <input type="checkbox" class="product-category-checkbox" value="notebook">
+                                <span>Notebook</span>
+                            </label>
+                        </div>
+                        <span class="field-hint">Selecione apenas uma categoria.</span>
                     </div>
 
                     <div class="product-form-group">
@@ -677,6 +922,12 @@
                     </div>
 
                     <div class="product-form-group">
+                        <label for="productImage">Imagem (.webp)</label>
+                        <input type="file" id="productImage" name="imagemArquivo" accept=".webp,image/webp" required>
+                        <span class="field-hint">Selecione um arquivo `.webp` do seu computador. A imagem sera salva junto do produto.</span>
+                    </div>
+
+                    <div class="product-form-group">
                         <label for="productValue">Valor</label>
                         <input type="text" id="productValue" name="valor" inputmode="decimal" required placeholder="Ex.: 1100,00">
                         <span class="field-hint">Informe o valor base do produto. O sistema calcula o preço final quando houver desconto.</span>
@@ -686,6 +937,21 @@
                         <label for="productDiscount">Desconto (%)</label>
                         <input type="number" id="productDiscount" name="desconto" min="0" max="100" step="0.01" value="0" required placeholder="0">
                         <span class="field-hint">Use `0` se não houver promoção.</span>
+                    </div>
+
+                    <div class="product-form-group full-width">
+                        <label>Disponibilidade e promoção</label>
+                        <div class="product-inline-flags">
+                            <label class="product-inline-flag">
+                                <input type="checkbox" id="productPromotion" name="promocao">
+                                <span>Colocar em promoção</span>
+                            </label>
+                            <label class="product-inline-flag">
+                                <input type="checkbox" id="productOutOfStock" name="foraDeEstoque">
+                                <span>Marcar como fora de estoque</span>
+                            </label>
+                        </div>
+                        <span class="field-hint">Se a promoção estiver desmarcada, o desconto será ignorado.</span>
                     </div>
 
                     <div class="product-form-group full-width">
@@ -704,6 +970,100 @@
         </div>
     </div>
 
+    <div id="productEditOverlay" class="product-overlay" aria-hidden="true">
+        <div class="product-modal" role="dialog" aria-modal="true" aria-labelledby="productEditModalTitle">
+            <div class="product-modal-header">
+                <div>
+                    <h2 id="productEditModalTitle">Editar Produto</h2>
+                    <p>Atualize titulo, valor, descricao e imagem de produtos ja cadastrados.</p>
+                </div>
+                <button type="button" class="product-modal-close" aria-label="Fechar edicao de produto" onclick="closeProductEditOverlay()">&times;</button>
+            </div>
+
+            <form id="editProductForm">
+                <div class="product-form-grid">
+                    <div class="product-form-group">
+                        <label for="editProductCode">Codigo</label>
+                        <input type="text" id="editProductCode" readonly>
+                    </div>
+
+                    <div class="product-form-group">
+                        <label for="editProductName">Titulo</label>
+                        <input type="text" id="editProductName" required placeholder="Nome do produto">
+                    </div>
+
+                    <div class="product-form-group">
+                        <label for="editProductCategory">Categoria</label>
+                        <select id="editProductCategory" required>
+                            <option value="placa de vídeo">Placa de vídeo</option>
+                            <option value="processador">Processador</option>
+                            <option value="placa mãe">Placa mãe</option>
+                            <option value="ssd">SSD</option>
+                            <option value="fonte">Fonte</option>
+                            <option value="memória">Memória</option>
+                            <option value="monitor">Monitor</option>
+                            <option value="gabinetes">Gabinetes</option>
+                            <option value="mouse">Mouse</option>
+                            <option value="teclado">Teclado</option>
+                            <option value="acessórios">Acessórios</option>
+                            <option value="notebook">Notebook</option>
+                            <option value="geral">Geral</option>
+                        </select>
+                    </div>
+
+                    <div class="product-form-group">
+                        <label for="editProductValue">Valor</label>
+                        <input type="text" id="editProductValue" inputmode="decimal" required placeholder="Ex.: 999,90">
+                    </div>
+
+                    <div class="product-form-group">
+                        <label for="editProductDiscount">Desconto (%)</label>
+                        <input type="number" id="editProductDiscount" min="0" max="100" step="0.01" value="0" placeholder="0">
+                        <span class="field-hint">Usado quando o produto estiver em promoção.</span>
+                    </div>
+
+                    <div class="product-form-group">
+                        <label for="editProductImage">Nova imagem (.webp)</label>
+                        <input type="file" id="editProductImage" accept=".webp,image/webp">
+                        <span class="field-hint">Opcional. Se nao selecionar um arquivo, a imagem atual sera mantida.</span>
+                    </div>
+
+                    <div class="product-form-group full-width">
+                        <label>Imagem atual</label>
+                        <img id="editProductImagePreview" class="edit-product-current-image" src="/images/placeholder.png" alt="Imagem atual do produto">
+                        <span id="editProductImageLabel" class="field-hint">Nenhuma imagem definida.</span>
+                    </div>
+
+                    <div class="product-form-group full-width">
+                        <label>Disponibilidade e promoção</label>
+                        <div class="product-inline-flags">
+                            <label class="product-inline-flag">
+                                <input type="checkbox" id="editProductPromotion">
+                                <span>Colocar em promoção</span>
+                            </label>
+                            <label class="product-inline-flag">
+                                <input type="checkbox" id="editProductOutOfStock">
+                                <span>Marcar como fora de estoque</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="product-form-group full-width">
+                        <label for="editProductDescription">Descricao</label>
+                        <textarea id="editProductDescription" required placeholder="Descreva os principais detalhes do produto."></textarea>
+                    </div>
+                </div>
+
+                <div id="editProductFormStatus" class="product-form-status status-info" hidden></div>
+
+                <div class="product-modal-actions">
+                    <button type="button" class="secondary-admin-btn" onclick="closeProductEditOverlay()">Cancelar</button>
+                    <button type="submit" class="primary-admin-btn" id="saveProductEditBtn">Salvar Alteracoes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Firebase Condicional (carrega apenas em páginas que realmente precisam) -->
     <script>
     // Verifica se a página atual precisa de Firebase
@@ -717,12 +1077,20 @@
         firestore.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js';
         firestore.async = false;
 
+        const storage = document.createElement('script');
+        storage.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js';
+        storage.async = false;
+
+        const auth = document.createElement('script');
+        auth.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js';
+        auth.async = false;
+
         firebaseApp.onload = () => {
             // Aguardar um pouco para garantir que firestore foi carregado
             setTimeout(() => {
                 // Carregar configuração do Firebase (mesmo do index.html)
                 const configScript = document.createElement('script');
-                configScript.src = '/js/firebase-config.js?v=20260317-1405';
+                configScript.src = '/js/firebase-config.js?v=20260408-1905';
                 configScript.async = false;
                 document.head.appendChild(configScript);
                 
@@ -734,7 +1102,7 @@
                     document.head.appendChild(ordersScript);
 
                     const productsScript = document.createElement('script');
-                    productsScript.src = '/js/firebase-products.js?v=20260326-1730';
+                    productsScript.src = '/js/firebase-products.js?v=20260413-1835';
                     productsScript.async = false;
                     document.head.appendChild(productsScript);
                 }, 100);
@@ -743,16 +1111,28 @@
 
         document.head.appendChild(firebaseApp);
         document.head.appendChild(firestore);
+        document.head.appendChild(storage);
+        document.head.appendChild(auth);
     }
     </script>
     
     <script>
-        // Admin credentials
-        const ADMIN_EMAIL = 'teste@primos.com';
-        const ADMIN_PASSWORD = 'admin123';
-        const DEFAULT_PRODUCT_IMAGE = 'default.webp';
+        const ADMIN_ALLOWED_EMAILS = Object.freeze([
+            'teste@primos.com',
+            'marketing.primosinfo@gmail.com',
+            'admin@primos.com'
+        ]);
+        const ADMIN_LOCAL_PASSWORD_HASH = '166af27b83d03367b403d900811c74dedbfff275c103a28c5b47ccc8dff015f6';
+        const MAX_EMBEDDED_PRODUCT_IMAGE_BYTES = 650 * 1024;
         
         let allOrders = [];
+        let allProductsAdmin = [];
+        let selectedProductForEdit = null;
+        let selectedEditProductImageFile = null;
+        let selectedEditProductImagePreviewUrl = '';
+        let isAdminAuthenticated = false;
+        let adminDataInitialized = false;
+        let authObserverRegistered = false;
         let unsubscribe = null;
 
         function showNotification(message, type = 'info') {
@@ -779,6 +1159,100 @@
             return String(value || '').trim();
         }
 
+        function normalizeAdminCategoryValue(value) {
+            return sanitizeAdminText(value)
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase();
+        }
+
+        function setEditProductCategoryValue(categoryValue) {
+            const categoryField = document.getElementById('editProductCategory');
+            if (!categoryField) {
+                return;
+            }
+
+            const normalizedCategory = normalizeAdminCategoryValue(categoryValue) || 'geral';
+            const matchingOption = Array.from(categoryField.options).find((option) => {
+                return normalizeAdminCategoryValue(option.value) === normalizedCategory;
+            });
+
+            categoryField.value = matchingOption ? matchingOption.value : 'geral';
+        }
+
+        function normalizeAdminEmail(value) {
+            return sanitizeAdminText(value).toLowerCase();
+        }
+
+        function isAllowlistedAdminEmail(email) {
+            const normalized = normalizeAdminEmail(email);
+            return ADMIN_ALLOWED_EMAILS.includes(normalized);
+        }
+
+        async function hashAdminPassword(password) {
+            const text = new TextEncoder().encode(String(password || ''));
+            const digest = await crypto.subtle.digest('SHA-256', text);
+            return Array.from(new Uint8Array(digest))
+                .map((byte) => byte.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
+        async function isValidLocalAdminLogin(email, password) {
+            const normalizedEmail = normalizeAdminEmail(email);
+            const allowedLocalEmails = ['teste@primos.com', 'admin@primos.com'];
+
+            if (!allowedLocalEmails.includes(normalizedEmail)) {
+                return false;
+            }
+
+            const passwordHash = await hashAdminPassword(password);
+            return passwordHash === ADMIN_LOCAL_PASSWORD_HASH;
+        }
+
+        function setAdminScreenState(isAuthenticated) {
+            const loginScreen = document.getElementById('loginScreen');
+            const adminPanel = document.getElementById('adminPanel');
+
+            if (loginScreen) {
+                loginScreen.style.display = isAuthenticated ? 'none' : 'flex';
+            }
+
+            if (adminPanel) {
+                adminPanel.style.display = isAuthenticated ? 'block' : 'none';
+            }
+
+            isAdminAuthenticated = Boolean(isAuthenticated);
+        }
+
+        function escapeAdminHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function resolveAdminProductImageUrl(imageValue) {
+            const normalized = sanitizeAdminText(imageValue);
+
+            if (!normalized) {
+                return '/images/placeholder.png';
+            }
+
+            if (
+                /^https?:\/\//i.test(normalized) ||
+                normalized.startsWith('//') ||
+                normalized.startsWith('data:') ||
+                normalized.startsWith('blob:') ||
+                normalized.startsWith('/')
+            ) {
+                return normalized;
+            }
+
+            return `/images/products/thumbnail/${encodeURIComponent(normalized)}`;
+        }
+
         function parseAdminNumber(value, fallback = 0) {
             if (typeof value === 'number') {
                 return Number.isFinite(value) ? value : fallback;
@@ -801,6 +1275,132 @@
             });
         }
 
+        function normalizeAdminProduct(productData = {}) {
+            const currentPrice = parseAdminNumber(productData.preco, 0);
+            const originalPrice = parseAdminNumber(productData.precoOriginal, 0);
+            const discount = Math.max(0, Math.min(100, parseAdminNumber(productData.desconto, 0)));
+            const stock = Math.max(0, Math.round(parseAdminNumber(productData.qt, 1)));
+            const activeValue = sanitizeAdminText(productData.ativo).toLowerCase();
+
+            const normalizedProduct = {
+                codigo: sanitizeAdminText(productData.codigo),
+                nome: sanitizeAdminText(productData.nome),
+                categoria: sanitizeAdminText(productData.categoria || 'geral').toLowerCase(),
+                descricao: sanitizeAdminText(productData.descricao),
+                modelo: sanitizeAdminText(productData.modelo),
+                marca: sanitizeAdminText(productData.marca),
+                preco: Number(currentPrice.toFixed(2)),
+                qt: stock,
+                imagem: sanitizeAdminText(productData.imagem || 'placeholder.webp') || 'placeholder.webp',
+                promocao: discount > 0 || productData.promocao === true || productData.promocao === 'sim',
+                origem: sanitizeAdminText(productData.origem || 'catalogo-json') || 'catalogo-json',
+                ativo: productData.ativo !== false && activeValue !== 'nao'
+            };
+
+            if (originalPrice > currentPrice) {
+                normalizedProduct.precoOriginal = Number(originalPrice.toFixed(2));
+            }
+
+            if (discount > 0) {
+                normalizedProduct.desconto = Number(discount.toFixed(2));
+            }
+
+            return normalizedProduct;
+        }
+
+        async function loadStaticProductsForAdmin() {
+            const response = await fetch('/data/products.json', {
+                cache: 'no-store'
+            });
+
+            if (!response.ok) {
+                throw new Error(`Falha ao carregar catalogo local: HTTP ${response.status}`);
+            }
+
+            const products = await response.json();
+            return Array.isArray(products)
+                ? products.map(normalizeAdminProduct).filter((product) => product.codigo && product.ativo !== false)
+                : [];
+        }
+
+        async function loadRemoteProductsForAdmin() {
+            try {
+                const firebaseProductsHelper = await waitForFirebaseProductsHelper(3500);
+                if (!firebaseProductsHelper) {
+                    console.warn('Modulo de produtos do Firebase indisponivel; usando catalogo local no admin.');
+                    return [];
+                }
+
+                const result = await firebaseProductsHelper.getAllProducts();
+                if (!result.success) {
+                    console.warn('Falha ao carregar produtos do Firebase no admin:', result.error);
+                    return [];
+                }
+
+                return Array.isArray(result.products)
+                    ? result.products.map(normalizeAdminProduct).filter((product) => product.codigo)
+                    : [];
+            } catch (error) {
+                console.warn('Erro ao carregar produtos remotos no admin:', error);
+                return [];
+            }
+        }
+
+        function mergeAdminProduct(existingProduct, incomingProduct) {
+            const mergedProduct = {
+                ...existingProduct,
+                ...incomingProduct
+            };
+
+            ['nome', 'categoria', 'descricao', 'modelo', 'marca', 'imagem'].forEach((field) => {
+                if (!sanitizeAdminText(incomingProduct[field])) {
+                    mergedProduct[field] = existingProduct[field];
+                }
+            });
+
+            return mergedProduct;
+        }
+
+        function buildMergedAdminProducts(staticProducts = [], remoteProducts = []) {
+            const mergedProducts = [];
+            const productIndexByCode = {};
+
+            function upsertProduct(productData) {
+                const product = normalizeAdminProduct(productData);
+                if (!product.codigo) {
+                    return;
+                }
+
+                if (product.ativo === false) {
+                    if (Object.prototype.hasOwnProperty.call(productIndexByCode, product.codigo)) {
+                        const indexToRemove = productIndexByCode[product.codigo];
+                        mergedProducts.splice(indexToRemove, 1);
+                        Object.keys(productIndexByCode).forEach((code) => {
+                            if (productIndexByCode[code] >= indexToRemove) {
+                                productIndexByCode[code] -= 1;
+                            }
+                        });
+                        delete productIndexByCode[product.codigo];
+                    }
+                    return;
+                }
+
+                if (Object.prototype.hasOwnProperty.call(productIndexByCode, product.codigo)) {
+                    const existingIndex = productIndexByCode[product.codigo];
+                    mergedProducts[existingIndex] = mergeAdminProduct(mergedProducts[existingIndex], product);
+                    return;
+                }
+
+                productIndexByCode[product.codigo] = mergedProducts.length;
+                mergedProducts.push(product);
+            }
+
+            staticProducts.forEach(upsertProduct);
+            remoteProducts.forEach(upsertProduct);
+
+            return mergedProducts;
+        }
+
         function buildAdminProductCode(name, model) {
             const rawBase = `${sanitizeAdminText(name)} ${sanitizeAdminText(model)}`.trim();
             const normalizedBase = rawBase
@@ -812,6 +1412,28 @@
                 .slice(0, 18) || 'PRODUTO';
 
             return `${normalizedBase}-${Date.now().toString().slice(-6)}`;
+        }
+
+        function sanitizeProductImageFileName(fileName) {
+            const baseName = sanitizeAdminText(fileName)
+                .replace(/\\/g, '/')
+                .split('/')
+                .filter(Boolean)
+                .pop();
+
+            if (!baseName) {
+                return '';
+            }
+
+            const normalized = baseName
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+                .replace(/[^a-z0-9._-]+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+
+            return normalized;
         }
 
         function setProductFormStatus(message, type = 'info') {
@@ -834,6 +1456,68 @@
             statusElement.hidden = true;
             statusElement.textContent = '';
             statusElement.className = 'product-form-status status-info';
+        }
+
+        function getSelectedProductCategory() {
+            const selectedCategory = document.querySelector('.product-category-checkbox:checked');
+            return sanitizeAdminText(selectedCategory ? selectedCategory.value : '').toLowerCase();
+        }
+
+        function initializeProductCategoryCheckboxes() {
+            const categoryCheckboxes = document.querySelectorAll('.product-category-checkbox');
+
+            categoryCheckboxes.forEach((checkbox) => {
+                checkbox.addEventListener('change', () => {
+                    if (!checkbox.checked) {
+                        return;
+                    }
+
+                    categoryCheckboxes.forEach((otherCheckbox) => {
+                        if (otherCheckbox !== checkbox) {
+                            otherCheckbox.checked = false;
+                        }
+                    });
+                });
+            });
+        }
+
+        function syncPromotionFieldState(checkboxId, discountFieldId, fallbackDiscount = '0') {
+            const promotionCheckbox = document.getElementById(checkboxId);
+            const discountField = document.getElementById(discountFieldId);
+            if (!promotionCheckbox || !discountField) {
+                return;
+            }
+
+            discountField.disabled = !promotionCheckbox.checked;
+
+            if (!promotionCheckbox.checked) {
+                discountField.value = '0';
+                return;
+            }
+
+            const numericDiscount = parseAdminNumber(discountField.value, 0);
+            if (numericDiscount <= 0 && fallbackDiscount !== '0') {
+                discountField.value = fallbackDiscount;
+            }
+        }
+
+        function initializePromotionControls() {
+            [
+                { checkboxId: 'productPromotion', discountFieldId: 'productDiscount', fallbackDiscount: '0' },
+                { checkboxId: 'editProductPromotion', discountFieldId: 'editProductDiscount', fallbackDiscount: '7' }
+            ].forEach(({ checkboxId, discountFieldId, fallbackDiscount }) => {
+                const checkbox = document.getElementById(checkboxId);
+                if (!checkbox || checkbox.dataset.adminPromotionInit === 'true') {
+                    syncPromotionFieldState(checkboxId, discountFieldId, fallbackDiscount);
+                    return;
+                }
+
+                checkbox.addEventListener('change', () => {
+                    syncPromotionFieldState(checkboxId, discountFieldId, fallbackDiscount);
+                });
+                checkbox.dataset.adminPromotionInit = 'true';
+                syncPromotionFieldState(checkboxId, discountFieldId, fallbackDiscount);
+            });
         }
 
         function openProductOverlay() {
@@ -865,6 +1549,448 @@
             clearProductFormStatus();
         }
 
+        function setEditProductFormStatus(message, type = 'info') {
+            const statusElement = document.getElementById('editProductFormStatus');
+            if (!statusElement) {
+                return;
+            }
+
+            statusElement.hidden = false;
+            statusElement.className = `product-form-status status-${type}`;
+            statusElement.textContent = message;
+        }
+
+        function clearEditProductFormStatus() {
+            const statusElement = document.getElementById('editProductFormStatus');
+            if (!statusElement) {
+                return;
+            }
+
+            statusElement.hidden = true;
+            statusElement.textContent = '';
+            statusElement.className = 'product-form-status status-info';
+        }
+
+        function clearSelectedEditProductImageFile() {
+            selectedEditProductImageFile = null;
+
+            if (selectedEditProductImagePreviewUrl) {
+                URL.revokeObjectURL(selectedEditProductImagePreviewUrl);
+                selectedEditProductImagePreviewUrl = '';
+            }
+        }
+
+        function handleEditProductImageSelection() {
+            const imageInput = document.getElementById('editProductImage');
+            const imagePreview = document.getElementById('editProductImagePreview');
+            const imageLabel = document.getElementById('editProductImageLabel');
+            const selectedImageFile = imageInput && imageInput.files ? imageInput.files[0] : null;
+
+            clearSelectedEditProductImageFile();
+
+            if (!selectedImageFile) {
+                if (imagePreview && selectedProductForEdit) {
+                    imagePreview.src = resolveAdminProductImageUrl(selectedProductForEdit.imagem);
+                }
+
+                if (imageLabel) {
+                    imageLabel.textContent = `Imagem atual: ${sanitizeAdminText(selectedProductForEdit && selectedProductForEdit.imagem) || 'nao definida'}`;
+                }
+                return;
+            }
+
+            const normalizedFileName = sanitizeProductImageFileName(selectedImageFile.name);
+            if (!/\.webp$/i.test(normalizedFileName)) {
+                if (imageInput) {
+                    imageInput.value = '';
+                }
+
+                if (imageLabel) {
+                    imageLabel.textContent = 'Selecione um arquivo .webp valido.';
+                }
+
+                showNotification('Selecione uma imagem no formato .webp.', 'error');
+                return;
+            }
+
+            selectedEditProductImageFile = selectedImageFile;
+            selectedEditProductImagePreviewUrl = URL.createObjectURL(selectedImageFile);
+
+            if (imagePreview) {
+                imagePreview.src = selectedEditProductImagePreviewUrl;
+            }
+
+            if (imageLabel) {
+                imageLabel.textContent = `Nova imagem selecionada: ${selectedImageFile.name}`;
+            }
+        }
+
+        function renderAdminProductsList(products) {
+            const productsList = document.getElementById('productsList');
+            if (!productsList) {
+                return;
+            }
+
+            productsList.classList.remove('loading');
+
+            if (!Array.isArray(products) || products.length === 0) {
+                productsList.innerHTML = '<p>Nenhum produto encontrado com os filtros atuais.</p>';
+                return;
+            }
+
+            const html = products.map((product) => {
+                const code = sanitizeAdminText(product.codigo);
+                const name = sanitizeAdminText(product.nome) || 'Produto sem nome';
+                const category = sanitizeAdminText(product.categoria) || 'Sem categoria';
+                const brand = sanitizeAdminText(product.marca) || 'Sem marca';
+                const price = formatAdminCurrency(parseAdminNumber(product.preco, 0));
+                const imageUrl = resolveAdminProductImageUrl(product.imagem);
+
+                return `
+                    <div class="admin-product-card">
+                        <img class="admin-product-image" src="${escapeAdminHtml(imageUrl)}" alt="${escapeAdminHtml(name)}" onerror="this.onerror=null;this.src='/images/placeholder.png';">
+                        <div class="admin-product-info">
+                            <h3>${escapeAdminHtml(name)}</h3>
+                            <div class="admin-product-meta">
+                                <span><strong>Valor:</strong> ${escapeAdminHtml(price)}</span>
+                                <span><strong>Categoria:</strong> ${escapeAdminHtml(category)}</span>
+                                <span><strong>Marca:</strong> ${escapeAdminHtml(brand)}</span>
+                            </div>
+                        </div>
+                        <div class="admin-product-actions">
+                            <button type="button" class="small-admin-btn" onclick="openEditProductOverlayByCode('${encodeURIComponent(code)}')">Editar</button>
+                            <span class="admin-product-code">${escapeAdminHtml(code || 'sem-codigo')}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            productsList.innerHTML = html;
+        }
+
+        function filterAdminProducts() {
+            const searchInput = document.getElementById('productSearchFilter');
+            const searchTerm = sanitizeAdminText(searchInput ? searchInput.value : '').toLowerCase();
+
+            let filteredProducts = allProductsAdmin.slice();
+            if (searchTerm) {
+                filteredProducts = filteredProducts.filter((product) => {
+                    const haystack = [
+                        sanitizeAdminText(product.nome),
+                        sanitizeAdminText(product.codigo),
+                        sanitizeAdminText(product.marca),
+                        sanitizeAdminText(product.categoria),
+                        sanitizeAdminText(product.descricao)
+                    ].join(' ').toLowerCase();
+
+                    return haystack.includes(searchTerm);
+                });
+            }
+
+            renderAdminProductsList(filteredProducts);
+        }
+
+        async function loadProductsForAdmin() {
+            const productsList = document.getElementById('productsList');
+            if (productsList) {
+                productsList.classList.add('loading');
+                productsList.textContent = 'Carregando produtos...';
+            }
+
+            try {
+                const [staticProducts, remoteProducts] = await Promise.all([
+                    loadStaticProductsForAdmin(),
+                    loadRemoteProductsForAdmin()
+                ]);
+
+                allProductsAdmin = buildMergedAdminProducts(staticProducts, remoteProducts);
+                allProductsAdmin.sort((a, b) => {
+                    const nameA = sanitizeAdminText(a.nome).toLowerCase();
+                    const nameB = sanitizeAdminText(b.nome).toLowerCase();
+                    return nameA.localeCompare(nameB, 'pt-BR');
+                });
+
+                filterAdminProducts();
+            } catch (error) {
+                console.error('Erro ao carregar produtos no admin:', error);
+                if (productsList) {
+                    productsList.classList.add('loading');
+                    productsList.textContent = error.message || 'Erro ao carregar produtos.';
+                }
+            }
+        }
+
+        function openEditProductOverlayByCode(encodedCode) {
+            const productCode = decodeURIComponent(String(encodedCode || ''));
+            const targetProduct = allProductsAdmin.find((product) => sanitizeAdminText(product.codigo) === sanitizeAdminText(productCode));
+
+            if (!targetProduct) {
+                showNotification('Produto nao encontrado para edicao.', 'error');
+                return;
+            }
+
+            selectedProductForEdit = { ...targetProduct };
+
+            const codeField = document.getElementById('editProductCode');
+            const nameField = document.getElementById('editProductName');
+            const valueField = document.getElementById('editProductValue');
+            const descriptionField = document.getElementById('editProductDescription');
+            const imageField = document.getElementById('editProductImage');
+            const imagePreview = document.getElementById('editProductImagePreview');
+            const imageLabel = document.getElementById('editProductImageLabel');
+            const overlay = document.getElementById('productEditOverlay');
+
+            if (codeField) {
+                codeField.value = sanitizeAdminText(targetProduct.codigo);
+            }
+
+            if (nameField) {
+                nameField.value = sanitizeAdminText(targetProduct.nome);
+            }
+
+            if (valueField) {
+                const numericValue = parseAdminNumber(targetProduct.preco, 0);
+                valueField.value = Number(numericValue).toFixed(2).replace('.', ',');
+            }
+
+            if (descriptionField) {
+                descriptionField.value = sanitizeAdminText(targetProduct.descricao);
+            }
+
+            setEditProductCategoryValue(targetProduct.categoria);
+
+            const discountField = document.getElementById('editProductDiscount');
+            const promotionField = document.getElementById('editProductPromotion');
+            const outOfStockField = document.getElementById('editProductOutOfStock');
+            const hasPromotion = Boolean(
+                targetProduct.promocao === true ||
+                targetProduct.promocao === 'sim' ||
+                parseAdminNumber(targetProduct.desconto, 0) > 0
+            );
+
+            if (discountField) {
+                const existingDiscount = parseAdminNumber(targetProduct.desconto, 0);
+                discountField.value = hasPromotion
+                    ? Number(existingDiscount > 0 ? existingDiscount : 7).toFixed(2)
+                    : '0';
+            }
+
+            if (promotionField) {
+                promotionField.checked = hasPromotion;
+            }
+
+            if (outOfStockField) {
+                outOfStockField.checked = parseAdminNumber(targetProduct.qt, 0) <= 0;
+            }
+
+            syncPromotionFieldState('editProductPromotion', 'editProductDiscount', '7');
+
+            if (imageField) {
+                imageField.value = '';
+            }
+
+            clearSelectedEditProductImageFile();
+
+            if (imagePreview) {
+                imagePreview.src = resolveAdminProductImageUrl(targetProduct.imagem);
+            }
+
+            if (imageLabel) {
+                imageLabel.textContent = `Imagem atual: ${sanitizeAdminText(targetProduct.imagem) || 'nao definida'}`;
+            }
+
+            clearEditProductFormStatus();
+
+            if (overlay) {
+                overlay.classList.add('active');
+                overlay.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeProductEditOverlay() {
+            const overlay = document.getElementById('productEditOverlay');
+            if (!overlay) {
+                return;
+            }
+
+            overlay.classList.remove('active');
+            overlay.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            clearEditProductFormStatus();
+            clearSelectedEditProductImageFile();
+            selectedProductForEdit = null;
+        }
+
+        async function submitEditProductForm(event) {
+            event.preventDefault();
+
+            const saveButton = document.getElementById('saveProductEditBtn');
+
+            try {
+                clearEditProductFormStatus();
+
+                if (!selectedProductForEdit || !sanitizeAdminText(selectedProductForEdit.codigo)) {
+                    throw new Error('Selecione um produto valido para editar.');
+                }
+
+                const nome = sanitizeAdminText(document.getElementById('editProductName')?.value);
+                const descricao = sanitizeAdminText(document.getElementById('editProductDescription')?.value);
+                const preco = parseAdminNumber(document.getElementById('editProductValue')?.value);
+                const categoria = sanitizeAdminText(document.getElementById('editProductCategory')?.value) || sanitizeAdminText(selectedProductForEdit.categoria) || 'geral';
+                const modelo = sanitizeAdminText(selectedProductForEdit.modelo) || nome;
+                const marca = sanitizeAdminText(selectedProductForEdit.marca) || 'sem-marca';
+                const promotionEnabled = Boolean(document.getElementById('editProductPromotion')?.checked);
+                const outOfStock = Boolean(document.getElementById('editProductOutOfStock')?.checked);
+                const discountValue = promotionEnabled
+                    ? Math.max(0, Math.min(100, parseAdminNumber(document.getElementById('editProductDiscount')?.value)))
+                    : 0;
+
+                if (!nome || !descricao || !categoria) {
+                    throw new Error('Preencha titulo, categoria e descricao para salvar as alteracoes.');
+                }
+
+                if (preco <= 0) {
+                    throw new Error('Informe um valor valido maior que zero.');
+                }
+
+                if (saveButton) {
+                    saveButton.disabled = true;
+                    saveButton.textContent = 'Salvando...';
+                }
+
+                const firebaseProductsHelper = await waitForFirebaseProductsHelper();
+                if (!firebaseProductsHelper) {
+                    throw new Error('Modulo de produtos indisponivel no momento.');
+                }
+
+                const imageInput = document.getElementById('editProductImage');
+                const selectedImageFile = selectedEditProductImageFile || (imageInput && imageInput.files ? imageInput.files[0] : null);
+
+                let imageReference = sanitizeAdminText(selectedProductForEdit.imagem);
+                let uploadedFileName = '';
+
+                if (selectedImageFile) {
+                    setEditProductFormStatus('Processando nova imagem do produto...', 'info');
+                    const uploadResult = await uploadProductImageFile(selectedImageFile);
+                    imageReference = uploadResult.imageUrl;
+                    uploadedFileName = uploadResult.fileName;
+                }
+
+                setEditProductFormStatus('Salvando alteracoes no Firebase...', 'info');
+
+                const updatedPayload = {
+                    ...selectedProductForEdit,
+                    codigo: sanitizeAdminText(selectedProductForEdit.codigo),
+                    nome,
+                    descricao,
+                    categoria,
+                    modelo,
+                    marca,
+                    preco: Number(preco.toFixed(2)),
+                    qt: outOfStock
+                        ? 0
+                        : Math.max(1, Math.round(parseAdminNumber(selectedProductForEdit.qt, 1))),
+                    imagem: imageReference,
+                    promocao: promotionEnabled,
+                    origem: 'admin-edit-overlay'
+                };
+
+                if (promotionEnabled && discountValue > 0) {
+                    const normalizedDiscount = Number(discountValue.toFixed(2));
+                    const originalPrice = updatedPayload.preco / (1 - normalizedDiscount / 100);
+                    updatedPayload.desconto = normalizedDiscount;
+                    updatedPayload.precoOriginal = Number(originalPrice.toFixed(2));
+                } else {
+                    delete updatedPayload.desconto;
+                    delete updatedPayload.precoOriginal;
+                }
+
+                const result = await firebaseProductsHelper.saveProduct(updatedPayload);
+                if (!result.success) {
+                    throw new Error(result.error || 'Nao foi possivel atualizar o produto.');
+                }
+
+                const imageSummary = uploadedFileName ? ` Nova imagem: ${uploadedFileName}.` : '';
+                setEditProductFormStatus(`Produto atualizado com sucesso.${imageSummary}`, 'success');
+                showNotification(`Produto "${nome}" atualizado com sucesso.`, 'success');
+
+                await loadProductsForAdmin();
+                clearSelectedEditProductImageFile();
+                setTimeout(() => {
+                    closeProductEditOverlay();
+                }, 350);
+            } catch (error) {
+                console.error('Erro ao atualizar produto:', error);
+                setEditProductFormStatus(error.message || 'Erro inesperado ao atualizar produto.', 'error');
+                showNotification(error.message || 'Erro ao atualizar produto.', 'error');
+            } finally {
+                if (saveButton) {
+                    saveButton.disabled = false;
+                    saveButton.textContent = 'Salvar Alteracoes';
+                }
+            }
+        }
+
+        function waitForFirebaseAuthHelper(timeoutMs = 7000) {
+            return new Promise((resolve) => {
+                const startedAt = Date.now();
+
+                const checkHelper = () => {
+                    if (window.firebaseAuth) {
+                        resolve(window.firebaseAuth);
+                        return;
+                    }
+
+                    if (
+                        typeof firebase !== 'undefined' &&
+                        Array.isArray(firebase.apps) &&
+                        firebase.apps.length > 0 &&
+                        typeof firebase.auth === 'function'
+                    ) {
+                        try {
+                            window.firebaseAuth = firebase.auth();
+                            resolve(window.firebaseAuth);
+                            return;
+                        } catch (error) {
+                            // Continua aguardando até o timeout.
+                        }
+                    }
+
+                    if (Date.now() - startedAt >= timeoutMs) {
+                        resolve(null);
+                        return;
+                    }
+
+                    setTimeout(checkHelper, 100);
+                };
+
+                checkHelper();
+            });
+        }
+
+        function waitForFirebaseOrdersHelper(timeoutMs = 5000) {
+            return new Promise((resolve) => {
+                const startedAt = Date.now();
+
+                const checkHelper = () => {
+                    if (typeof firebaseOrders !== 'undefined') {
+                        resolve(firebaseOrders);
+                        return;
+                    }
+
+                    if (Date.now() - startedAt >= timeoutMs) {
+                        resolve(null);
+                        return;
+                    }
+
+                    setTimeout(checkHelper, 100);
+                };
+
+                checkHelper();
+            });
+        }
+
         function waitForFirebaseProductsHelper(timeoutMs = 5000) {
             return new Promise((resolve) => {
                 const startedAt = Date.now();
@@ -887,20 +2013,74 @@
             });
         }
 
-        function buildProductPayloadFromForm() {
+        function readProductImageFileAsDataUrl(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+
+                reader.onload = () => {
+                    resolve(typeof reader.result === 'string' ? reader.result : '');
+                };
+
+                reader.onerror = () => {
+                    reject(new Error('Nao foi possivel ler a imagem selecionada.'));
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function uploadProductImageFile(file) {
+            if (!(file instanceof File)) {
+                throw new Error('Selecione uma imagem .webp antes de salvar o produto.');
+            }
+
+            const normalizedFileName = sanitizeProductImageFileName(file.name);
+            if (!normalizedFileName || !/\.webp$/i.test(normalizedFileName)) {
+                throw new Error('A imagem precisa estar no formato .webp.');
+            }
+
+            if (file.size > MAX_EMBEDDED_PRODUCT_IMAGE_BYTES) {
+                throw new Error('A imagem .webp esta muito grande para salvar pelo painel. Use um arquivo de ate 650 KB.');
+            }
+
+            const downloadURL = await readProductImageFileAsDataUrl(file);
+            if (!downloadURL || !downloadURL.startsWith('data:image/webp')) {
+                throw new Error('Nao foi possivel converter a imagem .webp selecionada.');
+            }
+
+            if (downloadURL.length > 900000) {
+                throw new Error('A imagem convertida ficou grande demais para salvar no painel. Use uma .webp menor.');
+            }
+
+            return {
+                imageUrl: downloadURL,
+                fileName: normalizedFileName,
+                storagePath: 'firestore-inline'
+            };
+        }
+
+        function buildProductPayloadFromForm(imageReference) {
             const form = document.getElementById('productForm');
             const formData = new FormData(form);
 
             const nome = sanitizeAdminText(formData.get('nome'));
-            const categoria = sanitizeAdminText(formData.get('categoria')).toLowerCase();
+            const categoria = getSelectedProductCategory();
             const descricao = sanitizeAdminText(formData.get('descricao'));
             const modelo = sanitizeAdminText(formData.get('modelo'));
             const marca = sanitizeAdminText(formData.get('marca'));
             const valorBase = parseAdminNumber(formData.get('valor'));
-            const desconto = Math.max(0, Math.min(100, parseAdminNumber(formData.get('desconto'))));
+            const promotionEnabled = Boolean(document.getElementById('productPromotion')?.checked);
+            const outOfStock = Boolean(document.getElementById('productOutOfStock')?.checked);
+            const desconto = promotionEnabled
+                ? Math.max(0, Math.min(100, parseAdminNumber(formData.get('desconto'))))
+                : 0;
 
             if (!nome || !categoria || !descricao || !modelo || !marca) {
                 throw new Error('Preencha todos os campos do formulário antes de salvar.');
+            }
+
+            if (!sanitizeAdminText(imageReference)) {
+                throw new Error('A imagem do produto não foi enviada corretamente.');
             }
 
             if (valorBase <= 0) {
@@ -919,14 +2099,14 @@
                 modelo,
                 marca,
                 preco: precoFinal,
-                qt: 1,
-                imagem: DEFAULT_PRODUCT_IMAGE,
-                promocao: desconto > 0,
-                desconto: Number(desconto.toFixed(2)),
+                qt: outOfStock ? 0 : 1,
+                imagem: imageReference,
+                promocao: promotionEnabled,
                 origem: 'admin-overlay'
             };
 
             if (desconto > 0) {
+                productPayload.desconto = Number(desconto.toFixed(2));
                 productPayload.precoOriginal = Number(valorBase.toFixed(2));
             }
 
@@ -940,11 +2120,17 @@
 
             try {
                 clearProductFormStatus();
-                setProductFormStatus('Salvando produto no Firebase...', 'info');
+                setProductFormStatus('Validando formulário e preparando upload da imagem...', 'info');
 
                 if (saveButton) {
                     saveButton.disabled = true;
                     saveButton.textContent = 'Salvando...';
+                }
+
+                const imageField = document.getElementById('productImage');
+                const selectedImageFile = imageField && imageField.files ? imageField.files[0] : null;
+                if (!selectedImageFile) {
+                    throw new Error('Selecione uma imagem .webp para o produto.');
                 }
 
                 const firebaseProductsHelper = await waitForFirebaseProductsHelper();
@@ -952,7 +2138,11 @@
                     throw new Error('O módulo de produtos ainda não ficou disponível. Tente novamente em alguns segundos.');
                 }
 
-                const productPayload = buildProductPayloadFromForm();
+                setProductFormStatus('Processando imagem do produto...', 'info');
+                const uploadResult = await uploadProductImageFile(selectedImageFile);
+
+                setProductFormStatus('Salvando produto no Firebase...', 'info');
+                const productPayload = buildProductPayloadFromForm(uploadResult.imageUrl);
                 const result = await firebaseProductsHelper.saveProduct(productPayload);
 
                 if (!result.success) {
@@ -960,11 +2150,16 @@
                 }
 
                 const valorResumo = productPayload.precoOriginal || productPayload.preco;
-                const resumoDesconto = productPayload.desconto > 0
-                    ? `Preço final ${formatAdminCurrency(productPayload.preco)} com ${productPayload.desconto}% de desconto sobre ${formatAdminCurrency(valorResumo)}.`
-                    : `Preço final ${formatAdminCurrency(productPayload.preco)} sem desconto.`;
+                const resumoPromocao = productPayload.promocao
+                    ? productPayload.desconto > 0
+                        ? `Preço final ${formatAdminCurrency(productPayload.preco)} com ${productPayload.desconto}% de desconto sobre ${formatAdminCurrency(valorResumo)}.`
+                        : `Produto marcado como promoção pelo painel.`
+                    : `Produto sem promoção.`;
+                const resumoEstoque = productPayload.qt <= 0
+                    ? 'Produto marcado como fora de estoque.'
+                    : 'Produto disponível em estoque.';
 
-                setProductFormStatus(`Produto salvo com sucesso. Código gerado: ${productPayload.codigo}. ${resumoDesconto}`, 'success');
+                setProductFormStatus(`Produto salvo com sucesso. Código gerado: ${productPayload.codigo}. ${resumoPromocao} ${resumoEstoque}`, 'success');
                 showNotification(`Produto "${productPayload.nome}" cadastrado com sucesso.`, 'success');
 
                 const form = document.getElementById('productForm');
@@ -976,6 +2171,18 @@
                 if (discountField) {
                     discountField.value = '0';
                 }
+
+                const promotionField = document.getElementById('productPromotion');
+                if (promotionField) {
+                    promotionField.checked = false;
+                }
+
+                const outOfStockField = document.getElementById('productOutOfStock');
+                if (outOfStockField) {
+                    outOfStockField.checked = false;
+                }
+
+                syncPromotionFieldState('productPromotion', 'productDiscount', '0');
             } catch (error) {
                 console.error('Erro ao cadastrar produto:', error);
                 setProductFormStatus(error.message || 'Erro inesperado ao cadastrar o produto.', 'error');
@@ -988,52 +2195,203 @@
             }
         }
         
-        // Login function
-        function login() {
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
-            const errorMessage = document.getElementById('errorMessage');
-            
-            if (!emailInput || !passwordInput) {
-                console.error('Campos de email ou senha não encontrados!');
+        async function isAuthorizedAdminUser(authUser) {
+            if (!authUser) {
+                return false;
+            }
+
+            const email = normalizeAdminEmail(authUser.email);
+            if (isAllowlistedAdminEmail(email)) {
+                return true;
+            }
+
+            if (typeof authUser.getIdTokenResult !== 'function') {
+                return false;
+            }
+
+            try {
+                const tokenResult = await authUser.getIdTokenResult();
+                return Boolean(tokenResult && tokenResult.claims && tokenResult.claims.admin === true);
+            } catch (error) {
+                return false;
+            }
+        }
+
+        async function ensureAdminDataLoaded(forceReload = false) {
+            const [ordersHelper, productsHelper] = await Promise.all([
+                waitForFirebaseOrdersHelper(7000),
+                waitForFirebaseProductsHelper(7000)
+            ]);
+
+            if (!ordersHelper || !productsHelper || !window.firebaseDB) {
+                throw new Error('Os servicos do Firebase ainda nao ficaram prontos. Tente novamente em alguns segundos.');
+            }
+
+            if (adminDataInitialized && !forceReload) {
                 return;
             }
-            
-            const email = emailInput.value.trim();
-            const password = passwordInput.value;
-            
-            console.log('Tentativa de login com:', email);
-            
-            if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-                console.log('Login bem-sucedido!');
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('adminPanel').style.display = 'block';
-                errorMessage.style.display = 'none';
-                loadOrders();
-                setupRealTimeListener(); // Ativa listener em tempo real
-            } else {
-                console.log('Falha no login. Verifique as credenciais.');
+
+            await loadOrders();
+            await loadProductsForAdmin();
+            setupRealTimeListener();
+            adminDataInitialized = true;
+        }
+
+        function resetAdminPanelState() {
+            if (unsubscribe) {
+                unsubscribe();
+                unsubscribe = null;
+            }
+
+            allOrders = [];
+            allProductsAdmin = [];
+            selectedProductForEdit = null;
+            adminDataInitialized = false;
+
+            closeProductOverlay();
+            closeProductEditOverlay();
+            setAdminScreenState(false);
+
+            const ordersList = document.getElementById('ordersList');
+            if (ordersList) {
+                ordersList.classList.add('loading');
+                ordersList.textContent = 'Carregando pedidos...';
+            }
+
+            const productsList = document.getElementById('productsList');
+            if (productsList) {
+                productsList.classList.add('loading');
+                productsList.textContent = 'Carregando produtos...';
+            }
+        }
+
+        // Login function
+        async function handleAdminLogin(event) {
+            if (event) event.preventDefault();
+
+            const emailInput = document.getElementById('adminEmail');
+            const passwordInput = document.getElementById('password');
+            const errorMessage = document.getElementById('errorMessage');
+            const adminEmail = normalizeAdminEmail(emailInput ? emailInput.value : '');
+            const adminPassword = passwordInput ? passwordInput.value : '';
+
+            const MAX_ATTEMPTS = 5;
+            const LOCKOUT_TIME = 5 * 60 * 1000;
+
+            if (!adminEmail || !adminPassword) {
+                errorMessage.textContent = 'Informe email e senha para entrar no painel.';
                 errorMessage.style.display = 'block';
-                const loginForm = document.getElementById('loginForm');
-                if (loginForm) {
-                    loginForm.classList.add('shake');
-                    setTimeout(() => {
-                        loginForm.classList.remove('shake');
-                    }, 500);
+                return;
+            }
+
+            // Verificar tentativas falhas
+            const attempts = JSON.parse(sessionStorage.getItem('loginAttempts') || '{"count": 0, "timestamp": 0}');
+            const now = Date.now();
+            const didLoginLocally = await isValidLocalAdminLogin(adminEmail, adminPassword);
+
+            if (attempts.count >= MAX_ATTEMPTS && !didLoginLocally) {
+                const timePassed = now - attempts.timestamp;
+                if (timePassed < LOCKOUT_TIME) {
+                    const minutesLeft = Math.ceil((LOCKOUT_TIME - timePassed) / 60000);
+                    errorMessage.textContent = `Muitas tentativas falhas. Tente novamente em ${minutesLeft} minuto(s).`;
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+            }
+
+            try {
+                if (didLoginLocally) {
+                    sessionStorage.setItem('loginAttempts', JSON.stringify({ count: 0, timestamp: 0 }));
+                    sessionStorage.setItem('adminAuthEmail', adminEmail);
+
+                    if (passwordInput) {
+                        passwordInput.value = '';
+                    }
+
+                    errorMessage.style.display = 'none';
+                    setAdminScreenState(true);
+                    await ensureAdminDataLoaded(true);
+                    return;
+                }
+
+                const auth = await waitForFirebaseAuthHelper();
+                if (!auth || typeof auth.signInWithEmailAndPassword !== 'function') {
+                    throw new Error('Firebase Auth indisponivel no momento.');
+                }
+
+                if (
+                    typeof auth.setPersistence === 'function' &&
+                    typeof firebase !== 'undefined' &&
+                    firebase.auth &&
+                    firebase.auth.Auth &&
+                    firebase.auth.Auth.Persistence &&
+                    firebase.auth.Auth.Persistence.SESSION
+                ) {
+                    await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+                }
+
+                const credential = await auth.signInWithEmailAndPassword(adminEmail, adminPassword);
+                const authUser = credential && credential.user ? credential.user : auth.currentUser;
+                const canAccessAdmin = await isAuthorizedAdminUser(authUser);
+
+                if (!canAccessAdmin) {
+                    await auth.signOut();
+                    throw new Error('Seu usuario nao possui permissao de administrador.');
+                }
+
+                sessionStorage.setItem('loginAttempts', JSON.stringify({ count: 0, timestamp: 0 }));
+                sessionStorage.setItem('adminAuthEmail', normalizeAdminEmail(authUser.email));
+
+                if (passwordInput) {
+                    passwordInput.value = '';
+                }
+
+                errorMessage.style.display = 'none';
+                setAdminScreenState(true);
+                await ensureAdminDataLoaded(true);
+            } catch (error) {
+                attempts.count += 1;
+                attempts.timestamp = now;
+                sessionStorage.setItem('loginAttempts', JSON.stringify(attempts));
+
+                const remainingAttempts = Math.max(0, MAX_ATTEMPTS - attempts.count);
+                const baseMessage = error && error.message ? error.message : 'Falha ao autenticar no admin.';
+                errorMessage.textContent = remainingAttempts > 0
+                    ? `${baseMessage} ${remainingAttempts} tentativa(s) restante(s).`
+                    : 'Muitas tentativas falhas. Aguarde alguns minutos e tente novamente.';
+                errorMessage.style.display = 'block';
+
+                if (passwordInput) {
+                    passwordInput.value = '';
+                    passwordInput.focus();
                 }
             }
         }
         
         // Logout function
-        function logout() {
-            document.getElementById('loginScreen').style.display = 'flex';
-            document.getElementById('adminPanel').style.display = 'none';
-            document.getElementById('email').value = '';
-            document.getElementById('password').value = '';
-            closeProductOverlay();
-            if (unsubscribe) {
-                unsubscribe();
+        async function logout() {
+            sessionStorage.removeItem('loginAttempts');
+            sessionStorage.removeItem('adminAuthEmail');
+
+            const emailInput = document.getElementById('adminEmail');
+            const passwordInput = document.getElementById('password');
+            if (emailInput) {
+                emailInput.value = '';
             }
+            if (passwordInput) {
+                passwordInput.value = '';
+            }
+
+            try {
+                const auth = await waitForFirebaseAuthHelper(2500);
+                if (auth && auth.currentUser) {
+                    await auth.signOut();
+                }
+            } catch (error) {
+                console.warn('Falha ao encerrar sessao no Firebase Auth:', error);
+            }
+
+            resetAdminPanelState();
         }
 
         function getLocalOrders() {
@@ -1285,10 +2643,70 @@
         window.clearAllOrders = clearAllOrders;
         window.openProductOverlay = openProductOverlay;
         window.closeProductOverlay = closeProductOverlay;
+        window.loadProductsForAdmin = loadProductsForAdmin;
+        window.openEditProductOverlayByCode = openEditProductOverlayByCode;
+        window.closeProductEditOverlay = closeProductEditOverlay;
+
+        function registerAdminAuthObserver() {
+            if (authObserverRegistered) {
+                return;
+            }
+
+            authObserverRegistered = true;
+
+            waitForFirebaseAuthHelper(9000).then((auth) => {
+                if (!auth || typeof auth.onAuthStateChanged !== 'function') {
+                    console.warn('Firebase Auth nao ficou disponivel para observar sessao de admin.');
+                    return;
+                }
+
+                auth.onAuthStateChanged(async (authUser) => {
+                    if (!authUser) {
+                        resetAdminPanelState();
+                        return;
+                    }
+
+                    const canAccessAdmin = await isAuthorizedAdminUser(authUser);
+                    if (!canAccessAdmin) {
+                        const errorMessage = document.getElementById('errorMessage');
+                        if (errorMessage) {
+                            errorMessage.textContent = 'Usuario autenticado sem permissao de administrador.';
+                            errorMessage.style.display = 'block';
+                        }
+
+                        try {
+                            await auth.signOut();
+                        } catch (error) {
+                            console.warn('Falha ao encerrar sessao sem permissao admin:', error);
+                        }
+
+                        resetAdminPanelState();
+                        return;
+                    }
+
+                    const errorMessage = document.getElementById('errorMessage');
+                    if (errorMessage) {
+                        errorMessage.style.display = 'none';
+                    }
+
+                    setAdminScreenState(true);
+
+                    try {
+                        await ensureAdminDataLoaded(false);
+                    } catch (error) {
+                        console.error('Erro ao carregar dados do painel admin:', error);
+                        showNotification(error.message || 'Erro ao carregar dados do admin.', 'error');
+                    }
+                });
+            });
+        }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM carregado, inicializando...');
+            
+            // Verificar se já está autenticado
+            setAdminScreenState(false);
             
             // Adiciona listeners para os filtros
             const safeAddListener = (id, event, callback) => {
@@ -1305,13 +2723,18 @@
             if (loginForm) {
                 loginForm.addEventListener('submit', function(e) {
                     e.preventDefault(); // Evita o comportamento padrão do formulário
-                    login();
+                    handleAdminLogin(e);
                 });
             } else {
-                console.error('Formulário de login não encontrado!');
+                console.warn('Formulário de login não encontrado!');
             }
 
             safeAddListener('productForm', 'submit', submitProductForm);
+            safeAddListener('editProductForm', 'submit', submitEditProductForm);
+            safeAddListener('productSearchFilter', 'input', filterAdminProducts);
+            safeAddListener('editProductImage', 'change', handleEditProductImageSelection);
+            initializeProductCategoryCheckboxes();
+            initializePromotionControls();
             
             safeAddListener('searchFilter', 'input', filterOrders);
             safeAddListener('statusFilter', 'change', filterOrders);
@@ -1325,20 +2748,42 @@
                 });
             }
 
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape') {
-                    const overlay = document.getElementById('productOverlay');
-                    if (overlay && overlay.classList.contains('active')) {
-                        closeProductOverlay();
+            const productEditOverlay = document.getElementById('productEditOverlay');
+            if (productEditOverlay) {
+                productEditOverlay.addEventListener('click', function(event) {
+                    if (event.target === productEditOverlay) {
+                        closeProductEditOverlay();
                     }
+                });
+            }
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key !== 'Escape') {
+                    return;
+                }
+
+                const editOverlay = document.getElementById('productEditOverlay');
+                if (editOverlay && editOverlay.classList.contains('active')) {
+                    closeProductEditOverlay();
+                    return;
+                }
+
+                const overlay = document.getElementById('productOverlay');
+                if (overlay && overlay.classList.contains('active')) {
+                    closeProductOverlay();
                 }
             });
 
             // Inicializa o carregamento dos pedidos após o Firebase estar pronto
             const initializeAdmin = () => {
+                if (!isAdminAuthenticated) {
+                    return;
+                }
+
                 if (typeof firebaseOrders !== 'undefined' && window.firebaseDB) {
                     console.log('FirebaseOrders e FirebaseDB detectados, carregando pedidos...');
                     loadOrders();
+                    loadProductsForAdmin();
                     
                     // Adiciona listener para atualizações de status em tempo real
                     window.addEventListener('orderStatusChanged', (event) => {
@@ -1383,6 +2828,7 @@
             
             // Inicia a inicialização do admin
             setTimeout(initializeAdmin, 1000);
+            registerAdminAuthObserver();
         });
     </script>
 </body>

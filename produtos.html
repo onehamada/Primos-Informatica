@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <!-- SEO Meta Tags Essenciais -->
-  <title>Primos Informática | Loja de Hardware, PCs e Acessórios em Brasília</title>
-  <meta name="description" content="Primos Informática: Loja de hardware, PCs, notebooks e acessórios em Brasília. Processadores, placas mãe, SSDs e mais com entrega rápida. Confira nossas ofertas!">
+  <title>Promocoes em hardware e perifericos | Primos Informatica</title>
+  <meta name="description" content="Veja as promocoes em hardware, monitores, fontes, notebooks e acessorios da Primos Informatica com retirada em Brasilia e atendimento comercial rapido.">
   <meta name="keywords" content="informática brasília, computadores, processadores, placa mãe, placa de vídeo, SSD, HD, fonte">
   <meta name="robots" content="index, follow">
   
@@ -230,13 +230,13 @@
   
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://primos-informatica-ecommerce.web.app/" />
-  <meta property="og:title" content="Primos Informática | Hardware em Brasília" />
-  <meta property="og:description" content="Loja de informática em Brasília. Processadores, placas, SSDs e mais." />
+  <meta property="og:url" content="https://primos-informatica-ecommerce.web.app/produtos" />
+  <meta property="og:title" content="Promocoes em hardware | Primos Informatica" />
+  <meta property="og:description" content="Promocoes em hardware, upgrades, monitores, fontes e perifericos com retirada em Brasilia." />
   <meta property="og:image" content="https://primos-informatica-ecommerce.web.app/images/logo.png" />
   
   <!-- Canonical URL -->
-  <link rel="canonical" href="https://primos-informatica-ecommerce.web.app/" />
+  <link rel="canonical" href="https://primos-informatica-ecommerce.web.app/produtos" />
   
   <!-- Favicon completo para todos os dispositivos -->
   <link rel="icon" href="/images/favicons/favicon.ico" sizes="any">
@@ -260,8 +260,54 @@
   <script src="/js/lazy-loading.js?v=20260316-1835" defer></script>
   
   <!-- Funções Compartilhadas -->
+<style data-route-prerender>
+  body.route-prerendered #inicio,
+  body.route-prerendered #promo,
+  body.route-prerendered .category,
+  body.route-prerendered .products-section,
+  body.route-prerendered #catalogResultsSection {
+    display: none !important;
+  }
+
+  .route-prerender {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 16px 24px;
+  }
+
+  .route-prerender-shell {
+    background: linear-gradient(135deg, #ffffff 0%, #eef6ff 100%);
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 24px;
+    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.08);
+    padding: 32px 28px;
+  }
+
+  .route-prerender-kicker {
+    margin: 0 0 12px;
+    color: #0f5b86;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .route-prerender h1 {
+    margin: 0 0 12px;
+    color: #0f172a;
+    font-size: clamp(28px, 5vw, 42px);
+    line-height: 1.1;
+  }
+
+  .route-prerender p {
+    margin: 0;
+    color: #475569;
+    line-height: 1.7;
+    max-width: 760px;
+  }
+</style>
 </head>
-<body class="needs-firebase">
+<body class="needs-firebase route-prerendered">
   <!-- Loading Overlay -->
   <div class="initial-loading" id="initialLoading">
     <div class="loading-spinner"></div>
@@ -854,6 +900,14 @@
   </div>
 </div>
 
+<section class="route-prerender" data-route-prerender>
+  <div class="route-prerender-shell">
+    <p class="route-prerender-kicker">Catalogo Primos Informatica</p>
+    <h1>Promocoes em hardware e perifericos</h1>
+    <p>Confira as ofertas atuais da loja com estoque local, retirada rapida e atendimento comercial pelo WhatsApp.</p>
+  </div>
+</section>
+
 <main>
   <section class="catalog-toolbar" id="catalogToolbar" style="display:none;">
     <div class="catalog-toolbar-header">
@@ -884,7 +938,7 @@
         <div class="hero-layout">
           <div class="hero-copy">
             <p class="hero-kicker">Hardware, upgrades e PCs com atendimento de loja fisica</p>
-            <h1>Seu setup pronto para comprar com mais seguranca e menos atrito</h1>
+            <h2>Seu setup pronto para comprar com mais seguranca e menos atrito</h2>
             <p>Escolha processadores, placas de video, SSDs, fontes e computadores montados com estoque local, retirada rapida na Asa Norte e envio para todo o Brasil.</p>
             <div class="hero-buttons">
               <button type="button" class="btn-primary hero-primary-btn" onclick="showCategory('promo')">Ver ofertas em destaque</button>
