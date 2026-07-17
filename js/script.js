@@ -6584,7 +6584,7 @@ function calculateDistanceFallback(cep1, cep2) {
 
 function updateCheckoutTotal(shippingCost = 0) {
   const subtotal = window.checkoutSubtotal || 0;
-  const shipping = shippingCost || window.checkoutShipping || 0;
+  const shipping = typeof shippingCost === 'number' ? shippingCost : (window.checkoutShipping || 0);
   const discount = 0; // Sem desconto por enquanto
   
   const total = subtotal + shipping - discount;
@@ -7381,15 +7381,28 @@ function createCheckoutPage() {
     document.getElementById('frete-container').style.display = isDelivery ? 'flex' : 'none';
     document.getElementById('retirada-container').style.display = isDelivery ? 'none' : 'flex';
     
-    // Atualiza o total sem frete se for retirada
     if (!isDelivery) {
+      window.checkoutShipping = 0;
       updateCheckoutTotal(0);
-    } else {
-      // Recalcula o frete se voltar para entrega
-      const cep = document.getElementById('checkout-cep').value;
-      if (cep && cep.length === 9) {
-        calculateUberShipping(cep);
+      const shippingElement = document.getElementById('checkout-shipping');
+      if (shippingElement) {
+        shippingElement.textContent = 'Grátis';
+        shippingElement.style.color = '#10b981';
       }
+      return;
+    }
+
+    const shippingElement = document.getElementById('checkout-shipping');
+    if (shippingElement) {
+      shippingElement.textContent = 'Calculando...';
+      shippingElement.style.color = '#374151';
+    }
+
+    const cep = document.getElementById('checkout-cep').value;
+    if (cep && cep.length === 9) {
+      calculateUberShipping(cep);
+    } else {
+      updateCheckoutTotal(0);
     }
   };
   
