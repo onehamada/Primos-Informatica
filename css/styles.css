@@ -19,6 +19,18 @@
   --shadow-strong: 0 24px 60px rgba(15, 23, 42, 0.14);
 }
 
+/* === PREFERS-REDUCED-MOTION: Desliga animações para acessibilidade === */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -3032,99 +3044,59 @@ img[loading="lazy"]:not([data-src]) {
   border-color: rgba(148, 163, 184, 0.4);
 }
 
-/* === Animações de Carregamento de Imagem === */
+/* === Animações de Carregamento de Imagem (Otimizadas - sem filter:blur) === */
 @keyframes imageFadeIn {
   0% {
     opacity: 0;
-    transform: scale(0.8) translateY(15px);
-    filter: blur(8px) brightness(0.8);
-  }
-  30% {
-    opacity: 0.3;
-    transform: scale(0.9) translateY(8px);
-    filter: blur(4px) brightness(0.9);
-  }
-  60% {
-    opacity: 0.7;
-    transform: scale(0.95) translateY(3px);
-    filter: blur(1px) brightness(1);
+    transform: scale(0.9) translateY(10px);
   }
   100% {
     opacity: 1;
     transform: scale(1) translateY(0);
-    filter: blur(0) brightness(1);
   }
 }
 
 @keyframes imageSlideIn {
   0% {
     opacity: 0;
-    transform: translateX(-30px) scale(0.85) rotate(-2deg);
-    filter: blur(6px);
-  }
-  50% {
-    opacity: 0.6;
-    transform: translateX(-10px) scale(0.95) rotate(-1deg);
-    filter: blur(2px);
+    transform: translateX(-20px) scale(0.95);
   }
   100% {
     opacity: 1;
     transform: translateX(0) scale(1) rotate(0deg);
-    filter: blur(0);
   }
 }
 
 @keyframes imageZoomIn {
   0% {
     opacity: 0;
-    transform: scale(0.6) rotate(1deg);
-    filter: blur(10px) brightness(0.7);
-  }
-  40% {
-    opacity: 0.5;
-    transform: scale(0.8) rotate(0.5deg);
-    filter: blur(3px) brightness(0.9);
+    transform: scale(0.7);
   }
   100% {
     opacity: 1;
     transform: scale(1) rotate(0deg);
-    filter: blur(0) brightness(1);
   }
 }
 
 @keyframes imageReveal {
   0% {
     opacity: 0;
-    transform: scale(1.1) translateY(10px);
-    filter: blur(12px) contrast(0.8);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.05) translateY(3px);
-    filter: blur(2px) contrast(1);
+    transform: scale(1.05) translateY(8px);
   }
   100% {
     opacity: 1;
     transform: scale(1) translateY(0);
-    filter: blur(0) contrast(1);
   }
 }
 
 @keyframes placeholderFadeOut {
   0% {
     opacity: 1;
-    transform: scale(1) rotate(0deg);
-    filter: blur(0);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(0.9) rotate(1deg);
-    filter: blur(1px);
+    transform: scale(1);
   }
   100% {
     opacity: 0;
-    transform: scale(0.7) rotate(-1deg);
-    filter: blur(3px);
+    transform: scale(0.85);
   }
 }
 
