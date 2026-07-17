@@ -7,7 +7,7 @@ import shutil
 import unicodedata
 from datetime import date
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 
 
 STORE_ORIGIN = "https://primos-informatica-ecommerce.web.app"
@@ -154,8 +154,44 @@ def generate_slug(value: str) -> str:
     return slug.strip("-")
 
 
+def product_base_slug(product: dict) -> str:
+    return generate_slug(product.get("nome") or product.get("codigo") or "produto")
+
+
+def product_code_slug(product: dict) -> str:
+    return generate_slug(product.get("codigo") or "")
+
+
+def build_unique_product_routes(products: list[dict]) -> list[tuple[dict, str]]:
+    routes: list[tuple[dict, str]] = []
+    used_slugs: set[str] = set()
+
+    for index, product in enumerate(products, start=1):
+        base_slug = product_base_slug(product) or "produto"
+        code_slug = product_code_slug(product)
+        candidate = base_slug
+
+        if candidate in used_slugs:
+            candidate = f"{base_slug}-{code_slug}" if code_slug else f"{base_slug}-{index}"
+
+        suffix = 2
+        unique_candidate = candidate
+        while unique_candidate in used_slugs:
+            unique_candidate = f"{candidate}-{suffix}"
+            suffix += 1
+
+        used_slugs.add(unique_candidate)
+        routes.append((product, unique_candidate))
+
+    return routes
+
+
 def category_route_segment(category: str) -> str:
     return quote(normalize_category_name(category), safe="")
+
+
+def route_segment_to_filesystem_name(segment: str) -> str:
+    return unquote(str(segment or ""))
 
 
 def build_store_url(pathname: str) -> str:
@@ -343,8 +379,7 @@ def build_category_state(category: str) -> dict:
     }
 
 
-def build_product_state(product: dict) -> dict:
-    slug = generate_slug(product.get("nome", "produto"))
+def build_product_state(product: dict, slug: str) -> dict:
     canonical = build_store_url(f"/produto/{slug}")
     price_label = format_currency(product.get("preco") or 0)
     name = str(product.get("nome") or "Produto").strip()
@@ -372,10 +407,17 @@ def build_product_state(product: dict) -> dict:
 def build_page(template: str, seo_state: dict, *, add_product_schema_data: dict | None = None) -> str:
     page = apply_seo_state(template, seo_state)
     page = downgrade_home_hero_heading(page)
+    page = root_institutional_links(page)
     page = inject_prerender_shell(page, seo_state["heading"], seo_state["shell_description"])
     if add_product_schema_data is not None:
         page = inject_product_schema(page, add_product_schema_data, seo_state["canonical"])
     return page
+
+
+def root_institutional_links(html_text: str) -> str:
+    for page in INSTITUTIONAL_PAGES:
+        html_text = html_text.replace(f'href="{page}"', f'href="/{page}"')
+    return html_text
 
 
 def ensure_clean_directory(path: Path) -> None:
@@ -387,7 +429,7 @@ def ensure_clean_directory(path: Path) -> None:
             child.unlink()
 
 
-def write_sitemap(root: Path, categories: list[str], products: list[dict]) -> None:
+def write_sitemap(root: Path, categories: list[str], product_routes: list[tuple[dict, str]]) -> None:
     lastmod = date.today().isoformat()
     lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
 
@@ -409,8 +451,7 @@ def write_sitemap(root: Path, categories: list[str], products: list[dict]) -> No
     for category in categories:
         add_url(f"/categoria/{category_route_segment(category)}", "0.8", "weekly")
 
-    for product in products:
-        slug = generate_slug(product.get("nome", "produto"))
+    for _product, slug in product_routes:
         if slug:
             add_url(f"/produto/{slug}", "0.7", "monthly")
 
@@ -426,6 +467,7 @@ def main() -> None:
     root = repo_root()
     template = (root / "index.html").read_text(encoding="utf-8")
     products = json.loads((root / "data" / "products.json").read_text(encoding="utf-8"))
+    product_routes = build_unique_product_routes(products)
 
     category_dir = root / "categoria"
     product_dir = root / "produto"
@@ -451,29 +493,28 @@ def main() -> None:
     for category in categories:
         state = build_category_state(category)
         category_page = build_page(template, state)
-        canonical_dir = category_dir / category_route_segment(category)
+        canonical_segment = category_route_segment(category)
+        canonical_dir = category_dir / route_segment_to_filesystem_name(canonical_segment)
         canonical_dir.mkdir(parents=True, exist_ok=True)
         (canonical_dir / "index.html").write_text(category_page, encoding="utf-8")
 
         for raw_category in sorted(raw_category_map.get(category, set())):
             raw_segment = quote(raw_category, safe="")
-            canonical_segment = category_route_segment(category)
             if raw_segment and raw_segment != canonical_segment:
-                alias_dir = category_dir / raw_segment
+                alias_dir = category_dir / route_segment_to_filesystem_name(raw_segment)
                 alias_dir.mkdir(parents=True, exist_ok=True)
                 (alias_dir / "index.html").write_text(category_page, encoding="utf-8")
 
-    for product in products:
-        slug = generate_slug(product.get("nome", "produto"))
+    for product, slug in product_routes:
         if not slug:
             continue
-        state = build_product_state(product)
+        state = build_product_state(product, slug)
         product_page = build_page(template, state, add_product_schema_data=product)
         current_product_dir = product_dir / slug
         current_product_dir.mkdir(parents=True, exist_ok=True)
         (current_product_dir / "index.html").write_text(product_page, encoding="utf-8")
 
-    write_sitemap(root, categories, products)
+    write_sitemap(root, categories, product_routes)
 
     print(f"Geradas {len(categories)} paginas de categoria.")
     print(f"Geradas {len(products)} paginas de produto.")

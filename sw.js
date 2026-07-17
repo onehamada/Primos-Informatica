@@ -1,13 +1,13 @@
 // SERVICE WORKER OTIMIZADO PARA PRIMOS INFORMÁTICA
-const APP_VERSION = '20260406-14';
+const APP_VERSION = '20260413-1835';
 const ASSET_VERSIONS = {
-  styles: '20260406-2045',
-  script: '20260406-2045',
+  styles: '20260413-1345',
+  script: '20260413-1345',
   lazyLoading: '20260316-1835',
   notifications: '20260313-1945',
-  firebaseConfig: '20260402-1805',
+  firebaseConfig: '20260408-1905',
   firebaseOrders: '20260317-1405',
-  firebaseProducts: '20260326-1730',
+  firebaseProducts: '20260413-1835',
   firebaseReviews: '20260401-1820'
 };
 const CACHE_NAME = `primos-informatica-${APP_VERSION}`;

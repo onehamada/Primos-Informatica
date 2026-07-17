@@ -10,3 +10,7 @@ __pycache__/
 *.backup
 Thumbs.db
 .DS_Store
+
+.venv
+.publish-temp*
+.tmp-lighthouse-auth.json

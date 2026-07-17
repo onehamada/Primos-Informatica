@@ -16,6 +16,12 @@
   --shadow-strong: 0 16px 40px rgba(2, 12, 27, 0.14);
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 /* === SCROLL SUAVE E FEEDBACK === */
 html {
   scroll-behavior: smooth;
@@ -632,11 +638,6 @@ body {
   animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 /* IMAGENS OTIMIZADAS */
 .product img,
 .products-grid .product img,
@@ -721,10 +722,6 @@ body {
 }
 
 /* SCROLL SUAVE */
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   overflow-x: hidden;
 }
@@ -1469,18 +1466,7 @@ img[loading="lazy"]:not([data-src]) {
   transition: background 0.3s ease;
 }
 
-/* Fallback para Firefox */
-.nav-tabs scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
-}
-
 .nav-tabs::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Fallback para Firefox */
-.nav-tabs scrollbar-thumb:hover {
   background: #94a3b8;
 }
 
@@ -1695,11 +1681,6 @@ img[loading="lazy"]:not([data-src]) {
   animation: spin 1s linear infinite;
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
   will-change: transform;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 
 /* === Menu do Usuário === */
@@ -6745,7 +6726,237 @@ main {
 }
 
 .home-trust-section {
-  margin-top: -6px;
+  margin-top: 0;
+  position: relative;
+}
+
+/* === BUYING JOURNEY HEADER === */
+.buying-journey-header {
+  text-align: center;
+  margin-bottom: 48px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.buying-journey-header h2 {
+  margin: 0 0 12px;
+  color: #0f172a;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.buying-journey-lead {
+  margin: 0;
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* === BUYING JOURNEY GRID === */
+.buying-journey-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 40px;
+  align-items: start;
+}
+
+/* === STEPS CONTAINER === */
+.buying-steps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.buying-step-card {
+  position: relative;
+  padding: 32px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: 8px;
+  z-index: 2;
+}
+
+.buying-step-card:hover {
+  border-color: #117aa3;
+  box-shadow: 0 8px 24px rgba(17, 122, 163, 0.12);
+  transform: translateY(-2px);
+}
+
+.step-badge {
+  position: absolute;
+  top: 20px;
+  left: 32px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #117aa3 0%, #19a4c1 100%);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(17, 122, 163, 0.25);
+}
+
+.buying-step-card h3 {
+  margin: 0 0 8px 76px;
+  color: #0f172a;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.buying-step-card p {
+  margin: 0 0 0 76px;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.step-icon {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  font-size: 28px;
+  opacity: 0.3;
+}
+
+.step-connector {
+  position: relative;
+  height: 24px;
+  z-index: 1;
+}
+
+.step-connector::before {
+  content: '';
+  position: absolute;
+  left: 53px;
+  top: -12px;
+  width: 2px;
+  height: 24px;
+  background: linear-gradient(180deg, #bfdbfe 0%, #dbeafe 100%);
+}
+
+.buying-step-card:last-child .step-connector {
+  display: none;
+}
+
+/* === INFO CARD === */
+.buying-info-card {
+  background: linear-gradient(135deg, #0d1b2a 0%, #142d42 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 12px 32px rgba(13, 27, 42, 0.3);
+  position: sticky;
+  top: 120px;
+}
+
+.info-card-header h3 {
+  margin: 0 0 20px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.info-card-content {
+  margin-bottom: 24px;
+}
+
+.location-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
+.location-details strong {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.location-details span {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+}
+
+.info-card-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 20px 0;
+}
+
+.info-card-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.info-card-list li {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 12px;
+  align-items: flex-start;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.info-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+.info-card-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.btn-whatsapp-hero,
+.btn-maps-hero {
+  padding: 14px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 13px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: block;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-whatsapp-hero {
+  background: #25d366;
+  color: #fff;
+}
+
+.btn-whatsapp-hero:hover {
+  background: #20ba58;
+  transform: translateY(-1px);
+}
+
+.btn-maps-hero {
+  background: #fff;
+  color: #0d1b2a;
+}
+
+.btn-maps-hero:hover {
+  background: #f0f4f8;
+  transform: translateY(-1px);
 }
 
 .trust-strip {
@@ -6783,6 +6994,236 @@ main {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+/* === RESPONSIVIDADE BUYING JOURNEY === */
+@media (max-width: 1024px) {
+  .buying-journey-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .buying-info-card {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .buying-journey-header {
+    margin-bottom: 40px;
+  }
+
+  .buying-journey-header h2 {
+    font-size: clamp(24px, 3.5vw, 32px);
+  }
+
+  .buying-journey-lead {
+    font-size: 15px;
+  }
+
+  .buying-step-card {
+    padding: 24px;
+    margin-bottom: 6px;
+  }
+
+  .step-badge {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    left: 20px;
+    top: 18px;
+  }
+
+  .buying-step-card h3 {
+    margin-left: 68px;
+    font-size: 16px;
+  }
+
+  .buying-step-card p {
+    margin-left: 68px;
+    font-size: 13px;
+  }
+
+  .step-icon {
+    font-size: 24px;
+  }
+
+  .buying-info-card {
+    padding: 28px;
+  }
+
+  .info-card-header h3 {
+    font-size: 17px;
+  }
+
+  .info-card-list li {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .buying-journey-header {
+    margin-bottom: 32px;
+  }
+
+  .buying-journey-header h2 {
+    font-size: clamp(20px, 3vw, 28px);
+    margin-bottom: 8px;
+  }
+
+  .buying-journey-lead {
+    font-size: 14px;
+  }
+
+  .buying-step-card {
+    padding: 20px;
+    margin-bottom: 4px;
+  }
+
+  .step-badge {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+    left: 16px;
+    top: 16px;
+  }
+
+  .buying-step-card h3 {
+    margin-left: 64px;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+
+  .buying-step-card p {
+    margin-left: 64px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .step-icon {
+    font-size: 22px;
+    right: 20px;
+  }
+
+  .step-connector::before {
+    left: 50px;
+  }
+
+  .buying-info-card {
+    padding: 24px;
+  }
+
+  .info-card-header h3 {
+    margin-bottom: 16px;
+    font-size: 16px;
+  }
+
+  .info-card-list li {
+    gap: 10px;
+    font-size: 11px;
+  }
+
+  .info-icon {
+    font-size: 16px;
+  }
+
+  .btn-whatsapp-hero,
+  .btn-maps-hero {
+    padding: 12px 14px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .buying-journey-header {
+    margin-bottom: 28px;
+  }
+
+  .buying-journey-header h2 {
+    font-size: clamp(18px, 2.5vw, 24px);
+    margin-bottom: 6px;
+  }
+
+  .buying-journey-lead {
+    font-size: 13px;
+  }
+
+  .buying-step-card {
+    padding: 18px 16px;
+    margin-bottom: 2px;
+  }
+
+  .step-badge {
+    width: 36px;
+    height: 36px;
+    font-size: 15px;
+    left: 14px;
+    top: 14px;
+  }
+
+  .buying-step-card h3 {
+    margin-left: 60px;
+    font-size: 14px;
+  }
+
+  .buying-step-card p {
+    margin-left: 60px;
+    font-size: 11px;
+  }
+
+  .step-connector {
+    height: 20px;
+  }
+
+  .step-connector::before {
+    left: 48px;
+    height: 20px;
+  }
+
+  .buying-info-card {
+    padding: 20px;
+  }
+
+  .info-card-header h3 {
+    font-size: 15px;
+    margin-bottom: 14px;
+  }
+
+  .location-details {
+    margin-bottom: 16px;
+  }
+
+  .location-details strong {
+    font-size: 14px;
+  }
+
+  .location-details span {
+    font-size: 12px;
+  }
+
+  .info-card-divider {
+    margin: 16px 0;
+  }
+
+  .info-card-list {
+    gap: 12px;
+  }
+
+  .info-card-list li {
+    gap: 8px;
+    font-size: 10.5px;
+    grid-template-columns: 28px 1fr;
+  }
+
+  .info-icon {
+    font-size: 14px;
+  }
+
+  .btn-whatsapp-hero,
+  .btn-maps-hero {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
 }
 
 .btn-primary {
@@ -7989,13 +8430,393 @@ main {
   }
 }
 
+/* === RESPONSIVIDADE OTIMIZADA PARA HOME-TRUST-SECTION === */
+
+/* Tablet (até 1024px) */
+@media (max-width: 1024px) {
+  .how-to-buy-layout {
+    gap: 28px;
+  }
+
+  .how-to-buy-copy,
+  .how-to-buy-panel {
+    padding: 28px;
+  }
+
+  .how-to-buy-steps {
+    gap: 24px;
+  }
+
+  .how-to-buy-step {
+    padding: 28px;
+  }
+}
+
+/* Tablet Pequeno (até 900px) */
 @media (max-width: 900px) {
   .hero-layout {
     grid-template-columns: 1fr;
   }
 
+  .how-to-buy-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .how-to-buy-copy,
+  .how-to-buy-panel {
+    padding: 24px;
+  }
+
+  .how-to-buy-copy h2 {
+    font-size: clamp(26px, 4vw, 36px);
+    margin: 0 0 14px;
+  }
+
+  .how-to-buy-lead {
+    font-size: 15px;
+    margin: 0 0 24px;
+  }
+
+  .how-to-buy-steps {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+
+  .how-to-buy-step {
+    padding: 24px;
+    gap: 14px;
+  }
+
+  .how-to-buy-step h3,
+  .how-to-buy-panel h3 {
+    font-size: 17px;
+  }
+
+  .how-to-buy-panel-list {
+    margin: 20px 0 0;
+    gap: 12px;
+  }
+
+  .how-to-buy-actions {
+    gap: 12px;
+    margin-top: 24px;
+  }
+
   .trust-strip {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Tablet Extra Pequeno (até 768px) */
+@media (max-width: 768px) {
+  .how-to-buy-layout {
+    gap: 20px;
+  }
+
+  .how-to-buy-copy,
+  .how-to-buy-panel {
+    padding: 22px;
+  }
+
+  .how-to-buy-copy h2 {
+    font-size: clamp(24px, 3.5vw, 32px);
+    margin: 0 0 12px;
+  }
+
+  .how-to-buy-lead {
+    font-size: 14px;
+    margin: 0 0 20px;
+  }
+
+  .how-to-buy-steps {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .how-to-buy-step {
+    padding: 18px;
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+
+  .how-to-buy-step-number {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
+
+  .how-to-buy-step h3,
+  .how-to-buy-panel h3 {
+    font-size: 16px;
+    margin: 0 0 6px;
+  }
+
+  .how-to-buy-step p,
+  .how-to-buy-panel p {
+    font-size: 13px;
+  }
+
+  .trust-strip-label {
+    font-size: 11px;
+  }
+
+  .how-to-buy-panel h3 {
+    font-size: 17px;
+  }
+
+  .how-to-buy-panel-list {
+    margin: 16px 0 0;
+    gap: 10px;
+  }
+
+  .how-to-buy-panel-list li {
+    font-size: 13px;
+  }
+
+  .how-to-buy-actions {
+    gap: 10px;
+    margin-top: 18px;
+  }
+}
+
+/* Celular Grande (até 640px) */
+@media (max-width: 640px) {
+  .home-section {
+    padding: 0 14px;
+  }
+
+  .how-to-buy-layout {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .how-to-buy-copy,
+  .how-to-buy-panel {
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .how-to-buy-copy h2 {
+    font-size: clamp(20px, 3vw, 28px);
+    margin: 0 0 10px;
+  }
+
+  .how-to-buy-lead {
+    font-size: 13.5px;
+    margin: 0 0 18px;
+    line-height: 1.6;
+  }
+
+  .how-to-buy-steps {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .how-to-buy-step {
+    padding: 16px;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .how-to-buy-step-number {
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .how-to-buy-step h3 {
+    font-size: 15px;
+    margin: 0 0 4px;
+  }
+
+  .how-to-buy-step p {
+    font-size: 12.5px;
+  }
+
+  .how-to-buy-panel h3 {
+    font-size: 17px;
+    margin: 0 0 8px;
+  }
+
+  .how-to-buy-panel p {
+    font-size: 13px;
+  }
+
+  .how-to-buy-panel-list {
+    margin: 14px 0 0;
+    gap: 8px;
+  }
+
+  .how-to-buy-panel-list li {
+    font-size: 12.5px;
+  }
+
+  .how-to-buy-actions {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .how-to-buy-actions .btn-whatsapp,
+  .how-to-buy-actions .btn-outline {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+}
+
+/* Celular Pequeno (até 475px) */
+@media (max-width: 475px) {
+  .home-section {
+    padding: 0 12px;
+  }
+
+  .how-to-buy-layout {
+    gap: 14px;
+  }
+
+  .how-to-buy-copy,
+  .how-to-buy-panel {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .how-to-buy-copy h2 {
+    font-size: clamp(18px, 2.5vw, 24px);
+    margin: 0 0 8px;
+  }
+
+  .how-to-buy-lead {
+    font-size: 13px;
+    margin: 0 0 14px;
+  }
+
+  .how-to-buy-steps {
+    gap: 12px;
+  }
+
+  .how-to-buy-step {
+    padding: 14px;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .how-to-buy-step-number {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .how-to-buy-step h3 {
+    font-size: 14px;
+    margin: 0 0 3px;
+  }
+
+  .how-to-buy-step p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .trust-strip-label {
+    font-size: 10px;
+  }
+
+  .how-to-buy-panel h3 {
+    font-size: 16px;
+    margin: 0 0 6px;
+  }
+
+  .how-to-buy-panel p {
+    font-size: 12px;
+  }
+
+  .how-to-buy-panel-list {
+    margin: 12px 0 0;
+    gap: 6px;
+  }
+
+  .how-to-buy-panel-list li {
+    font-size: 12px;
+    padding-left: 14px;
+  }
+
+  .how-to-buy-panel-list li::before {
+    top: 6px;
+    width: 5px;
+    height: 5px;
+  }
+
+  .how-to-buy-actions {
+    gap: 6px;
+    margin-top: 14px;
+  }
+
+  .how-to-buy-actions .btn-whatsapp,
+  .how-to-buy-actions .btn-outline {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+}
+
+/* Celular Extra Pequeno (até 360px) */
+@media (max-width: 360px) {
+  .home-section {
+    padding: 0 10px;
+  }
+
+  .how-to-buy-copy,
+  .how-to-buy-panel {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .how-to-buy-copy h2 {
+    font-size: 18px;
+    margin: 0 0 6px;
+  }
+
+  .how-to-buy-lead {
+    font-size: 12px;
+    margin: 0 0 12px;
+  }
+
+  .how-to-buy-step {
+    padding: 12px;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .how-to-buy-step-number {
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
+  }
+
+  .how-to-buy-step h3 {
+    font-size: 13px;
+  }
+
+  .how-to-buy-step p {
+    font-size: 11px;
+  }
+
+  .how-to-buy-panel h3 {
+    font-size: 15px;
+  }
+
+  .how-to-buy-panel p {
+    font-size: 11px;
+  }
+
+  .how-to-buy-actions {
+    gap: 4px;
+    margin-top: 12px;
+  }
+
+  .how-to-buy-actions .btn-whatsapp,
+  .how-to-buy-actions .btn-outline {
+    padding: 8px 12px;
+    font-size: 11px;
   }
 }
 
@@ -8042,6 +8863,15 @@ main {
 
   .trust-strip-item {
     padding: 18px;
+  }
+
+  .how-to-buy-copy,
+  .how-to-buy-panel {
+    padding: 20px;
+  }
+
+  .how-to-buy-actions {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -10516,6 +11346,8 @@ main {
   position: relative;
   z-index: 10 !important;
   background: transparent !important;
+  color: inherit;
+  text-decoration: none;
 }
 
 .search-result-item:hover {
@@ -10524,6 +11356,12 @@ main {
 
 .search-result-item:active {
   background-color: #e5e7eb !important;
+}
+
+.search-result-item:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+  background-color: #eff6ff !important;
 }
 
 .search-result-info {
@@ -10608,6 +11446,25 @@ main {
   text-align: center;
   color: #6b7280;
   font-size: 14px;
+}
+
+.product-view-section.search-highlight .product-container {
+  outline: 2px solid #2563eb;
+  outline-offset: 6px;
+  border-radius: 8px;
+  animation: productSearchFocusPulse 1.4s ease;
+}
+
+@keyframes productSearchFocusPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.34);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(37, 99, 235, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+  }
 }
 
 /* Mobile Responsiveness */
@@ -12368,11 +13225,6 @@ main {
   40%, 80% { transform: translateX(2px); }
 }
 
-/* Mantendo o scroll suave */
-html {
-  scroll-behavior: smooth;
-}
-
 /* Responsividade */
 @media (max-width: 768px) {
   .edit-profile-modal {
@@ -13057,12 +13909,16 @@ html {
 /* Mobile overflow guards for the home page */
 @media (max-width: 900px) {
   .hero-layout,
+  .how-to-buy-layout,
+  .how-to-buy-steps,
   .trust-strip,
   .features-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
   .hero-layout > *,
+  .how-to-buy-layout > *,
+  .how-to-buy-steps > *,
   .trust-strip > *,
   .features-grid > * {
     min-width: 0;

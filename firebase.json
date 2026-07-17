@@ -7,6 +7,11 @@
       ".gitignore",
       "README.md",
       "netlify.toml",
+      "package.json",
+      "package-lock.json",
+      "firestore.rules",
+      "firebase-key.json",
+      "sync-products-*.js",
       "firebase-debug.log",
       "*.log",
       "**/*.log",
@@ -40,10 +45,6 @@
           {
             "key": "Cache-Control",
             "value": "public, max-age=31536000, immutable"
-          },
-          {
-            "key": "Content-Encoding",
-            "value": "gzip"
           }
         ]
       },

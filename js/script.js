@@ -1,6 +1,6 @@
 // === CONTROLE DE DEBUG ===
 const DEBUG = false;
-const PRODUCT_IMAGE_VERSION = '20260313-1908';
+const PRODUCT_IMAGE_VERSION = '20260413-1300';
 const STORE_INFO = Object.freeze({
   whatsappNumber: '556133406740',
   whatsappDisplay: '(61) 3340-6740',
@@ -22,6 +22,20 @@ function isDevelopmentEnvironment() {
   const host = window.location.hostname;
   return host === 'localhost' || host === '127.0.0.1' || host === '' || host.endsWith('.local');
 }
+
+function muteProductionConsoleNoise() {
+  if (DEBUG || isDevelopmentEnvironment() || typeof console === 'undefined') {
+    return;
+  }
+
+  ['log', 'info', 'debug'].forEach((method) => {
+    if (typeof console[method] === 'function') {
+      console[method] = function() {};
+    }
+  });
+}
+
+muteProductionConsoleNoise();
 
 function buildStoreUrl(pathname = '/') {
   const normalizedPath = pathname.startsWith('/') ? pathname : `/${pathname}`;
@@ -616,6 +630,18 @@ function getProductPriceMeta(product = {}) {
   };
 }
 
+function isDirectImageReference(imageValue) {
+  const normalizedValue = String(imageValue || '').trim();
+
+  return (
+    /^https?:\/\//i.test(normalizedValue) ||
+    normalizedValue.startsWith('//') ||
+    normalizedValue.startsWith('data:') ||
+    normalizedValue.startsWith('blob:') ||
+    normalizedValue.startsWith('/')
+  );
+}
+
 function getProductImagePath(productOrImage, fallbackImage = 'placeholder.webp') {
   let imageName = fallbackImage;
 
@@ -625,12 +651,22 @@ function getProductImagePath(productOrImage, fallbackImage = 'placeholder.webp')
     imageName = productOrImage.imagem || (productOrImage.codigo ? productOrImage.codigo + '.webp' : fallbackImage);
   }
 
+  if (isDirectImageReference(imageName)) {
+    return imageName;
+  }
+
   const separator = imageName.includes('?') ? '&' : '?';
   return `/images/products/thumbnail/${imageName}${separator}v=${PRODUCT_IMAGE_VERSION}`;
 }
 
 function getProductImageAbsoluteUrl(productOrImage, fallbackImage = 'placeholder.webp') {
-  return `https://primos-informatica-ecommerce.web.app${getProductImagePath(productOrImage, fallbackImage)}`;
+  const imagePath = getProductImagePath(productOrImage, fallbackImage);
+
+  if (isDirectImageReference(imagePath)) {
+    return imagePath.startsWith('/') ? `https://primos-informatica-ecommerce.web.app${imagePath}` : imagePath;
+  }
+
+  return `https://primos-informatica-ecommerce.web.app${imagePath}`;
 }
 
 function getCategoryImagePath(categoryName, sampleProduct) {
@@ -890,10 +926,101 @@ const APP_ROUTES = Object.freeze({
   '/produtos': 'promo'
 });
 
+const LEGACY_CATEGORY_HASHES = new Set([
+  'inicio',
+  'promo',
+  'promocoes',
+  'acessorios',
+  'audio',
+  'gabinetes',
+  'hd externo',
+  'hd interno',
+  'kit-teclado-mouse',
+  'memoria',
+  'monitor',
+  'mouse',
+  'notebook',
+  'placa de video',
+  'placa mae',
+  'processador',
+  'redes',
+  'ssd',
+  'switch',
+  'teclado',
+  'webcam',
+  'adaptadores',
+  'cabos',
+  'cooler',
+  'energia',
+  'fonte'
+]);
+
 function normalizeRouteSegment(segment) {
   return String(segment || '')
     .replace(/^\/+/, '')
     .replace(/\/+$/, '');
+}
+
+function getCurrentHashTarget(hashValue = window.location.hash) {
+  const rawHash = String(hashValue || '').trim();
+  if (!rawHash) {
+    return '';
+  }
+
+  return normalizeRouteSegment(decodeURIComponent(rawHash.replace(/^#/, '')));
+}
+
+function isLegacyCategoryHash(hashValue = window.location.hash) {
+  const hashTarget = getCurrentHashTarget(hashValue);
+  if (!hashTarget) {
+    return false;
+  }
+
+  return LEGACY_CATEGORY_HASHES.has(normalizeCategoryName(hashTarget));
+}
+
+function isInPageAnchorHash(hashValue = window.location.hash) {
+  const hashTarget = getCurrentHashTarget(hashValue);
+  if (!hashTarget || isLegacyCategoryHash(hashValue)) {
+    return false;
+  }
+
+  return Boolean(document.getElementById(hashTarget));
+}
+
+function scrollToAnchorTarget(anchorId, behavior = 'smooth') {
+  const target = document.getElementById(String(anchorId || '').trim());
+  if (!target) {
+    return false;
+  }
+
+  const header = document.querySelector('header');
+  const headerOffset = header ? Math.ceil(header.getBoundingClientRect().height) + 24 : 24;
+  const targetTop = window.pageYOffset + target.getBoundingClientRect().top - headerOffset;
+
+  window.scrollTo({
+    top: Math.max(targetTop, 0),
+    behavior
+  });
+
+  return true;
+}
+
+function revealHomeAnchorTarget(anchorId, behavior = 'smooth') {
+  const normalizedAnchorId = String(anchorId || '').trim();
+  if (!normalizedAnchorId) {
+    return false;
+  }
+
+  showCategory('inicio', { syncHistory: false, replaceHistory: true });
+
+  requestAnimationFrame(function() {
+    setTimeout(function() {
+      scrollToAnchorTarget(normalizedAnchorId, behavior);
+    }, 120);
+  });
+
+  return true;
 }
 
 function getCategoryRoutePath(category) {
@@ -938,7 +1065,15 @@ function syncProductHistory(productSlug, options = {}) {
 
 function getCurrentAppRoute() {
   const pathname = window.location.pathname || '/';
-  const hash = window.location.hash ? window.location.hash.substring(1) : '';
+  const hash = getCurrentHashTarget();
+
+  if (hash && isInPageAnchorHash(`#${hash}`)) {
+    return {
+      type: 'category',
+      category: 'inicio',
+      anchorTarget: hash
+    };
+  }
 
   if (pathname.startsWith('/produto/')) {
     return {
@@ -961,7 +1096,7 @@ function getCurrentAppRoute() {
     };
   }
 
-  if (hash) {
+  if (hash && isLegacyCategoryHash(`#${hash}`)) {
     return {
       type: 'category',
       category: normalizeCategoryName(hash || 'inicio'),
@@ -997,10 +1132,31 @@ function renderCurrentRoute(options = {}) {
     syncHistory: false,
     replaceHistory: options.replaceHistory === true
   });
+
+  if (route.anchorTarget) {
+    const scrollBehavior = options.scrollBehavior || (options.replaceHistory === true ? 'auto' : 'smooth');
+
+    requestAnimationFrame(function() {
+      setTimeout(function() {
+        scrollToAnchorTarget(route.anchorTarget, scrollBehavior);
+      }, 120);
+    });
+  }
 }
 
 function navigateTo(path, category = null, productSlug = null) {
-  const normalizedCategory = category ? normalizeCategoryName(category) : null;
+  const normalizedPath = String(path || '/');
+  const inferredCategory = category || (
+    normalizedPath.startsWith('/categoria/')
+      ? decodeURIComponent(normalizedPath.replace('/categoria/', ''))
+      : null
+  );
+  const inferredProductSlug = productSlug || (
+    normalizedPath.startsWith('/produto/')
+      ? decodeURIComponent(normalizedPath.replace('/produto/', ''))
+      : null
+  );
+  const normalizedCategory = inferredCategory ? normalizeCategoryName(inferredCategory) : null;
 
   if (normalizedCategory) {
     syncCategoryHistory(normalizedCategory);
@@ -1008,19 +1164,33 @@ function navigateTo(path, category = null, productSlug = null) {
     return;
   }
 
-  if (productSlug) {
-    syncProductHistory(productSlug);
-    showProduct(productSlug, { syncHistory: false });
+  if (inferredProductSlug) {
+    syncProductHistory(inferredProductSlug);
+    showProduct(inferredProductSlug, { syncHistory: false });
     return;
   }
 
-  const targetCategory = APP_ROUTES[path] || 'inicio';
+  const targetCategory = APP_ROUTES[normalizedPath] || 'inicio';
   syncCategoryHistory(targetCategory);
   showCategory(targetCategory, { syncHistory: false });
 }
 
 function initRouter() {
   document.addEventListener('click', function(e) {
+    const hashLink = e.target.closest('a[href^="#"]');
+    if (hashLink) {
+      const href = hashLink.getAttribute('href');
+
+      if (isInPageAnchorHash(href)) {
+        e.preventDefault();
+
+        const anchorTarget = getCurrentHashTarget(href);
+        history.pushState({ category: 'inicio', anchorTarget }, '', `#${encodeURIComponent(anchorTarget)}`);
+        revealHomeAnchorTarget(anchorTarget, 'smooth');
+        return;
+      }
+    }
+
     const link = e.target.closest('a[href^="/"]');
     if (!link) {
       return;
@@ -1172,25 +1342,99 @@ let advancedLazyLoader;
 
 // === SISTEMA DE PRODUTOS (SEO 3.0) ===
 function generateSlug(productName) {
-  return productName
+  return String(productName || '')
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '') // Remove acentos
     .replace(/[^a-z0-9\s-]/g, '') // Remove caracteres especiais
     .replace(/\s+/g, '-') // Espaços para hífens
     .replace(/-+/g, '-') // Múltiplos hífens para um
+    .replace(/^-+|-+$/g, '')
     .trim();
+}
+
+let productSlugByCode = new Map();
+let productBySlug = new Map();
+
+function getProductBaseSlug(product) {
+  return generateSlug((product && product.nome) || (product && product.codigo) || 'produto') || 'produto';
+}
+
+function getProductCodeSlug(product) {
+  return generateSlug(product && product.codigo);
+}
+
+function buildUniqueProductSlug(product, usedSlugs, index) {
+  const baseSlug = getProductBaseSlug(product);
+  const codeSlug = getProductCodeSlug(product);
+  let candidate = baseSlug;
+
+  if (usedSlugs.has(candidate)) {
+    candidate = codeSlug ? `${baseSlug}-${codeSlug}` : `${baseSlug}-${index + 1}`;
+  }
+
+  let uniqueCandidate = candidate;
+  let suffix = 2;
+  while (usedSlugs.has(uniqueCandidate)) {
+    uniqueCandidate = `${candidate}-${suffix}`;
+    suffix += 1;
+  }
+
+  usedSlugs.add(uniqueCandidate);
+  return uniqueCandidate;
+}
+
+function rebuildProductSlugIndex(products = allProducts) {
+  productSlugByCode = new Map();
+  productBySlug = new Map();
+
+  const usedSlugs = new Set();
+  const catalogProducts = Array.isArray(products) ? products : [];
+
+  catalogProducts.forEach((product, index) => {
+    if (!product) {
+      return;
+    }
+
+    const slug = buildUniqueProductSlug(product, usedSlugs, index);
+    if (product.codigo) {
+      productSlugByCode.set(String(product.codigo), slug);
+    }
+    productBySlug.set(slug, product);
+  });
+}
+
+function getProductSlug(product) {
+  if (!product) {
+    return '';
+  }
+
+  if (!productBySlug.size && Array.isArray(allProducts) && allProducts.length > 0) {
+    rebuildProductSlugIndex(allProducts);
+  }
+
+  const productCode = String(product.codigo || '');
+  return productSlugByCode.get(productCode) || getProductBaseSlug(product);
 }
 
 function resolveProductBySlug(slug) {
   if (!allProducts || allProducts.length === 0) return null;
+
+  if (!productBySlug.size) {
+    rebuildProductSlugIndex(allProducts);
+  }
+
+  const normalizedSlug = String(slug || '').trim();
+  if (productBySlug.has(normalizedSlug)) {
+    return productBySlug.get(normalizedSlug);
+  }
   
-  // Buscar por slug gerado
+  // Compatibilidade com URLs antigas que usavam apenas o nome do produto.
   for (let i = 0; i < allProducts.length; i++) {
     const product = allProducts[i];
-    const productSlug = generateSlug(product.nome);
+    const productSlug = getProductBaseSlug(product);
     
-    if (productSlug === slug) {
+    if (productSlug === normalizedSlug) {
       return product;
     }
   }
@@ -1199,7 +1443,7 @@ function resolveProductBySlug(slug) {
 }
 
 function createProductLink(product) {
-  const slug = generateSlug(product.nome);
+  const slug = getProductSlug(product);
   return `/produto/${slug}`;
 }
 
@@ -2055,6 +2299,10 @@ function buildMergedCatalogProducts(staticProducts = [], remoteProducts = []) {
   const mergedProducts = [];
   const productIndexByCode = {};
 
+  function isDetailedDescription(value) {
+    return String(value || '').trim().length >= 80;
+  }
+
   function addStaticProduct(rawProduct) {
     const product = normalizeCatalogProduct(rawProduct);
     if (!product.codigo) {
@@ -2084,7 +2332,18 @@ function buildMergedCatalogProducts(staticProducts = [], remoteProducts = []) {
 
     if (Object.prototype.hasOwnProperty.call(productIndexByCode, product.codigo)) {
       const existingIndex = productIndexByCode[product.codigo];
-      mergedProducts[existingIndex] = product;
+      const localProduct = mergedProducts[existingIndex];
+      const mergedProduct = {
+        ...localProduct,
+        ...product
+      };
+
+      // Se o Firebase vier com descricao muito curta, preserva a versao mais rica do catalogo local.
+      if (!isDetailedDescription(product.descricao) && isDetailedDescription(localProduct.descricao)) {
+        mergedProduct.descricao = localProduct.descricao;
+      }
+
+      mergedProducts[existingIndex] = mergedProduct;
       return;
     }
 
@@ -2171,6 +2430,7 @@ function loadProducts() {
       const products = buildMergedCatalogProducts(jsonData, remoteProducts);
       allProducts = products;
       window.products = products;
+      rebuildProductSlugIndex(products);
       DEBUG && console.log('✅', allProducts.length, 'produtos carregados do JSON');
       return products;
     })
@@ -2207,7 +2467,7 @@ function addIndividualProductSchema(product) {
   
   if (!product) return;
   
-  const slug = generateSlug(product.nome);
+  const slug = getProductSlug(product);
   const price = String(product.preco || '0').replace(',', '.');
   
   // Gerar schema individual para o produto
@@ -2268,7 +2528,7 @@ function addIndividualProductSchema(product) {
 function updateProductMetaTags(product) {
   if (!product) return;
   
-  const slug = generateSlug(product.nome);
+  const slug = getProductSlug(product);
   const price = String(product.preco || '0').replace(',', '.');
   const formattedPrice = parseFloat(price).toLocaleString('pt-BR', {
     style: 'currency',
@@ -2349,7 +2609,7 @@ function addProductSchema(products) {
       },
       "offers": {
         "@type": "Offer",
-        "url": `https://primos-informatica-ecommerce.web.app/#produto-${product.codigo}`,
+        "url": `https://primos-informatica-ecommerce.web.app${createProductLink(product)}`,
         "priceCurrency": "BRL",
         "price": String(product.preco || '0').replace(',', '.'),
         "availability": product.qt > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
@@ -4734,7 +4994,11 @@ function migrateToSEOUrls() {
     return;
   }
 
-  const normalizedCategory = normalizeCategoryName(window.location.hash.substring(1) || 'inicio');
+  if (isInPageAnchorHash(window.location.hash) || !isLegacyCategoryHash(window.location.hash)) {
+    return;
+  }
+
+  const normalizedCategory = normalizeCategoryName(getCurrentHashTarget() || 'inicio');
   syncCategoryHistory(normalizedCategory, { replace: true });
 }
 
@@ -4784,6 +5048,11 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   window.addEventListener('hashchange', function() {
+    if (isInPageAnchorHash(window.location.hash)) {
+      revealHomeAnchorTarget(getCurrentHashTarget(), 'smooth');
+      return;
+    }
+
     migrateToSEOUrls();
     renderCurrentRoute({ replaceHistory: true });
   });
@@ -7594,7 +7863,6 @@ function createCheckoutPage() {
 
   const usuario = readStoredLoggedInUser();
   if (usuario) {
-    const usuario = JSON.parse(usuarioLogado);
     console.log('Preenchendo dados do usuario logado:', usuario);
 
     const nomeField = document.getElementById('checkout-nome');
@@ -7843,8 +8111,18 @@ function loadUserOrdersFromLocalStorage(usuario) {
   console.log('📋 Carregando pedidos do usuário do localStorage...');
   console.log('👤 Usuário:', usuario);
   
+  // Verificar se é admin
+  const isAdminUser = usuario && (usuario.isAdmin === true || usuario.role === 'admin' || usuario.email === 'teste@primos.com');
+  console.log('🔓 É admin?:', isAdminUser);
+  
   // Filtrar pedidos do usuário atual
   const userOrders = allOrders.filter(order => {
+    // Se for admin, mostrar TODOS os pedidos
+    if (isAdminUser) {
+      console.log('👑 Admin - mostrando todos os pedidos');
+      return true;
+    }
+    
     console.log('🔍 Verificando pedido:', order);
     console.log('📧 Email do pedido (cliente.email):', order.cliente?.email);
     console.log('📧 Email do pedido (email):', order.email);
@@ -9618,7 +9896,7 @@ function matchesQuickFilter(product, index) {
   }
 }
 
-function getEffectiveSortMode() {
+function getEffectiveSortMode(activeSearch = '') {
   if (currentFilters.sortBy && currentFilters.sortBy !== 'relevance') {
     return currentFilters.sortBy;
   }
@@ -9634,7 +9912,7 @@ function getEffectiveSortMode() {
     case 'pickup':
       return 'stock-desc';
     default:
-      return currentFilters.searchQuery ? 'relevance' : 'name-asc';
+      return activeSearch ? 'relevance' : 'name-asc';
   }
 }
 
@@ -9694,7 +9972,7 @@ function getFilteredCatalogEntries(searchOverride = null) {
       return true;
     })
     .sort((a, b) => {
-      const sortMode = getEffectiveSortMode();
+      const sortMode = getEffectiveSortMode(activeSearch);
 
       switch (sortMode) {
         case 'price-asc':
@@ -10005,10 +10283,16 @@ function displaySearchResults(results, searchTerm) {
     const stockClass = product.qt > 3 ? '' : product.qt > 0 ? 'stock-low' : 'stock-none';
     const brandLabel = product.marca ? product.marca.toUpperCase() : 'CATALOGO';
     const imagePath = getProductImagePath(product);
+    const productLink = createProductLink(product);
+    const productSlug = getProductSlug(product);
 
     return `
-      <div class="search-result-item" data-product-code="${escapeHtml(product.codigo)}">
-        <img class="search-result-thumb" src="${imagePath}" alt="${escapeHtml(product.nome)}" loading="lazy" decoding="async">
+      <a class="search-result-item"
+         href="${escapeHtml(productLink)}"
+         data-product-code="${escapeHtml(product.codigo)}"
+         data-product-slug="${escapeHtml(productSlug)}"
+         aria-label="Abrir produto ${escapeHtml(product.nome)}">
+        <img class="search-result-thumb" src="${escapeHtml(imagePath)}" alt="${escapeHtml(product.nome)}" loading="lazy" decoding="async">
         <div class="search-result-info">
           <div class="search-result-name">${escapeHtml(product.nome)}</div>
           <div class="search-result-category">${escapeHtml(formatCategoryLabel(product.categoria || 'Sem categoria'))}</div>
@@ -10019,7 +10303,7 @@ function displaySearchResults(results, searchTerm) {
           </div>
           <div class="search-result-price">${formattedPrice}</div>
         </div>
-      </div>
+      </a>
     `;
   }).join('');
 
@@ -10029,39 +10313,61 @@ function displaySearchResults(results, searchTerm) {
     item.addEventListener('click', function(event) {
       event.preventDefault();
       event.stopPropagation();
-      selectSearchProduct(this.getAttribute('data-product-code'));
+      selectSearchProduct(
+        this.getAttribute('data-product-code'),
+        this.getAttribute('data-product-slug')
+      );
     });
   });
 }
 
-function selectSearchProduct(productCode) {
+function focusSelectedProductView() {
+  window.requestAnimationFrame(() => {
+    window.setTimeout(() => {
+      const productView = document.getElementById('product-view');
+      if (!productView) {
+        return;
+      }
+
+      productView.setAttribute('tabindex', '-1');
+      productView.classList.add('search-highlight');
+      productView.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+      productView.focus({ preventScroll: true });
+
+      window.setTimeout(() => {
+        productView.classList.remove('search-highlight');
+      }, 2200);
+    }, 80);
+  });
+}
+
+function selectSearchProduct(productCode, productSlug = '') {
+  const normalizedCode = String(productCode || '').trim();
+  const product = allProducts.find((entry) => String(entry.codigo || '') === normalizedCode);
+
   hideSearchResults();
   setSearchFieldValue('');
   currentFilters.searchQuery = '';
   syncFiltersUIFromState();
   hideCatalogResultsPresentation();
 
-  const product = allProducts.find((entry) => entry.codigo === productCode);
-
-  if (product) {
-    showCategory(product.categoria);
-
-    setTimeout(() => {
-      const productElement = document.querySelector(`[data-product-code="${productCode}"]`);
-
-      if (productElement) {
-        productElement.classList.add('search-highlight');
-        productElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
-
-        setTimeout(() => {
-          productElement.classList.remove('search-highlight');
-        }, 3000);
-      }
-    }, 500);
+  if (!product) {
+    return;
   }
+
+  const slug = sanitizeInput(productSlug) || getProductSlug(product);
+  const productLink = createProductLink(product);
+
+  if (typeof window.navigateTo === 'function') {
+    window.navigateTo(productLink, null, slug);
+    focusSelectedProductView();
+    return;
+  }
+
+  window.location.assign(productLink);
 }
 
 function readFiltersFromUI() {

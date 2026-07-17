@@ -226,7 +226,7 @@
 
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" defer></script>
-  <script src="js/firebase-config.js?v=20260402-1805" defer></script>
+  <script src="js/firebase-config.js?v=20260408-1905" defer></script>
 </head>
 <body>
   <header class="modern-header">
@@ -398,9 +398,17 @@
             }
 
             if (typeof firebase !== 'undefined' && typeof firebase.auth === 'function') {
-              window.firebaseAuth = firebase.auth();
-              resolve(window.firebaseAuth);
-              return;
+              const hasFirebaseApp = Array.isArray(firebase.apps) && firebase.apps.length > 0;
+
+              if (hasFirebaseApp) {
+                try {
+                  window.firebaseAuth = firebase.auth();
+                  resolve(window.firebaseAuth);
+                  return;
+                } catch (error) {
+                  // Se o SDK ainda estiver finalizando a inicializacao, seguimos aguardando.
+                }
+              }
             }
 
             if (Date.now() - startedAt >= timeoutMs) {
