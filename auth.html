@@ -2,615 +2,1168 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  
-  <!-- SEO Meta Tags -->
-  <title>Login - Primos Informática</title>
-  <meta name="description" content="Faça login na Primos Informática. Loja especializada em informática em Brasília.">
-  <meta name="robots" content="index, follow">
-  
-  <!-- Performance -->
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="theme-color" content="#3b82f6">
-  
-  <!-- Preconnect -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  
-  <!-- Favicon -->
-  <link rel="icon" href="images/favicons/favicon.ico" sizes="any">
-  <link rel="icon" href="images/favicons/favicon-32x32.png" type="image/png" sizes="32x32">
-  <link rel="icon" href="images/favicons/favicon-16x16.png" type="image/png" sizes="16x16">
-  <link rel="apple-touch-icon" href="images/favicons/apple-touch-icon.png" sizes="180x180">
-  <link rel="icon" href="images/favicons/android-chrome-192x192.png" type="image/png" sizes="192x192">
-  <link rel="icon" href="images/favicons/android-chrome-512x512.png" type="image/png" sizes="512x512">
-  <link rel="manifest" href="manifest.json">
-  
-  <link rel="stylesheet" href="css/styles.css?v=20260316-1835" />
-  
-  <!-- Estilos para remover margin do body -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Login | Primos Informatica</title>
+  <meta name="description" content="Entre na sua conta da Primos Informatica para acompanhar pedidos, avaliacoes e atualizacoes do seu perfil." />
+  <meta name="robots" content="noindex,follow" />
+  <meta name="theme-color" content="#0f5b86" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+
+  <link rel="icon" href="images/favicons/favicon.ico" sizes="any" />
+  <link rel="icon" href="images/favicons/favicon-32x32.png" type="image/png" sizes="32x32" />
+  <link rel="icon" href="images/favicons/favicon-16x16.png" type="image/png" sizes="16x16" />
+  <link rel="apple-touch-icon" href="images/favicons/apple-touch-icon.png" sizes="180x180" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="canonical" href="https://primos-informatica-ecommerce.web.app/auth.html" />
+
+  <link rel="stylesheet" href="css/styles.css?v=20260402-1805" />
+
   <style>
     body {
-      margin: 0 !important;
-      padding: 0 !important;
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(25, 164, 193, 0.18), transparent 34%),
+        linear-gradient(180deg, #eef6fb 0%, #f7fafc 100%);
+    }
+
+    .auth-page {
+      min-height: calc(100vh - 163px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px 64px;
+    }
+
+    .auth-shell {
+      width: 100%;
+      max-width: 440px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 24px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.16);
+      padding: 32px 28px;
+      backdrop-filter: blur(12px);
+    }
+
+    .auth-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .auth-brand img {
+      width: 64px;
+      height: 72px;
+      object-fit: contain;
+    }
+
+    .auth-brand-copy h1 {
+      margin: 0 0 6px;
+      font-size: 28px;
+      color: #0f172a;
+    }
+
+    .auth-brand-copy p {
+      margin: 0;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    .auth-mode-toggle {
+      margin-top: 24px;
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+      padding-top: 20px;
+      color: #475569;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .auth-mode-toggle a {
+      color: #0f5b86;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .auth-mode-toggle a:hover {
+      text-decoration: underline;
+    }
+
+    .auth-panel {
+      display: none;
+    }
+
+    .auth-panel.active {
+      display: block;
+    }
+
+    .auth-form {
+      display: grid;
+      gap: 18px;
+    }
+
+    .auth-field {
+      display: grid;
+      gap: 8px;
+      text-align: left;
+    }
+
+    .auth-field label {
+      color: #0f172a;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .auth-field input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px 14px;
+      border: 1px solid rgba(148, 163, 184, 0.38);
+      border-radius: 12px;
+      font-size: 15px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .auth-field input:focus {
+      outline: none;
+      border-color: #117aa3;
+      box-shadow: 0 0 0 4px rgba(17, 122, 163, 0.12);
+    }
+
+    .error-message {
+      display: none;
+      color: #b91c1c;
+      font-size: 12px;
+    }
+
+    .auth-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: #475569;
+    }
+
+    .auth-actions a {
+      color: #0f5b86;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .auth-actions a:hover {
+      text-decoration: underline;
+    }
+
+    .auth-submit {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(135deg, #0f5b86 0%, #19a4c1 100%);
+      box-shadow: 0 16px 30px rgba(17, 122, 163, 0.22);
+    }
+
+    .auth-submit:disabled {
+      cursor: wait;
+      opacity: 0.7;
+    }
+
+    .auth-note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #eff6ff;
+      color: #1e3a8a;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      left: 20px;
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 16px 18px;
+      border-radius: 14px;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+      z-index: 1200;
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .auth-page {
+        min-height: calc(100vh - 143px);
+        padding-top: 24px;
+      }
+
+      .auth-shell {
+        padding: 24px 20px;
+        border-radius: 20px;
+      }
+
+      .auth-brand {
+        align-items: flex-start;
+      }
+
+      .auth-brand-copy h1 {
+        font-size: 24px;
+      }
     }
   </style>
-  
-  <!-- Funções Compartilhadas -->
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" defer></script>
+  <script src="js/firebase-config.js?v=20260408-1905" defer></script>
 </head>
 <body>
-
-<!-- Header Completo do Index.html -->
-<header class="modern-header">
-  <div class="header-top">
-    <div class="header-container">
-      <!-- Logo e Nome -->
-      <div class="header-brand">
-        <img src="images/logo.png" alt="Primos Informática" onclick="window.location.href='index.html'" />
-        <div class="brand-info">
-          <h1 onclick="window.location.href='index.html'">Primos Informática</h1>
-          <span class="brand-tagline">Hardware em Brasília</span>
-        </div>
-      </div>
-      
-      <!-- Ações do Header -->
-      <div class="header-actions">
-        <!-- Barra de Pesquisa -->
-        <div class="search-container">
-          <div class="search-input-wrapper">
-            <input 
-              type="text" 
-              class="search-input" 
-              id="searchInput"
-              placeholder="🔍 Buscar produtos..."
-              autocomplete="off"
-              onkeypress="if(event.key === 'Enter') window.location.href='index.html'"
-            >
-            <div class="search-results" id="searchResults"></div>
+  <header class="modern-header">
+    <div class="header-top">
+      <div class="header-container">
+        <div class="header-brand" onclick="window.location.href='/'">
+          <img src="images/logo.png" alt="Primos Informatica" width="40" height="40" />
+          <div class="brand-info">
+            <p class="brand-title">Primos Informatica</p>
+            <span class="brand-tagline">Hardware em Brasilia</span>
           </div>
         </div>
-        
-        <!-- Botões de Ação -->
-        <div class="action-buttons">
-          <!-- Carrinho -->
-          <button class="action-btn cart-btn" onclick="window.location.href='index.html'" title="Carrinho">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="9" cy="21" r="1"></circle>
-              <circle cx="20" cy="21" r="1"></circle>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-            </svg>
-            <span class="cart-count" id="cartCount">0</span>
-          </button>
-          
-          <!-- Filtros -->
-          <button class="action-btn filters-btn" onclick="window.location.href='index.html'" title="Filtros">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-            </svg>
-          </button>
-          
-          <!-- Menu Mobile -->
-          <button class="action-btn mobile-menu-btn" onclick="window.location.href='index.html'" title="Menu">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-          </button>
-          
-          <!-- Voltar para Loja -->
-          <button class="action-btn back-to-store-btn" onclick="window.location.href='index.html'" title="Voltar para Loja">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="m15 18-6-6 6-6"></path>
-              <path d="M9 12h14"></path>
-            </svg>
-          </button>
-          
+
+        <div class="header-actions">
+          <div class="action-buttons">
+            <button class="action-btn cart-btn" type="button" onclick="window.location.href='/'" aria-label="Voltar para a loja">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              </svg>
+              <span class="cart-count" aria-hidden="true">0</span>
+            </button>
+
+            <button class="action-btn filters-btn" type="button" onclick="window.location.href='/'" aria-label="Ver catalogo">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+              </svg>
+              <span>Catalogo</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
+
+    <nav class="header-nav">
+      <div class="header-container">
+        <div class="nav-tabs">
+          <button type="button" class="nav-tab" onclick="window.location.href='/'">
+            <span>Inicio</span>
+          </button>
+          <button type="button" class="nav-tab" onclick="window.location.href='/produtos'">
+            <span>Promocoes</span>
+          </button>
+          <button type="button" class="nav-tab" onclick="window.location.href='/categoria/processador'">
+            <span>Processadores</span>
+          </button>
+          <button type="button" class="nav-tab" onclick="window.location.href='/categoria/placa%20de%20video'">
+            <span>Placas de video</span>
+          </button>
+        </div>
+      </div>
+    </nav>
   </header>
 
-  <!-- Navegação Principal -->
-  <nav class="header-nav">
-    <div class="header-container">
-      <div class="nav-tabs">
-        <button type="button" class="nav-tab" onclick="window.location.href='index.html'">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
-          <span>Início</span>
-        </button>
-        
-        <button type="button" class="nav-tab" onclick="window.location.href='index.html#promo'">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
-          </svg>
-          <span>Promoções</span>
-        </button>
-        
-        <button type="button" class="nav-tab" onclick="window.location.href='index.html#processador'">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
-            <rect x="9" y="9" width="6" height="6"></rect>
-            <line x1="9" y1="1" x2="9" y2="4"></line>
-            <line x1="15" y1="1" x2="15" y2="4"></line>
-            <line x1="9" y1="20" x2="9" y2="23"></line>
-            <line x1="15" y1="20" x2="15" y2="23"></line>
-            <line x1="20" y1="9" x2="23" y2="9"></line>
-            <line x1="20" y1="14" x2="23" y2="14"></line>
-            <line x1="1" y1="9" x2="4" y2="9"></line>
-            <line x1="1" y1="14" x2="4" y2="14"></line>
-          </svg>
-          <span>Processadores</span>
-        </button>
-        
-        <button type="button" class="nav-tab" onclick="window.location.href='index.html#placa de vídeo'">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-            <line x1="8" y1="21" x2="16" y2="21"></line>
-            <line x1="12" y1="17" x2="12" y2="21"></line>
-          </svg>
-          <span>Placas de Vídeo</span>
-        </button>
-      </div>
-    </div>
-  </nav>
-</header>
-
-<!-- Conteúdo Principal: Formulário de Login -->
-<main style="min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); padding-top: 20px;">
-  <div class="auth-container" style="background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); padding: 40px; width: 100%; max-width: 400px; text-align: center; margin-top: 140px;">
-    <img src="images/logo.png" alt="Primos Informática" style="width: 80px; height: 80px; margin-bottom: 20px;">
-    <h1 id="authTitle" style="color: #333; font-size: 24px; margin-bottom: 10px;">Primos Informática</h1>
-    <p id="authSubtitle" style="color: #666; font-size: 14px; margin-bottom: 30px;">Bem-vindo! Faça login para continuar</p>
-
-    <!-- Formulário de Login -->
-    <form id="loginForm" style="display: block;">
-      <div class="form-group" style="margin-bottom: 20px; text-align: left;">
-        <label for="email" style="display: block; color: #333; font-weight: 600; margin-bottom: 8px; font-size: 14px;">E-mail</label>
-        <input type="email" id="email" name="email" required placeholder="seu@email.com" style="width: 100%; padding: 12px 16px; border: 2px solid #e1e5e9; border-radius: 10px; font-size: 16px; transition: all 0.3s ease;">
-        <div class="error-message" id="emailError" style="color: #ef4444; font-size: 12px; margin-top: 5px; display: none;"></div>
-      </div>
-      
-      <div class="form-group" style="margin-bottom: 20px; text-align: left;">
-        <label for="password" style="display: block; color: #333; font-weight: 600; margin-bottom: 8px; font-size: 14px;">Senha</label>
-        <input type="password" id="password" name="password" required placeholder="•••••••" style="width: 100%; padding: 12px 16px; border: 2px solid #e1e5e9; border-radius: 10px; font-size: 16px; transition: all 0.3s ease;">
-        <div class="error-message" id="passwordError" style="color: #ffffff; font-size: 12px; margin-top: 5px; display: none;"></div>
+  <main class="auth-page">
+    <section class="auth-shell" aria-labelledby="authPageTitle">
+      <div class="auth-brand">
+        <img src="images/logo.png" alt="Primos Informatica" />
+        <div class="auth-brand-copy">
+          <h1 id="authPageTitle">Entre na sua conta</h1>
+          <p id="authSubtitle">Acompanhe pedidos, edite seu perfil e avalie os produtos comprados.</p>
+        </div>
       </div>
 
-      <div class="form-options" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 14px;">
-        <label class="checkbox" style="display: flex; align-items: center; gap: 8px; color: #666;">
-          <input type="checkbox" id="remember">
-          <span>Lembrar-me</span>
-        </label>
-        <a href="#" class="forgot-link" style="color: #3b82f6; text-decoration: none; font-weight: 500;" onclick="showForgotPassword(); return false;">Esqueci minha senha</a>
+      <div class="auth-panel active" id="loginPanel">
+        <form class="auth-form" id="loginForm" novalidate>
+          <div class="auth-field">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="voce@empresa.com" />
+            <div class="error-message" id="emailError"></div>
+          </div>
+
+          <div class="auth-field">
+            <label for="password">Senha</label>
+            <input type="password" id="password" name="password" autocomplete="current-password" placeholder="Sua senha" />
+            <div class="error-message" id="passwordError"></div>
+          </div>
+
+          <div class="auth-actions">
+            <label>
+              <input type="checkbox" id="remember" checked />
+              <span>Manter conectado</span>
+            </label>
+            <a href="#" onclick="showForgotPassword(); return false;">Esqueci minha senha</a>
+          </div>
+
+          <button type="submit" id="loginBtn" class="auth-submit">Entrar</button>
+        </form>
       </div>
 
-      <button type="submit" id="loginBtn" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-bottom: 20px;">
-        Entrar
-      </button>
-    </form>
+      <div class="auth-panel" id="cadastroPanel">
+        <form class="auth-form" id="cadastroForm" novalidate>
+          <div class="auth-field">
+            <label for="cadNome">Nome completo</label>
+            <input type="text" id="cadNome" name="cadNome" autocomplete="name" placeholder="Seu nome completo" />
+            <div class="error-message" id="cadNomeError"></div>
+          </div>
 
-    <!-- Formulário de Cadastro -->
-    <form id="cadastroForm" style="display: none;">
-      <div class="form-group" style="margin-bottom: 20px; text-align: left;">
-        <label for="cadNome" style="display: block; color: #333; font-weight: 600; margin-bottom: 8px; font-size: 14px;">Nome Completo</label>
-        <input type="text" id="cadNome" name="cadNome" required placeholder="Seu nome completo" style="width: 100%; padding: 12px 16px; border: 2px solid #e1e5e9; border-radius: 10px; font-size: 16px; transition: all 0.3s ease;">
-        <div class="error-message" id="cadNomeError" style="color: #ef4444; font-size: 12px; margin-top: 5px; display: none;"></div>
+          <div class="auth-field">
+            <label for="cadEmail">E-mail</label>
+            <input type="email" id="cadEmail" name="cadEmail" autocomplete="email" placeholder="voce@empresa.com" />
+            <div class="error-message" id="cadEmailError"></div>
+          </div>
+
+          <div class="auth-field">
+            <label for="cadSenha">Senha</label>
+            <input type="password" id="cadSenha" name="cadSenha" autocomplete="new-password" placeholder="Minimo de 6 caracteres" />
+            <div class="error-message" id="cadSenhaError"></div>
+          </div>
+
+          <div class="auth-field">
+            <label for="cadConfirmarSenha">Confirmar senha</label>
+            <input type="password" id="cadConfirmarSenha" name="cadConfirmarSenha" autocomplete="new-password" placeholder="Repita sua senha" />
+            <div class="error-message" id="cadConfirmarSenhaError"></div>
+          </div>
+
+          <div class="auth-actions" style="align-items: flex-start;">
+            <label>
+              <input type="checkbox" id="cadTermos" />
+              <span>Aceito os <a href="termos-de-uso.html">termos de uso</a> e a <a href="politica-privacidade.html">politica de privacidade</a>.</span>
+            </label>
+          </div>
+          <div class="error-message" id="cadTermosError"></div>
+
+          <button type="submit" id="cadastroBtn" class="auth-submit">Criar conta</button>
+        </form>
       </div>
 
-      <div class="form-group" style="margin-bottom: 20px; text-align: left;">
-        <label for="cadEmail" style="display: block; color: #333; font-weight: 600; margin-bottom: 8px; font-size: 14px;">E-mail</label>
-        <input type="email" id="cadEmail" name="cadEmail" required placeholder="seu@email.com" style="width: 100%; padding: 12px 16px; border: 2px solid #e1e5e9; border-radius: 10px; font-size: 16px; transition: all 0.3s ease;">
-        <div class="error-message" id="cadEmailError" style="color: #ef4444; font-size: 12px; margin-top: 5px; display: none;"></div>
-      </div>
-      
-      <div class="form-group" style="margin-bottom: 20px; text-align: left;">
-        <label for="cadSenha" style="display: block; color: #333; font-weight: 600; margin-bottom: 8px; font-size: 14px;">Senha</label>
-        <input type="password" id="cadSenha" name="cadSenha" required placeholder="Mínimo 6 caracteres" style="width: 100%; padding: 12px 16px; border: 2px solid #e1e5e9; border-radius: 10px; font-size: 16px; transition: all 0.3s ease;">
-        <div class="error-message" id="cadSenhaError" style="color: #ef4444; font-size: 12px; margin-top: 5px; display: none;"></div>
+      <div class="auth-note">
+        A autenticacao usa Firebase Auth quando disponivel. Se ele nao estiver configurado neste projeto, a pagina usa um fallback local no navegador para nao travar o acesso.
       </div>
 
-      <div class="form-group" style="margin-bottom: 20px; text-align: left;">
-        <label for="cadConfirmarSenha" style="display: block; color: #333; font-weight: 600; margin-bottom: 8px; font-size: 14px;">Confirmar Senha</label>
-        <input type="password" id="cadConfirmarSenha" name="cadConfirmarSenha" required placeholder="Confirme sua senha" style="width: 100%; padding: 12px 16px; border: 2px solid #e1e5e9; border-radius: 10px; font-size: 16px; transition: all 0.3s ease;">
-        <div class="error-message" id="cadConfirmarSenhaError" style="color: #ef4444; font-size: 12px; margin-top: 5px; display: none;"></div>
+      <div class="auth-mode-toggle" id="authFooterText">
+        Nao tem conta? <a href="#" onclick="toggleAuthMode(); return false;">Cadastre-se</a>
       </div>
+    </section>
+  </main>
 
-      <div class="form-group" style="margin-bottom: 25px; text-align: left;">
-        <label class="checkbox" style="display: flex; align-items: flex-start; gap: 8px; color: #666; font-size: 14px;">
-          <input type="checkbox" id="cadTermos" required style="margin-top: 2px;">
-          <span>Li e aceito os <a href="termos-de-uso.html" style="color: #3b82f6; text-decoration: none;">termos de uso</a> e <a href="politica-privacidade.html" style="color: #3b82f6; text-decoration: none;">política de privacidade</a></span>
-        </label>
-        <div class="error-message" id="cadTermosError" style="color: #ef4444; font-size: 12px; margin-top: 5px; display: none;"></div>
-      </div>
+  <div class="notification" id="notification"></div>
 
-      <button type="submit" id="cadastroBtn" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-bottom: 20px;">
-        Cadastrar
-      </button>
-    </form>
+  <script>
+    const USER_SESSION_STORAGE_KEY = 'usuarioLogado';
+    const AUTH_SESSION_TTL_MS = 1000 * 60 * 60 * 24;
+    const FALLBACK_USERS_STORAGE_KEY = 'usuariosFallback';
+    const AUTH_RUNTIME_MODE_STORAGE_KEY = 'primosAuthRuntimeMode';
+    const ADMIN_ACCOUNT_EMAIL = 'teste@primos.com';
+    const ADMIN_ACCOUNT_PASSWORD_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
 
-    <div class="auth-footer" style="border-top: 1px solid #e1e5e9; padding-top: 20px; color: #666; font-size: 14px;">
-      <p id="authFooterText">Não tem conta? <a href="#" style="color: #3b82f6; text-decoration: none; font-weight: 600;" onclick="toggleAuthMode(); return false;">Cadastre-se</a></p>
-    </div>
-  </div>
-</main>
+    class FirebaseEmailAuth {
+      constructor() {
+        this.loginPanel = document.getElementById('loginPanel');
+        this.cadastroPanel = document.getElementById('cadastroPanel');
+        this.subtitle = document.getElementById('authSubtitle');
+        this.footer = document.getElementById('authFooterText');
+        this.authRuntimeMode = this.getAuthRuntimeMode();
+        this.setupForm();
+        this.initialize();
+      }
 
-<!-- Notification -->
-<div class="notification" id="notification" style="position: fixed; top: 20px; right: 20px; left: 20px; max-width: 400px; margin: 0 auto; padding: 16px; border-radius: 10px; font-weight: 500; z-index: 1000; display: none;"></div>
+      async waitForAuth(timeoutMs = 5000) {
+        const startedAt = Date.now();
 
-<script>
-// Sistema de Autenticação Simples
-class SimpleAuth {
-  constructor() {
-    this.init();
-  }
+        return new Promise((resolve) => {
+          const checkAuth = () => {
+            if (window.firebaseAuth) {
+              resolve(window.firebaseAuth);
+              return;
+            }
 
-  init() {
-    console.log('🚀 Auth System iniciado');
-    
-    // Verificar se já está logado
-    if (this.isLoggedIn()) {
-      this.redirectToHome();
-      return;
-    }
+            if (typeof firebase !== 'undefined' && typeof firebase.auth === 'function') {
+              const hasFirebaseApp = Array.isArray(firebase.apps) && firebase.apps.length > 0;
 
-    // Criar usuário teste se não existir
-    this.createTestUser();
-    
-    // Configurar form
-    this.setupForm();
-  }
+              if (hasFirebaseApp) {
+                try {
+                  window.firebaseAuth = firebase.auth();
+                  resolve(window.firebaseAuth);
+                  return;
+                } catch (error) {
+                  // Se o SDK ainda estiver finalizando a inicializacao, seguimos aguardando.
+                }
+              }
+            }
 
-  getUsers() {
-    const users = localStorage.getItem('usuarios');
-    return users ? JSON.parse(users) : [];
-  }
+            if (Date.now() - startedAt >= timeoutMs) {
+              resolve(null);
+              return;
+            }
 
-  saveUsers(users) {
-    localStorage.setItem('usuarios', JSON.stringify(users));
-  }
+            setTimeout(checkAuth, 100);
+          };
 
-  getLoggedInUser() {
-    const user = localStorage.getItem('usuarioLogado');
-    return user ? JSON.parse(user) : null;
-  }
+          checkAuth();
+        });
+      }
 
-  setLoggedInUser(user) {
-    localStorage.setItem('usuarioLogado', JSON.stringify(user));
-  }
+      normalizeEmail(email) {
+        return String(email || '').trim().toLowerCase();
+      }
 
-  isLoggedIn() {
-    return !!this.getLoggedInUser();
-  }
-
-  createTestUser() {
-    // Limpar todas as contas existentes
-    localStorage.removeItem('usuarios');
-    
-    // Criar apenas o usuário teste
-    const testUser = {
-      id: Date.now(),
-      nome: 'Usuário Teste',
-      email: 'teste@primos.com',
-      senha: btoa('123456'),
-      dataCadastro: new Date().toISOString()
-    };
-    
-    const users = [testUser];
-    this.saveUsers(users);
-    
-    console.log('✅ Apenas usuário teste criado, todas as outras contas removidas');
-  }
-
-  findUser(email, password) {
-    const users = this.getUsers();
-    const encodedPassword = btoa(password);
-    return users.find(user => 
-      user.email === email.toLowerCase() && 
-      user.senha === encodedPassword
-    );
-  }
-
-  showNotification(message, type = 'success') {
-    const notification = document.getElementById('notification');
-    notification.textContent = message;
-    notification.style.background = type === 'success' ? '#10b981' : '#ef4444';
-    notification.style.color = 'white';
-    notification.style.display = 'block';
-    
-    setTimeout(() => {
-      notification.style.display = 'none';
-    }, 3000);
-  }
-
-  clearErrors() {
-    document.querySelectorAll('.error-message').forEach(msg => {
-      msg.style.display = 'none';
-      msg.textContent = '';
-    });
-    document.querySelectorAll('input').forEach(input => {
-      input.style.borderColor = '#e1e5e9';
-    });
-  }
-
-  showError(fieldId, message) {
-    const input = document.getElementById(fieldId);
-    const error = document.getElementById(fieldId + 'Error');
-    
-    input.style.borderColor = '#ef4444';
-    error.textContent = message;
-    error.style.display = 'block';
-  }
-
-  validateForm(email, password) {
-    this.clearErrors();
-    
-    let isValid = true;
-    
-    if (!email.trim()) {
-      this.showError('email', 'E-mail é obrigatório');
-      isValid = false;
-    } else if (!email.includes('@') || !email.includes('.')) {
-      this.showError('email', 'E-mail inválido');
-      isValid = false;
-    }
-    
-    if (!password.trim()) {
-      this.showError('password', 'Senha é obrigatória');
-      isValid = false;
-    }
-    
-    return isValid;
-  }
-
-  async handleLogin(email, password) {
-    if (!this.validateForm(email, password)) {
-      return false;
-    }
-
-    const btn = document.getElementById('loginBtn');
-    btn.disabled = true;
-    btn.textContent = 'Entrando...';
-
-    const user = this.findUser(email, password);
-    
-    if (user) {
-      this.setLoggedInUser(user);
-      this.showNotification(`Bem-vindo(a), ${user.nome}! Você será redirecionado para a página inicial...`, 'success');
-      
-      setTimeout(() => {
-        this.redirectToHome();
-      }, 3000);
-      
-      return true;
-    } else {
-      this.showError('password', 'E-mail ou senha incorretos');
-      btn.disabled = false;
-      btn.textContent = 'Entrar';
-      return false;
-    }
-  }
-
-  validateCadastro(nome, email, senha, confirmarSenha, termos) {
-    this.clearErrors();
-    
-    let isValid = true;
-    
-    // Validar nome
-    if (!nome.trim()) {
-      this.showError('cadNome', 'Nome é obrigatório');
-      isValid = false;
-    } else if (nome.trim().length < 3) {
-      this.showError('cadNome', 'Nome deve ter pelo menos 3 caracteres');
-      isValid = false;
-    }
-    
-    // Validar email
-    if (!email.trim()) {
-      this.showError('cadEmail', 'E-mail é obrigatório');
-      isValid = false;
-    } else if (!email.includes('@') || !email.includes('.')) {
-      this.showError('cadEmail', 'E-mail inválido');
-      isValid = false;
-    }
-    
-    // Validar senha
-    if (!senha.trim()) {
-      this.showError('cadSenha', 'Senha é obrigatória');
-      isValid = false;
-    } else if (senha.length < 6) {
-      this.showError('cadSenha', 'Senha deve ter pelo menos 6 caracteres');
-      isValid = false;
-    }
-    
-    // Validar confirmação de senha
-    if (!confirmarSenha.trim()) {
-      this.showError('cadConfirmarSenha', 'Confirme sua senha');
-      isValid = false;
-    } else if (senha !== confirmarSenha) {
-      this.showError('cadConfirmarSenha', 'As senhas não coincidem');
-      isValid = false;
-    }
-    
-    // Validar termos
-    if (!termos) {
-      this.showError('cadTermos', 'Você precisa aceitar os termos de uso');
-      isValid = false;
-    }
-    
-    return isValid;
-  }
-
-  async handleCadastro(nome, email, senha, confirmarSenha, termos) {
-    if (!this.validateCadastro(nome, email, senha, confirmarSenha, termos)) {
-      return false;
-    }
-
-    const btn = document.getElementById('cadastroBtn');
-    btn.disabled = true;
-    btn.textContent = 'Cadastrando...';
-
-    // Verificar se email já existe
-    const users = this.getUsers();
-    const emailExists = users.find(user => user.email === email.toLowerCase());
-    
-    if (emailExists) {
-      this.showError('cadEmail', 'Este e-mail já está cadastrado');
-      btn.disabled = false;
-      btn.textContent = 'Cadastrar';
-      return false;
-    }
-
-    // Criar novo usuário
-    const newUser = {
-      id: Date.now(),
-      nome: nome.trim(),
-      email: email.toLowerCase().trim(),
-      senha: btoa(senha),
-      dataCadastro: new Date().toISOString()
-    };
-
-    users.push(newUser);
-    this.saveUsers(users);
-
-    this.showNotification('Cadastro realizado com sucesso! Faça login para continuar.', 'success');
-    
-    // Limpar formulário
-    document.getElementById('cadNome').value = '';
-    document.getElementById('cadEmail').value = '';
-    document.getElementById('cadSenha').value = '';
-    document.getElementById('cadConfirmarSenha').value = '';
-    document.getElementById('cadTermos').checked = false;
-
-    // Voltar para login
-    setTimeout(() => {
-      this.toggleAuthMode();
-    }, 2000);
-
-    btn.disabled = false;
-    btn.textContent = 'Cadastrar';
-    return true;
-  }
-
-  toggleAuthMode() {
-    const loginForm = document.getElementById('loginForm');
-    const cadastroForm = document.getElementById('cadastroForm');
-    const authTitle = document.getElementById('authTitle');
-    const authSubtitle = document.getElementById('authSubtitle');
-    const authFooterText = document.getElementById('authFooterText');
-
-    if (loginForm.style.display === 'none') {
-      // Mostrar login
-      loginForm.style.display = 'block';
-      cadastroForm.style.display = 'none';
-      authTitle.textContent = 'Primos Informática';
-      authSubtitle.textContent = 'Bem-vindo! Faça login para continuar';
-      authFooterText.innerHTML = 'Não tem conta? <a href="#" style="color: #3b82f6; text-decoration: none; font-weight: 600;" onclick="toggleAuthMode(); return false;">Cadastre-se</a>';
-    } else {
-      // Mostrar cadastro
-      loginForm.style.display = 'none';
-      cadastroForm.style.display = 'block';
-      authTitle.textContent = 'Criar Conta';
-      authSubtitle.textContent = 'Preencha os dados abaixo para se cadastrar';
-      authFooterText.innerHTML = 'Já tem conta? <a href="#" style="color: #3b82f6; text-decoration: none; font-weight: 600;" onclick="toggleAuthMode(); return false;">Faça login</a>';
-    }
-
-    this.clearErrors();
-  }
-
-  setupForm() {
-    const loginForm = document.getElementById('loginForm');
-    const cadastroForm = document.getElementById('cadastroForm');
-
-    // Setup login form
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      
-      await this.handleLogin(email, password);
-    });
-
-    // Setup cadastro form
-    cadastroForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const nome = document.getElementById('cadNome').value;
-      const email = document.getElementById('cadEmail').value;
-      const senha = document.getElementById('cadSenha').value;
-      const confirmarSenha = document.getElementById('cadConfirmarSenha').value;
-      const termos = document.getElementById('cadTermos').checked;
-      
-      await this.handleCadastro(nome, email, senha, confirmarSenha, termos);
-    });
-
-    // Limpar erros ao digitar
-    document.querySelectorAll('input').forEach(input => {
-      input.addEventListener('input', () => {
-        input.style.borderColor = '#e1e5e9';
-        const error = document.getElementById(input.id + 'Error');
-        if (error) {
-          error.style.display = 'none';
+      getDefaultAuthRuntimeMode() {
+        const hostname = String(window.location && window.location.hostname || '').trim().toLowerCase();
+        if (hostname === 'primos-informatica-ecommerce.web.app' || hostname === 'primos-informatica-ecommerce.firebaseapp.com') {
+          return 'fallback-local';
         }
-      });
+
+        return 'auto';
+      }
+
+      getAuthRuntimeMode() {
+        try {
+          return localStorage.getItem(AUTH_RUNTIME_MODE_STORAGE_KEY) || this.getDefaultAuthRuntimeMode();
+        } catch (error) {
+          return this.getDefaultAuthRuntimeMode();
+        }
+      }
+
+      setAuthRuntimeMode(mode) {
+        this.authRuntimeMode = mode;
+
+        try {
+          localStorage.setItem(AUTH_RUNTIME_MODE_STORAGE_KEY, mode);
+        } catch (error) {
+          // Ignorar falhas de persistencia para nao quebrar o login.
+        }
+      }
+
+      shouldUseFallbackAuth() {
+        return this.getAuthRuntimeMode() === 'fallback-local';
+      }
+
+      shouldGrantAdminAccess(email) {
+        return this.normalizeEmail(email) === ADMIN_ACCOUNT_EMAIL;
+      }
+
+      getRedirectTarget() {
+        const params = new URLSearchParams(window.location.search);
+        const redirectTarget = String(params.get('redirect') || '').trim();
+
+        if (!redirectTarget.startsWith('/') || redirectTarget.startsWith('//')) {
+          return '/';
+        }
+
+        return redirectTarget;
+      }
+
+      decorateSessionUser(user) {
+        if (!user || typeof user !== 'object') {
+          return null;
+        }
+
+        const normalizedUser = {
+          ...user,
+          email: this.normalizeEmail(user.email)
+        };
+
+        if (
+          normalizedUser.isAdmin === true ||
+          normalizedUser.role === 'admin' ||
+          normalizedUser.tipo === 'admin' ||
+          this.shouldGrantAdminAccess(normalizedUser.email)
+        ) {
+          normalizedUser.isAdmin = true;
+          normalizedUser.role = 'admin';
+          normalizedUser.tipo = 'admin';
+        }
+
+        return normalizedUser;
+      }
+
+      getSessionStorageAreas() {
+        const storages = [];
+
+        try {
+          if (typeof window.sessionStorage !== 'undefined') {
+            storages.push(window.sessionStorage);
+          }
+        } catch (error) {
+          // Ignorar ambientes sem sessionStorage.
+        }
+
+        try {
+          if (typeof window.localStorage !== 'undefined') {
+            storages.push(window.localStorage);
+          }
+        } catch (error) {
+          // Ignorar ambientes sem localStorage.
+        }
+
+        return storages;
+      }
+
+      clearStoredSession() {
+        this.getSessionStorageAreas().forEach((storageArea) => {
+          try {
+            storageArea.removeItem(USER_SESSION_STORAGE_KEY);
+          } catch (error) {
+            // Ignorar falhas de limpeza para nao travar o login.
+          }
+        });
+      }
+
+      isStoredSessionExpired(user) {
+        const expiresAt = Date.parse(user && user.sessionExpiresAt);
+        return Number.isFinite(expiresAt) && expiresAt <= Date.now();
+      }
+
+      buildStoredSessionPayload(user) {
+        const normalizedUser = this.buildSessionUser(user);
+        if (!normalizedUser) {
+          return null;
+        }
+
+        return {
+          ...normalizedUser,
+          sessionUpdatedAt: new Date().toISOString(),
+          sessionExpiresAt: new Date(Date.now() + AUTH_SESSION_TTL_MS).toISOString()
+        };
+      }
+
+      readStoredSession() {
+        const storageAreas = this.getSessionStorageAreas();
+
+        for (const storageArea of storageAreas) {
+          try {
+            const raw = storageArea.getItem(USER_SESSION_STORAGE_KEY);
+            if (!raw) {
+              continue;
+            }
+
+            const parsed = JSON.parse(raw);
+            if (this.isStoredSessionExpired(parsed)) {
+              this.clearStoredSession();
+              return null;
+            }
+
+            const normalizedUser = this.decorateSessionUser(parsed);
+            if (normalizedUser && storageArea !== storageAreas[0]) {
+              this.persistSession(normalizedUser);
+            }
+            return normalizedUser;
+          } catch (error) {
+            this.clearStoredSession();
+            return null;
+          }
+        }
+
+        return null;
+      }
+
+      readFallbackUsers() {
+        try {
+          const raw = localStorage.getItem(FALLBACK_USERS_STORAGE_KEY);
+          return raw ? JSON.parse(raw) : [];
+        } catch (error) {
+          localStorage.removeItem(FALLBACK_USERS_STORAGE_KEY);
+          return [];
+        }
+      }
+
+      saveFallbackUsers(users) {
+        localStorage.setItem(FALLBACK_USERS_STORAGE_KEY, JSON.stringify(users));
+      }
+
+      async hashPassword(password) {
+        const text = new TextEncoder().encode(String(password || ''));
+        const digest = await crypto.subtle.digest('SHA-256', text);
+        return Array.from(new Uint8Array(digest))
+          .map((byte) => byte.toString(16).padStart(2, '0'))
+          .join('');
+      }
+
+      createFallbackUserRecord({ nome, email, senhaHash, telefone = '', isAdmin = false }) {
+        const normalizedEmail = this.normalizeEmail(email);
+        return {
+          id: `fallback-${normalizedEmail.replace(/[^a-z0-9]/g, '-')}`,
+          nome: String(nome || normalizedEmail.split('@')[0] || 'Cliente').trim(),
+          email: normalizedEmail,
+          telefone: String(telefone || '').trim(),
+          passwordHash: senhaHash,
+          provider: 'fallback-local',
+          isAdmin: Boolean(isAdmin),
+          role: isAdmin ? 'admin' : 'customer',
+          tipo: isAdmin ? 'admin' : 'cliente',
+          dataCadastro: new Date().toISOString(),
+          dataAtualizacao: new Date().toISOString()
+        };
+      }
+
+      async ensureFallbackAdminAccount() {
+        const users = this.readFallbackUsers();
+        const adminEmail = ADMIN_ACCOUNT_EMAIL;
+        const existingAdmin = users.find((user) => this.normalizeEmail(user.email) === adminEmail);
+
+        if (existingAdmin) {
+          return users;
+        }
+
+        users.push(this.createFallbackUserRecord({
+          nome: 'Administrador Primos',
+          email: adminEmail,
+          senhaHash: ADMIN_ACCOUNT_PASSWORD_HASH,
+          isAdmin: true
+        }));
+        this.saveFallbackUsers(users);
+        return users;
+      }
+
+      async findFallbackUserByEmail(email) {
+        const users = await this.ensureFallbackAdminAccount();
+        return users.find((user) => this.normalizeEmail(user.email) === this.normalizeEmail(email)) || null;
+      }
+
+      buildFallbackSessionUser(user) {
+        if (!user) {
+          return null;
+        }
+
+        return this.decorateSessionUser({
+          id: user.id,
+          nome: String(user.nome || '').trim(),
+          email: user.email,
+          telefone: String(user.telefone || '').trim(),
+          provider: user.provider || 'fallback-local',
+          isAdmin: Boolean(user.isAdmin),
+          role: user.role,
+          tipo: user.tipo,
+          dataAtualizacao: new Date().toISOString()
+        });
+      }
+
+      async loginWithFallback(email, password) {
+        const user = await this.findFallbackUserByEmail(email);
+        if (!user) {
+          return false;
+        }
+
+        const providedPasswordHash = await this.hashPassword(password);
+        if (user.passwordHash !== providedPasswordHash) {
+          return false;
+        }
+
+        this.persistSession(this.buildFallbackSessionUser(user));
+        return true;
+      }
+
+      async createFallbackAccount(nome, email, senha) {
+        const users = await this.ensureFallbackAdminAccount();
+        const normalizedEmail = this.normalizeEmail(email);
+        const existingUser = users.find((user) => this.normalizeEmail(user.email) === normalizedEmail);
+
+        if (existingUser) {
+          return { ok: false, field: 'cadEmail', message: 'Este e-mail ja esta em uso.' };
+        }
+
+        const passwordHash = await this.hashPassword(senha);
+        const newUser = this.createFallbackUserRecord({
+          nome,
+          email: normalizedEmail,
+          senhaHash: passwordHash,
+          isAdmin: this.shouldGrantAdminAccess(normalizedEmail)
+        });
+
+        users.push(newUser);
+        this.saveFallbackUsers(users);
+        this.persistSession(this.buildFallbackSessionUser(newUser));
+
+        return { ok: true, localOnly: true };
+      }
+
+      isAuthConfigurationError(error) {
+        const combinedMessage = [
+          error && error.code,
+          error && error.message,
+          error && error.customData && error.customData._tokenResponse && error.customData._tokenResponse.error && error.customData._tokenResponse.error.message,
+          error && error.serverResponse
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toUpperCase();
+
+        return (
+          combinedMessage.includes('CONFIGURATION_NOT_FOUND') ||
+          combinedMessage.includes('OPERATION_NOT_ALLOWED') ||
+          combinedMessage.includes('AUTH/OPERATION-NOT-ALLOWED')
+        );
+      }
+
+      buildSessionUser(user) {
+        const fallbackName = user.email ? user.email.split('@')[0] : 'Cliente';
+
+        return this.decorateSessionUser({
+          id: user.uid || user.id,
+          nome: String(user.displayName || user.nome || fallbackName).trim(),
+          email: this.normalizeEmail(user.email),
+          telefone: String(user.phoneNumber || user.telefone || '').trim(),
+          provider: user.provider || 'firebase',
+          isAdmin: Boolean(user.isAdmin),
+          role: user.role,
+          tipo: user.tipo,
+          dataAtualizacao: new Date().toISOString()
+        });
+      }
+
+      persistSession(user) {
+        const payload = this.buildStoredSessionPayload(user);
+        if (!payload) {
+          this.clearStoredSession();
+          return;
+        }
+
+        this.getSessionStorageAreas().forEach((storageArea) => {
+          try {
+            storageArea.setItem(USER_SESSION_STORAGE_KEY, JSON.stringify(payload));
+          } catch (error) {
+            // Ignorar falhas pontuais de persistencia.
+          }
+        });
+      }
+
+      clearErrors() {
+        document.querySelectorAll('.error-message').forEach((item) => {
+          item.style.display = 'none';
+          item.textContent = '';
+        });
+
+        document.querySelectorAll('.auth-field input').forEach((input) => {
+          input.style.borderColor = 'rgba(148, 163, 184, 0.38)';
+        });
+      }
+
+      showError(fieldId, message) {
+        const field = document.getElementById(fieldId);
+        const error = document.getElementById(fieldId + 'Error');
+
+        if (field) {
+          field.style.borderColor = '#b91c1c';
+        }
+
+        if (error) {
+          error.textContent = message;
+          error.style.display = 'block';
+        }
+      }
+
+      showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.style.display = 'block';
+        notification.style.background = type === 'success' ? '#047857' : '#b91c1c';
+
+        window.clearTimeout(this.notificationTimer);
+        this.notificationTimer = window.setTimeout(() => {
+          notification.style.display = 'none';
+        }, 4000);
+      }
+
+      validateLogin(email, password) {
+        this.clearErrors();
+        let isValid = true;
+
+        if (!email.trim()) {
+          this.showError('email', 'Informe seu e-mail.');
+          isValid = false;
+        } else if (!email.includes('@')) {
+          this.showError('email', 'E-mail invalido.');
+          isValid = false;
+        }
+
+        if (!password.trim()) {
+          this.showError('password', 'Informe sua senha.');
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      validateCadastro(nome, email, senha, confirmarSenha, termos) {
+        this.clearErrors();
+        let isValid = true;
+
+        if (!nome.trim() || nome.trim().length < 3) {
+          this.showError('cadNome', 'Informe um nome completo valido.');
+          isValid = false;
+        }
+
+        if (!email.trim() || !email.includes('@')) {
+          this.showError('cadEmail', 'Informe um e-mail valido.');
+          isValid = false;
+        }
+
+        if (!senha.trim() || senha.length < 6) {
+          this.showError('cadSenha', 'Use uma senha com pelo menos 6 caracteres.');
+          isValid = false;
+        }
+
+        if (!confirmarSenha.trim()) {
+          this.showError('cadConfirmarSenha', 'Confirme sua senha.');
+          isValid = false;
+        } else if (senha !== confirmarSenha) {
+          this.showError('cadConfirmarSenha', 'As senhas precisam ser iguais.');
+          isValid = false;
+        }
+
+        if (!termos) {
+          const termsError = document.getElementById('cadTermosError');
+          if (termsError) {
+            termsError.textContent = 'Voce precisa aceitar os termos para continuar.';
+            termsError.style.display = 'block';
+          }
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      mapLoginError(error) {
+        const code = error && error.code ? error.code : '';
+
+        if (this.isAuthConfigurationError(error)) {
+          return { field: 'password', message: 'Login local ativado enquanto o Firebase Auth nao esta configurado.' };
+        }
+
+        if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
+          return { field: 'password', message: 'E-mail ou senha incorretos.' };
+        }
+
+        if (code === 'auth/invalid-email') {
+          return { field: 'email', message: 'O e-mail informado e invalido.' };
+        }
+
+        if (code === 'auth/too-many-requests') {
+          return { field: 'password', message: 'Muitas tentativas seguidas. Aguarde um pouco e tente novamente.' };
+        }
+
+        return { field: 'password', message: 'Nao foi possivel entrar agora. Tente novamente.' };
+      }
+
+      mapSignupError(error) {
+        const code = error && error.code ? error.code : '';
+
+        if (this.isAuthConfigurationError(error)) {
+          return { field: 'cadSenha', message: 'Cadastro local ativado enquanto o Firebase Auth nao esta configurado.' };
+        }
+
+        if (code === 'auth/email-already-in-use') {
+          return { field: 'cadEmail', message: 'Este e-mail ja esta em uso.' };
+        }
+
+        if (code === 'auth/invalid-email') {
+          return { field: 'cadEmail', message: 'O e-mail informado e invalido.' };
+        }
+
+        if (code === 'auth/weak-password') {
+          return { field: 'cadSenha', message: 'Use uma senha mais forte.' };
+        }
+
+        return { field: 'cadSenha', message: 'Nao foi possivel criar a conta agora.' };
+      }
+
+      async initialize() {
+        const auth = await this.waitForAuth();
+        const storedSession = this.readStoredSession();
+
+        if (!auth) {
+          if (storedSession) {
+            this.redirectAfterAuth();
+            return;
+          }
+
+          if (!this.shouldUseFallbackAuth()) {
+            this.showNotification('Nao foi possivel carregar a autenticacao agora.', 'error');
+          }
+          return;
+        }
+
+        auth.onAuthStateChanged((user) => {
+          if (user) {
+            this.persistSession(user);
+          } else {
+            const storedUser = this.readStoredSession();
+            if (!storedUser || storedUser.provider === 'firebase') {
+              this.clearStoredSession();
+            }
+          }
+        });
+
+        if (auth.currentUser) {
+          this.persistSession(auth.currentUser);
+          this.redirectAfterAuth();
+        } else if (storedSession && storedSession.provider !== 'firebase') {
+          this.redirectAfterAuth();
+        }
+      }
+
+      async handleLogin(email, password) {
+        if (!this.validateLogin(email, password)) {
+          return false;
+        }
+
+        if (this.shouldUseFallbackAuth()) {
+          const didLoginLocally = await this.loginWithFallback(email, password);
+          if (didLoginLocally) {
+            this.showNotification('Login realizado com sucesso! Redirecionando...', 'success');
+            window.setTimeout(() => this.redirectAfterAuth(), 900);
+            return true;
+          }
+
+          const fallbackUser = await this.findFallbackUserByEmail(email);
+          this.showError(
+            'password',
+            fallbackUser
+              ? 'E-mail ou senha incorretos.'
+              : 'Esta conta ainda nao existe neste navegador.'
+          );
+          return false;
+        }
+
+        const auth = await this.waitForAuth();
+        if (!auth) {
+          const didLoginLocally = await this.loginWithFallback(email, password);
+          if (didLoginLocally) {
+            this.showNotification('Login realizado com sucesso! Redirecionando...', 'success');
+            window.setTimeout(() => this.redirectAfterAuth(), 900);
+            return true;
+          }
+
+          this.showNotification('Autenticacao indisponivel no momento.', 'error');
+          return false;
+        }
+
+        const loginBtn = document.getElementById('loginBtn');
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'Entrando...';
+
+        try {
+          const result = await auth.signInWithEmailAndPassword(email.trim().toLowerCase(), password);
+          this.persistSession(result.user);
+          this.showNotification('Login realizado com sucesso! Redirecionando...', 'success');
+          window.setTimeout(() => this.redirectAfterAuth(), 900);
+          return true;
+        } catch (error) {
+          const didLoginLocally = await this.loginWithFallback(email, password);
+          if (didLoginLocally) {
+            this.showNotification('Login realizado com sucesso! Redirecionando...', 'success');
+            window.setTimeout(() => this.redirectAfterAuth(), 900);
+            return true;
+          }
+
+          if (this.isAuthConfigurationError(error)) {
+            this.setAuthRuntimeMode('fallback-local');
+            const fallbackUser = await this.findFallbackUserByEmail(email);
+            this.showError(
+              'password',
+              fallbackUser
+                ? 'E-mail ou senha incorretos.'
+                : 'O Firebase Auth deste projeto nao esta configurado e esta conta ainda nao existe neste navegador.'
+            );
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Entrar';
+            return false;
+          }
+
+          const mapped = this.mapLoginError(error);
+          this.showError(mapped.field, mapped.message);
+          loginBtn.disabled = false;
+          loginBtn.textContent = 'Entrar';
+          return false;
+        }
+      }
+
+      async handleCadastro(nome, email, senha, confirmarSenha, termos) {
+        if (!this.validateCadastro(nome, email, senha, confirmarSenha, termos)) {
+          return false;
+        }
+
+        if (this.shouldUseFallbackAuth()) {
+          const fallbackResult = await this.createFallbackAccount(nome, email, senha);
+          if (fallbackResult.ok) {
+            this.showNotification('Conta criada com sucesso! Redirecionando...', 'success');
+            window.setTimeout(() => this.redirectAfterAuth(), 900);
+            return true;
+          }
+
+          this.showError(fallbackResult.field, fallbackResult.message);
+          return false;
+        }
+
+        const auth = await this.waitForAuth();
+        if (!auth) {
+          const fallbackResult = await this.createFallbackAccount(nome, email, senha);
+          if (fallbackResult.ok) {
+            this.showNotification('Conta criada com sucesso! Redirecionando...', 'success');
+            window.setTimeout(() => this.redirectAfterAuth(), 900);
+            return true;
+          }
+
+          this.showError(fallbackResult.field, fallbackResult.message);
+          return false;
+        }
+
+        const cadastroBtn = document.getElementById('cadastroBtn');
+        cadastroBtn.disabled = true;
+        cadastroBtn.textContent = 'Criando conta...';
+
+        try {
+          const result = await auth.createUserWithEmailAndPassword(email.trim().toLowerCase(), senha);
+          await result.user.updateProfile({ displayName: nome.trim() });
+          this.persistSession(auth.currentUser || result.user);
+          this.showNotification('Conta criada com sucesso! Redirecionando...', 'success');
+          window.setTimeout(() => this.redirectAfterAuth(), 900);
+          return true;
+        } catch (error) {
+          if (this.isAuthConfigurationError(error)) {
+            this.setAuthRuntimeMode('fallback-local');
+            const fallbackResult = await this.createFallbackAccount(nome, email, senha);
+            if (fallbackResult.ok) {
+              this.showNotification('Conta criada com sucesso! Redirecionando...', 'success');
+              window.setTimeout(() => this.redirectAfterAuth(), 900);
+              return true;
+            }
+
+            this.showError(fallbackResult.field, fallbackResult.message);
+            cadastroBtn.disabled = false;
+            cadastroBtn.textContent = 'Criar conta';
+            return false;
+          }
+
+          const mapped = this.mapSignupError(error);
+          this.showError(mapped.field, mapped.message);
+          cadastroBtn.disabled = false;
+          cadastroBtn.textContent = 'Criar conta';
+          return false;
+        }
+      }
+
+      async sendPasswordReset() {
+        this.clearErrors();
+
+        const email = String(document.getElementById('email').value || '').trim().toLowerCase();
+        if (!email) {
+          this.showError('email', 'Informe seu e-mail para receber o link de redefinicao.');
+          return;
+        }
+
+        if (this.shouldUseFallbackAuth()) {
+          this.showNotification('Redefinicao automatica indisponivel no modo local.', 'error');
+          return;
+        }
+
+        const auth = await this.waitForAuth();
+        if (!auth) {
+          this.showNotification('Nao foi possivel enviar o e-mail agora.', 'error');
+          return;
+        }
+
+        try {
+          await auth.sendPasswordResetEmail(email);
+          this.showNotification('Enviamos um link de redefinicao para o seu e-mail.', 'success');
+        } catch (error) {
+          if (this.isAuthConfigurationError(error)) {
+            this.showNotification('Redefinicao automatica indisponivel enquanto o Firebase Auth nao estiver configurado.', 'error');
+            return;
+          }
+
+          this.showNotification('Nao foi possivel enviar o e-mail de redefinicao agora.', 'error');
+        }
+      }
+
+      toggleAuthMode() {
+        const isLoginVisible = this.loginPanel.classList.contains('active');
+
+        this.loginPanel.classList.toggle('active', !isLoginVisible);
+        this.cadastroPanel.classList.toggle('active', isLoginVisible);
+
+        if (isLoginVisible) {
+          this.subtitle.textContent = 'Crie sua conta para acompanhar pedidos e avaliacoes.';
+          this.footer.innerHTML = 'Ja tem conta? <a href="#" onclick="toggleAuthMode(); return false;">Faca login</a>';
+        } else {
+          this.subtitle.textContent = 'Acompanhe pedidos, edite seu perfil e avalie os produtos comprados.';
+          this.footer.innerHTML = 'Nao tem conta? <a href="#" onclick="toggleAuthMode(); return false;">Cadastre-se</a>';
+        }
+
+        this.clearErrors();
+      }
+
+      setupForm() {
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+          event.preventDefault();
+          await this.handleLogin(
+            document.getElementById('email').value,
+            document.getElementById('password').value
+          );
+        });
+
+        document.getElementById('cadastroForm').addEventListener('submit', async (event) => {
+          event.preventDefault();
+          await this.handleCadastro(
+            document.getElementById('cadNome').value,
+            document.getElementById('cadEmail').value,
+            document.getElementById('cadSenha').value,
+            document.getElementById('cadConfirmarSenha').value,
+            document.getElementById('cadTermos').checked
+          );
+        });
+
+        document.querySelectorAll('input').forEach((input) => {
+          input.addEventListener('input', () => {
+            input.style.borderColor = 'rgba(148, 163, 184, 0.38)';
+            const error = document.getElementById(input.id + 'Error');
+            if (error) {
+              error.style.display = 'none';
+            }
+          });
+        });
+      }
+
+      redirectAfterAuth() {
+        window.location.href = this.getRedirectTarget();
+      }
+    }
+
+    function showForgotPassword() {
+      if (window.authPage) {
+        window.authPage.sendPasswordReset();
+      }
+    }
+
+    function toggleAuthMode() {
+      if (window.authPage) {
+        window.authPage.toggleAuthMode();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      window.authPage = new FirebaseEmailAuth();
     });
-  }
-
-  redirectToHome() {
-    console.log('🏠 Redirecionando para página inicial...');
-    window.location.href = 'index.html';
-  }
-}
-
-// Funções globais
-function showForgotPassword() {
-  const message = encodeURIComponent('Ola! Preciso de ajuda para recuperar minha senha no site.');
-  window.open(`https://wa.me/556133406740?text=${message}`, '_blank');
-}
-function showCadastro() {
-  // Usar a instância global do SimpleAuth
-  if (window.simpleAuth) {
-    window.simpleAuth.toggleAuthMode();
-  }
-}
-function toggleAuthMode() {
-  // Usar a instância global do SimpleAuth
-  if (window.simpleAuth) {
-    window.simpleAuth.toggleAuthMode();
-  }
-}
-function limparContas() {
-  // Limpar todas as contas e deixar apenas a de teste
-  localStorage.removeItem('usuarios');
-  
-  const testUser = {
-    id: Date.now(),
-    nome: 'Usuário Teste',
-    email: 'teste@primos.com',
-    senha: btoa('123456'),
-    dataCadastro: new Date().toISOString()
-  };
-  
-  const users = [testUser];
-  localStorage.setItem('usuarios', JSON.stringify(users));
-  
-  console.log('✅ Todas as contas foram removidas. Apenas a conta teste@primos.com foi mantida.');
-  alert('Todas as contas foram removidas!\n\nApenas a conta teste@primos.com (senha: 123456) foi mantida.');
-}
-
-// Inicializar
-document.addEventListener('DOMContentLoaded', function() {
-  window.simpleAuth = new SimpleAuth();
-});
-
-</script>
-
+  </script>
 </body>
 </html>

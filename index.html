@@ -1,7 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta name="google-site-verification" content="mcaXyGAD066VOl0qHXVbV6eFoqt3CGXc9NRKMsd0PrE" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
@@ -31,8 +30,8 @@
   <link rel="dns-prefetch" href="//firestore.googleapis.com">
   
   <!-- Preload para recursos críticos -->
-  <link rel="preload" href="/css/styles.css?v=20260316-1835" as="style">
-  <link rel="preload" href="/js/script.js?v=20260317-1405" as="script">
+  <link rel="preload" href="/css/styles.css?v=20260413-1345" as="style">
+  <link rel="preload" href="/js/script.js?v=20260413-1345" as="script">
   
   <!-- Critical CSS Inline -->
   <style>
@@ -43,12 +42,15 @@
       line-height: 1.6;
       background: #f8fafc;
       color: #1e293b;
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
+      overflow-x: hidden;
     }
     
-    body.loaded {
-      opacity: 1;
+    body:not(.loaded) {
+      overflow: hidden;
+    }
+
+    body:not(.loaded) > *:not(.initial-loading) {
+      visibility: hidden;
     }
     
     /* Loading State */
@@ -63,11 +65,16 @@
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      transition: opacity 0.3s ease-out;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
     }
     
+    body.loaded .initial-loading,
     .initial-loading.hidden {
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
     }
     
@@ -165,14 +172,20 @@
     
     /* Hide main content initially */
     main {
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
-    }
-    
-    main.loaded {
       opacity: 1;
     }
   </style>
+  <noscript>
+    <style>
+      body:not(.loaded) > *:not(.initial-loading) {
+        visibility: visible;
+      }
+
+      .initial-loading {
+        display: none;
+      }
+    </style>
+  </noscript>
   
   <!-- Font Fallback Local -->
   <style>
@@ -220,7 +233,7 @@
   <meta property="og:url" content="https://primos-informatica-ecommerce.web.app/" />
   <meta property="og:title" content="Primos Informática | Hardware em Brasília" />
   <meta property="og:description" content="Loja de informática em Brasília. Processadores, placas, SSDs e mais." />
-  <meta property="og:image" content="https://onehamada.github.io/Primos-Informatica/images/logo.png" />
+  <meta property="og:image" content="https://primos-informatica-ecommerce.web.app/images/logo.png" />
   
   <!-- Canonical URL -->
   <link rel="canonical" href="https://primos-informatica-ecommerce.web.app/" />
@@ -240,8 +253,8 @@
   <!-- Manifest para Android -->
   <link rel="manifest" href="/manifest.json">
   
-  <link rel="stylesheet" href="/css/styles.css?v=20260316-1835" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="/css/styles.css?v=20260316-1835"></noscript>
+  <link rel="stylesheet" href="/css/styles.css?v=20260413-1345">
+  <noscript><link rel="stylesheet" href="/css/styles.css?v=20260413-1345"></noscript>
   
   <!-- Lazy Loading Script -->
   <script src="/js/lazy-loading.js?v=20260316-1835" defer></script>
@@ -261,7 +274,7 @@
       <div class="header-brand">
         <img src="/images/logo.png" alt="Primos Informática" onclick="goToHomePage()" width="40" height="40" decoding="async" fetchpriority="high" />
         <div class="brand-info">
-          <h1 onclick="goToHomePage()">Primos Informática</h1>
+          <p class="brand-title" onclick="goToHomePage()">Primos Informática</p>
           <span class="brand-tagline">Hardware em Brasília</span>
         </div>
       </div>
@@ -294,7 +307,7 @@
               <circle cx="20" cy="21" r="1"></circle>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
-            <span class="cart-count" id="cartCount">0</span>
+            <span class="cart-count" id="cartCount" aria-hidden="true">0</span>
           </button>
           
           <!-- Menu Mobile -->
@@ -307,7 +320,7 @@
           </button>
           
           <!-- Filtros -->
-          <button class="action-btn filters-btn" id="filtersToggle" title="Filtros" aria-label="Filtros de produtos">
+          <button class="action-btn filters-btn" id="filtersToggle" title="Filtros" aria-label="Filtros de produtos" aria-controls="filtersDrawer" aria-expanded="false" aria-haspopup="dialog">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
@@ -321,13 +334,6 @@
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
             <span class="auth-text">Faça Login/Cadastre</span>
-          </button>
-          
-          <!-- Botão de Perfil (aparece apenas quando logado) -->
-          <button class="action-btn profile-btn" id="profileBtn" style="display: none;" title="Meu Perfil" aria-label="Meu Perfil" aria-haspopup="true" aria-expanded="false">
-            <div class="profile-avatar" id="profileAvatar">
-              <span class="profile-initial">U</span>
-            </div>
           </button>
           
         </div>
@@ -636,131 +642,100 @@
 
 <!-- Menu Mobile Filtros Overlay -->
 <div class="mobile-menu-overlay" id="filtersMenuOverlay" onclick="toggleFiltersMenu()">
-  <div class="mobile-menu-sidebar" onclick="event.stopPropagation()">
-    <div class="mobile-menu-header">
-      <h3>Filtros</h3>
-      <button class="mobile-menu-close" onclick="toggleFiltersMenu()">×</button>
+  <div class="mobile-menu-sidebar filters-drawer" id="filtersDrawer" role="dialog" aria-modal="true" aria-labelledby="filtersDrawerTitle" onclick="event.stopPropagation()">
+    <div class="mobile-menu-header filters-drawer-header">
+      <div class="filters-drawer-header-copy">
+        <span class="filters-drawer-eyebrow">Busca e refinamento</span>
+        <h3 id="filtersDrawerTitle">Filtros do Catalogo</h3>
+      </div>
+      <button class="mobile-menu-close" type="button" aria-label="Fechar painel de filtros" onclick="toggleFiltersMenu()">×</button>
     </div>
-    <div class="mobile-menu-content">
-      <div class="mobile-filters-tabs">
-        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=price-low'; toggleFiltersMenu()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-          </svg>
-          <span>Menor Preço</span>
-        </button>
-        
-        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=price-high'; toggleFiltersMenu()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-          </svg>
-          <span>Maior Preço</span>
-        </button>
-        
-        <div class="price-range-container" id="priceRangeContainer" style="display: none;" onclick="event.stopPropagation()">
-          <div class="price-range-inputs">
-            <div class="price-input-group">
-              <label for="minPriceFilter">De:</label>
-              <input type="number" id="minPriceFilter" placeholder="R$ 0" min="0">
-            </div>
-            <div class="price-input-group">
-              <label for="maxPriceFilter">Até:</label>
-              <input type="number" id="maxPriceFilter" placeholder="R$ 5000" min="0">
-            </div>
+    <div class="mobile-menu-content filters-drawer-content">
+      <div class="filters-drawer-intro">
+        <div class="filters-drawer-intro-top">
+          <div>
+            <strong>Refine o catalogo da loja</strong>
+            <p id="filtersSummaryText">Use filtros rapidos, faixa de preco, marca e categoria para achar mais rapido o que voce quer.</p>
           </div>
+          <span class="filters-active-count" id="filtersActiveCount">0 ativos</span>
+        </div>
+        <div class="filters-active-chips" id="filtersDrawerActiveChips"></div>
+      </div>
+
+      <div class="filters-drawer-section">
+        <span class="filters-drawer-label">Filtros rapidos</span>
+        <div class="filters-quick-grid">
+          <button type="button" class="filters-quick-btn" data-filter-key="stock" onclick="applyQuickFilter('stock')">Em estoque</button>
+          <button type="button" class="filters-quick-btn" data-filter-key="pickup" onclick="applyQuickFilter('pickup')">Retirada rapida</button>
+          <button type="button" class="filters-quick-btn" data-filter-key="discount" onclick="applyQuickFilter('discount')">Com desconto</button>
+          <button type="button" class="filters-quick-btn" data-filter-key="new" onclick="applyQuickFilter('new')">Novidades</button>
+          <button type="button" class="filters-quick-btn" data-filter-key="price-low" onclick="applyQuickFilter('price-low')">Menor preco</button>
+          <button type="button" class="filters-quick-btn" data-filter-key="price-high" onclick="applyQuickFilter('price-high')">Maior preco</button>
+          <button type="button" class="filters-quick-btn" data-filter-key="gaming" onclick="applyQuickFilter('gaming')">Gaming</button>
+          <button type="button" class="filters-quick-btn" data-filter-key="office" onclick="applyQuickFilter('office')">Escritorio</button>
+          <button type="button" class="filters-quick-btn" data-filter-key="brand-intel" onclick="applyQuickFilter('brand-intel')">Intel</button>
+          <button type="button" class="filters-quick-btn" data-filter-key="brand-amd" onclick="applyQuickFilter('brand-amd')">AMD</button>
+          <button type="button" class="filters-quick-btn" data-filter-key="brand-nvidia" onclick="applyQuickFilter('brand-nvidia')">NVIDIA</button>
+        </div>
+      </div>
+
+      <div class="filters-drawer-section">
+        <label class="filters-drawer-label" for="catalogSort">Ordenar por</label>
+        <select id="catalogSort" class="filters-select">
+          <option value="relevance">Relevancia</option>
+          <option value="price-asc">Menor preco</option>
+          <option value="price-desc">Maior preco</option>
+          <option value="newest">Novidades</option>
+          <option value="stock-desc">Mais estoque</option>
+          <option value="name-asc">Nome A-Z</option>
+        </select>
+      </div>
+
+      <div class="filters-drawer-section">
+        <span class="filters-drawer-label">Faixa de preco</span>
+        <div class="filters-price-grid">
+          <div class="price-input-group">
+            <label for="minPrice">De</label>
+            <input type="number" id="minPrice" class="filters-number-input" placeholder="R$ 0" min="0">
           </div>
-          <div class="price-range-actions">
-            <button class="apply-price-btn" onclick="applyPriceRange()">Aplicar</button>
-            <button class="cancel-price-btn" onclick="toggleFiltersMenu()">Cancelar</button>
+          <div class="price-input-group">
+            <label for="maxPrice">Ate</label>
+            <input type="number" id="maxPrice" class="filters-number-input" placeholder="R$ 5000" min="0">
           </div>
         </div>
-        
-        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=new'; toggleFiltersMenu()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
-          </svg>
-          <span>Lançamentos</span>
-        </button>
-        
-        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=bestseller'; toggleFiltersMenu()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="12 2 15.09 8.26 22 9 17 14 14 17 22 9 15.09 8.26 12 2 8.91 8.26 2 9 7 14 10 17 2 9 8.91 8.26 12 2"></polygon>
-          </svg>
-          <span>Mais Vendidos</span>
-        </button>
-        
-        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=stock'; toggleFiltersMenu()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-            <line x1="12" y1="22" x2="12" y2="2"></line>
-          </svg>
-          <span>Em Estoque</span>
-        </button>
-        
-        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=gaming'; toggleFiltersMenu()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="6" width="20" height="12" rx="2"></rect>
-            <path d="M12 12h.01M12 6h.01M12 18h.01"></path>
-          </svg>
-          <span>Para Gamers</span>
-        </button>
-        
-        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=office'; toggleFiltersMenu()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
-          <span>Para Escritório</span>
-        </button>
-        
-        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=discount'; toggleFiltersMenu()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-          </svg>
-          <span>Com Desconto</span>
-        </button>
-        
-        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=brand-intel'; toggleFiltersMenu()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
-            <rect x="9" y="9" width="6" height="6"></rect>
-            <line x1="9" y1="1" x2="9" y2="4"></line>
-            <line x1="15" y1="1" x2="15" y2="4"></line>
-            <line x1="9" y1="20" x2="9" y2="23"></line>
-            <line x1="15" y1="20" x2="15" y2="23"></line>
-            <line x1="20" y1="9" x2="23" y2="9"></line>
-            <line x1="20" y1="14" x2="23" y2="14"></line>
-            <line x1="1" y1="9" x2="4" y2="9"></line>
-            <line x1="1" y1="14" x2="4" y2="14"></line>
-          </svg>
-          <span>Intel</span>
-        </button>
-        
-        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=brand-amd'; toggleFiltersMenu()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
-            <rect x="9" y="9" width="6" height="6"></rect>
-            <line x1="9" y1="1" x2="9" y2="4"></line>
-            <line x1="15" y1="1" x2="15" y2="4"></line>
-            <line x1="9" y1="20" x2="9" y2="23"></line>
-            <line x1="15" y1="20" x2="15" y2="23"></line>
-            <line x1="20" y1="9" x2="23" y2="9"></line>
-            <line x1="20" y1="14" x2="23" y2="14"></line>
-            <line x1="1" y1="9" x2="4" y2="9"></line>
-            <line x1="1" y1="14" x2="4" y2="14"></line>
-          </svg>
-          <span>AMD</span>
-        </button>
-        
-        <button type="button" class="mobile-nav-tab" onclick="window.location.href='index.html?filter=brand-nvidia'; toggleFiltersMenu()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-            <line x1="8" y1="21" x2="16" y2="21"></line>
-            <line x1="12" y1="17" x2="12" y2="21"></line>
-          </svg>
-          <span>NVIDIA</span>
-        </button>
+      </div>
+
+      <div class="filters-drawer-section">
+        <span class="filters-drawer-label">Disponibilidade</span>
+        <div class="filters-toggle-list">
+          <label class="filters-toggle-row">
+            <input type="checkbox" id="inStockOnly">
+            <span>Só produtos com estoque</span>
+          </label>
+          <label class="filters-toggle-row">
+            <input type="checkbox" id="onSaleOnly">
+            <span>Mostrar somente ofertas e descontos</span>
+          </label>
+          <label class="filters-toggle-row">
+            <input type="checkbox" id="pickupOnly">
+            <span>Priorizar retirada local em Brasilia</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="filters-drawer-section">
+        <span class="filters-drawer-label" id="categoryFiltersLabel">Categorias</span>
+        <div id="dynamicCategoryFilters" class="filters-checkbox-grid"></div>
+      </div>
+
+      <div class="filters-drawer-section">
+        <span class="filters-drawer-label" id="brandFiltersLabel">Marcas</span>
+        <div id="dynamicBrandFilters" class="filters-checkbox-grid"></div>
+      </div>
+
+      <div class="filters-drawer-footer">
+        <button type="button" class="apply-price-btn" onclick="applyFilters()">Mostrar resultados</button>
+        <button type="button" class="cancel-price-btn" onclick="clearFilters()">Limpar filtros</button>
       </div>
     </div>
   </div>
@@ -779,6 +754,14 @@
     <div class="cart-footer">
       <div class="cart-total">
         <span>Total: <strong id="cartTotal">R$ 0,00</strong></span>
+      </div>
+      <div class="cart-trust-box">
+        <div class="cart-trust-title">Compra assistida na loja fisica</div>
+        <ul class="cart-trust-list">
+          <li>Retirada na CLN 208 com estoque confirmado</li>
+          <li>PIX, cartao e atendimento pelo WhatsApp</li>
+          <li>Nota fiscal, garantia e suporte comercial</li>
+        </ul>
       </div>
       <button class="btn-primary" onclick="navigateToCheckout()">Finalizar Pedido</button>
       <button class="btn-outline" onclick="clearCart()">Esvaziar Carrinho</button>
@@ -872,6 +855,24 @@
 </div>
 
 <main>
+  <section class="catalog-toolbar" id="catalogToolbar" style="display:none;">
+    <div class="catalog-toolbar-header">
+      <div>
+        <span class="catalog-toolbar-kicker">Busca e filtros ativos</span>
+        <h2 id="catalogToolbarTitle">Resultados do catalogo</h2>
+        <p id="catalogToolbarCount">0 produtos encontrados</p>
+      </div>
+      <button type="button" class="btn-outline catalog-toolbar-clear" onclick="clearFilters()">Limpar filtros</button>
+    </div>
+    <div class="catalog-active-filters" id="catalogActiveFilters"></div>
+  </section>
+
+  <section id="catalogResultsSection" class="catalog-results-section" style="display:none;">
+    <div class="catalog-results-shell">
+      <div id="catalogResultsGrid" class="products-grid"></div>
+    </div>
+  </section>
+
   <div id="inicio" class="category">
     <section class="home-hero">
       <div class="hero-content animate-fadeInUp">
@@ -914,44 +915,159 @@
     </section>
 
     <section class="home-section home-trust-section" id="home-como-comprar">
-      <div class="trust-strip">
-        <article class="trust-strip-item">
-          <span class="trust-strip-label">Compra local</span>
-          <h2>Loja fisica com retirada em Brasilia</h2>
-          <p>Compre online e retire na CLN 208 Bloco A Loja 11, Asa Norte, com confirmacao de estoque.</p>
-        </article>
-        <article class="trust-strip-item">
-          <span class="trust-strip-label">Entrega</span>
-          <h2>Envio em Brasilia e para todo o Brasil</h2>
-          <p>Estimativa de entrega, retirada e atendimento comercial ficam mais proximos da decisao de compra.</p>
-        </article>
-        <article class="trust-strip-item">
-          <span class="trust-strip-label">Confianca</span>
-          <h2>Garantia, FAQ e politicas claras</h2>
-          <p>Rodape institucional com paginas reais para garantia, devolucao, privacidade e termos de uso.</p>
-        </article>
+      <div class="buying-journey-header">
+        <span class="trust-strip-label">Jornada do cliente</span>
+        <h2>Como funciona a compra na Primos Informática</h2>
+        <p class="buying-journey-lead">Simples, rápido e com atendimento humano em cada etapa</p>
+      </div>
+
+      <div class="buying-journey-grid">
+        <!-- Column 1 & 2: Passos -->
+        <div class="buying-steps-container">
+          <div class="buying-step-card">
+            <div class="step-badge">1</div>
+            <h3>Explore o catálogo</h3>
+            <p>Browse nossa vitrine de hardware, notebooks e periféricos com componentes em estoque e pronto para retirada.</p>
+            <div class="step-icon">🔍</div>
+          </div>
+
+          <div class="step-connector"></div>
+
+          <div class="buying-step-card">
+            <div class="step-badge">2</div>
+            <h3>Confirme com a gente</h3>
+            <p>Chame no WhatsApp ou visite a loja para confirmar estoque, compatibilidade e formas de pagamento.</p>
+            <div class="step-icon">💬</div>
+          </div>
+
+          <div class="step-connector"></div>
+
+          <div class="buying-step-card">
+            <div class="step-badge">3</div>
+            <h3>Reserve ou pague</h3>
+            <p>Finalize com PIX, cartão ou marcação de retirada. A gente guarda o produto com seu nome.</p>
+            <div class="step-icon">✅</div>
+          </div>
+
+          <div class="step-connector"></div>
+
+          <div class="buying-step-card">
+            <div class="step-badge">4</div>
+            <h3>Retire na loja</h3>
+            <p>Pegue o produto na CLN 208 em Brasília ou receba em casa. Consulte nossos prazos de envio.</p>
+            <div class="step-icon">📦</div>
+          </div>
+        </div>
+
+        <!-- Column 3: Info Card -->
+        <div class="buying-info-card">
+          <div class="info-card-header">
+            <h3>📍 Retirada Local</h3>
+          </div>
+          
+          <div class="info-card-content">
+            <div class="location-details">
+              <strong>CLN 208 Bloco A Loja 11</strong>
+              <span>Asa Norte, Brasília</span>
+            </div>
+
+            <div class="info-card-divider"></div>
+
+            <ul class="info-card-list">
+              <li>
+                <span class="info-icon">⏰</span>
+                <span>
+                  <strong>Seg-Sex:</strong> 9h-18h<br>
+                  <strong>Sábado:</strong> 9h-13h
+                </span>
+              </li>
+              <li>
+                <span class="info-icon">💳</span>
+                <span>PIX, Cartão e Parcelamento</span>
+              </li>
+              <li>
+                <span class="info-icon">📄</span>
+                <span>Nota fiscal, garantia e suporte técnico</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="info-card-actions">
+            <a href="https://wa.me/556133406740" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-hero">
+              Falar no WhatsApp
+            </a>
+            <a href="https://share.google/fw8RnykGYOGizyf74" target="_blank" rel="noopener noreferrer" class="btn-maps-hero">
+              Ver no Google Maps
+            </a>
+          </div>
+        </div>
       </div>
     </section>
 
+
     <section class="home-section">
-      <h2>Nossas Categorias de Produtos</h2>
+      <div class="home-section-header">
+        <div>
+          <span class="home-section-kicker">Navegue por objetivo</span>
+          <h2>Nossas categorias de produtos</h2>
+          <p class="home-section-lead">Entre mais rapido no que voce quer comprar: upgrades, perifericos, rede, energia, notebooks e hardware de montagem.</p>
+        </div>
+      </div>
       <div id="home-categories-grid" class="categories-grid">
         <!-- cards gerados dinamicamente via JS -->
       </div>
     </section>
 
-    <section class="home-section">
-      <h2>Produtos em Destaque - Ofertas Especiais</h2>
+    <section class="home-section home-shelf-section">
+      <div class="home-section-header">
+        <div>
+          <span class="home-section-kicker">Curadoria da loja</span>
+          <h2>Ofertas em destaque</h2>
+          <p class="home-section-lead">Produtos com bom giro, preco competitivo e imagem pronta para comparar com mais clareza.</p>
+        </div>
+        <button type="button" class="btn-outline home-section-action" onclick="showCategory('promo')">Ver ofertas</button>
+      </div>
       <div id="home-highlights-grid" class="products-grid">
         <!-- produtos gerados dinamicamente via JS -->
       </div>
-      <div class="text-center">
-        <button type="button" class="btn-outline" onclick="showCategory('promo')">Ver todos os produtos</button>
+    </section>
+
+    <section class="home-section home-shelf-section">
+      <div class="home-section-header">
+        <div>
+          <span class="home-section-kicker">Atualizacao de catalogo</span>
+          <h2>Novidades no catalogo</h2>
+          <p class="home-section-lead">Itens adicionados recentemente para quem acompanha o estoque da loja e quer achar novidade sem ficar caçando categoria por categoria.</p>
+        </div>
+        <button type="button" class="btn-outline home-section-action" onclick="showCategory('inicio')">Ver inicio completo</button>
+      </div>
+      <div id="home-new-arrivals-grid" class="products-grid">
+        <!-- novidades geradas dinamicamente via JS -->
+      </div>
+    </section>
+
+    <section class="home-section home-shelf-section">
+      <div class="home-section-header">
+        <div>
+          <span class="home-section-kicker">Compra local</span>
+          <h2>Prontos para retirada em Brasilia</h2>
+          <p class="home-section-lead">Produtos com estoque local para acelerar sua decisao de compra e facilitar reserva via WhatsApp ou retirada na CLN 208.</p>
+        </div>
+        <a href="https://wa.me/556133406740" target="_blank" rel="noopener noreferrer" class="btn-outline home-section-action">Reservar no WhatsApp</a>
+      </div>
+      <div id="home-pickup-grid" class="products-grid">
+        <!-- itens prontos para retirada gerados dinamicamente via JS -->
       </div>
     </section>
 
     <section class="home-section">
-      <h2>Por que comprar na Primos Informática?</h2>
+      <div class="home-section-header">
+        <div>
+          <span class="home-section-kicker">Confianca comercial</span>
+          <h2>Por que comprar na Primos Informatica?</h2>
+          <p class="home-section-lead">A loja ja tem os blocos institucionais e atendimento humano; aqui a home passa isso logo de cara para reduzir duvida e aumentar conversao.</p>
+        </div>
+      </div>
       <div class="features-grid">
         <div class="feature-item">
           <h3>Estoque confirmado e retirada local</h3>
@@ -1021,16 +1137,6 @@
     <div class="products-grid"></div>
   </div>
 
-  <div id="access-point" class="category" style="display:none;">
-    <h2>Access Points</h2>
-    <div class="products-grid"></div>
-  </div>
-
-  <div id="repetidor" class="category" style="display:none;">
-    <h2>Repetidores</h2>
-    <div class="products-grid"></div>
-  </div>
-
   <div id="adaptador" class="category" style="display:none;">
     <h2>Adaptadores</h2>
     <div class="products-grid"></div>
@@ -1086,7 +1192,7 @@
   <div class="site-footer-inner">
     <div class="site-footer-grid">
       <section class="site-footer-brand">
-        <img src="/images/logo.png" alt="Primos Informatica" width="48" height="48" loading="lazy">
+        <img src="/images/logo.png" alt="Primos Informatica" width="43" height="48" loading="lazy">
         <h2>Primos Informatica</h2>
         <p>Loja de hardware em Brasilia com foco em conversao, atendimento consultivo e retirada na loja fisica.</p>
         <div class="site-footer-badges">
@@ -1110,11 +1216,11 @@
       <section class="site-footer-column">
         <h3>Atendimento</h3>
         <div class="site-footer-links">
-          <a href="faq.html">Perguntas frequentes</a>
-          <a href="garantia.html">Garantia</a>
-          <a href="politica-devolucao.html">Trocas e devolucoes</a>
-          <a href="termos-de-uso.html">Termos de uso</a>
-          <a href="politica-privacidade.html">Politica de privacidade</a>
+          <a href="/faq.html">Perguntas frequentes</a>
+          <a href="/garantia.html">Garantia</a>
+          <a href="/politica-devolucao.html">Trocas e devolucoes</a>
+          <a href="/termos-de-uso.html">Termos de uso</a>
+          <a href="/politica-privacidade.html">Politica de privacidade</a>
         </div>
       </section>
 
@@ -1201,52 +1307,30 @@
 </div>
 
 <!-- Scripts Otimizados para Performance -->
-  <script src="/js/script.js?v=20260317-1405" defer></script>
+  <script src="/js/script.js?v=20260413-1345" defer></script>
   
   <!-- Loading Management Script -->
   <script>
-    // Prevenir flash de conteúdo não estilizado
+    function finalizeInitialRendering() {
+      const loadingOverlay = document.getElementById('initialLoading');
+      const body = document.body;
+      const main = document.querySelector('main');
+
+      body.classList.add('loaded');
+      if (main) {
+        main.classList.add('loaded');
+      }
+
+      if (loadingOverlay) {
+        loadingOverlay.remove();
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
-      // Esconder loading overlay quando tudo estiver carregado
-      setTimeout(function() {
-        const loadingOverlay = document.getElementById('initialLoading');
-        const body = document.body;
-        const main = document.querySelector('main');
-        
-        if (loadingOverlay) {
-          loadingOverlay.classList.add('hidden');
-          setTimeout(() => {
-            loadingOverlay.style.display = 'none';
-          }, 300);
-        }
-        
-        body.classList.add('loaded');
-        if (main) {
-          main.classList.add('loaded');
-        }
-      }, 500);
+      requestAnimationFrame(finalizeInitialRendering);
     });
-    
-    // Fallback para garantir que o loading seja removido
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        const loadingOverlay = document.getElementById('initialLoading');
-        const body = document.body;
-        const main = document.querySelector('main');
-        
-        if (loadingOverlay && loadingOverlay.style.display !== 'none') {
-          loadingOverlay.classList.add('hidden');
-          setTimeout(() => {
-            loadingOverlay.style.display = 'none';
-          }, 300);
-        }
-        
-        body.classList.add('loaded');
-        if (main) {
-          main.classList.add('loaded');
-        }
-      }, 100);
-    });
+
+    window.addEventListener('load', finalizeInitialRendering, { once: true });
   </script>
   
   <!-- Firebase Condicional (carrega apenas se necessário) -->
@@ -1262,13 +1346,18 @@
       firestoreScript.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js';
       firestoreScript.async = false; // Mudar para false para garantir ordem
       document.head.appendChild(firestoreScript);
+
+      const authScript = document.createElement('script');
+      authScript.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js';
+      authScript.async = false;
+      document.head.appendChild(authScript);
       
       // Carregar configuração e scripts de Firebase após os SDKs
       firebaseScript.onload = () => {
         // Aguardar um pouco para garantir que firestore foi carregado
         setTimeout(() => {
           const configScript = document.createElement('script');
-          configScript.src = '/js/firebase-config.js?v=20260317-1405';
+          configScript.src = '/js/firebase-config.js?v=20260402-1805';
           configScript.async = false;
           document.head.appendChild(configScript);
           
@@ -1280,9 +1369,14 @@
             document.head.appendChild(ordersScript);
 
             const productsScript = document.createElement('script');
-            productsScript.src = '/js/firebase-products.js?v=20260326-1730';
+            productsScript.src = '/js/firebase-products.js?v=20260413-1835';
             productsScript.async = false;
             document.head.appendChild(productsScript);
+
+            const reviewsScript = document.createElement('script');
+            reviewsScript.src = '/js/firebase-reviews.js?v=20260401-1820';
+            reviewsScript.async = false;
+            document.head.appendChild(reviewsScript);
           }, 100);
         }, 100);
       };
@@ -1292,80 +1386,21 @@
 <!-- Script específico para menu de filtros mobile -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Função para o menu mobile de filtros - IGUAL AO HAMBURGUER
-  window.toggleFiltersMenu = function() {
-    const filtersMenuOverlay = document.getElementById('filtersMenuOverlay');
-    if (!filtersMenuOverlay) return;
-    
-    const isActive = filtersMenuOverlay.classList.contains('active');
-    
-    if (isActive) {
-      filtersMenuOverlay.classList.remove('active');
-      document.body.style.overflow = '';
-    } else {
-      filtersMenuOverlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      
-      // Abrir automaticamente a caixa de preço
-      const priceRangeContainer = document.getElementById('priceRangeContainer');
-      if (priceRangeContainer) {
-        priceRangeContainer.style.display = 'block';
-      }
-    }
-  };
-  
-  // Função para mostrar/esconder a faixa de preço
-  window.togglePriceRange = function() {
-    const priceRangeContainer = document.getElementById('priceRangeContainer');
-    if (!priceRangeContainer) return;
-    
-    const isVisible = priceRangeContainer.style.display !== 'none';
-    
-    if (isVisible) {
-      priceRangeContainer.style.display = 'none';
-    } else {
-      priceRangeContainer.style.display = 'block';
-    }
-  };
-  
-  // Função para aplicar a faixa de preço
-  window.applyPriceRange = function() {
-    const minPrice = document.getElementById('minPriceFilter').value;
-    const maxPrice = document.getElementById('maxPrice').value;
-    
-    // Construir URL com os parâmetros de preço
-    let url = 'index.html?filter=price-range';
-    if (minPrice) {
-      url += '&min=' + minPrice;
-    }
-    if (maxPrice) {
-      url += '&max=' + maxPrice;
-    }
-    
-    // Redirecionar para a página com os filtros aplicados
-    window.location.href = url;
-  };
-  
-  // Adicionar eventos de toque para iOS no botão de filtros - IGUAL AO HAMBURGUER
   setTimeout(function() {
     const filtersToggle = document.querySelector('.filters-btn');
     if (filtersToggle) {
-      // Remover eventos anteriores
       filtersToggle.replaceWith(filtersToggle.cloneNode(true));
       const newBtn = document.querySelector('.filters-btn');
-      
-      // Adicionar eventos para iOS
-      newBtn.addEventListener('click', function(e) {
+      const handleOpenFilters = function(e) {
         e.preventDefault();
         e.stopPropagation();
-        window.toggleFiltersMenu();
-      });
+        if (typeof window.toggleFiltersMenu === 'function') {
+          window.toggleFiltersMenu();
+        }
+      };
       
-      newBtn.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        window.toggleFiltersMenu();
-      }, { passive: false });
+      newBtn.addEventListener('click', handleOpenFilters);
+      newBtn.addEventListener('touchend', handleOpenFilters, { passive: false });
     }
   }, 100);
 });

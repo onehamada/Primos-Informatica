@@ -1,0 +1,34 @@
+<svg width="320" height="120" viewBox="0 0 320 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="notebook-bg" x1="24" y1="16" x2="292" y2="112" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="0.5" stop-color="#1D4ED8"/>
+      <stop offset="1" stop-color="#22C55E"/>
+    </linearGradient>
+    <linearGradient id="notebook-screen" x1="108" y1="30" x2="221" y2="89" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E0F2FE"/>
+      <stop offset="0.55" stop-color="#BAE6FD"/>
+      <stop offset="1" stop-color="#60A5FA"/>
+    </linearGradient>
+    <linearGradient id="notebook-base" x1="88" y1="83" x2="232" y2="100" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E2E8F0"/>
+      <stop offset="1" stop-color="#94A3B8"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="312" height="112" rx="20" fill="url(#notebook-bg)"/>
+  <circle cx="53" cy="27" r="16" fill="#FFFFFF" fill-opacity="0.08"/>
+  <circle cx="271" cy="93" r="24" fill="#FFFFFF" fill-opacity="0.08"/>
+  <path d="M41 91C64 74 98 69 134 74" stroke="#F8FAFC" stroke-opacity="0.28" stroke-width="4" stroke-linecap="round"/>
+  <path d="M196 38C222 23 253 25 282 44" stroke="#DBEAFE" stroke-opacity="0.3" stroke-width="4" stroke-linecap="round"/>
+  <rect x="99" y="24" width="122" height="70" rx="9" fill="#0F172A"/>
+  <rect x="106" y="31" width="108" height="56" rx="5" fill="url(#notebook-screen)"/>
+  <path d="M121 67C132 52 148 48 161 56C170 61 178 61 187 52C193 46 201 43 209 45V87H106V74C115 75 118 72 121 67Z" fill="#2563EB" fill-opacity="0.9"/>
+  <circle cx="160" cy="28" r="1.8" fill="#94A3B8"/>
+  <path d="M87 86C87 83.7909 88.7909 82 91 82H229C231.209 82 233 83.7909 233 86V87.5C233 90.5376 230.538 93 227.5 93H92.5C89.4624 93 87 90.5376 87 87.5V86Z" fill="url(#notebook-base)"/>
+  <path d="M76 93H244L232 99C230.586 99.7071 229.025 100.075 227.444 100.075H92.5563C90.9755 100.075 89.4145 99.7071 88 99L76 93Z" fill="#CBD5E1"/>
+  <rect x="144" y="90" width="32" height="2.5" rx="1.25" fill="#64748B"/>
+  <path d="M45 20H76" stroke="#F8FAFC" stroke-opacity="0.8" stroke-width="6" stroke-linecap="round"/>
+  <path d="M45 32H64" stroke="#F8FAFC" stroke-opacity="0.55" stroke-width="6" stroke-linecap="round"/>
+  <path d="M239 82H280" stroke="#ECFCCB" stroke-opacity="0.85" stroke-width="6" stroke-linecap="round"/>
+  <path d="M254 70H280" stroke="#DCFCE7" stroke-opacity="0.6" stroke-width="6" stroke-linecap="round"/>
+</svg>

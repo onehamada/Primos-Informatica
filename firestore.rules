@@ -1,0 +1,108 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function authEmail() {
+      return isSignedIn() && request.auth.token.email is string
+        ? request.auth.token.email
+        : '';
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.admin == true ||
+        authEmail() in [
+          'teste@primos.com',
+          'marketing.primosinfo@gmail.com'
+        ]
+      );
+    }
+
+    function isOrderOwner(orderData) {
+      return isSignedIn() && (
+        (orderData.cliente is map &&
+          orderData.cliente.email is string &&
+          orderData.cliente.email == authEmail()) ||
+        (orderData.email is string &&
+          orderData.email == authEmail()) ||
+        (orderData.usuarioEmail is string &&
+          orderData.usuarioEmail == authEmail())
+      );
+    }
+
+    function hasPendingStatusOnCreate() {
+      return !('status' in request.resource.data) ||
+        request.resource.data.status == 'pendente' ||
+        request.resource.data.status == 'Pendente';
+    }
+
+    function isOrderOwnerCancellingOwnOrder() {
+      return isOrderOwner(resource.data) &&
+        request.resource.data.status == 'cancelado' &&
+        request.resource.data.diff(resource.data).changedKeys().hasOnly([
+          'status',
+          'dataCancelamento',
+          'updatedAt'
+        ]);
+    }
+
+    function isReviewOwner() {
+      return isSignedIn() &&
+        resource.data.userEmail is string &&
+        resource.data.userEmail == authEmail();
+    }
+
+    function isHelpfulCounterUpdate() {
+      return request.resource.data.diff(resource.data).changedKeys().hasOnly([
+          'helpful',
+          'updatedAt'
+        ]) &&
+        request.resource.data.helpful is number &&
+        resource.data.helpful is number &&
+        request.resource.data.helpful >= resource.data.helpful;
+    }
+
+    function isValidReviewPayload() {
+      return request.resource.data.productId is string &&
+        request.resource.data.productId.size() > 0 &&
+        request.resource.data.rating is number &&
+        request.resource.data.rating >= 1 &&
+        request.resource.data.rating <= 5 &&
+        request.resource.data.text is string &&
+        request.resource.data.text.size() >= 5 &&
+        request.resource.data.text.size() <= 2000 &&
+        request.resource.data.userEmail is string &&
+        request.resource.data.userEmail == authEmail();
+    }
+
+    match /products/{productId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /orders/{orderId} {
+      allow create: if hasPendingStatusOnCreate() || isAdmin();
+      allow get, list: if isAdmin() || isOrderOwner(resource.data);
+      allow update, delete: if isAdmin() || isOrderOwnerCancellingOwnOrder();
+    }
+
+    match /reviews/{reviewId} {
+      allow get, list: if true;
+      allow create: if isSignedIn() && isValidReviewPayload();
+      allow update: if isAdmin() || isReviewOwner() || isHelpfulCounterUpdate();
+      allow delete: if isAdmin() || isReviewOwner();
+    }
+
+    match /users/{userId} {
+      allow read, write: if isAdmin() || (isSignedIn() && request.auth.uid == userId);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

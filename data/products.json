@@ -5,7 +5,7 @@
     "categoria": "monitor",
     "preco": 285,
     "qt": 1,
-    "descricao": "Monitor 19 MO6001",
+    "descricao": "MONITOR 19 HAYOM MO6001. Principais pontos: tela 19 pol. Bom para escritorio, estudos e entretenimento.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "monitor-hayom-19-mo6001.webp"
@@ -16,7 +16,7 @@
     "categoria": "monitor",
     "preco": 825,
     "qt": 1,
-    "descricao": "Monitor 21.5 Full HD 221V8 WVA HDMI",
+    "descricao": "MONITOR 21.5 PHILIPS LED FULL HD 221V8 WVA HDMI. Principais pontos: tela 21,5 pol; resolucao Full HD; conexoes HDMI. Bom para escritorio, estudos e entretenimento.",
     "marca": "Philips",
     "promocao": false,
     "imagem": "monitor-philips-215-fullhd-221v8.webp"
@@ -27,7 +27,7 @@
     "categoria": "monitor",
     "preco": 300,
     "qt": 0,
-    "descricao": "Monitor 15.4 MO6006",
+    "descricao": "MONITOR 15.4 HAYOM MO 6006. Principais pontos: tela 15,4 pol. Bom para escritorio, estudos e entretenimento.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "monitor-hayom-154-mo6006.webp"
@@ -38,7 +38,7 @@
     "categoria": "monitor",
     "preco": 330,
     "qt": 1,
-    "descricao": "Monitor 17.1 MO6004",
+    "descricao": "MONITOR 17.1 HAYOM MO6004. Principais pontos: tela 17,1 pol. Bom para escritorio, estudos e entretenimento.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "monitor-hayom-171-mo6004.webp"
@@ -49,7 +49,7 @@
     "categoria": "gabinetes",
     "preco": 172,
     "qt": 3,
-    "descricao": "Gabinete ATX HAYOM 171023",
+    "descricao": "GABINETE ATX HAYOM 171023. Principais pontos: categoria gabinete; marca Hayom; modelo 171023. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "gabinete-hayom-171023.webp"
@@ -60,7 +60,7 @@
     "categoria": "gabinetes",
     "preco": 172,
     "qt": 1,
-    "descricao": "Gabinete ATX HAYOM 171050",
+    "descricao": "GABINETE ATX HAYOM 171050. Principais pontos: categoria gabinete; marca Hayom; modelo 171050. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "gabinete-hayom-171050.webp"
@@ -71,7 +71,7 @@
     "categoria": "gabinetes",
     "preco": 329,
     "qt": 7,
-    "descricao": "Gabinete Gamer Branco HAYOM 1791",
+    "descricao": "GABINETE GAMER BRANCO HAYOM 1791. Principais pontos: categoria gabinete; marca Hayom; modelo 1791. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "gabinete-gamer-branco-hayom-1791.webp"
@@ -82,7 +82,7 @@
     "categoria": "gabinetes",
     "preco": 238,
     "qt": 5,
-    "descricao": "Gabinete Gamer HAYOM GB171049",
+    "descricao": "GABINETE GAMER HAYOM GB171049. Principais pontos: categoria gabinete; marca Hayom; modelo GB171049. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "gabinete-gamer-hayom-gb171049.webp"
@@ -92,8 +92,8 @@
     "nome": "GABINETE GAMER HAYOM AQUARIO 3 FANS GB1787",
     "categoria": "gabinetes",
     "preco": 172,
-    "qt": 8,
-    "descricao": "Gabinete Gamer HAYOM Aquario 3 Fans GB1787",
+    "qt": 0,
+    "descricao": "GABINETE GAMER HAYOM AQUARIO 3 FANS GB1787. Principais pontos: categoria gabinete; marca Hayom; modelo AQUARIO 3 FANS GB1787. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Hayom",
     "promocao": true,
     "imagem": "gabinete-gamer-hayom-aquario-gb1787.webp"
@@ -104,7 +104,7 @@
     "categoria": "gabinetes",
     "preco": 390,
     "qt": 2,
-    "descricao": "Gabinete Gamer HAYOM Branco GB1799",
+    "descricao": "GABINETE GAMER HAYOM BRANCO GB1799. Principais pontos: categoria gabinete; marca Hayom; modelo BRANCO GB1799. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "gabinete-gamer-hayom-branco-gb1799.webp"
@@ -115,7 +115,7 @@
     "categoria": "gabinetes",
     "preco": 272,
     "qt": 1,
-    "descricao": "Gabinete Gamer HAYOM C 3 Fans GB1769",
+    "descricao": "GABINETE GAMER HAYOM C 3 FANS GB1769. Principais pontos: categoria gabinete; marca Hayom; modelo C 3 FANS GB1769. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "gabinete-gamer-hayom-c-3fans-gb1769.webp"
@@ -126,7 +126,7 @@
     "categoria": "gabinetes",
     "preco": 272,
     "qt": 4,
-    "descricao": "Gabinete Gamer HAYOM Preto GB1798 3 Cooler",
+    "descricao": "GABINETE GAMER HAYOM PRETO GB1798 3 COOLER. Principais pontos: categoria gabinete; marca Hayom; modelo PRETO GB1798 3 COOLER. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "gabinete-hayom-gb1789.webp"
@@ -137,7 +137,7 @@
     "categoria": "gabinetes",
     "preco": 440,
     "qt": 2,
-    "descricao": "Gabinete Gamer HAYOM Vidro GB1701",
+    "descricao": "GABINETE GAMER HAYOM VIDRO GB1701. Principais pontos: categoria gabinete; marca Hayom; modelo VIDRO GB1701. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "gabinete-gamer-hayom-vidro-gb1701.webp"
@@ -148,7 +148,7 @@
     "categoria": "gabinetes",
     "preco": 345,
     "qt": 2,
-    "descricao": "Gabinete Gamer Preto HAYOM 171090",
+    "descricao": "GABINETE GAMER PRETO HAYOM 171090. Principais pontos: categoria gabinete; marca Hayom; modelo 171090. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "gabinete-gamer-preto-hayom-171090.webp"
@@ -159,7 +159,7 @@
     "categoria": "gabinetes",
     "preco": 135,
     "qt": 59,
-    "descricao": "Gabinete HAYOM Fonte s/cabo GB1751",
+    "descricao": "GABINETE HAYOM FONTE S/CABO GB1751. Principais pontos: categoria gabinete; marca Hayom; modelo FONTE S/CABO GB1751. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "gabinete-hayom-fonte-scabo-gb1751.webp"
@@ -170,32 +170,10 @@
     "categoria": "gabinetes",
     "preco": 240,
     "qt": 3,
-    "descricao": "Gabinete Gamer GB1792",
+    "descricao": "GABINETE GAMER GB1792. Principais pontos: categoria gabinete; marca Hayom; modelo GABINETE GAMER GB1792. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "gabinete-hayom-gb1792.webp"
-  },
-  {
-    "codigo": "1947",
-    "nome": "GABINETE GAMER MID TOWER C/3 FANS HAYOM GB1789",
-    "categoria": "gabinetes",
-    "preco": 372,
-    "qt": 5,
-    "descricao": "Gabinete Gamer Mid Tower com 3 Fans Hayom GB1789",
-    "marca": "Hayom",
-    "promocao": false,
-    "imagem": "gabinete-hayom-gb1789.webp"
-  },
-  {
-    "codigo": "400396",
-    "nome": "MOUSE MULTILASER SEM FIO PRETO MO307",
-    "categoria": "mouse",
-    "preco": 22,
-    "qt": 2,
-    "descricao": "Mouse sem fio preto MO307",
-    "marca": "Multilaser",
-    "promocao": false,
-    "imagem": "mouse-multilaser-mo307.webp"
   },
   {
     "codigo": "402226",
@@ -203,32 +181,10 @@
     "categoria": "mouse",
     "preco": 15,
     "qt": 1,
-    "descricao": "Mouse USB preto MO255",
+    "descricao": "MOUSE MULTILASER PRETO USB MO255. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Multilaser",
     "promocao": false,
     "imagem": "mouse-multilaser-mo255.webp"
-  },
-  {
-    "codigo": "1939",
-    "nome": "MOUSE MULTILASER SEM FIO RECARREGÁVEL 2.4 GHZ MO277",
-    "categoria": "mouse",
-    "preco": 70,
-    "qt": 1,
-    "descricao": "Mouse recarregável sem fio MO277",
-    "marca": "Multilaser",
-    "promocao": false,
-    "imagem": "mouse-multilaser-mo277.webp"
-  },
-  {
-    "codigo": "1938",
-    "nome": "MOUSE MULTILASER S/FIO BLUETOOTH M5750 MO403",
-    "categoria": "mouse",
-    "preco": 90,
-    "qt": 1,
-    "descricao": "Mouse Bluetooth sem fio MO403",
-    "marca": "Multilaser",
-    "promocao": false,
-    "imagem": "mouse-multilaser-mo403.webp"
   },
   {
     "codigo": "1536",
@@ -236,7 +192,7 @@
     "categoria": "Redes",
     "preco": 201,
     "qt": 1,
-    "descricao": "Roteador Mesh AC1200 EC220-G5",
+    "descricao": "ROTEADOR WR TP-LINK MESH AC1200 EC220-G5. Principais pontos: padrao AC1200; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "TP-Link",
     "promocao": false,
     "imagem": "roteador-tplink-ec220g5.webp"
@@ -247,7 +203,7 @@
     "categoria": "Redes",
     "preco": 260,
     "qt": 1,
-    "descricao": "Roteador Dual Band AC1350 EC230-G1",
+    "descricao": "ROTEADOR WR TP-LINK DUAL BAND AC1350 EC230-G1. Principais pontos: padrao AC1350; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "TP-Link",
     "promocao": false,
     "imagem": "roteador-tplink-ec230g1.webp"
@@ -258,7 +214,7 @@
     "categoria": "Redes",
     "preco": 199,
     "qt": 1,
-    "descricao": "Roteador AC1200 Dual Band MR30G",
+    "descricao": "ROTEADOR WRE MERCUSYS AC1200 D BAND GIGABIT MR30G. Principais pontos: padrao AC1200; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "Mercusys",
     "promocao": false,
     "imagem": "roteador-mercusys-mr30g.webp"
@@ -269,7 +225,7 @@
     "categoria": "Redes",
     "preco": 209,
     "qt": 1,
-    "descricao": "Roteador Dual Band AC1350 C60 Archer",
+    "descricao": "ROTEADOR TP-LINK AC1350 C60 ARCHER DUAL BAND. Principais pontos: padrao AC1350; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "TP-Link",
     "promocao": false,
     "imagem": "roteador-tplink-c60.webp"
@@ -280,7 +236,7 @@
     "categoria": "Redes",
     "preco": 280,
     "qt": 1,
-    "descricao": "Roteador AX1500 Dual Band AX12 WiFi 6",
+    "descricao": "ROTEADOR WR TP LINK AX1500 DUAL BAND AX12 WIFI 6. Principais pontos: padrao AX1500; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "TP-Link",
     "promocao": false,
     "imagem": "roteador-tplink-ax12.webp"
@@ -291,7 +247,7 @@
     "categoria": "Redes",
     "preco": 470,
     "qt": 1,
-    "descricao": "Roteador AX1800 Dual Band AX23 WiFi 6",
+    "descricao": "ROTEADOR WR TP LINK AX1800 DUAL BAND AX23 WIFI 6. Principais pontos: padrao AX1800; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "TP-Link",
     "promocao": false,
     "imagem": "roteador-tplink-ax23.webp"
@@ -302,7 +258,7 @@
     "categoria": "Redes",
     "preco": 1775,
     "qt": 1,
-    "descricao": "Access Point UniFi AC U6-Pro 4x4",
+    "descricao": "UBIQUITI AP UNIFI AC U6-PRO 4X4 S/FONTE. Principais pontos: conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "Ubiquiti",
     "promocao": false,
     "imagem": "ap-ubiquiti-u6pro.webp"
@@ -313,7 +269,7 @@
     "categoria": "Redes",
     "preco": 189,
     "qt": 1,
-    "descricao": "Repetidor Dual Band AC750 RE200",
+    "descricao": "REPETIDOR WIRELESS TPLINK DUAL BAND AC750 RE200. Principais pontos: padrao AC750; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "TP-Link",
     "promocao": false,
     "imagem": "repetidor-tplink-re200.webp"
@@ -324,7 +280,7 @@
     "categoria": "Redes",
     "preco": 145,
     "qt": 1,
-    "descricao": "Adaptador USB RJ45 2.0",
+    "descricao": "ADAPTADOR USB REDE RJ45 3.0. Principais pontos: conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "Generico",
     "promocao": false,
     "imagem": "adaptador-usb-rj45-empree.webp"
@@ -335,7 +291,7 @@
     "categoria": "Redes",
     "preco": 105,
     "qt": 1,
-    "descricao": "Adaptador USB Wireless 600Mbps 5G",
+    "descricao": "ADAPTADOR USB WIRELESS 600MBPS 5G. Principais pontos: padrao 600MBPS; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "Generico",
     "promocao": false,
     "imagem": "adaptador-usb-600mbps-5g.webp"
@@ -346,7 +302,7 @@
     "categoria": "Redes",
     "preco": 150,
     "qt": 1,
-    "descricao": "Adaptador USB Wireless AC1300 U12",
+    "descricao": "ADAPTADOR USB WIRELESS AC1300 TENDA U12. Principais pontos: padrao AC1300; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "Tenda",
     "promocao": false,
     "imagem": "adaptador-tenda-u12.webp"
@@ -357,7 +313,7 @@
     "categoria": "Redes",
     "preco": 165,
     "qt": 1,
-    "descricao": "Adaptador USB Wireless AC1300 T3U",
+    "descricao": "ADAPTADOR USB WIRELESS AC1300 TP-LINK ARCHER T3U. Principais pontos: padrao AC1300; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "TP-Link",
     "promocao": false,
     "imagem": "adaptador-tplink-t3u.webp"
@@ -368,7 +324,7 @@
     "categoria": "Redes",
     "preco": 210,
     "qt": 1,
-    "descricao": "Adaptador USB Wireless AC1300 T4U",
+    "descricao": "ADAPTADOR USB WIRELESS AC1300 TP-LINK ARCHER T4U. Principais pontos: padrao AC1300; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "TP-Link",
     "promocao": false,
     "imagem": "adaptador-tplink-t4u.webp"
@@ -379,7 +335,7 @@
     "categoria": "teclado",
     "preco": 19.9,
     "qt": 1,
-    "descricao": "Teclado USB preto 0014",
+    "descricao": "TECLADO BRIGHT PRETO USB 0014. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "Bright",
     "promocao": false,
     "imagem": "teclado-bright-usb-0014.webp"
@@ -390,7 +346,7 @@
     "categoria": "mouse",
     "preco": 5.9,
     "qt": 1,
-    "descricao": "Mouse USB Officer MU2904",
+    "descricao": "MOUSE HAYOM OFFICER USB MU2904. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "mouse-hayom-mu2904.webp"
@@ -401,7 +357,7 @@
     "categoria": "mouse",
     "preco": 87.25,
     "qt": 1,
-    "descricao": "Mouse gamer RGB Crusader 70526",
+    "descricao": "MOUSE GAMER FORTREX RGB CRUSADER 70526. Principais pontos: conexao com fio para resposta estavel; perfil gamer com visual diferenciado; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Fortrex",
     "promocao": false,
     "imagem": "mouse-fortrex-crusader-70526.webp"
@@ -412,7 +368,7 @@
     "categoria": "mouse",
     "preco": 123.71,
     "qt": 1,
-    "descricao": "Mouse gamer RGB Crusader branco 83910",
+    "descricao": "MOUSE GAMER FORTREX RGB CRUSADER BRANCO 83910. Principais pontos: conexao com fio para resposta estavel; perfil gamer com visual diferenciado; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Fortrex",
     "promocao": false,
     "imagem": "mouse-fortrex-crusader-branco-83910.webp"
@@ -423,7 +379,7 @@
     "categoria": "mouse",
     "preco": 33,
     "qt": 2,
-    "descricao": "Mouse gamer USB Spider OM-705 3200",
+    "descricao": "MOUSE FORTREX GAMER USB SPIDER 2 OM-705 3200. Principais pontos: conexao com fio para resposta estavel; perfil gamer com visual diferenciado; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Fortrex",
     "promocao": false,
     "imagem": "mouse-fortrex-spider-om705.webp"
@@ -434,7 +390,7 @@
     "categoria": "mouse",
     "preco": 9.99,
     "qt": 1,
-    "descricao": "Mouse USB OM1101 800DPI",
+    "descricao": "MOUSE FORTREX USB OM1101 800DPI 62845. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Fortrex",
     "promocao": false,
     "imagem": "mouse-fortrex-om1101.webp"
@@ -445,7 +401,7 @@
     "categoria": "mouse",
     "preco": 37.74,
     "qt": 1,
-    "descricao": "Mouse gamer USB OM702 Tarantula 2000",
+    "descricao": "MOUSE GAMER FORTREX USB OM702 TARANTULA 2000. Principais pontos: conexao com fio para resposta estavel; perfil gamer com visual diferenciado; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Fortrex",
     "promocao": false,
     "imagem": "mouse-fortrex-tarantula-om702.webp"
@@ -456,7 +412,7 @@
     "categoria": "mouse",
     "preco": 105,
     "qt": 2,
-    "descricao": "Mouse USB M240 Silent branco",
+    "descricao": "MOUSE LOGITECH USB M240 SILENT BRANCO. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "mouse-logitech-m240-silent-branco.webp"
@@ -467,7 +423,7 @@
     "categoria": "mouse",
     "preco": 45,
     "qt": 1,
-    "descricao": "Mouse USB M90 cinza",
+    "descricao": "MOUSE LOGITECH USB M90 CINZA. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "mouse-logitech-m90-cinza.webp"
@@ -478,7 +434,7 @@
     "categoria": "mouse",
     "preco": 39,
     "qt": 1,
-    "descricao": "Mouse USB vermelho M105",
+    "descricao": "MOUSE LOGITECH USB VERMELHO M105. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "mouse-logitech-m105-vermelho.webp"
@@ -489,7 +445,7 @@
     "categoria": "mouse",
     "preco": 77,
     "qt": 2,
-    "descricao": "Mouse wireless azul M170",
+    "descricao": "MOUSE LOGITECH WIRELESS AZUL M170. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "mouse-logitech-m170-azul.webp"
@@ -500,7 +456,7 @@
     "categoria": "mouse",
     "preco": 65,
     "qt": 1,
-    "descricao": "Mouse wireless preto M170",
+    "descricao": "MOUSE LOGITECH WIRELESS PRETO M170. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "mouse-logitech-m170-preto.webp"
@@ -511,7 +467,7 @@
     "categoria": "mouse",
     "preco": 253.82,
     "qt": 1,
-    "descricao": "Mouse sem fio M650 Signature preto",
+    "descricao": "MOUSE LOGITECH SEM FIO M650 SIGNATURE PRETO. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "mouse-logitech-m650-signature-preto.webp"
@@ -522,7 +478,7 @@
     "categoria": "mouse",
     "preco": 130,
     "qt": 1,
-    "descricao": "Mouse wireless M310 preto",
+    "descricao": "MOUSE LOGITECH WIRELESS M310 PRETO. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "mouse-logitech-m310-preto.webp"
@@ -533,21 +489,10 @@
     "categoria": "mouse",
     "preco": 92,
     "qt": 1,
-    "descricao": "Mouse wireless M196 BT branco",
+    "descricao": "MOUSE LOGITECH WIRELESS M196 BT BRANCO. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "mouse-logitech-m196-branco.webp"
-  },
-  {
-    "codigo": "1837",
-    "nome": "MOUSE LOGITECH WIRELESS ANYWHERE S3 GRAF",
-    "categoria": "mouse",
-    "preco": 600,
-    "qt": 1,
-    "descricao": "Mouse wireless Anywhere S3 grafite",
-    "marca": "Logitech",
-    "promocao": false,
-    "imagem": "mouse-logitech-anywhere-s3.webp"
   },
   {
     "codigo": "1290",
@@ -555,7 +500,7 @@
     "categoria": "mouse",
     "preco": 45,
     "qt": 1,
-    "descricao": "Mouse sem fio FAMS-11",
+    "descricao": "MOUSE FEASSO SEM FIO FAMS-11. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Feasso",
     "promocao": false,
     "imagem": "mouse-feasso-fams11.webp"
@@ -566,7 +511,7 @@
     "categoria": "placa mãe",
     "preco": 555,
     "qt": 1,
-    "descricao": "Placa-mãe chipset A520 socket AM4",
+    "descricao": "PLACA MAE BRAZILPC A520 AM4 ULTRA. Principais pontos: socket AM4; chipset A520. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
     "marca": "BrazilPC",
     "promocao": false,
     "imagem": "placa-mae-brazilpc-a520.webp"
@@ -577,7 +522,7 @@
     "categoria": "placa mãe",
     "preco": 605,
     "qt": 1,
-    "descricao": "Placa-mãe H510 socket LGA1200 DDR4",
+    "descricao": "PLACA MAE BRAZILPC H510 1200 DDR4. Principais pontos: socket LGA1200; chipset H510; suporte a memoria DDR4. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
     "marca": "BrazilPC",
     "promocao": false,
     "imagem": "placa-mae-brazilpc-h510.webp"
@@ -588,7 +533,7 @@
     "categoria": "audio",
     "preco": 3102.45,
     "qt": 1,
-    "descricao": "Caixa de som bluetooth JBL Boombox 3 IPX7",
+    "descricao": "CAIXA DE SOM JBL BOOMBOX 3 BLACK. Principais pontos: ideal para chamadas, aulas e reunioes online. Audio com bom custo-beneficio para uso diario.",
     "marca": "JBL",
     "promocao": false,
     "imagem": "jbl-boombox-3-black.webp"
@@ -596,10 +541,10 @@
   {
     "codigo": "1967",
     "nome": "KVM 2 PORTAS SWITCH USB",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 155,
     "qt": 1,
-    "descricao": "Switch KVM USB com 2 portas",
+    "descricao": "KVM 2 PORTAS SWITCH USB. Principais pontos: 2 portas para distribuicao de rede; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "Generico",
     "promocao": false,
     "imagem": "kvm-2-portas-usb.webp"
@@ -607,10 +552,10 @@
   {
     "codigo": "1499",
     "nome": "SPLITTER HDMI 8 PORTAS KNUK PK-SW100",
-    "categoria": "Switch",
+    "categoria": "adaptadores",
     "preco": 180,
     "qt": 1,
-    "descricao": "Splitter HDMI com 8 portas",
+    "descricao": "SPLITTER HDMI 8 PORTAS KNUK PK-SW100. Principais pontos: 8 portas para distribuicao de rede; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "Knuk",
     "promocao": false,
     "imagem": "splitter-hdmi-8-portas.webp"
@@ -621,7 +566,7 @@
     "categoria": "cabos",
     "preco": 860,
     "qt": 1,
-    "descricao": "Cabo de rede CAT6 caixa 305 metros",
+    "descricao": "CABO DE REDE CAT6 305M LAN MAX. Principais pontos: categoria cabo; marca Lan Max; modelo padrao. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Lan Max",
     "promocao": false,
     "imagem": "cabo-rede-cat6-305m-lanmax.webp"
@@ -632,7 +577,7 @@
     "categoria": "cabos",
     "preco": 261,
     "qt": 1,
-    "descricao": "Cabo de rede CAT6 azul caixa 100 metros",
+    "descricao": "CABO DE REDE CAT6 100M AZUL MPT. Principais pontos: categoria cabo; marca MPT; modelo padrao. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "MPT",
     "promocao": false,
     "imagem": "cabo-rede-cat6-100m-mpt.webp"
@@ -643,7 +588,7 @@
     "categoria": "cabos",
     "preco": 1333,
     "qt": 1,
-    "descricao": "Cabo de rede CAT6 azul caixa 305 metros",
+    "descricao": "CABO DE REDE CAT6 305M SOHPLUS AZUL. Principais pontos: categoria cabo; marca Sohplus; modelo AZUL. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Sohplus",
     "promocao": false,
     "imagem": "cabo-rede-cat6-305m-sohplus.webp"
@@ -651,10 +596,10 @@
   {
     "codigo": "1561",
     "nome": "SWITCH TP-LINK 16 PORTAS GIGABIT TL-SG1016",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 640,
     "qt": 1,
-    "descricao": "Switch Gigabit 16 portas TP-Link",
+    "descricao": "SWITCH TP-LINK 16 PORTAS GIGABIT TL-SG1016. Principais pontos: 16 portas para distribuicao de rede; padrao GIGABIT; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "TP-Link",
     "promocao": false,
     "imagem": "switch-tplink-tl-sg1016.webp"
@@ -662,10 +607,10 @@
   {
     "codigo": "1351",
     "nome": "SWITCH TP-LINK 24 PORTAS GIGABIT SG1024D",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 850,
     "qt": 1,
-    "descricao": "Switch Gigabit 24 portas TP-Link",
+    "descricao": "SWITCH TP-LINK 24 PORTAS GIGABIT SG1024D. Principais pontos: 24 portas para distribuicao de rede; padrao GIGABIT; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "TP-Link",
     "promocao": false,
     "imagem": "switch-tplink-sg1024d.webp"
@@ -673,10 +618,10 @@
   {
     "codigo": "1353",
     "nome": "SWITCH TP-LINK 8 PORTAS GIGABIT LS1008G",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 183,
     "qt": 1,
-    "descricao": "Switch Gigabit 8 portas TP-Link",
+    "descricao": "SWITCH TP-LINK 8 PORTAS GIGABIT LS1008G. Principais pontos: 8 portas para distribuicao de rede; padrao GIGABIT; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "TP-Link",
     "promocao": false,
     "imagem": "switch-tplink-ls1008g.webp"
@@ -684,10 +629,10 @@
   {
     "codigo": "1204",
     "nome": "SWITCH TP-LINK 5 PORTAS GIGABIT LS1005G",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 115,
     "qt": 1,
-    "descricao": "Switch Gigabit 5 portas TP-Link",
+    "descricao": "SWITCH TP-LINK 5 PORTAS GIGABIT LS1005G. Principais pontos: 5 portas para distribuicao de rede; padrao GIGABIT; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "TP-Link",
     "promocao": false,
     "imagem": "switch-tplink-ls1005g.webp"
@@ -695,10 +640,10 @@
   {
     "codigo": "1058",
     "nome": "SWITCH MERCUSYS 8 PORTAS GIGABIT MS108G",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 115,
     "qt": 1,
-    "descricao": "Switch Gigabit 8 portas Mercusys",
+    "descricao": "SWITCH MERCUSYS 8 PORTAS GIGABIT MS108G. Principais pontos: 8 portas para distribuicao de rede; padrao GIGABIT; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "Mercusys",
     "promocao": false,
     "imagem": "switch-mercusys-ms108g.webp"
@@ -706,10 +651,10 @@
   {
     "codigo": "1059",
     "nome": "SWITCH MERCUSYS 5 PORTAS GIGABIT MS105G",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 84.3,
     "qt": 1,
-    "descricao": "Switch Gigabit 5 portas Mercusys",
+    "descricao": "SWITCH MERCUSYS 5 PORTAS GIGABIT MS105G. Principais pontos: 5 portas para distribuicao de rede; padrao GIGABIT; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "Mercusys",
     "promocao": false,
     "imagem": "switch-mercusys-ms105g.webp"
@@ -717,10 +662,10 @@
   {
     "codigo": "400548",
     "nome": "KVM D-LINK 16 PORTAS USB PS2 KVM-450",
-    "categoria": "Redes",
+    "categoria": "Switch",
     "preco": 1655,
     "qt": 1,
-    "descricao": "Switch KVM 16 portas USB e PS/2",
+    "descricao": "KVM D-LINK 16 PORTAS USB PS2 KVM-450. Principais pontos: 16 portas para distribuicao de rede; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "D-Link",
     "promocao": false,
     "imagem": "kvm-dlink-kvm450.webp"
@@ -731,7 +676,7 @@
     "categoria": "cabos",
     "preco": 70,
     "qt": 1,
-    "descricao": "Cabo console USB para RJ45",
+    "descricao": "CABO CONSOLE USB RJ45. Principais pontos: categoria cabo; marca Generico; modelo CABO CONSOLE USB RJ45. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Generico",
     "promocao": false,
     "imagem": "cabo-console-usb-rj45.webp"
@@ -742,7 +687,7 @@
     "categoria": "webcam",
     "preco": 78,
     "qt": 1,
-    "descricao": "Webcam USB resolução Full HD 1080p",
+    "descricao": "WEB CAMERA USB FULL HD 1080P. Principais pontos: resolucao Full HD; ideal para chamadas, aulas e reunioes online. Webcam com bom custo-beneficio para uso diario.",
     "marca": "Generico",
     "promocao": false,
     "imagem": "webcam-usb-fullhd.webp"
@@ -753,7 +698,7 @@
     "categoria": "webcam",
     "preco": 145,
     "qt": 1,
-    "descricao": "Webcam USB 1.5MP com microfone",
+    "descricao": "WEBCAM LED 1.5MP USB COM MICROFONE. Principais pontos: sensor 1.5mp; ideal para chamadas, aulas e reunioes online. Webcam com bom custo-beneficio para uso diario.",
     "marca": "BrazilPC",
     "promocao": false,
     "imagem": "webcam-led-15mp-brazilpc.webp"
@@ -764,7 +709,7 @@
     "categoria": "webcam",
     "preco": 325,
     "qt": 1,
-    "descricao": "Webcam Logitech Brio 100 Full HD",
+    "descricao": "WEBCAM LOGITECH BRIO 100 GRAFITE. Principais pontos: resolucao Full HD; ideal para chamadas, aulas e reunioes online. Webcam com bom custo-beneficio para uso diario.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "webcam-logitech-brio-100.webp"
@@ -775,7 +720,7 @@
     "categoria": "webcam",
     "preco": 685,
     "qt": 1,
-    "descricao": "Webcam Full HD C925E",
+    "descricao": "WEBCAM LOGITECH FULL HD C925E. Principais pontos: resolucao Full HD; ideal para chamadas, aulas e reunioes online. Webcam com bom custo-beneficio para uso diario.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "webcam-logitech-c925e.webp"
@@ -786,7 +731,7 @@
     "categoria": "webcam",
     "preco": 220,
     "qt": 1,
-    "descricao": "Webcam HD C270",
+    "descricao": "WEBCAM LOGITECH HD 1280 X 720P C270HD. Principais pontos: resolucao HD; ideal para chamadas, aulas e reunioes online. Webcam com bom custo-beneficio para uso diario.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "webcam-logitech-c270.webp"
@@ -796,8 +741,8 @@
     "nome": "TECLADO OEX GAME ZIGGY MECANICO PRETO TC-607",
     "categoria": "teclado",
     "preco": 355,
-    "qt": 2,
-    "descricao": "Teclado mecânico Ziggy TC-607",
+    "qt": 0,
+    "descricao": "TECLADO OEX GAME ZIGGY MECANICO PRETO TC-607. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "OEX",
     "promocao": false,
     "imagem": "teclado-oex-ziggy-tc607.webp"
@@ -808,7 +753,7 @@
     "categoria": "teclado",
     "preco": 209.55,
     "qt": 1,
-    "descricao": "Teclado mecânico Gravity 100",
+    "descricao": "TECLADO GAMER MEC FORTREK GRAVITY 100. Principais pontos: conexao com fio para resposta estavel; perfil gamer com visual diferenciado; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "Fortrek",
     "promocao": false,
     "imagem": "teclado-fortrek-gravity100.webp"
@@ -819,7 +764,7 @@
     "categoria": "teclado",
     "preco": 296.13,
     "qt": 1,
-    "descricao": "Teclado mecânico Gravity 100 BR",
+    "descricao": "TECLADO GAMER MEC FORTREK GRAVITY 100 BR. Principais pontos: conexao com fio para resposta estavel; perfil gamer com visual diferenciado; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "Fortrek",
     "promocao": false,
     "imagem": "teclado-fortrek-gravity100br.webp"
@@ -830,7 +775,7 @@
     "categoria": "teclado",
     "preco": 176.19,
     "qt": 1,
-    "descricao": "Teclado mecânico Gravity 65",
+    "descricao": "TECLADO GAMER MEC FORTREK GRAVITY 65. Principais pontos: conexao com fio para resposta estavel; perfil gamer com visual diferenciado; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "Fortrek",
     "promocao": false,
     "imagem": "teclado-fortrek-gravity65.webp"
@@ -841,7 +786,7 @@
     "categoria": "teclado",
     "preco": 197.6,
     "qt": 1,
-    "descricao": "Teclado mecânico Gravity 80",
+    "descricao": "TECLADO GAMER MEC FORTREK GRAVITY 80. Principais pontos: conexao com fio para resposta estavel; perfil gamer com visual diferenciado; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "Fortrek",
     "promocao": false,
     "imagem": "teclado-fortrek-gravity80.webp"
@@ -852,7 +797,7 @@
     "categoria": "kit-teclado-mouse",
     "preco": 260,
     "qt": 1,
-    "descricao": "Kit teclado e mouse MK295 Silent",
+    "descricao": "KIT TECLADO E MOUSE SEM FIO SILENT LOGITECH MK295. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. kit teclado e mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "kit-logitech-mk295.webp"
@@ -863,7 +808,7 @@
     "categoria": "kit-teclado-mouse",
     "preco": 149.78,
     "qt": 1,
-    "descricao": "Kit teclado e mouse Ranger 7055I",
+    "descricao": "KIT TECLADO E MOUSE FORTREK RANGER 7055I. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. kit teclado e mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Fortrek",
     "promocao": false,
     "imagem": "kit-fortrek-ranger7055i.webp"
@@ -874,7 +819,7 @@
     "categoria": "kit-teclado-mouse",
     "preco": 170,
     "qt": 1,
-    "descricao": "Kit teclado e mouse MK220",
+    "descricao": "KIT TECLADO E MOUSE LOGITECH WIRELESS MK220. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. kit teclado e mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "kit-logitech-mk220.webp"
@@ -885,7 +830,7 @@
     "categoria": "kit-teclado-mouse",
     "preco": 192,
     "qt": 1,
-    "descricao": "Kit teclado e mouse MK235",
+    "descricao": "KIT TECLADO E MOUSE LOGITECH WIRELESS MK235. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. kit teclado e mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "kit-logitech-mk235.webp"
@@ -896,7 +841,7 @@
     "categoria": "kit-teclado-mouse",
     "preco": 200,
     "qt": 1,
-    "descricao": "Kit teclado e mouse MK250",
+    "descricao": "KIT TECLADO E MOUSE LOGITECH WIRELESS MK250. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. kit teclado e mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "kit-logitech-mk250.webp"
@@ -907,7 +852,7 @@
     "categoria": "kit-teclado-mouse",
     "preco": 268,
     "qt": 1,
-    "descricao": "Kit teclado e mouse MK345",
+    "descricao": "KIT TECLADO E MOUSE LOGITECH WIRELESS MK345. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. kit teclado e mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "kit-logitech-mk345.webp"
@@ -918,7 +863,7 @@
     "categoria": "kit-teclado-mouse",
     "preco": 390,
     "qt": 1,
-    "descricao": "Kit teclado e mouse MK540",
+    "descricao": "KIT TECLADO E MOUSE LOGITECH WIRELESS MK540. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. kit teclado e mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "kit-logitech-mk540.webp"
@@ -929,7 +874,7 @@
     "categoria": "teclado",
     "preco": 165,
     "qt": 1,
-    "descricao": "Teclado mecânico Ballistic Cinetic",
+    "descricao": "TECLADO GAMER MEC BALLISTIC CINETIC DAZZ. Principais pontos: conexao com fio para resposta estavel; perfil gamer com visual diferenciado; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "Dazz",
     "promocao": false,
     "imagem": "teclado-dazz-ballistic-cinetic.webp"
@@ -940,7 +885,7 @@
     "categoria": "teclado",
     "preco": 25,
     "qt": 1,
-    "descricao": "Teclado USB multimídia TC193",
+    "descricao": "TECLADO MULTILASER USB MULTIMÍDIA TC193. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "Multilaser",
     "promocao": false,
     "imagem": "teclado-multilaser-tc193.webp"
@@ -951,18 +896,18 @@
     "categoria": "kit-teclado-mouse",
     "preco": 125,
     "qt": 1,
-    "descricao": "Kit teclado e mouse TM.406",
+    "descricao": "KIT TECLADO E MOUSE OEX CAMBO OFFICE TM.406. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. kit teclado e mouse original com garantia e suporte da Primos Informatica.",
     "marca": "OEX",
     "promocao": false,
     "imagem": "kit-oex-tm406.webp"
   },
   {
-    "codigo": "1841",
+    "codigo": "1841_2",
     "nome": "TECLADO LOGITECH GAMER G413SE",
     "categoria": "teclado",
     "preco": 585,
     "qt": 1,
-    "descricao": "Teclado gamer G413SE",
+    "descricao": "TECLADO LOGITECH GAMER G413SE. Principais pontos: conexao com fio para resposta estavel; perfil gamer com visual diferenciado; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "teclado-logitech-g413se.webp"
@@ -973,7 +918,7 @@
     "categoria": "teclado",
     "preco": 195,
     "qt": 1,
-    "descricao": "Mini teclado mecânico GK-510",
+    "descricao": "MINI TECLADO MULTILASER MEC GK-510. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "Multilaser",
     "promocao": true,
     "imagem": "teclado-multilaser-gk510.webp"
@@ -984,7 +929,7 @@
     "categoria": "teclado",
     "preco": 45,
     "qt": 1,
-    "descricao": "Mini teclado touchpad wireless verde",
+    "descricao": "MINI TECLADO TOUCHPAD WIRELESS KEYBOARD KNUP VERDE. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "Knup",
     "promocao": false,
     "imagem": "mini-teclado-knup-verde.webp"
@@ -995,7 +940,7 @@
     "categoria": "kit-teclado-mouse",
     "preco": 250,
     "qt": 1,
-    "descricao": "Kit teclado e mouse FATSC40",
+    "descricao": "KIT TECLADO E MOUSE WIRELESS FATSC40 FEASSO 495. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. kit teclado e mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Feasso",
     "promocao": false,
     "imagem": "kit-feasso-fatsc40.webp"
@@ -1006,7 +951,7 @@
     "categoria": "teclado",
     "preco": 25,
     "qt": 1,
-    "descricao": "Teclado USB preto BPC-8236",
+    "descricao": "TECLADO USB PRETO BPC-8236 BRAZIL. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "BPC",
     "promocao": false,
     "imagem": "teclado-bpc-8236.webp"
@@ -1017,7 +962,7 @@
     "categoria": "teclado",
     "preco": 40,
     "qt": 1,
-    "descricao": "Teclado numérico Knup",
+    "descricao": "TECLADO NUMERICO KNUP. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "Knup",
     "promocao": false,
     "imagem": "teclado-numerico-knup.webp"
@@ -1028,7 +973,7 @@
     "categoria": "kit-teclado-mouse",
     "preco": 76.09,
     "qt": 1,
-    "descricao": "Kit teclado e mouse CW11",
+    "descricao": "KIT TECLADO E MOUSE 5 FIO OFFICER FORTREK CW11. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. kit teclado e mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Fortrek",
     "promocao": false,
     "imagem": "kit-fortrek-cw11.webp"
@@ -1039,7 +984,7 @@
     "categoria": "kit-teclado-mouse",
     "preco": 65,
     "qt": 1,
-    "descricao": "Kit teclado e mouse 2.4GHz BPC 5271/17",
+    "descricao": "KIT TECLADO E MOUSE 5 FIO 2.4 GHZ BPC 5271/17. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. kit teclado e mouse original com garantia e suporte da Primos Informatica.",
     "marca": "BPC",
     "promocao": false,
     "imagem": "kit-bpc-5271.webp"
@@ -1050,7 +995,7 @@
     "categoria": "teclado",
     "preco": 140,
     "qt": 1,
-    "descricao": "Teclado Maxprint TV Plus 601476",
+    "descricao": "TECLADO MAXPRINT TV PLUS 601476. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "Maxprint",
     "promocao": false,
     "imagem": "teclado-maxprint-tvplus-601476.webp"
@@ -1061,7 +1006,7 @@
     "categoria": "kit-teclado-mouse",
     "preco": 105,
     "qt": 1,
-    "descricao": "Kit teclado mini sem fio JP102",
+    "descricao": "KIT TECLADO MINI SEM FIO HMASTON JP102. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. kit teclado e mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Hmaston",
     "promocao": false,
     "imagem": "kit-hmaston-jp102.webp"
@@ -1072,7 +1017,7 @@
     "categoria": "teclado",
     "preco": 80,
     "qt": 1,
-    "descricao": "Teclado wireless Bluetooth ABNT2 JP101",
+    "descricao": "TECLADO HMASTON WIRELESS BLUETOOTH ABNT2 JP101. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "Hmaston",
     "promocao": false,
     "imagem": "teclado-hmaston-jp101.webp"
@@ -1083,7 +1028,7 @@
     "categoria": "teclado",
     "preco": 260,
     "qt": 1,
-    "descricao": "Teclado gamer mecânico Cybertronic",
+    "descricao": "TECLADO GAMER MEC CYBERTRONIC DAZZ. Principais pontos: conexao com fio para resposta estavel; perfil gamer com visual diferenciado; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "Dazz",
     "promocao": false,
     "imagem": "teclado-dazz-cybertronic.webp"
@@ -1094,7 +1039,7 @@
     "categoria": "teclado",
     "preco": 75,
     "qt": 1,
-    "descricao": "Teclado Inova Prime Gamer KEY-9968",
+    "descricao": "TECLADO INOVA PRIME GAMER USB KEY-9968. Principais pontos: conexao com fio para resposta estavel; perfil gamer com visual diferenciado; uso confortavel para rotina de trabalho e estudos. teclado original com garantia e suporte da Primos Informatica.",
     "marca": "Inova",
     "promocao": false,
     "imagem": "teclado-inova-key9968.webp"
@@ -1105,95 +1050,62 @@
     "categoria": "mouse",
     "preco": 45,
     "qt": 1,
-    "descricao": "Mouse USB M90 cinza",
+    "descricao": "MOUSE LOGITECH USB M90 CINZA. Principais pontos: conexao com fio para resposta estavel; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "mouse-logitech-m90-cinza.webp"
   },
   {
-    "codigo": "1576",
+    "codigo": "1576_2",
     "nome": "MOUSE LOGITECH WIRELESS AZUL M170",
     "categoria": "mouse",
     "preco": 154,
     "qt": 1,
-    "descricao": "Mouse wireless M170 azul",
+    "descricao": "MOUSE LOGITECH WIRELESS AZUL M170. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "mouse-logitech-m170-azul-v2.webp"
   },
   {
-    "codigo": "1576",
+    "codigo": "1576_3",
     "nome": "MOUSE LOGITECH WIRELESS PRETO M170",
     "categoria": "mouse",
     "preco": 64.65,
     "qt": 1,
-    "descricao": "Mouse wireless M170 preto",
+    "descricao": "MOUSE LOGITECH WIRELESS PRETO M170. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "mouse-logitech-m170-preto-v2.webp"
   },
   {
-    "codigo": "1840",
+    "codigo": "1840_2",
     "nome": "MOUSE LOGITECH WIRELESS ANYWHERE 3S GRAF",
     "categoria": "mouse",
     "preco": 600,
     "qt": 1,
-    "descricao": "Mouse wireless Anywhere 3S grafite",
+    "descricao": "MOUSE LOGITECH WIRELESS ANYWHERE 3S GRAF. Principais pontos: conexao sem fio para mesa mais limpa; uso confortavel para rotina de trabalho e estudos. mouse original com garantia e suporte da Primos Informatica.",
     "marca": "Logitech",
     "promocao": false,
     "imagem": "mouse-logitech-anywhere-3s.webp"
   },
   {
-    "codigo": "400936",
-    "nome": "MOUSE MULTILASER SEM FIO PRETO MO307",
-    "categoria": "mouse",
-    "preco": 45,
-    "qt": 2,
-    "descricao": "Mouse Multilaser sem fio MO307 preto",
-    "marca": "Multilaser",
-    "promocao": false,
-    "imagem": "mouse-multilaser-mo307-v2.webp"
-  },
-  {
-    "codigo": "1938",
-    "nome": "MOUSE MULTILASER SEM FIO RECARREGAVEL 2.4 GHZ MO277",
-    "categoria": "mouse",
-    "preco": 75,
-    "qt": 1,
-    "descricao": "Mouse Multilaser recarregável MO277 2.4GHz",
-    "marca": "Multilaser",
-    "promocao": false,
-    "imagem": "mouse-multilaser-mo277-v2.webp"
-  },
-  {
-    "codigo": "1938",
-    "nome": "MOUSE MULTILASER S/FIO BLUETOOTH M5750 MO403",
-    "categoria": "mouse",
-    "preco": 90,
-    "qt": 1,
-    "descricao": "Mouse Multilaser Bluetooth M5750 MO403",
-    "marca": "Multilaser",
-    "promocao": false,
-    "imagem": "mouse-multilaser-mo403-v2.webp"
-  },
-  {
-    "codigo": "1562",
+    "codigo": "1562_2",
     "nome": "UBIQUITI AP UNIFI AC U6-PRO 4X4 S/FONTE",
     "categoria": "Redes",
     "preco": 1775,
     "qt": 1,
-    "descricao": "Access Point UniFi AC U6-Pro 4x4 sem fonte",
+    "descricao": "UBIQUITI AP UNIFI AC U6-PRO 4X4 S/FONTE. Principais pontos: conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "Ubiquiti",
     "promocao": false,
     "imagem": "ap-ubiquiti-u6pro.webp"
   },
   {
-    "codigo": "1559",
+    "codigo": "1559_2",
     "nome": "REPETIDOR WIRELES TP LINK DUAL BAND AC750 RE200",
     "categoria": "Redes",
     "preco": 189,
     "qt": 1,
-    "descricao": "Repetidor Dual Band AC750 RE200",
+    "descricao": "REPETIDOR WIRELES TP LINK DUAL BAND AC750 RE200. Principais pontos: padrao AC750; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "TP-Link",
     "promocao": false,
     "imagem": "repetidor-tplink-re200.webp"
@@ -1204,7 +1116,7 @@
     "categoria": "monitor",
     "preco": 312,
     "qt": 1,
-    "descricao": "Monitor 21.5 GBT-M218 HDMI VGA",
+    "descricao": "MONITOR 21.5 GBT LED HDMI E VGA GBT-M218. Principais pontos: tela 21,5 pol; conexoes HDMI e VGA. Bom para escritorio, estudos e entretenimento.",
     "marca": "GBT",
     "promocao": false,
     "imagem": "monitor-gbt-215-hdmi-vga-m218.webp"
@@ -1215,7 +1127,7 @@
     "categoria": "monitor",
     "preco": 410.88,
     "qt": 1,
-    "descricao": "Monitor 23.5 GBT-M218 HDMI VGA",
+    "descricao": "MONITOR 23.5 GBT LED HDMI VGA GBT-M218. Principais pontos: tela 23,5 pol; conexoes HDMI e VGA. Bom para escritorio, estudos e entretenimento.",
     "marca": "GBT",
     "promocao": false,
     "imagem": "monitor-gbt-235-hdmi-vga-m218.webp"
@@ -1226,7 +1138,7 @@
     "categoria": "monitor",
     "preco": 1650,
     "qt": 1,
-    "descricao": "Monitor gamer 32 QHD LS32CG55 Odyssey",
+    "descricao": "MONITOR 32 SAMSUNG GAMER QHD LS32CG55 ODYSSEY. Principais pontos: tela 32 pol; resolucao QHD. Bom para escritorio, estudos e entretenimento.",
     "marca": "Samsung",
     "promocao": false,
     "imagem": "monitor-samsung-32-gamer-qhd-odyssey.webp"
@@ -1237,7 +1149,7 @@
     "categoria": "monitor",
     "preco": 955,
     "qt": 1,
-    "descricao": "Monitor curvo 24 1K 165Hz alto-falante",
+    "descricao": "MONITOR 24 DX 1K 165HZ CURVO ALTO-FALANTE 3W HDMI. Principais pontos: tela 24 pol; taxa de atualizacao 165hz; conexoes HDMI. Bom para escritorio, estudos e entretenimento.",
     "marca": "DX",
     "promocao": false,
     "imagem": "monitor-dx-24-curvo-165hz-speaker.webp"
@@ -1248,7 +1160,7 @@
     "categoria": "monitor",
     "preco": 1050,
     "qt": 1,
-    "descricao": "Monitor 27 IPS 165Hz alto-falante",
+    "descricao": "MONITOR 27 DX 165HZ SPEAKER ALTO-FALANTE IPS BOX. Principais pontos: tela 27 pol; taxa de atualizacao 165hz. Bom para escritorio, estudos e entretenimento.",
     "marca": "DX",
     "promocao": false,
     "imagem": "monitor-dx-27-ips-165hz-speaker.webp"
@@ -1259,7 +1171,7 @@
     "categoria": "monitor",
     "preco": 563,
     "qt": 1,
-    "descricao": "Monitor 18.5 E970SWNHL HDMI",
+    "descricao": "MONITOR 18.5 AOC LED E970SWNHL HDMI. Principais pontos: tela 18,5 pol; conexoes HDMI. Bom para escritorio, estudos e entretenimento.",
     "marca": "AOC",
     "promocao": false,
     "imagem": "monitor-aoc-185-led-e970swnhl.webp"
@@ -1270,7 +1182,7 @@
     "categoria": "monitor",
     "preco": 1168,
     "qt": 1,
-    "descricao": "Monitor 21.5 LS22F350FHLMZD",
+    "descricao": "MONITOR 21.5 LED SAMSUNG LS22F350FHLMZD. Principais pontos: tela 21,5 pol. Bom para escritorio, estudos e entretenimento.",
     "marca": "Samsung",
     "promocao": false,
     "imagem": "monitor-samsung-215-led-ls22f350fhlmzd.webp"
@@ -1281,7 +1193,7 @@
     "categoria": "processador",
     "preco": 225,
     "qt": 23,
-    "descricao": "Intel Celeron G5905 LGA1200 4MB",
+    "descricao": "PROCESSADOR INTEL CELERON 1151 LGA1200 G5905 4MB. Principais pontos: linha CELERON; socket LGA1200; cache 4mb. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "g5905.webp"
@@ -1292,7 +1204,7 @@
     "categoria": "processador",
     "preco": 225,
     "qt": 6,
-    "descricao": "Intel Celeron G5925 3.6GHz LGA1200",
+    "descricao": "PROCESSADOR INTEL CELERON 1151 LGA1200 G5925 3.6GHZ. Principais pontos: linha CELERON; socket LGA1200; clock de ate 3,6GHz. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "g5925.webp"
@@ -1303,7 +1215,7 @@
     "categoria": "processador",
     "preco": 76.5,
     "qt": 5,
-    "descricao": "Intel Core i3 4150/4160 3.4GHz 3MB OEM",
+    "descricao": "PROCESSADOR INTEL I3 LGA1150 4150/4160 3.4GHZ 3MB OEM. Principais pontos: linha I3; socket LGA1150; cache 3mb; clock de ate 3,4GHz. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "i34150.webp"
@@ -1314,7 +1226,7 @@
     "categoria": "processador",
     "preco": 460,
     "qt": 29,
-    "descricao": "Intel Core i3 9100F 3.6GHz 9ª geração",
+    "descricao": "PROCESSADOR INTEL I3 LGA1151 9100F 3.6GHZ 3MB 9GER. Principais pontos: linha I3; socket LGA1151; cache 3mb; clock de ate 3,6GHz. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "i39100f.webp"
@@ -1325,7 +1237,7 @@
     "categoria": "processador",
     "preco": 529,
     "qt": 11,
-    "descricao": "Intel Core i3 10100F 3.6GHz 6MB 10ª geração",
+    "descricao": "PROCESSADOR INTEL I3 LGA1200 10100F 3.6GHZ 6MB 10ªG. Principais pontos: linha I3; socket LGA1200; cache 6mb; clock de ate 3,6GHz. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "i310100f.webp"
@@ -1336,7 +1248,7 @@
     "categoria": "processador",
     "preco": 900,
     "qt": 10,
-    "descricao": "Intel Core i3 10105 3.7GHz 6MB",
+    "descricao": "PROCESSADOR INTEL I3 LGA1200 CORE 10105 3.70GHZ 6MB. Principais pontos: linha I3; socket LGA1200; cache 6mb; clock de ate 3,7GHz. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "i310105.webp"
@@ -1347,7 +1259,7 @@
     "categoria": "processador",
     "preco": 210,
     "qt": 1,
-    "descricao": "Intel Core i5 4570 4ª geração",
+    "descricao": "PROCESSADOR INTEL I5 LGA1150 4570 4ªG. Principais pontos: linha I5; socket LGA1150. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "i54570.webp"
@@ -1358,7 +1270,7 @@
     "categoria": "processador",
     "preco": 721,
     "qt": 5,
-    "descricao": "Intel Core i5 8400 OEM",
+    "descricao": "PROCESSADOR INTEL I5 LGA1151 8400 OEM. Principais pontos: linha I5; socket LGA1151. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "i58400.webp"
@@ -1369,7 +1281,7 @@
     "categoria": "processador",
     "preco": 635.88,
     "qt": 21,
-    "descricao": "Intel Core i5 9400F OEM",
+    "descricao": "PROCESSADOR INTEL I5 LGA1151 9400F OEM. Principais pontos: linha I5; socket LGA1151. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "i59400f.webp"
@@ -1380,7 +1292,7 @@
     "categoria": "processador",
     "preco": 190,
     "qt": 1,
-    "descricao": "Intel Core i5 3570 3.8GHz 6MB OEM",
+    "descricao": "PROCESSADOR INTEL I5 LGA1155 3570 3.8GHZ 6MB OEM. Principais pontos: linha I5; socket LGA1155; cache 6mb; clock de ate 3,8GHz. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "i53570.webp"
@@ -1391,7 +1303,7 @@
     "categoria": "processador",
     "preco": 188,
     "qt": 1,
-    "descricao": "Intel Core i5 3470 3.2GHz OEM",
+    "descricao": "PROCESSADOR INTEL I5 LGA1155 3470 3.2GHZ OEM. Principais pontos: linha I5; socket LGA1155; clock de ate 3,2GHz. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "i53470.webp"
@@ -1402,7 +1314,7 @@
     "categoria": "processador",
     "preco": 1040,
     "qt": 3,
-    "descricao": "Intel Core i5 11400F 2.6GHz 12MB 11ª geração",
+    "descricao": "PROCESSADOR INTEL I5 LGA1200 11400F 2.6 GHZ 12MB 11ª. Principais pontos: linha I5; socket LGA1200; cache 12mb; clock de ate 2,6GHz. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "i511400f.webp"
@@ -1413,7 +1325,7 @@
     "categoria": "processador",
     "preco": 905,
     "qt": 2,
-    "descricao": "Intel Core i5 12400F LGA1700 12ª geração",
+    "descricao": "PROCESSADOR INTEL I5 LGA1700 12400F 4.4 GHZ 12MB. Principais pontos: linha I5; socket LGA1700; cache 12mb; clock de ate 4,4GHz. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "i512400f.webp"
@@ -1424,7 +1336,7 @@
     "categoria": "processador",
     "preco": 1634.01,
     "qt": 3,
-    "descricao": "Intel Core i5 13400 2.5GHz 20MB 13ª geração",
+    "descricao": "PROCESSADOR INTEL I5 13400 LGA1700. Principais pontos: linha I5; socket LGA1700; cache 20mb; clock de ate 2,5GHz. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "i513400.webp"
@@ -1435,7 +1347,7 @@
     "categoria": "processador",
     "preco": 1700,
     "qt": 1,
-    "descricao": "Intel Core i5 14400 14ª geração",
+    "descricao": "PROCESSADOR INTEL I5 14400 LGA1700. Principais pontos: linha I5; socket LGA1700. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "i514400.webp"
@@ -1446,32 +1358,21 @@
     "categoria": "processador",
     "preco": 465,
     "qt": 4,
-    "descricao": "Intel Core i7 3770 3.9GHz",
+    "descricao": "PROCESSADOR INTEL I7 3770 LGA1155. Principais pontos: linha I7; socket LGA1155; clock de ate 3,9GHz. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "i73770.webp"
   },
   {
-    "codigo": "1891",
+    "codigo": "1891_2",
     "nome": "PROCESSADOR INTEL PENTIUM G5400T",
     "categoria": "processador",
     "preco": 399,
     "qt": 4,
-    "descricao": "Intel Pentium G5400T 3.1GHz",
+    "descricao": "PROCESSADOR INTEL PENTIUM G5400T. Principais pontos: linha PENTIUM; clock de ate 3,1GHz. Indicado para montagem ou upgrade de PC com foco em desempenho estavel no dia a dia.",
     "marca": "Intel",
     "promocao": false,
     "imagem": "g5400t.webp"
-  },
-  {
-    "codigo": "2001",
-    "nome": "PLACA MAE BRAZIL PC H61 ITX M.2",
-    "categoria": "placa mãe",
-    "preco": 189,
-    "qt": 3,
-    "descricao": "Placa Mãe Brazil PC H61 ITX M.2",
-    "marca": "Brazil PC",
-    "promocao": false,
-    "imagem": "bpc-h61-itx.webp"
   },
   {
     "codigo": "2002",
@@ -1479,7 +1380,7 @@
     "categoria": "placa mãe",
     "preco": 219,
     "qt": 2,
-    "descricao": "Placa Mãe Brasil PC B1150 H81",
+    "descricao": "PLACA MAE BRASIL PC B1150 H81 BPCH81M. Principais pontos: chipset H81. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
     "marca": "Brasil PC",
     "promocao": true,
     "imagem": "bpch81m.webp"
@@ -1490,7 +1391,7 @@
     "categoria": "placa mãe",
     "preco": 610,
     "qt": 4,
-    "descricao": "Placa Mãe ASUS Prime H310M-E HDMI DDR4",
+    "descricao": "PLACA MAE ASUS PRIME H310M-E HDMI DDR4. Principais pontos: suporte a memoria DDR4. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
     "marca": "ASUS",
     "promocao": false,
     "imagem": "h310meprime.webp"
@@ -1501,7 +1402,7 @@
     "categoria": "placa mãe",
     "preco": 548,
     "qt": 3,
-    "descricao": "Placa Mãe ASUS H310M-C / H310M-H",
+    "descricao": "PLACA MAE ASUS H310M-C / H310M-H. Principais pontos: base confiavel para montagem de PC; boa compatibilidade com componentes de mercado. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
     "marca": "ASUS",
     "promocao": false,
     "imagem": "h310mh.webp"
@@ -1511,8 +1412,8 @@
     "nome": "PLACA MAE ASUS H610M-CS D4 PRIME",
     "categoria": "placa mãe",
     "preco": 702,
-    "qt": 2,
-    "descricao": "Placa Mãe ASUS H610M-CS D4 PRIME",
+    "qt": 0,
+    "descricao": "PLACA MAE ASUS H610M-CS D4 PRIME. Principais pontos: base confiavel para montagem de PC; boa compatibilidade com componentes de mercado. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
     "marca": "ASUS",
     "promocao": false,
     "imagem": "h610mcsprime.webp"
@@ -1522,8 +1423,8 @@
     "nome": "PLACA MAE ASUS PRIME H610M-K D4 PRIME 12ª GER",
     "categoria": "placa mãe",
     "preco": 702,
-    "qt": 3,
-    "descricao": "Placa Mãe ASUS Prime H610M-K D4 Prime 12ª geração",
+    "qt": 0,
+    "descricao": "PLACA MAE ASUS PRIME H610M-K D4 PRIME 12ª GER. Principais pontos: base confiavel para montagem de PC; boa compatibilidade com componentes de mercado. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
     "marca": "ASUS",
     "promocao": false,
     "imagem": "h610mk.webp"
@@ -1534,7 +1435,7 @@
     "categoria": "placa mãe",
     "preco": 530,
     "qt": 3,
-    "descricao": "Placa Mãe PCWARE 1151 8ª/9ª IPMH310G DDR4",
+    "descricao": "PLACA MAE PCWARE 1151 8ª/9ª IPMH310G DDR4. Principais pontos: socket LGA1151; suporte a memoria DDR4. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
     "marca": "PCWARE",
     "promocao": false,
     "imagem": "ipmh310g.webp"
@@ -1545,32 +1446,10 @@
     "categoria": "placa mãe",
     "preco": 470,
     "qt": 2,
-    "descricao": "Placa Mãe PCWARE 1151 8ª/9ª IPMH310G DDR4 PRO",
+    "descricao": "PLACA MAE PCWARE 1151 8ª/9ª IPMH310G DDR4 PRO. Principais pontos: socket LGA1151; suporte a memoria DDR4. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
     "marca": "PCWARE",
     "promocao": false,
     "imagem": "ipmh310gpro.webp"
-  },
-  {
-    "codigo": "2011",
-    "nome": "PLACA MAE HAYOM H155 H61M EL DDR3 PLM2300",
-    "categoria": "placa mãe",
-    "preco": 199,
-    "qt": 4,
-    "descricao": "Placa Mãe Hayom H155 H61M EL DDR3",
-    "marca": "Hayom",
-    "promocao": false,
-    "imagem": "plm2300.webp"
-  },
-  {
-    "codigo": "2012",
-    "nome": "PLACA MAE HAYOM H155 B75M S/V/R DDR3 PLM2301",
-    "categoria": "placa mãe",
-    "preco": 209,
-    "qt": 3,
-    "descricao": "Placa Mãe Hayom H155 B75M S/V/R DDR3",
-    "marca": "Hayom",
-    "promocao": false,
-    "imagem": "plm2301.webp"
   },
   {
     "codigo": "1828",
@@ -1578,7 +1457,7 @@
     "categoria": "placa de vídeo",
     "preco": 2185.5,
     "qt": 1,
-    "descricao": "RTX 3060 12GB DDR6 PCIe 4.0",
+    "descricao": "PLACA DE VÍDEO NVIDIA INNO3D RTX3060 12GB DDR6. Principais pontos: chip RTX3060; memoria 12gb; padrao DDR6. Ideal para video, jogos e tarefas graficas conforme a configuracao do PC.",
     "marca": "NVIDIA",
     "promocao": false,
     "imagem": "rtx3060.webp"
@@ -1589,7 +1468,7 @@
     "categoria": "placa de vídeo",
     "preco": 326,
     "qt": 1,
-    "descricao": "GTX 550 1GB DDR5 128 bits",
+    "descricao": "PLACA DE VÍDEO NVIDIA GTX 550 1GB DDR5 128 BITS. Principais pontos: chip GTX 550; memoria 1gb; padrao DDR5; barramento 128 bits. Ideal para video, jogos e tarefas graficas conforme a configuracao do PC.",
     "marca": "NVIDIA",
     "promocao": true,
     "imagem": "gtx550.webp"
@@ -1600,7 +1479,7 @@
     "categoria": "placa de vídeo",
     "preco": 363,
     "qt": 1,
-    "descricao": "GT740 2GB DDR3 128 bits BlueCase",
+    "descricao": "PLACA DE VÍDEO NVIDIA GT740 2GB DDR3 BLUECASE. Principais pontos: chip GT740; memoria 2gb; padrao DDR3; barramento 128 bits. Ideal para video, jogos e tarefas graficas conforme a configuracao do PC.",
     "marca": "NVIDIA",
     "promocao": false,
     "imagem": "gt740.webp"
@@ -1611,7 +1490,7 @@
     "categoria": "placa de vídeo",
     "preco": 435,
     "qt": 1,
-    "descricao": "GT710 2GB DDR3 64 bits Hoopson",
+    "descricao": "PLACA DE VÍDEO NVIDIA GT710 2GB DDR3 HOOPSON. Principais pontos: chip GT710; memoria 2gb; padrao DDR3; barramento 64 bits. Ideal para video, jogos e tarefas graficas conforme a configuracao do PC.",
     "marca": "NVIDIA",
     "promocao": false,
     "imagem": "gt710.webp"
@@ -1622,7 +1501,7 @@
     "categoria": "placa de vídeo",
     "preco": 240,
     "qt": 2,
-    "descricao": "Radeon R5 230 2GB DDR3 64 bits PCYes",
+    "descricao": "PLACA DE VÍDEO AMD R5 230 2GB DDR3 PCYES. Principais pontos: chip R5 230; memoria 2gb; padrao DDR3; barramento 64 bits. Ideal para video, jogos e tarefas graficas conforme a configuracao do PC.",
     "marca": "AMD",
     "promocao": false,
     "imagem": "r5230.webp"
@@ -1633,7 +1512,7 @@
     "categoria": "placa de vídeo",
     "preco": 1099,
     "qt": 0,
-    "descricao": "RX570 8GB DDR5 256 bits PCYes",
+    "descricao": "PLACA DE VÍDEO AMD RX570 8GB DDR5 PCYES. Principais pontos: chip RX570; memoria 8gb; padrao DDR5; barramento 256 bits. Ideal para video, jogos e tarefas graficas conforme a configuracao do PC.",
     "marca": "AMD",
     "promocao": false,
     "imagem": "rx570.webp"
@@ -1644,7 +1523,7 @@
     "categoria": "placa de vídeo",
     "preco": 1190,
     "qt": 2,
-    "descricao": "GTX 1050 4GB DDR5 128 bits Galax",
+    "descricao": "PLACA DE VÍDEO NVIDIA GTX1050 4GB DDR5 GALAX. Principais pontos: chip GTX1050; memoria 4gb; padrao DDR5; barramento 128 bits. Ideal para video, jogos e tarefas graficas conforme a configuracao do PC.",
     "marca": "NVIDIA",
     "promocao": false,
     "imagem": "gtx1050.webp"
@@ -1655,7 +1534,7 @@
     "categoria": "placa de vídeo",
     "preco": 1530,
     "qt": 2,
-    "descricao": "GTX 1050 Ti 4GB DDR5 128 bits ASUS",
+    "descricao": "PLACA DE VÍDEO NVIDIA GTX1050 TI 4GB DDR5 ASUS. Principais pontos: chip GTX1050; memoria 4gb; padrao DDR5; barramento 128 bits. Ideal para video, jogos e tarefas graficas conforme a configuracao do PC.",
     "marca": "NVIDIA",
     "promocao": false,
     "imagem": "gtx1050ti.webp"
@@ -1666,7 +1545,7 @@
     "categoria": "placa de vídeo",
     "preco": 1534.5,
     "qt": 1,
-    "descricao": "GTX 1660 6GB DDR5 192 bits Galax",
+    "descricao": "PLACA DE VÍDEO NVIDIA GTX1660 6GB DDR5 GALAX. Principais pontos: chip GTX1660; memoria 6gb; padrao DDR5; barramento 192 bits. Ideal para video, jogos e tarefas graficas conforme a configuracao do PC.",
     "marca": "NVIDIA",
     "promocao": false,
     "imagem": "gtx1660.webp"
@@ -1677,7 +1556,7 @@
     "categoria": "ssd",
     "preco": 179,
     "qt": 71,
-    "descricao": "SSD 120GB 2.5 GET",
+    "descricao": "HD SSD 120GB 2.5 GET. Principais pontos: capacidade 120GB. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "GET",
     "promocao": false,
     "imagem": "ssd-get-120gb.webp"
@@ -1688,7 +1567,7 @@
     "categoria": "ssd",
     "preco": 240,
     "qt": 21,
-    "descricao": "SSD 120GB 2.5",
+    "descricao": "HD SSD 120GB 2.5 PATRIOT. Principais pontos: capacidade 120GB. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "Patriot",
     "promocao": false,
     "imagem": "ssd-patriot-120gb.webp"
@@ -1699,7 +1578,7 @@
     "categoria": "ssd",
     "preco": 170,
     "qt": 2,
-    "descricao": "SSD 128GB",
+    "descricao": "HD SSD 128 GB LEXAR. Principais pontos: capacidade 128GB. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "Lexar",
     "promocao": false,
     "imagem": "ssd-lexar-128gb.webp"
@@ -1710,7 +1589,7 @@
     "categoria": "ssd",
     "preco": 279,
     "qt": 4,
-    "descricao": "SSD 240GB SU630SS SATA",
+    "descricao": "HD SSD 240 GB ADATA SU630SS SATA. Principais pontos: capacidade 240GB; interface SATA. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "ADATA",
     "promocao": false,
     "imagem": "ssd-adata-su630ss-240gb.webp"
@@ -1721,7 +1600,7 @@
     "categoria": "ssd",
     "preco": 240,
     "qt": 4,
-    "descricao": "SSD 240GB MX500",
+    "descricao": "HD SSD 240GB CRUCIAL MX500. Principais pontos: capacidade 240GB. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "Crucial",
     "promocao": false,
     "imagem": "ssd-crucial-mx500-240gb.webp"
@@ -1729,10 +1608,10 @@
   {
     "codigo": "2049",
     "nome": "HD SSD 240GB 2.5 SANDISK 530MB/S G26",
-    "categoria": "fora de estoque",
+    "categoria": "ssd",
     "preco": 240,
     "qt": 7,
-    "descricao": "SSD 240GB 530MB/s G26",
+    "descricao": "HD SSD 240GB 2.5 SANDISK 530MB/S G26. Principais pontos: capacidade 240GB. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "Sandisk",
     "promocao": false,
     "imagem": "ssd-sandisk-240gb-g26.webp"
@@ -1743,7 +1622,7 @@
     "categoria": "ssd",
     "preco": 340,
     "qt": 38,
-    "descricao": "SSD 240GB A400 SA400537",
+    "descricao": "HD SSD 240GB KINGSTON A400 SA400537/240G. Principais pontos: capacidade 240GB. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "Kingston",
     "promocao": false,
     "imagem": "ssd-kingston-a400-240gb.webp"
@@ -1754,7 +1633,7 @@
     "categoria": "ssd",
     "preco": 370,
     "qt": 28,
-    "descricao": "SSD 480GB 2.5",
+    "descricao": "HD SSD 480 GB 2.5 HAYOM. Principais pontos: capacidade 480GB. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "ssd-hayom-480gb.webp"
@@ -1765,7 +1644,7 @@
     "categoria": "ssd",
     "preco": 410,
     "qt": 15,
-    "descricao": "SSD 512GB 2.5",
+    "descricao": "HD SSD 512 GB 2.5 GOTECH. Principais pontos: capacidade 512GB. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "Gotech",
     "promocao": false,
     "imagem": "ssd-gotech-512gb.webp"
@@ -1776,7 +1655,7 @@
     "categoria": "ssd",
     "preco": 370,
     "qt": 10,
-    "descricao": "SSD 480GB 2.5",
+    "descricao": "HD SSD 480 GB 2.5 HIK SEMI WEVE. Principais pontos: capacidade 480GB. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "HIK Semi",
     "promocao": false,
     "imagem": "ssd-hiksemi-480gb.webp"
@@ -1787,7 +1666,7 @@
     "categoria": "ssd",
     "preco": 295,
     "qt": 1,
-    "descricao": "SSD 480GB Burts Elite",
+    "descricao": "HD SSD 480 GB 2.5 PATRIOT BURTS ELITE. Principais pontos: capacidade 480GB. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "Patriot",
     "promocao": false,
     "imagem": "ssd-patriot-burtselite-480gb.webp"
@@ -1798,7 +1677,7 @@
     "categoria": "ssd",
     "preco": 544,
     "qt": 1,
-    "descricao": "SSD 480GB KINGSTON SA400S37",
+    "descricao": "HD SSD 480 GB 2.5 KINGSTON SA400S37. Principais pontos: capacidade 480GB. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "KINGSTON",
     "promocao": true,
     "imagem": "ssd480kingston.webp"
@@ -1809,7 +1688,7 @@
     "categoria": "ssd",
     "preco": 1451,
     "qt": 1,
-    "descricao": "SSD NVME M.2 2280 1TB",
+    "descricao": "NVME SSD M.2 2280 KINGSTON 1 TB NVME. Principais pontos: capacidade 1TB; interface NVMe / M.2. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "KINGSTON",
     "promocao": false,
     "imagem": "ssd1tbnvme.webp"
@@ -1820,7 +1699,7 @@
     "categoria": "ssd",
     "preco": 520,
     "qt": 1,
-    "descricao": "SSD NVME M.2 2280 500GB 2.5 polegadas",
+    "descricao": "NVME SSD M.2 2280 KINGSTON 500GB 2.5. Principais pontos: capacidade 500GB; interface NVMe / M.2. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "KINGSTON",
     "promocao": false,
     "imagem": "ssd500nvme.webp"
@@ -1831,7 +1710,7 @@
     "categoria": "ssd",
     "preco": 190,
     "qt": 1,
-    "descricao": "SSD M.2 2280 SATA3 SWB 256GB",
+    "descricao": "SSD M.2 2280 SATA3 MACROVIP SWB 256GB. Principais pontos: capacidade 256GB; interface M.2 / SATA. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "MACROVIP",
     "promocao": false,
     "imagem": "ssd256macrovip.webp"
@@ -1842,7 +1721,7 @@
     "categoria": "ssd",
     "preco": 260,
     "qt": 27,
-    "descricao": "SSD 256GB Gamer",
+    "descricao": "HD SSD 256GB 2.5 FNX GAMER. Principais pontos: capacidade 256GB. SSD indicado para upgrade, backup e uso continuo.",
     "marca": "FNX",
     "promocao": false,
     "imagem": "ssd-fnx-gamer-256gb.webp"
@@ -1853,7 +1732,7 @@
     "categoria": "hd externo",
     "preco": 490,
     "qt": 1,
-    "descricao": "HD externo 1TB Seagate Expansion USB 3.0",
+    "descricao": "HD EXTERNO 1TB SEAGATE EXPANSION USB 3.0. Principais pontos: capacidade 1TB; interface USB 3.0. HD externo indicado para upgrade, backup e uso continuo.",
     "marca": "Seagate",
     "promocao": false,
     "imagem": "hd1tb_sea.webp"
@@ -1864,7 +1743,7 @@
     "categoria": "hd externo",
     "preco": 620,
     "qt": 1,
-    "descricao": "HD externo portátil 2TB Seagate Expansion USB 3.0",
+    "descricao": "HD EXTERNO 2TB SEAGATE PORTÁTIL EXPANSION USB 3.0. Principais pontos: capacidade 2TB; interface USB 3.0. HD externo indicado para upgrade, backup e uso continuo.",
     "marca": "Seagate",
     "promocao": false,
     "imagem": "hd2tb_sea.webp"
@@ -1875,7 +1754,7 @@
     "categoria": "hd externo",
     "preco": 1110,
     "qt": 1,
-    "descricao": "HD externo 4TB Seagate Expansion USB 3.0",
+    "descricao": "HD EXTERNO 4TB SEAGATE USB 3.0 EXPANSION. Principais pontos: capacidade 4TB; interface USB 3.0. HD externo indicado para upgrade, backup e uso continuo.",
     "marca": "Seagate",
     "promocao": false,
     "imagem": "hd4tb_sea.webp"
@@ -1886,7 +1765,7 @@
     "categoria": "hd interno",
     "preco": 710.45,
     "qt": 1,
-    "descricao": "HD interno 3TB Seagate Constellation SATA3 7200 RPM",
+    "descricao": "HD INTERNO 3TB SATA3 SEAGATE CONSTELLATION 7200. Principais pontos: capacidade 3TB; interface SATA. HD interno indicado para upgrade, backup e uso continuo.",
     "marca": "Seagate",
     "promocao": false,
     "imagem": "hd3tb_sea.webp"
@@ -1897,7 +1776,7 @@
     "categoria": "fonte",
     "preco": 320,
     "qt": 3,
-    "descricao": "Fonte Real 500W ATX Aerocool KCAS 500",
+    "descricao": "FONTE REAL 500W ATX AEROCOOL KCAS 500. Principais pontos: potencia 500w. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Aerocool",
     "promocao": false,
     "imagem": "aerocool_fonte500w.webp"
@@ -1908,7 +1787,7 @@
     "categoria": "fonte",
     "preco": 383,
     "qt": 3,
-    "descricao": "Fonte Aerocool VX Plus 700W 80 Plus Bronze",
+    "descricao": "FONTE AEROCOOL VX PLUS 700W 80 PLUS BRONZE. Principais pontos: potencia 700w; certificacao 80 Plus. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Aerocool",
     "promocao": false,
     "imagem": "aerocool_fonte700w.webp"
@@ -1919,7 +1798,7 @@
     "categoria": "fonte",
     "preco": 945,
     "qt": 4,
-    "descricao": "Fonte Real 1000W ATX Aerocool KCAS PFC Ativo",
+    "descricao": "FONTE REAL 1000W ATX AEROCOOL KCAS 80 PLUS GOLD. Principais pontos: potencia 1000w; certificacao 80 Plus. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Aerocool",
     "promocao": false,
     "imagem": "aerocool_fonte1000w.webp"
@@ -1930,29 +1809,29 @@
     "categoria": "fonte",
     "preco": 492,
     "qt": 3,
-    "descricao": "Fonte Real 500W Corsair VS500 80 Plus CP9020223BR",
+    "descricao": "FONTE REAL 500W CORSAIR VS500 80 PLUS CP9020223BR. Principais pontos: potencia 500w; certificacao 80 Plus. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Corsair",
     "promocao": false,
     "imagem": "corsair_fonte500w.webp"
   },
   {
-    "codigo": "1888",
+    "codigo": "1888_2",
     "nome": "FONTE HAYOM HX-200W",
     "categoria": "fonte",
     "preco": 60,
     "qt": 6,
-    "descricao": "Fonte Hayom HX-200W",
+    "descricao": "FONTE HAYOM HX-200W. Principais pontos: potencia 200w. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "hayom_fonte200w.webp"
   },
   {
-    "codigo": "1889",
+    "codigo": "1889_2",
     "nome": "FONTE REAL 500WR ATX MGS",
     "categoria": "fonte",
     "preco": 148,
     "qt": 4,
-    "descricao": "Fonte Real 500WR ATX MGS",
+    "descricao": "FONTE REAL 500WR ATX MGS. Principais pontos: estabilidade eletrica para o sistema. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "MGS",
     "promocao": false,
     "imagem": "mgs_fonte500w.webp"
@@ -1963,7 +1842,7 @@
     "categoria": "fonte",
     "preco": 390,
     "qt": 3,
-    "descricao": "Fonte Real 750W 80 Plus MGS",
+    "descricao": "FONTE REAL 750 W 80 PLUS MGS. Principais pontos: potencia 750 w; certificacao 80 Plus. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "MGS",
     "promocao": true,
     "imagem": "mgs_fonte750w.webp"
@@ -1974,7 +1853,7 @@
     "categoria": "fonte",
     "preco": 310,
     "qt": 1,
-    "descricao": "Fonte Gamer PCYes Shocker Full Modular 600W 80 Plus White Black Vulcan FM600WBV",
+    "descricao": "FONTE PCYES SHOCKER 600W FULL MODULAR FM600WBV. Principais pontos: potencia 600w; certificacao 80 Plus. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "PCYes",
     "promocao": false,
     "imagem": "pcyes-fonte-shocker-fm600wbv.webp"
@@ -1985,7 +1864,7 @@
     "categoria": "placa mãe",
     "preco": 168,
     "qt": 3,
-    "descricao": "Placa Mãe Brazil PC 1155 DDR3 BPC-H61-ITX-M.2",
+    "descricao": "PLACA MAE BRAZIL PC 1155 DDR3 BPC-H61-ITX-M.2. Principais pontos: socket LGA1155; chipset H61; suporte a memoria DDR3. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
     "marca": "Brazil PC",
     "promocao": false,
     "imagem": "bpc-h61-itx-m2.webp"
@@ -1996,7 +1875,7 @@
     "categoria": "placa mãe",
     "preco": 548,
     "qt": 3,
-    "descricao": "Placa Mãe Gigabyte 1151 8ª/9ªG H310M-H DDR4",
+    "descricao": "PLACA MAE GIGABYTE 1151 8ª/9ªG H310M-H DDR4. Principais pontos: socket LGA1151; suporte a memoria DDR4. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
     "marca": "Gigabyte",
     "promocao": false,
     "imagem": "gigabyte-h310mh.webp"
@@ -2007,7 +1886,7 @@
     "categoria": "placa mãe",
     "preco": 700,
     "qt": 3,
-    "descricao": "Placa Mãe Gigabyte H610M.K 1700 HDMI ATX",
+    "descricao": "PLACA MAE GIGABYTE-H610M.K 1700 HDMI ATX. Principais pontos: socket LGA1700. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
     "marca": "Gigabyte",
     "promocao": false,
     "imagem": "gigabyte-h610mk.webp"
@@ -2018,7 +1897,7 @@
     "categoria": "placa mãe",
     "preco": 185,
     "qt": 3,
-    "descricao": "Placa Mãe Hayom 1155 B75M S/V/R DDR3 PLM2301",
+    "descricao": "PLACA MAE HAYOM 1155 B75M S/V/R DDR3 PLM2301. Principais pontos: socket LGA1155; suporte a memoria DDR3. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
     "marca": "Hayom",
     "promocao": true,
     "imagem": "hayom-1155-b75m.webp"
@@ -2029,7 +1908,7 @@
     "categoria": "placa mãe",
     "preco": 160,
     "qt": 3,
-    "descricao": "Placa Mãe Hayom 1155 H61M EL DDR3 PLM2300",
+    "descricao": "PLACA MAE HAYOM 1155 H61M EL DDR3 PLM2300. Principais pontos: socket LGA1155; suporte a memoria DDR3. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "hayom-1155-h61m.webp"
@@ -2040,10 +1919,21 @@
     "categoria": "placa mãe",
     "preco": 828,
     "qt": 3,
-    "descricao": "Placa Mãe PCWARE 1151 8ª IPMB360 PRO-GAMING DDR4",
+    "descricao": "PLACA MAE PCWARE 1151 8ª IPMB360 PRO-GAMING DDR4. Principais pontos: socket LGA1151; suporte a memoria DDR4. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
     "marca": "PCWARE",
     "promocao": false,
     "imagem": "pcware-1151-ipmb360.webp"
+  },
+  {
+    "codigo": "2017",
+    "nome": "PLACA MAE HAYOM DDR4 H610 PLM2306",
+    "categoria": "placa mãe",
+    "preco": 689,
+    "qt": 2,
+    "descricao": "PLACA MAE HAYOM DDR4 H610 PLM2306. Principais pontos: socket LGA1700; chipset H610; suporte a memoria DDR4. Boa opcao para montagem e upgrade com estabilidade no uso diario.",
+    "marca": "Hayom",
+    "promocao": false,
+    "imagem": "h610mkprime.webp"
   },
   {
     "codigo": "1906",
@@ -2051,7 +1941,7 @@
     "categoria": "processador",
     "preco": 1208,
     "qt": 1,
-    "descricao": "Processador AMD Ryzen 5 5600GT - 6 núcleos, 12 threads, clock até 4.6GHz",
+    "descricao": "Processador AMD Ryzen 5 5600GT com 6 nucleos e 12 threads, clock boost de ate 4,6GHz e video integrado Radeon Graphics. Principais pontos: excelente desempenho em multitarefa, suporte para jogos e otimo custo-beneficio para montar PC sem GPU dedicada.",
     "marca": "AMD",
     "promocao": false,
     "imagem": "amd-ryzen5-5600gt.webp"
@@ -2062,21 +1952,10 @@
     "categoria": "energia",
     "preco": 51,
     "qt": 3,
-    "descricao": "Bateria Unipower 6V 4,5Ah UP645SEG",
+    "descricao": "BATERIA UNIPOWER 6V 4,5AH UP645SEG. Principais pontos: estabilidade eletrica para o sistema. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Unipower",
     "promocao": false,
     "imagem": "unipower-up645seg.webp"
-  },
-  {
-    "codigo": "3002",
-    "nome": "BATERIA UNIPOWER P/ NOBREAK 12V 5AH UP1250",
-    "categoria": "energia",
-    "preco": 86,
-    "qt": 3,
-    "descricao": "Bateria Unipower p/ Nobreak 12V 5Ah UP1250",
-    "marca": "Unipower",
-    "promocao": false,
-    "imagem": "unipower-up1250.webp"
   },
   {
     "codigo": "3003",
@@ -2084,7 +1963,7 @@
     "categoria": "energia",
     "preco": 143,
     "qt": 3,
-    "descricao": "Bateria Unipower p/ Nobreak 12V 9Ah F187 UP1290",
+    "descricao": "BATERIA UNIPOWER P/ NOBREAK 12V 9AH F187 UP1290. Principais pontos: estabilidade eletrica para o sistema. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Unipower",
     "promocao": false,
     "imagem": "unipower-up1290.webp"
@@ -2095,7 +1974,7 @@
     "categoria": "energia",
     "preco": 111,
     "qt": 3,
-    "descricao": "Bateria Unipower p/ Nobreak 12V 7Ah UP1270E",
+    "descricao": "BATERIA UNIPOWER P/ NOBREAK 12V 7AH UP1270E. Principais pontos: estabilidade eletrica para o sistema. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Unipower",
     "promocao": false,
     "imagem": "unipower-up1270e.webp"
@@ -2106,7 +1985,7 @@
     "categoria": "energia",
     "preco": 101,
     "qt": 3,
-    "descricao": "Bateria Unipower p/ Nobreak 12V 7Ah UP1270SEG",
+    "descricao": "BATERIA UNIPOWER P/ NOBREAK 12V 7AH UP1270SEG. Principais pontos: estabilidade eletrica para o sistema. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Unipower",
     "promocao": false,
     "imagem": "unipower-up1270seg.webp"
@@ -2117,7 +1996,7 @@
     "categoria": "energia",
     "preco": 80,
     "qt": 3,
-    "descricao": "Bateria Multilaser p/ Nobreak 12V 5Ah BC125",
+    "descricao": "BATERIA MULTILASER P/ NOBREAK 12V 5AH BC125. Principais pontos: estabilidade eletrica para o sistema. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Multilaser",
     "promocao": false,
     "imagem": "multilaser-bc125.webp"
@@ -2128,7 +2007,7 @@
     "categoria": "energia",
     "preco": 95.51,
     "qt": 3,
-    "descricao": "Bateria Multilaser p/ Nobreak 12V 7Ah BC127",
+    "descricao": "BATERIA MULTILASER P/ NOBREAK 12V 7AH BC127. Principais pontos: estabilidade eletrica para o sistema. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Multilaser",
     "promocao": false,
     "imagem": "multilaser-bc127.webp"
@@ -2139,7 +2018,7 @@
     "categoria": "memória",
     "preco": 163,
     "qt": 1,
-    "descricao": "Memória Note DDR3 8GB 1600 1.35v Kingston CL11",
+    "descricao": "MEMORIA NOTE DDR3 8GB 1600 1.35v KINGSTON CL11. Principais pontos: categoria memoria; marca Kingston; modelo CL11. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Kingston",
     "promocao": false,
     "imagem": "memoria-note-ddr3-8gb-1600-kingston.webp"
@@ -2150,7 +2029,7 @@
     "categoria": "memória",
     "preco": 198,
     "qt": 1,
-    "descricao": "Memória DDR3 8GB 1600MHz Kingston CL11",
+    "descricao": "MEMORIA DDR3 8GB 1600MHZ KINGSTON CL11. Principais pontos: categoria memoria; marca Kingston; modelo CL11. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Kingston",
     "promocao": false,
     "imagem": "memoria-ddr3-8gb-1600-kingston.webp"
@@ -2161,7 +2040,7 @@
     "categoria": "memória",
     "preco": 1750,
     "qt": 1,
-    "descricao": "Memória DDR5 16GB 5600MHz Kingston Fury",
+    "descricao": "MEMORIA DDR5 16GB 5600MHZ KINGSTON FURY. Principais pontos: categoria memoria; marca Kingston; modelo FURY. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Kingston",
     "promocao": false,
     "imagem": "memoria-ddr5-16gb-5600-fury.webp"
@@ -2172,7 +2051,7 @@
     "categoria": "memória",
     "preco": 1187,
     "qt": 1,
-    "descricao": "Memória DDR4 16GB 3200MHz Kingston CL22",
+    "descricao": "MEMORIA DDR4 16GB 3200MHZ KINGSTON CL22. Principais pontos: categoria memoria; marca Kingston; modelo CL22. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Kingston",
     "promocao": false,
     "imagem": "memoria-ddr4-16gb-3200-kingston.webp"
@@ -2183,7 +2062,7 @@
     "categoria": "memória",
     "preco": 625,
     "qt": 1,
-    "descricao": "Memória DDR4 8GB 3200MHz Kingston CL22",
+    "descricao": "MEMORIA DDR4 8GB 3200MHZ KINGSTON CL22. Principais pontos: categoria memoria; marca Kingston; modelo CL22. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Kingston",
     "promocao": false,
     "imagem": "memoria-ddr4-8gb-3200-kingston.webp"
@@ -2194,7 +2073,7 @@
     "categoria": "acessórios",
     "preco": 53,
     "qt": 10,
-    "descricao": "Pasta p/ Notebook 15.6 Sky Lona Poliéster 600",
+    "descricao": "PASTA P/ NOTEBOOK 15.6 SKY LONA POLIESTER 600. Principais pontos: categoria acessorio; marca Sky; modelo LONA POLIESTER 600. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Sky",
     "promocao": false,
     "imagem": "pasta-notebook-156-sky-lona.webp"
@@ -2205,7 +2084,7 @@
     "categoria": "acessórios",
     "preco": 90,
     "qt": 8,
-    "descricao": "Pasta p/ Notebook 15.6 Sky Polipropileno Cores",
+    "descricao": "PASTA P/ NOTEBOOK 15.6 SKY POLIPROPILENO CORES. Principais pontos: categoria acessorio; marca Sky; modelo POLIPROPILENO CORES. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Sky",
     "promocao": false,
     "imagem": "pasta-notebook-156-sky-pp.webp"
@@ -2216,21 +2095,10 @@
     "categoria": "placa de vídeo",
     "preco": 1243,
     "qt": 1,
-    "descricao": "AMD RX 580 8GB GDDR5 Vinik",
+    "descricao": "PLACA DE VÍDEO AMD RX 580 8GB GDDR5 VINIK. Principais pontos: chip RX 580; memoria 8gb; padrao GDDR5. Ideal para video, jogos e tarefas graficas conforme a configuracao do PC.",
     "marca": "Vinik",
     "promocao": false,
     "imagem": "rx580vinik.webp"
-  },
-  {
-    "codigo": "3016",
-    "nome": "PLACA DE VÍDEO AMD RX 590 GME MONARCH DRAGON",
-    "categoria": "placa de vídeo",
-    "preco": 1100,
-    "qt": 1,
-    "descricao": "AMD RX 590 GME Monarch Dragon",
-    "marca": "AMD",
-    "promocao": false,
-    "imagem": "rx590webp"
   },
   {
     "codigo": "1526",
@@ -2238,7 +2106,7 @@
     "categoria": "energia",
     "preco": 177,
     "qt": 4,
-    "descricao": "Transformador 1500VA bivolt 220/115V Pratic",
+    "descricao": "TRANSFORMADOR 1500 VA BIVOLT 220/115V PRATIC. Principais pontos: capacidade 1500 va. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Pratic",
     "promocao": false,
     "imagem": "transformador-1500va-bivolt-pratic.webp"
@@ -2249,7 +2117,7 @@
     "categoria": "energia",
     "preco": 210,
     "qt": 2,
-    "descricao": "Transformador 2000VA bivolt 220/115V Pratik",
+    "descricao": "TRANSFORMADOR 2000 VA BIVOLT 220/115V PRATIK. Principais pontos: capacidade 2000 va. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Pratik",
     "promocao": false,
     "imagem": "transformador-2000va-bivolt-pratik.webp"
@@ -2260,7 +2128,7 @@
     "categoria": "energia",
     "preco": 130,
     "qt": 20,
-    "descricao": "Bateria Pioneiro p/ Nobreak 12V 9Ah NT12-9F2",
+    "descricao": "BATERIA PIONEIRO NOBREAK 12V 9AH NT12-9F2. Principais pontos: estabilidade eletrica para o sistema. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Pioneiro",
     "promocao": false,
     "imagem": "bateria-pioneiro-12v-9ah-nt12-9f2.webp"
@@ -2271,7 +2139,7 @@
     "categoria": "energia",
     "preco": 96,
     "qt": 42,
-    "descricao": "Bateria Pioneiro p/ Nobreak 12V 7Ah NT12-7F2",
+    "descricao": "BATERIA PIONEIRO NOBREAK 12V 7AH NT12-7F2. Principais pontos: estabilidade eletrica para o sistema. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Pioneiro",
     "promocao": false,
     "imagem": "bateria-pioneiro-12v-7ah-nt12-7f2.webp"
@@ -2282,7 +2150,7 @@
     "categoria": "audio",
     "preco": 75,
     "qt": 2,
-    "descricao": "Fone bluetooth OWS-Y7 wireless AJ-D58-H",
+    "descricao": "FONE BLUETOOTH OWS-Y7 WIRELESS AJ-D58-H. Principais pontos: ideal para chamadas, aulas e reunioes online. Audio com bom custo-beneficio para uso diario.",
     "marca": "Generico",
     "promocao": false,
     "imagem": "fone-bluetooth-ows-y7-aj-d58-h.webp"
@@ -2293,7 +2161,7 @@
     "categoria": "acessórios",
     "preco": 10.5,
     "qt": 10,
-    "descricao": "Fita crepe 25mm 50mts Startools",
+    "descricao": "FITA CREPE 25MM 50MTS STARTOOLS. Principais pontos: categoria acessorio; marca Startools; modelo padrao. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Startools",
     "promocao": false,
     "imagem": "fita-crepe-25mm-50mts-startools.webp"
@@ -2304,7 +2172,7 @@
     "categoria": "adaptadores",
     "preco": 15,
     "qt": 5,
-    "descricao": "Adaptador HDMI x Micro HDMI Segato 3157",
+    "descricao": "ADAPTADOR HDMI X MICRO HDMI SEGATO 3157. Principais pontos: conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "Segato",
     "promocao": false,
     "imagem": "adaptador-hdmi-micro-hdmi-segato-3157.webp"
@@ -2315,7 +2183,7 @@
     "categoria": "acessórios",
     "preco": 17,
     "qt": 5,
-    "descricao": "Chave de fenda 1x1 1/4 x 6",
+    "descricao": "CHAVE DE FENDA 1X1 1/4 X 6. Principais pontos: categoria acessorio; marca Generico; modelo CHAVE DE FENDA 1X1 1/4 X 6. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Generico",
     "promocao": false,
     "imagem": "chave-de-fenda-1x1-1-4x6.webp"
@@ -2326,7 +2194,7 @@
     "categoria": "acessórios",
     "preco": 5,
     "qt": 4,
-    "descricao": "Abracadeira TRI CM100/150/200 0,25cm Troyatools",
+    "descricao": "ABRACADEIRA TRI CM100/150/200 0,25CM TROYATOOLS. Principais pontos: categoria acessorio; marca Troyatools; modelo padrao. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Troyatools",
     "promocao": false,
     "imagem": "abracadeira-tri-cm100-150-200-025cm-troyatools.webp"
@@ -2337,19 +2205,19 @@
     "categoria": "energia",
     "preco": 578,
     "qt": 6,
-    "descricao": "Estabilizador MCM 1500VA bivolt",
+    "descricao": "ESTABILIZADOR MCM 1500VA BIVOLT. Principais pontos: capacidade 1500va. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "MCM",
     "promocao": false,
     "imagem": "estabilizador-mcm-1500va-bivolt.webp"
   },
   {
     "codigo": "2142",
-    "nome": "PLACA DE VIDEO 8GB MIGOL RX590 DDR5 RADEON 128 BIT",
+    "nome": "PLACA DE VIDEO RX 590 8GB GDDR5 MONARCH DRAGON",
     "categoria": "placa de vídeo",
     "preco": 1100,
     "qt": 1,
-    "descricao": "Placa de video RX590 8GB DDR5 Radeon 128 bits Migol",
-    "marca": "Migol",
+    "descricao": "PLACA DE VIDEO RX 590 8GB GDDR5 MONARCH DRAGON. Principais pontos: chip RX 590; memoria 8gb; padrao GDDR5. Ideal para video, jogos e tarefas graficas conforme a configuracao do PC.",
+    "marca": "AMD",
     "promocao": false,
     "imagem": "rx590-migol-8gb-ddr5-128bit.webp"
   },
@@ -2359,7 +2227,7 @@
     "categoria": "acessórios",
     "preco": 150,
     "qt": 1,
-    "descricao": "Carregador portatil 20000mAh Kimaster KR-932",
+    "descricao": "CARREGADOR PORTATIL 20.000 MAH KIMASTER KR-932. Principais pontos: categoria acessorio; marca Kimaster; modelo KR-932. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Kimaster",
     "promocao": false,
     "imagem": "carregador-portatil-kimaster-kr932-20000mah.webp"
@@ -2370,7 +2238,7 @@
     "categoria": "cooler",
     "preco": 45,
     "qt": 5,
-    "descricao": "Cooler universal para Intel e AMD grande Hayom FC1313",
+    "descricao": "COOLER UNIVERSAL P INTEL E AMD GRANDE HAYOM FC1313. Principais pontos: categoria cooler; marca Hayom; modelo FC1313. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "cooler-universal-hayom-fc1313.webp"
@@ -2381,7 +2249,7 @@
     "categoria": "fonte",
     "preco": 150,
     "qt": 17,
-    "descricao": "Fonte ATX 500W real Hayom PW1653",
+    "descricao": "FONTE ATX 500W REAL HAYOM PW1653. Principais pontos: potencia 500w. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "hayom-fonte-atx-500w-pw1653.webp"
@@ -2392,7 +2260,7 @@
     "categoria": "acessórios",
     "preco": 135,
     "qt": 1,
-    "descricao": "Carregador portatil 10000mAh Kimaster KR-937",
+    "descricao": "CARREGADOR PORTATIL 10.000 MAH KIMASTER KR-937. Principais pontos: categoria acessorio; marca Kimaster; modelo KR-937. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Kimaster",
     "promocao": false,
     "imagem": "carregador-portatil-kimaster-kr937-10000mah.webp"
@@ -2403,7 +2271,7 @@
     "categoria": "acessórios",
     "preco": 93,
     "qt": 1,
-    "descricao": "Carregador portatil 20000mAh Peining WUP-939",
+    "descricao": "CARREGADOR PORTATIL 20.000 MAH PEINING WUP-939. Principais pontos: categoria acessorio; marca Peining; modelo WUP-939. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Peining",
     "promocao": false,
     "imagem": "carregador-portatil-peining-wup-939-20000mah.webp"
@@ -2414,7 +2282,7 @@
     "categoria": "acessórios",
     "preco": 115,
     "qt": 1,
-    "descricao": "Carregador portatil 20000mAh Peining WUP-379",
+    "descricao": "CARREGADOR PORTATIL 20.000 MAH PEINING WUP-379. Principais pontos: categoria acessorio; marca Peining; modelo WUP-379. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Peining",
     "promocao": false,
     "imagem": "carregador-portatil-peining-wup-379-20000mah.webp"
@@ -2425,7 +2293,7 @@
     "categoria": "cabos",
     "preco": 16,
     "qt": 47,
-    "descricao": "Cabo HDMI 1.5 metros Hayom",
+    "descricao": "CABO HDMI 1.5 MTS HAYOM. Principais pontos: categoria cabo; marca Hayom; modelo padrao. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Hayom",
     "promocao": false,
     "imagem": "cabo-hdmi-15m-hayom.webp"
@@ -2433,10 +2301,10 @@
   {
     "codigo": "2141",
     "nome": "CARREGADOR CELULAR USB X USB C",
-    "categoria": "acessórios",
+    "categoria": "adaptadores",
     "preco": 55,
     "qt": 5,
-    "descricao": "Carregador celular USB x USB-C",
+    "descricao": "CARREGADOR CELULAR USB X USB C. Principais pontos: conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
     "marca": "Generico",
     "promocao": false,
     "imagem": "carregador-celular-usb-usbc.webp"
@@ -2447,7 +2315,7 @@
     "categoria": "acessórios",
     "preco": 92,
     "qt": 1,
-    "descricao": "Carregador portatil 10000mAh Peining preto WUP-653",
+    "descricao": "CARREGADOR PORTATIL 10.000MAH PEINING PRETO WUP-653. Principais pontos: categoria acessorio; marca Peining; modelo PRETO WUP-653. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Peining",
     "promocao": false,
     "imagem": "carregador-portatil-peining-wup-653-10000mah-preto.webp"
@@ -2458,7 +2326,7 @@
     "categoria": "acessórios",
     "preco": 80,
     "qt": 1,
-    "descricao": "Carregador portatil 5000mAh Kaidi KD-995",
+    "descricao": "CARREGADOR PORTATIL 5.000 MAH KAIDI KD-995. Principais pontos: categoria acessorio; marca Kaidi; modelo KD-995. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Kaidi",
     "promocao": false,
     "imagem": "carregador-portatil-kaidi-kd995-5000mah.webp"
@@ -2469,7 +2337,7 @@
     "categoria": "audio",
     "preco": 25,
     "qt": 5,
-    "descricao": "Caixa de som B-Max USB BM-S205",
+    "descricao": "CAIXA DE SOM B-MAX USB BM-S205. Principais pontos: ideal para chamadas, aulas e reunioes online. Audio com bom custo-beneficio para uso diario.",
     "marca": "B-Max",
     "promocao": false,
     "imagem": "caixa-som-bmax-usb-bm-s205.webp"
@@ -2480,7 +2348,7 @@
     "categoria": "acessórios",
     "preco": 170,
     "qt": 1,
-    "descricao": "Kit ferramenta 129 pecas Fasterr FST 129",
+    "descricao": "KIT FERRAMENTA 129 PECAS FASTERR FST 129. Principais pontos: categoria acessorio; marca Fasterr; modelo FST 129. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Fasterr",
     "promocao": false,
     "imagem": "kit-ferramenta-fasterr-fst129-129pecas.webp"
@@ -2491,7 +2359,7 @@
     "categoria": "acessórios",
     "preco": 95,
     "qt": 1,
-    "descricao": "Carregador portatil 20000mAh Kapbom preto KA-9756",
+    "descricao": "CARREGADOR PORTATIL 20.000MAH KAPBOM PRETO KA-9756. Principais pontos: categoria acessorio; marca Kapbom; modelo PRETO KA-9756. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Kapbom",
     "promocao": false,
     "imagem": "carregador-portatil-kapbom-ka9756-20000mah-preto.webp"
@@ -2502,7 +2370,7 @@
     "categoria": "audio",
     "preco": 145,
     "qt": 3,
-    "descricao": "Fone bluetooth Philips TAH2209BK/00 preto",
+    "descricao": "FONE BLUETOOTH PHILIPS TAH2209BK/00 PRETO. Principais pontos: ideal para chamadas, aulas e reunioes online. Audio com bom custo-beneficio para uso diario.",
     "marca": "Philips",
     "promocao": false,
     "imagem": "fone-bluetooth-philips-tah2209bk-00-preto.webp"
@@ -2513,7 +2381,7 @@
     "categoria": "acessórios",
     "preco": 15,
     "qt": 5,
-    "descricao": "Pasta termica Fortrek 3g Freezy Light",
+    "descricao": "PASTA TERMICA FORTREK 3G FREEZY LIGHT. Principais pontos: categoria acessorio; marca Fortrek; modelo 3G FREEZY LIGHT. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Fortrek",
     "promocao": false,
     "imagem": "pasta-termica-fortrek-freezy-light-3g.webp"
@@ -2524,7 +2392,7 @@
     "categoria": "acessórios",
     "preco": 15,
     "qt": 20,
-    "descricao": "Limpa tela 60ml com lenco Fortrek",
+    "descricao": "LIMPA TELA 60ML C/LENCO FORTREK. Principais pontos: categoria acessorio; marca Fortrek; modelo padrao. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Fortrek",
     "promocao": false,
     "imagem": "limpa-tela-fortrek-60ml-lenco.webp"
@@ -2535,7 +2403,7 @@
     "categoria": "acessórios",
     "preco": 50,
     "qt": 13,
-    "descricao": "Ar comprimido 200g / 164ml Air Duster Implastec",
+    "descricao": "AR COMPRIMIDO 200G / 164ML AIR DUSTER IMPLASTEC. Principais pontos: categoria acessorio; marca Implastec; modelo padrao. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Implastec",
     "promocao": false,
     "imagem": "ar-comprimido-implastec-air-duster-200g.webp"
@@ -2546,7 +2414,7 @@
     "categoria": "audio",
     "preco": 35,
     "qt": 6,
-    "descricao": "Fone com microfone Philips TAUE101BK preto",
+    "descricao": "FONE C/ MICROFONE PHILIPS TAUE101BK PRETO. Principais pontos: ideal para chamadas, aulas e reunioes online. Audio com bom custo-beneficio para uso diario.",
     "marca": "Philips",
     "promocao": false,
     "imagem": "fone-philips-taue101bk-preto.webp"
@@ -2557,7 +2425,7 @@
     "categoria": "fonte",
     "preco": 355,
     "qt": 2,
-    "descricao": "Fonte real 600W ATX Aerocool KCAS 80 Plus 64802",
+    "descricao": "FONTE REAL 600W ATX AEROCOOL KCAS 80 PLUS 64802. Principais pontos: potencia 600w; certificacao 80 Plus. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Aerocool",
     "promocao": false,
     "imagem": "aerocool-kcas-600w-64802.webp"
@@ -2568,7 +2436,7 @@
     "categoria": "fonte",
     "preco": 268,
     "qt": 4,
-    "descricao": "Fonte real 400W ATX Aerocool KCAS FC 64901",
+    "descricao": "FONTE REAL 400W ATX AEROCOOL KCAS FC 64901. Principais pontos: potencia 400w. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Aerocool",
     "promocao": false,
     "imagem": "aerocool-kcas-fc-400w-64901.webp"
@@ -2579,7 +2447,7 @@
     "categoria": "fonte",
     "preco": 205,
     "qt": 4,
-    "descricao": "Fonte real 500W ATX Aerocool VX 500",
+    "descricao": "FONTE REAL 500W ATX AEROCOOL VX 500. Principais pontos: potencia 500w. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Aerocool",
     "promocao": false,
     "imagem": "aerocool-vx500.webp"
@@ -2590,7 +2458,7 @@
     "categoria": "energia",
     "preco": 8,
     "qt": 17,
-    "descricao": "Bateria 12V 23A alkaline",
+    "descricao": "BATERIA 12V 23A ALKALINE. Principais pontos: estabilidade eletrica para o sistema. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Generico",
     "promocao": false,
     "imagem": "bateria-12v-23a-alkaline.webp"
@@ -2601,7 +2469,7 @@
     "categoria": "acessórios",
     "preco": 386,
     "qt": 3,
-    "descricao": "Suporte movel Fortrek TV/Monitor FK441S",
+    "descricao": "SUPORTE MOVEL FORTREK TV MONITOR FK441S. Principais pontos: categoria acessorio; marca Fortrek; modelo TV MONITOR FK441S. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Fortrek",
     "promocao": false,
     "imagem": "suporte-movel-fortrek-tv-monitor-fk441s.webp"
@@ -2612,7 +2480,7 @@
     "categoria": "audio",
     "preco": 86,
     "qt": 49,
-    "descricao": "Headset USB Fortrek FK731A com microfone",
+    "descricao": "FONE C/ MICROFONE HEADSET USB FORTREK FK731A. Principais pontos: ideal para chamadas, aulas e reunioes online. Audio com bom custo-beneficio para uso diario.",
     "marca": "Fortrek",
     "promocao": false,
     "imagem": "headset-usb-fortrek-fk731a.webp"
@@ -2623,7 +2491,7 @@
     "categoria": "energia",
     "preco": 86,
     "qt": 2,
-    "descricao": "Filtro de linha DPS 3P iClamper Energia 5 preto",
+    "descricao": "FILTRO DE LINHA DPS 3P ICLAMPER ENERGIA 5 PRETO. Principais pontos: estabilidade eletrica para o sistema. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "Clamper",
     "promocao": false,
     "imagem": "filtro-linha-iclamper-energia-5-preto.webp"
@@ -2634,7 +2502,7 @@
     "categoria": "acessórios",
     "preco": 120,
     "qt": 1,
-    "descricao": "Carregador portatil 10000mAh Peining preto WUP-832",
+    "descricao": "CARREGADOR PORTATIL 10.000MAH PEINING PRETO WUP-832. Principais pontos: categoria acessorio; marca Peining; modelo PRETO WUP-832. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Peining",
     "promocao": false,
     "imagem": "carregador-portatil-peining-wup-832-10000mah-preto.webp"
@@ -2645,10 +2513,10 @@
     "categoria": "notebook",
     "preco": 6200,
     "qt": 1,
-    "descricao": "Notebook Dell Latitude 3450 i7 32GB memoria SSD 1TB Win11",
+    "descricao": "NOTEBOOK DELL LAT 3450 I7 32G MEM SSD 1TB WIN11. Principais pontos: categoria notebook; marca Dell; modelo LAT 3450 I7 32G MEM SSD 1TB WIN11. Produto original com garantia e suporte da Primos Informatica.",
     "marca": "Dell",
     "promocao": false,
-    "imagem": "latitude3450.webp"
+    "imagem": "notebook-dell-lat-3450-i7-32g-mem-ssd-1tb-win11.webp"
   },
   {
     "codigo": "1573",
@@ -2656,7 +2524,7 @@
     "categoria": "energia",
     "preco": 520,
     "qt": 4,
-    "descricao": "Nobreak SMS 600VA preto bivolt Lite",
+    "descricao": "NOBREAK SMS 600V PRETO BIV LITE. Principais pontos: capacidade 600va. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "SMS",
     "promocao": false,
     "imagem": "nobreak-sms-600v-preto-biv-lite.webp"
@@ -2667,9 +2535,207 @@
     "categoria": "energia",
     "preco": 267,
     "qt": 1,
-    "descricao": "Estabilizador SMS 300VA preto bivolt",
+    "descricao": "ESTABILIZADOR SMS 300VA PRETO BIV. Principais pontos: capacidade 300va. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
     "marca": "SMS",
     "promocao": false,
     "imagem": "estabilizador-sms-300va-preto-biv.webp"
+  },
+  {
+    "codigo": "1778",
+    "nome": "NOBREAK SMS 1500VA PRO ENTRADA BIVOLT",
+    "categoria": "energia",
+    "preco": 1447,
+    "qt": 1,
+    "descricao": "NOBREAK SMS 1500VA PRO ENTRADA BIVOLT. Principais pontos: capacidade 1500va. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
+    "marca": "SMS",
+    "promocao": false,
+    "imagem": "nobreak-sms-1500va-pro-bivolt.webp"
+  },
+  {
+    "codigo": "2104",
+    "nome": "WEBCAM LOGITECH USB FULL HD 1080P C920E",
+    "categoria": "webcam",
+    "preco": 580,
+    "qt": 3,
+    "descricao": "WEBCAM LOGITECH USB FULL HD 1080P C920E. Principais pontos: resolucao Full HD; ideal para chamadas, aulas e reunioes online. Webcam com bom custo-beneficio para uso diario.",
+    "marca": "Logitech",
+    "promocao": false,
+    "imagem": "webcam-logitech-c920e.webp"
+  },
+  {
+    "codigo": "1076",
+    "nome": "MEMORY CARD 128 GB SANDISK ULTRA CLASSE10 100MB",
+    "categoria": "acessórios",
+    "preco": 180,
+    "qt": 3,
+    "descricao": "MEMORY CARD 128 GB SANDISK ULTRA CLASSE10 100MB. Principais pontos: categoria acessorio; marca Sandisk; modelo ULTRA CLASSE10 100MB. Produto original com garantia e suporte da Primos Informatica.",
+    "marca": "Sandisk",
+    "promocao": false,
+    "imagem": "memory-card-128-gb-sandisk-ultra-classe10-100mb.webp"
+  },
+  {
+    "codigo": "2164",
+    "nome": "PLACA DE REDE 1000 PCI-E X1 DUALPORT LC1000 VINIK",
+    "categoria": "redes",
+    "preco": 205,
+    "qt": 4,
+    "descricao": "PLACA DE REDE 1000 PCI-E X1 DUALPORT LC1000 VINIK. Principais pontos: padrao GIGABIT; conexao estavel para casa, escritorio ou loja. Solucao pratica para ampliar ou organizar a rede local.",
+    "marca": "Vinik",
+    "promocao": false,
+    "imagem": "placa-de-rede-1000-pci-e-x1-dualport-lc1000-vinik.webp"
+  },
+  {
+    "codigo": "2162",
+    "nome": "FONTE MIN SFX 230W VS230 VINTK 28866",
+    "categoria": "fonte",
+    "preco": 155,
+    "qt": 10,
+    "descricao": "FONTE MIN SFX 230W VS230 VINTK 28866. Principais pontos: potencia 230w. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
+    "marca": "Vintk",
+    "promocao": false,
+    "imagem": "fonte-min-sfx-230w-vs230-vintk-28866.webp"
+  },
+  {
+    "codigo": "2156",
+    "nome": "GABINETE PIXXO GAMER LKS065 S/FONTE 2 BAIA",
+    "categoria": "gabinetes",
+    "preco": 425,
+    "qt": 2,
+    "descricao": "GABINETE PIXXO GAMER LKS065 S/FONTE 2 BAIA. Principais pontos: categoria gabinete; marca Pixxo; modelo GAMER LKS065 S/FONTE 2 BAIA. Produto original com garantia e suporte da Primos Informatica.",
+    "marca": "Pixxo",
+    "promocao": false,
+    "imagem": "gabinete-pixxo-gamer-lks065-s-fonte-2-baia.webp"
+  },
+  {
+    "codigo": "2160",
+    "nome": "COOLER P/ GABINETE 80X80 VINIK CF80",
+    "categoria": "cooler",
+    "preco": 16,
+    "qt": 20,
+    "descricao": "COOLER P/ GABINETE 80X80 VINIK CF80. Principais pontos: categoria cooler; marca Vinik; modelo CF80. Produto original com garantia e suporte da Primos Informatica.",
+    "marca": "Vinik",
+    "promocao": false,
+    "imagem": "cooler-p-gabinete-80x80-vinik-cf80.webp"
+  },
+  {
+    "codigo": "2157",
+    "nome": "GABINETE C3TECH OFFICE 200W MT-33BK",
+    "categoria": "gabinetes",
+    "preco": 173,
+    "qt": 5,
+    "descricao": "GABINETE C3TECH OFFICE 200W MT-33BK. Principais pontos: categoria gabinete; marca C3Tech; modelo OFFICE 200W MT-33BK. Produto original com garantia e suporte da Primos Informatica.",
+    "marca": "C3Tech",
+    "promocao": false,
+    "imagem": "gabinete-c3tech-office-200w-mt-33bk.webp"
+  },
+  {
+    "codigo": "2158",
+    "nome": "FONTE VINIK TFX 230W 20+4 PINOS VFT230 28867",
+    "categoria": "fonte",
+    "preco": 155,
+    "qt": 10,
+    "descricao": "FONTE VINIK TFX 230W 20+4 PINOS VFT230 28867. Principais pontos: potencia 230w. Produto indicado para proteger ou alimentar equipamentos com seguranca.",
+    "marca": "Vinik",
+    "promocao": false,
+    "imagem": "fonte-vinik-tfx-230w-20-4-pinos-vft230-28867.webp"
+  },
+  {
+    "codigo": "1544",
+    "nome": "MEMORIA NOTE DDR3 8GB 1333MHZ KINGSTON KVR16LS11",
+    "categoria": "memória",
+    "preco": 188,
+    "qt": 1,
+    "descricao": "MEMORIA NOTE DDR3 8GB 1333MHZ KINGSTON KVR16LS11. Principais pontos: categoria memoria; marca Kingston; modelo KVR16LS11. Produto original com garantia e suporte da Primos Informatica.",
+    "marca": "Kingston",
+    "promocao": false,
+    "imagem": "memoria-note-ddr3-8gb-1333-kingston-kvr16ls11.webp"
+  },
+  {
+    "codigo": "1407",
+    "nome": "MEMORIA DDR4 8GB 2666MHZ KINGSTON KVR26N19S8/8",
+    "categoria": "memória",
+    "preco": 695,
+    "qt": 3,
+    "descricao": "MEMORIA DDR4 8GB 2666MHZ KINGSTON KVR26N19S8/8. Principais pontos: categoria memoria; marca Kingston; modelo KVR26N19S8/8. Produto original com garantia e suporte da Primos Informatica.",
+    "marca": "Kingston",
+    "promocao": false,
+    "imagem": "memoria-ddr4-8gb-2666-kingston-kvr26n19s8-8.webp"
+  },
+  {
+    "codigo": "1332",
+    "nome": "TESTADOR DE CABO DE REDE RJ45 EXBOM",
+    "categoria": "redes",
+    "preco": 45,
+    "qt": 6,
+    "descricao": "TESTADOR DE CABO DE REDE RJ45 EXBOM. Ideal para verificar continuidade e montagem de cabos de rede RJ45 em instalacoes e manutencoes.",
+    "marca": "Exbom",
+    "promocao": false,
+    "imagem": "testador-cabo-rede-rj45-exbom.webp"
+  },
+  {
+    "codigo": "1313",
+    "nome": "CABO EXTENSAO USB 2.0 LOTUS 10 MTS C/ AMPLIF",
+    "categoria": "cabos",
+    "preco": 90,
+    "qt": 4,
+    "descricao": "CABO EXTENSAO USB 2.0 LOTUS 10 MTS C/ AMPLIF. Cabo extensor USB 2.0 com amplificador para conexoes de longa distancia.",
+    "marca": "Lotus",
+    "promocao": false,
+    "imagem": "cabo-extensao-usb-20-lotus-10m-amplif.webp"
+  },
+  {
+    "codigo": "2172",
+    "nome": "FONTE MACBOOK 60W - SAFE 1",
+    "categoria": "fonte",
+    "preco": 123.63,
+    "qt": 12,
+    "descricao": "FONTE MACBOOK 60W - SAFE 1. Fonte carregador para MacBook com conector MagSafe 1 e potencia de 60W.",
+    "marca": "Safe 1",
+    "promocao": false,
+    "imagem": "fonte-macbook-60w-safe-1.webp"
+  },
+  {
+    "codigo": "2169",
+    "nome": "CABO CONVERSOR USB P/2 CB-74",
+    "categoria": "cabos",
+    "preco": 21,
+    "qt": 10,
+    "descricao": "CABO CONVERSOR USB P/2 CB-74. Adaptador em cabo para conexao USB P/2, util para perifericos e equipamentos compativeis.",
+    "marca": "CB",
+    "promocao": false,
+    "imagem": "cabo-conversor-usb-p2-cb74.webp"
+  },
+  {
+    "codigo": "2170",
+    "nome": "GRAVADORA DVD EXTERNA USB 3.0 HAIMEI",
+    "categoria": "acessorios",
+    "preco": 137.93,
+    "qt": 3,
+    "descricao": "GRAVADORA DVD EXTERNA USB 3.0 HAIMEI. Gravadora externa para leitura e gravacao de CDs e DVDs via USB.",
+    "marca": "Haimei",
+    "promocao": false,
+    "imagem": "gravadora-dvd-externa-usb30-haimei.webp"
+  },
+  {
+    "codigo": "2171",
+    "nome": "CABO CONVERSOR USB-C HDMI ITBLUE IE-6638 4K",
+    "categoria": "adaptadores",
+    "preco": 60,
+    "qt": 2,
+    "descricao": "CABO CONVERSOR USB-C HDMI ITBLUE IE-6638 4K. Conversor USB-C para HDMI com suporte a imagem 4K em equipamentos compativeis.",
+    "marca": "Itblue",
+    "promocao": false,
+    "imagem": "cabo-conversor-usbc-hdmi-itblue-ie6638-4k.webp"
+  },
+  {
+    "codigo": "1529",
+    "nome": "CONVERSOR USB 3.0 HDMI IT-BLUE LE-4116 KN FY-542",
+    "categoria": "adaptadores",
+    "preco": 75,
+    "qt": 19,
+    "descricao": "CONVERSOR USB 3.0 HDMI IT-BLUE LE-4116 KN FY-542. Adaptador USB 3.0 para HDMI para ampliar ou espelhar video em equipamentos compativeis.",
+    "marca": "Itblue",
+    "promocao": false,
+    "imagem": "conversor-usb30-hdmi-itblue-le4116-fy542.webp"
   }
 ]

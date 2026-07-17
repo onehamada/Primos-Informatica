@@ -13,6 +13,7 @@ import sys
 import json
 import argparse
 import unicodedata
+from collections import deque
 import requests
 from PIL import Image, ImageFilter, ImageEnhance
 import io
@@ -546,6 +547,16 @@ class OptimizedPersistentDownloader:
     def enhance_product_image(self, img):
         """Melhora a qualidade da imagem do produto"""
         try:
+            alpha_channel = None
+            if img.mode in ('RGBA', 'LA', 'P'):
+                rgba_img = img.convert('RGBA')
+                alpha_channel = rgba_img.getchannel('A')
+                rgb_img = Image.new('RGB', rgba_img.size, (255, 255, 255))
+                rgb_img.paste(rgba_img.convert('RGB'), mask=alpha_channel)
+                img = rgb_img
+            elif img.mode != 'RGB':
+                img = img.convert('RGB')
+
             # Aumentar contraste
             enhancer = ImageEnhance.Contrast(img)
             img = enhancer.enhance(1.1)
@@ -558,6 +569,11 @@ class OptimizedPersistentDownloader:
             enhancer = ImageEnhance.Color(img)
             img = enhancer.enhance(1.05)
             
+            if alpha_channel is not None:
+                rgba_result = img.convert('RGBA')
+                rgba_result.putalpha(alpha_channel)
+                return rgba_result
+
             return img
             
         except Exception as e:
@@ -684,6 +700,7 @@ class OptimizedPersistentDownloader:
             
             # Analisar fundo
             bg_analysis = self.analyze_background(img)
+            transparent_ratio_before = self.get_transparent_ratio(img)
             
             # Verificar se é fundo preto
             if bg_analysis['type'] == 'black' and bg_analysis['confidence'] > 60:
@@ -812,6 +829,106 @@ class OptimizedPersistentDownloader:
                 'color': (128, 128, 128),
                 'confidence': 0
             }
+
+    def remove_white_background(self, img):
+        """Remove fundo branco conectado as bordas, preservando partes brancas internas."""
+        try:
+            rgba_img = img.convert('RGBA')
+            img_array = np.array(rgba_img)
+            rgb = img_array[:, :, :3].astype(np.int16)
+            alpha = img_array[:, :, 3]
+            height, width = alpha.shape
+
+            if height < 2 or width < 2:
+                return rgba_img
+
+            border_h = max(2, int(height * 0.08))
+            border_w = max(2, int(width * 0.08))
+            border_pixels = np.concatenate([
+                img_array[:border_h, :, :].reshape(-1, 4),
+                img_array[-border_h:, :, :].reshape(-1, 4),
+                img_array[:, :border_w, :].reshape(-1, 4),
+                img_array[:, -border_w:, :].reshape(-1, 4),
+            ], axis=0)
+
+            opaque_border = border_pixels[border_pixels[:, 3] > 200][:, :3]
+            if opaque_border.size == 0:
+                return rgba_img
+
+            border_brightness = np.mean(opaque_border, axis=1)
+            bright_border = opaque_border[border_brightness > 220]
+            if bright_border.size == 0:
+                return rgba_img
+
+            base_color = np.mean(bright_border, axis=0)
+            avg_base = float(np.mean(base_color))
+            threshold = max(220.0, min(248.0, avg_base - 5.0))
+            distance_limit = 42.0 if avg_base > 240 else 34.0
+            saturation_limit = 36.0 if avg_base > 240 else 30.0
+
+            brightness = np.mean(rgb, axis=2)
+            max_delta = np.max(np.abs(rgb - base_color), axis=2)
+            saturation = np.max(rgb, axis=2) - np.min(rgb, axis=2)
+
+            candidate_mask = (
+                (alpha > 0) &
+                (brightness >= threshold) &
+                (max_delta <= distance_limit) &
+                (saturation <= saturation_limit)
+            )
+
+            if not np.any(candidate_mask):
+                return rgba_img
+
+            removable_mask = np.zeros((height, width), dtype=bool)
+            visited = np.zeros((height, width), dtype=bool)
+            queue = deque()
+
+            def push_seed(y, x):
+                if candidate_mask[y, x] and not visited[y, x]:
+                    visited[y, x] = True
+                    queue.append((y, x))
+
+            for x in range(width):
+                push_seed(0, x)
+                push_seed(height - 1, x)
+            for y in range(height):
+                push_seed(y, 0)
+                push_seed(y, width - 1)
+
+            while queue:
+                y, x = queue.popleft()
+                removable_mask[y, x] = True
+                for ny, nx in ((y - 1, x), (y + 1, x), (y, x - 1), (y, x + 1)):
+                    if 0 <= ny < height and 0 <= nx < width and not visited[ny, nx] and candidate_mask[ny, nx]:
+                        visited[ny, nx] = True
+                        queue.append((ny, nx))
+
+            removed_ratio = float(np.mean(removable_mask))
+            if removed_ratio < 0.03:
+                return rgba_img
+
+            feather_mask = (
+                (alpha > 0) &
+                (brightness >= max(205.0, threshold - 10.0)) &
+                (max_delta <= distance_limit + 10.0) &
+                (saturation <= saturation_limit + 8.0)
+            )
+
+            expanded_feather = np.zeros((height, width), dtype=bool)
+            for y, x in zip(*np.where(removable_mask)):
+                for ny in range(max(0, y - 1), min(height, y + 2)):
+                    for nx in range(max(0, x - 1), min(width, x + 2)):
+                        if feather_mask[ny, nx] and not removable_mask[ny, nx]:
+                            expanded_feather[ny, nx] = True
+
+            img_array[removable_mask, 3] = 0
+            img_array[expanded_feather, 3] = np.minimum(img_array[expanded_feather, 3], 110)
+            return Image.fromarray(img_array, 'RGBA')
+
+        except Exception as e:
+            print(f"    Erro na remocao de fundo branco: {e}")
+            return img
 
     def has_watermark_or_logo(self, img):
         """Heuristica leve para detectar logos ou marcas d'agua dominantes."""
@@ -946,6 +1063,41 @@ class OptimizedPersistentDownloader:
             print(f"    Erro ao redimensionar: {e}")
             return img
     
+    def get_transparent_ratio(self, img):
+        """Calcula quanto da imagem usa transparencia parcial ou total."""
+        try:
+            rgba = np.array(img.convert('RGBA'))
+            alpha = rgba[:, :, 3]
+            return float(np.mean(alpha < 250))
+        except Exception:
+            return 0.0
+
+    def has_bright_opaque_border(self, img, bright_threshold=232.0, min_ratio=0.55):
+        """Detecta bordas opacas claras, tipicas de fundo branco residual."""
+        try:
+            rgba = np.array(img.convert('RGBA'))
+            height, width = rgba.shape[:2]
+            if height < 4 or width < 4:
+                return False
+
+            border_h = max(2, min(10, height // 12))
+            border_w = max(2, min(10, width // 12))
+            border = np.concatenate([
+                rgba[:border_h, :, :].reshape(-1, 4),
+                rgba[-border_h:, :, :].reshape(-1, 4),
+                rgba[:, :border_w, :].reshape(-1, 4),
+                rgba[:, -border_w:, :].reshape(-1, 4),
+            ], axis=0)
+
+            opaque_border = border[border[:, 3] > 245][:, :3]
+            if opaque_border.size == 0:
+                return False
+
+            bright_ratio = float(np.mean(np.mean(opaque_border, axis=1) > bright_threshold))
+            return bright_ratio >= min_ratio
+        except Exception:
+            return False
+
     def process_image_background(self, img):
         """Processa o fundo da imagem conforme necessário"""
         try:
@@ -953,12 +1105,32 @@ class OptimizedPersistentDownloader:
             bg_analysis = self.analyze_background(img)
             
             print(f"    📊 Análise de fundo: {bg_analysis['type']} (confiança: {bg_analysis['confidence']:.1f}%)")
+            transparent_ratio_before = self.get_transparent_ratio(img)
             
             # Se for fundo preto, tentar remover
             if bg_analysis['type'] == 'black':
                 print(f"    🔄 Removendo fundo preto...")
                 img = self.remove_black_background(img)
                 print(f"    ✅ Fundo preto removido")
+            elif (
+                bg_analysis['type'] == 'white' and (
+                    bg_analysis['confidence'] >= 60 or
+                    bg_analysis.get('bright_ratio', 0) >= 0.78
+                )
+            ):
+                print(f"    🔄 Removendo fundo branco...")
+                img = self.remove_white_background(img)
+                processed_bg = self.analyze_background(img)
+                print(f"    ✅ Fundo branco processado: {processed_bg['type']} ({processed_bg['confidence']:.1f}%)")
+            elif self.has_bright_opaque_border(img):
+                print("    Ajustando borda branca residual...")
+                candidate_img = self.remove_white_background(img)
+                transparent_ratio_after = self.get_transparent_ratio(candidate_img)
+                if transparent_ratio_after > transparent_ratio_before + 0.03:
+                    img = candidate_img
+                    print(f"    Borda branca reduzida (alpha {transparent_ratio_before:.3f} -> {transparent_ratio_after:.3f})")
+                else:
+                    print("    Sem ganho relevante na remocao da borda branca")
             
             # Redimensionar se necessário
             img = self.resize_product_image(img)
@@ -972,6 +1144,67 @@ class OptimizedPersistentDownloader:
             print(f"    Erro ao processar fundo: {e}")
             return img
     
+    def repair_existing_white_backgrounds(self, force_codes=None):
+        """Reprocessa imagens ja salvas que ainda parecem ter fundo branco."""
+        force_codes = set(str(code).strip() for code in (force_codes or []) if str(code).strip())
+        repaired = 0
+        inspected = 0
+
+        if not os.path.exists(self.csv_file):
+            print("ERRO: CSV nao encontrado para reparo das imagens.")
+            return repaired
+
+        try:
+            with open(self.csv_file, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f, delimiter=';')
+
+                for row in reader:
+                    codigo = str(row.get('codigo') or '').strip()
+                    imagem = str(row.get('imagem') or '').strip()
+                    if not codigo or not imagem:
+                        continue
+                    if imagem.lower() == 'placeholder.webp':
+                        continue
+                    if force_codes and codigo not in force_codes:
+                        continue
+
+                    filepath = os.path.join(self.image_folder, imagem)
+                    if not os.path.exists(filepath):
+                        continue
+
+                    try:
+                        inspected += 1
+                        img = Image.open(filepath)
+                        before_ratio = self.get_transparent_ratio(img)
+
+                        if not self.has_bright_opaque_border(img) and before_ratio > 0.02:
+                            continue
+
+                        repaired_img = self.remove_white_background(img)
+                        after_ratio = self.get_transparent_ratio(repaired_img)
+
+                        if after_ratio <= before_ratio + 0.05:
+                            continue
+
+                        if repaired_img.mode == 'P':
+                            repaired_img = repaired_img.convert('RGBA')
+                        elif repaired_img.mode == 'LA':
+                            repaired_img = repaired_img.convert('RGBA')
+                        elif repaired_img.mode not in ('RGB', 'RGBA'):
+                            repaired_img = repaired_img.convert('RGB')
+
+                        repaired_img.save(filepath, 'WEBP', quality=88, method=6)
+                        repaired += 1
+                        print(f"REPARADA: {imagem} (alpha {before_ratio:.3f} -> {after_ratio:.3f})")
+                    except Exception as image_error:
+                        print(f"Falha ao reparar {imagem}: {image_error}")
+
+            print(f"Reparo concluido: {repaired} imagem(ns) atualizada(s) apos inspecionar {inspected}.")
+            return repaired
+        except Exception as e:
+            print(f"ERRO ao reparar imagens existentes: {e}")
+            return repaired
+
     def get_all_missing_products(self):
         """Pega TODOS os produtos sem imagem"""
         missing_products = []
@@ -2272,8 +2505,9 @@ class OptimizedPersistentDownloader:
                     imagem = row.get('imagem', f"{codigo}.webp").strip()
                     image_path = os.path.join(self.image_folder, imagem)
                     should_force = force_all or codigo in force_codes
+                    is_placeholder_image = imagem.lower() in {'placeholder.webp', 'placeholder.png'}
 
-                    if should_force or not os.path.exists(image_path):
+                    if should_force or is_placeholder_image or not os.path.exists(image_path):
                         product = dict(row)
                         product['codigo'] = codigo
                         product['nome'] = row['nome'].strip()
@@ -2639,10 +2873,15 @@ class OptimizedPersistentDownloader:
 
             filepath = os.path.join(self.image_folder, filename)
 
-            if img.mode in ('RGBA', 'LA', 'P'):
+            if img.mode == 'P':
+                img = img.convert('RGBA')
+            elif img.mode == 'LA':
+                img = img.convert('RGBA')
+            elif img.mode not in ('RGB', 'RGBA'):
                 img = img.convert('RGB')
 
-            img.save(filepath, 'WEBP', quality=85, optimize=True)
+            save_kwargs = {'quality': 88, 'method': 6}
+            img.save(filepath, 'WEBP', **save_kwargs)
             self.update_product_image_references(product, filename)
             product['imagem'] = filename
 
@@ -2805,6 +3044,11 @@ def main():
         action='store_true',
         help='Reprocessa todos os produtos mesmo se a imagem ja existir.',
     )
+    parser.add_argument(
+        '--repair-existing-white-bg',
+        action='store_true',
+        help='Reprocessa imagens ja existentes que ainda parecem ter fundo branco conectado as bordas.',
+    )
     mode_group = parser.add_mutually_exclusive_group()
     mode_group.add_argument(
         '--strict-sites-only',
@@ -2869,6 +3113,11 @@ def main():
         print("Modo estrito ativo: apenas lojas de hardware confiaveis.")
     else:
         print("Modo padrao ativo: lojas de hardware primeiro, depois Google/Bing com validacao forte.")
+
+    if args.repair_existing_white_bg:
+        downloader.repair_existing_white_backgrounds(force_codes=force_codes)
+        return
+
     downloader.download_all_missing_images(
         force_codes=force_codes,
         force_all=args.force_all,

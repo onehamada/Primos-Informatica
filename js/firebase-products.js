@@ -111,11 +111,21 @@ class FirebaseProducts {
     }
 
     try {
-      await db.collection(this.productsCollection).doc(normalizedProduct.codigo).set({
+      const payload = {
         ...normalizedProduct,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      }, { merge: true });
+      };
+
+      if (!Object.prototype.hasOwnProperty.call(normalizedProduct, 'precoOriginal')) {
+        payload.precoOriginal = firebase.firestore.FieldValue.delete();
+      }
+
+      if (!Object.prototype.hasOwnProperty.call(normalizedProduct, 'desconto')) {
+        payload.desconto = firebase.firestore.FieldValue.delete();
+      }
+
+      await db.collection(this.productsCollection).doc(normalizedProduct.codigo).set(payload, { merge: true });
 
       console.log('Produto salvo no Firebase:', normalizedProduct.codigo);
       return {

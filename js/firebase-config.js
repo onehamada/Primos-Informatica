@@ -1,4 +1,4 @@
-// Configuração do Firebase (Compat Mode)
+// Firebase configuration shared by the storefront and auth flows.
 const firebaseConfig = {
   apiKey: "AIzaSyAvJUdjnY7xjnlTSYJAQZ6safylKXKlzLc",
   authDomain: "primos-informatica-ecommerce.firebaseapp.com",
@@ -9,28 +9,62 @@ const firebaseConfig = {
   measurementId: "G-J6KVL50YGQ"
 };
 
-// Aguardar Firebase estar disponível
 function initializeFirebase() {
-  if (typeof firebase !== 'undefined') {
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    
-    // Exportar para uso global
-    window.firebaseDB = db;
-    window.firebaseApp = firebase.app();
-    
-    console.log('🔥 Firebase inicializado com sucesso!');
-    return true;
+  if (typeof firebase === 'undefined') {
+    return false;
   }
-  return false;
+
+  let app = null;
+
+  try {
+    app = firebase.apps && firebase.apps.length > 0
+      ? firebase.app()
+      : firebase.initializeApp(firebaseConfig);
+  } catch (error) {
+    // Evita quebrar a tela quando o SDK ainda não terminou de carregar.
+    return false;
+  }
+
+  window.firebaseApp = app;
+
+  if (typeof firebase.firestore === 'function') {
+    window.firebaseDB = firebase.firestore();
+  }
+
+  if (typeof firebase.auth === 'function') {
+    window.firebaseAuth = firebase.auth();
+  }
+
+  if (typeof firebase.storage === 'function') {
+    window.firebaseStorage = firebase.storage();
+  }
+
+  return true;
 }
 
-// Tentar inicializar imediatamente ou aguardar
-if (!initializeFirebase()) {
-  // Se Firebase não estiver disponível, aguardar
-  const checkFirebase = setInterval(() => {
-    if (initializeFirebase()) {
-      clearInterval(checkFirebase);
-    }
-  }, 100);
+function areRequestedFirebaseServicesReady() {
+  if (typeof firebase === 'undefined') {
+    return false;
+  }
+
+  const firestoreReady = typeof firebase.firestore !== 'function' || Boolean(window.firebaseDB);
+  const authReady = typeof firebase.auth !== 'function' || Boolean(window.firebaseAuth);
+  const storageReady = typeof firebase.storage !== 'function' || Boolean(window.firebaseStorage);
+
+  return firestoreReady && authReady && storageReady;
 }
+
+// Tentativa imediata para evitar corrida entre DOMContentLoaded e primeiro tick do intervalo.
+initializeFirebase();
+
+const firebaseBootstrapInterval = setInterval(() => {
+  const initialized = initializeFirebase();
+
+  if (initialized && areRequestedFirebaseServicesReady()) {
+    clearInterval(firebaseBootstrapInterval);
+  }
+}, 100);
+
+setTimeout(() => {
+  clearInterval(firebaseBootstrapInterval);
+}, 5000);
